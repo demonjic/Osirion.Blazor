@@ -35,4 +35,6 @@ Key parameters
 Notes
 - The heading comes from `ContentList.ShowTitle`, so a page that composes `ContentList` itself can turn it on to get
   the same `h1`.
-- The list keeps its `h1` when nothing matches and shows `NoContentText` below it.
+- The list keeps its `h1` when nothing matches and shows `NoContentText` below it. When a category, tag or author is
+  set and no item matches, the response is HTTP 404 (`ContentList.NotFoundWhenFilterMatchesNothing`); on .NET 10 the
+  router then renders its not-found page, if it has one. A directory with nothing in it stays a normal page.

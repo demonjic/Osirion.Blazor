@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Enums;
 using Osirion.Blazor.Cms.Domain.Repositories;
@@ -43,6 +44,16 @@ public partial class ContentList : IDisposable
     /// </summary>
     [Parameter]
     public string? Author { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether a <see cref="Category"/>, <see cref="Tag"/> or <see cref="Author"/> that no item matches
+    /// answers HTTP 404, so <c>/tag/no-such-tag</c> is not indexed as an empty page. On .NET 10 the router then
+    /// renders its not-found page, if it has one; otherwise the list shows <see cref="NoContentText"/>. Without a
+    /// filter an empty list stays a normal page, and a failed load never answers 404. Defaults to <see langword="false"/>; turn it on when the list is the page, as
+    /// <see cref="ContentListPage"/> does, and leave it off for a list embedded in another page.
+    /// </summary>
+    [Parameter]
+    public bool NotFoundWhenFilterMatchesNothing { get; set; }
 
     /// <summary>
     /// Gets or sets the search query for filtering content.
@@ -237,6 +248,14 @@ public partial class ContentList : IDisposable
 
     private string CurrentPathAndQuery { get; set; } = "/";
 
+#if !NET10_0_OR_GREATER
+    /// <summary>The request context; only available during static server-side rendering.</summary>
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+#endif
+
+    private readonly NotFoundSignal _notFound = new();
+
     ///// <summary>
     ///// Initializes the component.
     ///// </summary>
@@ -263,6 +282,13 @@ public partial class ContentList : IDisposable
     protected async Task LoadContentAsync()
     {
         IsLoading = true;
+        var loaded = false;
+#if NET10_0_OR_GREATER
+        var cancellationToken = CancellationToken.None;
+#else
+        // Under static SSR a closed connection stops the query; interactively there is no request to follow.
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+#endif
         try
         {
             var provider = ContentProviderManager.GetDefaultProvider();
@@ -294,7 +320,7 @@ public partial class ContentList : IDisposable
                 else if (ShowPagination)
                 {
                     // One fetch: the full result gives the total and the requested page is sliced from it.
-                    var allItems = WithoutCurrentPage(await provider.GetItemsByQueryAsync(query) ?? []);
+                    var allItems = WithoutCurrentPage(await provider.GetItemsByQueryAsync(query, cancellationToken) ?? []);
                     TotalItems = allItems.Count;
 
                     // page=0, negative or past the last page (including int overflow) falls back to the nearest valid page.
@@ -303,12 +329,18 @@ public partial class ContentList : IDisposable
                         .Skip((CurrentPage - 1) * EffectiveItemsPerPage)
                         .Take(EffectiveItemsPerPage)
                         .ToList();
+                    loaded = true;
                     return;
                 }
 
-                var items = await provider.GetItemsByQueryAsync(query);
+                var items = await provider.GetItemsByQueryAsync(query, cancellationToken);
                 ContentItems = items is null ? null : WithoutCurrentPage(items);
+                loaded = true;
             }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // The request was aborted; there is no visitor left to render the list for.
         }
         catch (Exception ex)
         {
@@ -319,8 +351,35 @@ public partial class ContentList : IDisposable
         finally
         {
             IsLoading = false;
+            if (loaded)
+            {
+                SignalNotFoundWhenTheFilterMatchesNothing();
+            }
+
             StateHasChanged();
         }
+    }
+
+    // Only a successful load reaches this: a provider that is missing or failed says nothing about the filter.
+    private void SignalNotFoundWhenTheFilterMatchesNothing()
+    {
+        var hasFilter = !string.IsNullOrWhiteSpace(Category) || !string.IsNullOrWhiteSpace(Tag) || !string.IsNullOrWhiteSpace(Author);
+        if (!NotFoundWhenFilterMatchesNothing || !hasFilter)
+        {
+            return;
+        }
+
+        if (ContentItems is { Count: > 0 })
+        {
+            _notFound.Reset();
+            return;
+        }
+
+#if NET10_0_OR_GREATER
+        _notFound.Send(NavigationManager);
+#else
+        _notFound.Send(HttpContext);
+#endif
     }
 
     /// <summary>

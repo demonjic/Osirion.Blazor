@@ -5,7 +5,7 @@ permalink: /components/content-list
 description: "List content items from the default provider as a grid of cards, filtered by directory, category, tag, author or search, with query-string pagination."
 author: "Osirion Team"
 date: 2025-01-26
-last_modified: 2026-10-11
+last_modified: 2026-10-17
 featured_image: /assets/images/blazor-cover.png
 categories:
 - Components
@@ -49,6 +49,7 @@ A paginated category page, the way the example site builds one:
 <ContentList Directory="blog"
              Category="@CategorySlug"
              ShowPagination
+             NotFoundWhenFilterMatchesNothing
              ItemsPerPage="12" />
 
 @code {
@@ -79,6 +80,7 @@ A search page passes the `q` query-string value through:
 | `Category` | `string?` | `null` | Items with a category that contains this text, ignoring case. Hyphens are read as spaces, so a URL slug works. |
 | `Tag` | `string?` | `null` | Items with this tag, ignoring case. |
 | `Author` | `string?` | `null` | Items whose `author` front matter matches the whole name, ignoring case. Available from 4.1. |
+| `NotFoundWhenFilterMatchesNothing` | `bool` | `false` | When `Category`, `Tag` or `Author` is set and no item matches, the response is HTTP 404, so an address such as `/tag/no-such-tag` is not indexed as an empty page. On .NET 10 the router renders its not-found page, if it has one. Without a filter, or when loading fails, an empty list stays a normal page. `ContentListPage` turns it on. |
 | `SearchQuery` | `string?` | `null` | Search terms, matched against title, description, body, categories and tags. Also bound to the `q` query-string parameter. |
 | `Locale` | `string?` | `null` | Items in this locale only. |
 | `DirectoryId` | `string?` | `null` | Items in the directory with this id. |

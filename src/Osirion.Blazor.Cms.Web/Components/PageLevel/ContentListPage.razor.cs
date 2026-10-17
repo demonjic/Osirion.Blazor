@@ -9,7 +9,8 @@ namespace Osirion.Blazor.Cms.Web.Components;
 /// A whole list page: a blog index, a category or a tag page. It opens with the title as the page's <c>h1</c> and a
 /// short description, lists the items with pagination, writes the list's CollectionPage structured data and, when
 /// <see cref="FeedUrl"/> is set, links the feed for readers and feed discovery. Categories and tags can be shown
-/// beside the list. It renders without script.
+/// beside the list. A category, tag or author that no item matches answers HTTP 404 (see
+/// <see cref="ContentList.NotFoundWhenFilterMatchesNothing"/>). It renders without script.
 /// </summary>
 public partial class ContentListPage
 {

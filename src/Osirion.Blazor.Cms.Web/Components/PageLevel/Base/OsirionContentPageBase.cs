@@ -479,35 +479,25 @@ public abstract partial class OsirionContentPageBase : OsirionComponentBase
     private HttpContext? HttpContext { get; set; }
 #endif
 
-    private bool _notFoundSignalled;
+    private readonly NotFoundSignal _notFound = new();
 
     /// <summary>
     /// Tells the framework the requested content does not exist so a statically rendered response carries
-    /// HTTP 404 instead of a 200 "soft 404". On .NET 10 this is <c>NavigationManager.NotFound()</c>; on .NET 9 the
-    /// status code is set on the cascading <c>HttpContext</c>. It has no effect once the response has started,
-    /// which is why the page components do not use streaming rendering, and none during interactive rendering,
-    /// where the not-found markup the component renders is all that can be shown.
+    /// HTTP 404 instead of a 200 "soft 404". It has no effect once the response has started, which is why the page
+    /// components do not use streaming rendering, and none during interactive rendering, where the not-found markup
+    /// the component renders is all that can be shown.
     /// </summary>
     protected void SignalNotFound()
     {
-        if (_notFoundSignalled)
-        {
-            return;
-        }
-
-        _notFoundSignalled = true;
 #if NET10_0_OR_GREATER
-        NavigationManager.NotFound();
+        _notFound.Send(NavigationManager);
 #else
-        if (HttpContext is { Response.HasStarted: false } httpContext)
-        {
-            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-        }
+        _notFound.Send(HttpContext);
 #endif
     }
 
     /// <summary>Allows the next not-found result to signal again after content was found.</summary>
-    protected void ResetNotFoundSignal() => _notFoundSignalled = false;
+    protected void ResetNotFoundSignal() => _notFound.Reset();
 
     /// <summary>
     /// Renders the page's title as its <c>h1</c>: in a <see cref="HeroSection"/> styled by the hero parameters while
