@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Osirion.Blazor.Cms.Web: `SeoMetadataOptions.SiteUrl` (`Osirion:Seo:SiteUrl`). When it is an absolute http(s) address, the canonical URL, `og:url` and the addresses in structured data use it with the page's path instead of the host that served the request, so a site behind a proxy, on a preview host or on a second domain declares its public address
 
 ### Fixed
+- Osirion.Blazor.Core: the Copy button restores its own accessible name after a copy. Two seconds later the script set a generic "Copy code to clipboard", so "Copy C# code to clipboard" lost its language
 - Osirion.Blazor.Core: `OsirionTestimonialCarousel` keeps its moving track out of the page width. The stage hid the track with `clip-path` alone, which still counts as scrollable overflow, so every page with the carousel scrolled sideways: 2,216 pixels on a 375 pixel screen and about 1,650 at 1280
 - Osirion.Blazor.Cms.Web: the `DocumentPage` title wraps a word longer than the line. A component name used as the title, such as `OsirionResponsiveShowcaseSection`, pushed a 375 pixel screen 41 pixels sideways
 - Osirion.Blazor.Core: `OsirionPageLoading` stops its spinner under `prefers-reduced-motion: reduce`. It turned continuously for visitors who ask for less motion
