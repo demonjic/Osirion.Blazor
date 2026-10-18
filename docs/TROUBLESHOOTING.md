@@ -603,7 +603,6 @@ public static class MemoryDebugger
 2. **Search Existing Issues:**
    - Browse [GitHub Issues](https://github.com/demonjic/Osirion.Blazor/issues)
    - Check closed issues for solutions
-   - Search discussions for similar problems
 
 3. **Create Minimal Reproduction:**
    - Isolate the problem in a small example
@@ -617,12 +616,7 @@ public static class MemoryDebugger
    - Include detailed reproduction steps
    - Provide relevant code samples
 
-2. **GitHub Discussions:**
-   - For questions and general help
-   - Share ideas and best practices
-   - Community support
-
-3. **Stack Overflow:**
+2. **Stack Overflow:**
    - Tag questions with `osirion-blazor`
    - Follow Stack Overflow guidelines
    - Provide complete, minimal examples
