@@ -62,7 +62,8 @@ setup. This page lists the components by module and links to their reference pag
 - **Common parameters.** Components inherit `OsirionComponentBase`, which adds `Class` and `Style` for the root
   element, `Attributes` (any unmatched attribute is passed through) and `Theme` (a `ThemeMode`: `Light`, `Dark`,
   `System` or `Inverted`, default `System`). The old `SetInteractive` parameter is obsolete and setting it is a
-  compile error; interactivity is detected automatically.
+  compile error; interactivity is detected automatically. A misspelled parameter is passed through as an attribute
+  too, so in Development a warning names the parameter an unknown attribute resembles.
 - **Sanitized content.** Markdown is rendered to HTML and cleaned with an allow-list before it is shown, so script,
   event handler attributes and `javascript:` URLs in content are removed.
 
