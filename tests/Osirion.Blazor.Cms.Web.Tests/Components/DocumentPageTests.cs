@@ -79,6 +79,23 @@ public class DocumentPageTests : CmsWebComponentTestBase
     }
 
     [Fact]
+    public void DocumentPage_Defaults_NumberTheTableOfContents()
+    {
+        var cut = RenderDocument();
+
+        cut.Find(".osirion-document-toc nav.osirion-table-of-contents").ClassList.ShouldContain("osirion-toc-numbered");
+    }
+
+    // Fails before the change: the page had no TocShowNumbers parameter to pass on to its table of contents.
+    [Fact]
+    public void DocumentPage_TocShowNumbersFalse_ReachesTheTableOfContents()
+    {
+        var cut = RenderDocument(p => p.Add(c => c.TocShowNumbers, false));
+
+        cut.Find(".osirion-document-toc nav.osirion-table-of-contents").ClassList.ShouldNotContain("osirion-toc-numbered");
+    }
+
+    [Fact]
     public void DocumentPage_NoEditUrlFormatter_HasNoEditLink()
     {
         var cut = RenderDocument();
