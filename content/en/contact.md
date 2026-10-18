@@ -40,9 +40,11 @@ Keep secrets, tokens and personal data out of an issue.
 
 ## A security problem
 
-Do not describe a vulnerability in a public issue. Private vulnerability reporting is not enabled on the repository, so
-write to the maintainer through his contact page at [demonjic.com/contact](https://demonjic.com/contact) and say that it
-is about Osirion.Blazor.
+Do not describe a vulnerability in a public issue. Report it privately on GitHub instead: the repository's **Security**
+tab has a **Report a vulnerability** button, which opens
+[the private report form](https://github.com/demonjic/Osirion.Blazor/security/advisories/new). Only you and the
+maintainers see the report. The [security policy](https://github.com/demonjic/Osirion.Blazor/security/policy) says
+which versions get fixes and what a useful report contains.
 
 ## The maintainer
 

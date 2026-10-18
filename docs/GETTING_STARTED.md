@@ -722,7 +722,6 @@ If you need help or have questions:
 
 1. Check the [documentation](../README.md)
 2. Browse [existing issues](https://github.com/demonjic/Osirion.Blazor/issues)
-3. Create a [new issue](https://github.com/demonjic/Osirion.Blazor/issues/new)
-4. Start a [discussion](https://github.com/demonjic/Osirion.Blazor/discussions)
+3. Create a [new issue](https://github.com/demonjic/Osirion.Blazor/issues/new); a question is welcome there too
 
 Welcome to the Osirion.Blazor community! We're excited to see what you'll build.
