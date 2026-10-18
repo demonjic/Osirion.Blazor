@@ -125,8 +125,8 @@ the next without a flash.
 Every palette variant is checked in the library's tests, against WCAG 2.2:
 
 - Text and its background reach 4.5:1 (AA): body, secondary and muted text on the page and on raised surfaces, links,
-  button labels on their buttons (also on hover), the active navigation item, status messages, form fields, and every
-  syntax highlighting color on the code background.
+  button labels on their buttons (also on hover and when pressed), the active navigation item, status messages, form
+  fields, and every syntax highlighting color on the code background.
 - The Contrast palette holds all of these to 7:1 (AAA).
 - The focus indicator reaches 3:1 against the page.
 

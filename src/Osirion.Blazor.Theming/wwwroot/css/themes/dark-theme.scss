@@ -111,7 +111,7 @@
     /* Action colors */
     --osirion-action-primary: var(--osirion-color-primary-600); /* #60a5fa - Bright blue */
     --osirion-action-primary-hover: var(--osirion-color-primary-500); /* #3b82f6 - Blue */
-    --osirion-action-primary-active: var(--osirion-color-primary-400); /* #2563eb - Dark blue */
+    --osirion-action-primary-active: #5492f9; /* Hover lightened toward white, as the generated palettes do: 5.79:1 with the dark text */
     --osirion-action-primary-text: var(--osirion-color-neutral-100); /* #111827 - Very dark gray */
     --osirion-action-primary-focus: var(--osirion-color-primary-700); /* #93c5fd - Light blue */
     --osirion-action-primary-disabled: var(--osirion-color-primary-300); /* #1d4ed8 - Very dark blue */
@@ -167,7 +167,7 @@
     --osirion-button-border: var(--osirion-action-primary); /* #60a5fa - Bright blue */
     --osirion-button-hover-background: var(--osirion-action-primary-hover); /* #3b82f6 - Blue */
     --osirion-button-hover-text: var(--osirion-color-neutral-100); /* #111827 - Very dark gray */
-    --osirion-button-active-background: var(--osirion-action-primary-active); /* #2563eb - Dark blue */
+    --osirion-button-active-background: var(--osirion-action-primary-active); /* #5492f9 - Lighter blue */
     --osirion-button-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     --osirion-button-secondary-background: var(--osirion-action-secondary); /* #374151 - Medium-dark gray */
     --osirion-button-secondary-text: var(--osirion-color-neutral-900); /* #f3f4f6 - Light gray */

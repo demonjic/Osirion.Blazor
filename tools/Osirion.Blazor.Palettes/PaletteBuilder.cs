@@ -51,6 +51,7 @@ internal static class PaletteBuilder
         new("link-color", "background-secondary", textContrast),
         new("action-primary-text", "action-primary", textContrast),
         new("action-primary-text", "action-primary-hover", textContrast),
+        new("action-primary-text", "action-primary-active", textContrast),
         new("action-secondary-text", "action-secondary", textContrast),
         new("action-secondary-text", "action-secondary-hover", textContrast),
         new("nav-active-text", "nav-active-background", textContrast),
