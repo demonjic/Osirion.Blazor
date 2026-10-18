@@ -31,6 +31,8 @@ PLACEMENTS = [
      ['shots/blog-navigation-components/menu-dark.webp']),
     ('blog/osirion-blazor-4-0-components.md', 'need no script at all.', 'Every one of them has a page with a live demo, all listed in the component gallery:',
      ['shots/blog-osirion-blazor-4-0-components/gallery-dark.webp']),
+    ('blog/gdpr-cookie-consent-blazor.md', 'you want a consent banner to say.', 'The banner on getosirion.com, set up this way:',
+     ['shots/blog-gdpr-cookie-consent-blazor/consent-banner-v2-dark.webp']),
     ('blog/github-cms-with-blazor.md', 'title, description, canonical URL and structured data into the head.', 'The blog list, as getosirion.com renders it:',
      ['shots/blog-github-cms-with-blazor/blog-from-github-dark.webp']),
 ]
