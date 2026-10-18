@@ -166,6 +166,28 @@ public class TemplatePackageTests
         imports.ShouldAllBe(line => line.StartsWith("@using global::", StringComparison.Ordinal));
     }
 
+    // Fails before the fix: content/docs had no _index.md, so the folder crumb of every docs page was the folder's file
+    // name, "Home / docs / Introduction". The folder index names the crumb and links it to the docs route, which sends
+    // the reader to the first page; unpublished, it is not a page of its own in the navigation, the pager or the sitemap.
+    [Fact]
+    public void DocsTemplate_FolderIndex_NamesTheDocsCrumb_AndLinksItToTheDocsRoute()
+    {
+        // Arrange
+        var template = Path.Combine(TemplatesFolder, "osirion-docs");
+        var index = Path.Combine(template, "content", "docs", "_index.md");
+        File.Exists(index).ShouldBeTrue("content/docs/_index.md names the docs folder in the breadcrumbs");
+        var docsPage = File.ReadAllText(Path.Combine(template, "Components", "Pages", "Docs.razor"));
+
+        // Act
+        var frontMatter = FrontMatter(index);
+
+        // Assert
+        frontMatter.ShouldContainKeyAndValue("title", "Documentation");
+        frontMatter.ShouldContainKeyAndValue("permalink", "/docs");
+        frontMatter.ShouldContainKeyAndValue("published", "false");
+        docsPage.ShouldContain("@page \"/docs\"");
+    }
+
     private static IEnumerable<string> TemplateFolders() =>
         Directory.GetDirectories(TemplatesFolder).Where(folder => Directory.Exists(Path.Combine(folder, ".template.config")));
 
@@ -176,6 +198,15 @@ public class TemplatePackageTests
 
     private static JsonElement TemplateConfig(string template) =>
         JsonDocument.Parse(File.ReadAllText(Path.Combine(TemplatesFolder, template, ".template.config", "template.json"))).RootElement;
+
+    // The key: value lines between the two --- lines that open a Markdown file, with the quotes around a value removed.
+    private static Dictionary<string, string> FrontMatter(string markdownFile) =>
+        File.ReadLines(markdownFile)
+            .Skip(1)
+            .TakeWhile(line => line != "---")
+            .Select(line => line.Split(':', 2))
+            .Where(parts => parts.Length == 2)
+            .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim().Trim('"'), StringComparer.Ordinal);
 
     private static string LibraryVersion() => Version(Path.Combine(Root, "src", "Osirion.Blazor", "Osirion.Blazor.csproj"));
 
