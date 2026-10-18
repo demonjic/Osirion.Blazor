@@ -120,7 +120,7 @@ A banner with your own text and categories:
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Title` | `string` | `"Cookie Consent"` | The banner heading (`h3`), which is also the accessible name of the banner region. |
-| `Message` | `string` | `"We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies."` | The banner text, rendered as encoded text. |
+| `Message` | `string` | `"This site would like to use optional cookies in addition to the ones it needs to work. Nothing optional is set until you choose."` | The banner text, rendered as encoded text. |
 | `AcceptButtonText` | `string` | `"Accept All"` | The text of the button that accepts every category. |
 | `DeclineButtonText` | `string` | `"Decline"` | The text of the button that declines every optional category. |
 | `CustomizeButtonText` | `string` | `"Customize"` | The text of the button that opens the category choices. |

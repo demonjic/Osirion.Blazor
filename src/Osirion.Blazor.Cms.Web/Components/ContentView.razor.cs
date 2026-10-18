@@ -30,6 +30,15 @@ public partial class ContentView(IContentProviderManager contentProviderManager)
     public string Path { get; set; } = string.Empty;
 
     /// <summary>
+    /// Whether to show an item that is not published (<c>published: false</c> in its front matter) when the
+    /// component loads it by <see cref="Path"/>. Off by default: a draft then renders the not-found state and
+    /// signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap
+    /// and feeds leave drafts out either way. An item you pass in is shown whatever its status.
+    /// </summary>
+    [Parameter]
+    public bool ShowUnpublished { get; set; }
+
+    /// <summary>
     /// The text shown while the item loads, in interactive render modes only. A statically rendered response is sent
     /// once the item has loaded.
     /// </summary>
@@ -189,7 +198,8 @@ public partial class ContentView(IContentProviderManager contentProviderManager)
             var provider = contentProviderManager.GetDefaultProvider();
             if (provider is not null)
             {
-                Item = await provider.GetItemByPathAsync(Path, RequestAborted);
+                Item = PublishedContent.ShownOrNull(
+                    await provider.GetItemByPathAsync(Path, RequestAborted), ShowUnpublished);
                 _loadedItem = Item;
 
                 if (Item is not null && ShowNavigationLinks)

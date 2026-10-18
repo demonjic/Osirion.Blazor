@@ -27,7 +27,8 @@
                                 @Message
                                 @if (!string.IsNullOrWhiteSpace(PolicyLink))
                                 {
-                                    <a href="@PolicyLink" class="osirion-cookie-consent-link">@PolicyLinkText</a>
+                                    @* Razor drops the whitespace before a code block, so the space is written explicitly *@
+                                    @(" ")<a href="@PolicyLink" class="osirion-cookie-consent-link">@PolicyLinkText</a>
                                 }
                             </p>
                         </div>

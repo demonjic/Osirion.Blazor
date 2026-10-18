@@ -217,6 +217,9 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
   [OsirionContentNotFound](/components/content-not-found) and answers with status 404: `NavigationManager.NotFound()` on .NET 10, the status code of
   the request on .NET 9. The status is only set while the response has not started, and not during interactive
   rendering. `NotFoundTitle` and `NotFoundText` are its heading and message, and a button leads to `BackLinkUrl` with the text `BackLinkText` unless `ShowBackLink` is off or the address is empty.
+- **Drafts.** The lookup by `ItemPath`, `ItemUrl` or `ItemSlug` asks for published items only, so a draft
+  (`published: false`) answers 404 like a missing item. A `Query` you pass decides through its
+  `IncludeUnpublished` and `Status`, and an `Item` you pass is shown as given.
 - **Security.** The body is sanitized by `ContentRenderer`, and `CustomFooterContent` is sanitized the same way.
   `HeaderContent`, `AuthorContent` and `SidebarContent` are your own markup, written as you give it.
 - **Attributes.** `Class`, `Style` and unmatched attributes go to the root element, and so does `Theme` as

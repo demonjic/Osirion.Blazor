@@ -25,6 +25,15 @@ public partial class DocumentPage
     public string? ContentPath { get; set; }
 
     /// <summary>
+    /// Whether to show an item that is not published (<c>published: false</c> in its front matter) when the
+    /// component loads it by <see cref="ContentPath"/>. Off by default: a draft then renders the not-found state and
+    /// signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap
+    /// and feeds leave drafts out either way. An item you pass in is shown whatever its status.
+    /// </summary>
+    [Parameter]
+    public bool ShowUnpublished { get; set; }
+
+    /// <summary>
     /// The document to show. Pass it when you have loaded it, as this documentation site does; the page then loads
     /// only what is missing: the side navigation entries and the previous and next documents. Without <see
     /// cref="Content"/> and <see cref="ContentPath"/> the page renders its frame without a document.
@@ -227,7 +236,8 @@ public partial class DocumentPage
             var provider = ContentProviderManager.GetDefaultProvider();
             if (provider is not null && ContentPath is { } contentPath && !string.IsNullOrWhiteSpace(contentPath))
             {
-                Content = _loadedContent = await provider.GetItemByPathAsync(contentPath);
+                Content = _loadedContent = PublishedContent.ShownOrNull(
+                    await provider.GetItemByPathAsync(contentPath), ShowUnpublished);
 
                 if (Content is not null)
                 {

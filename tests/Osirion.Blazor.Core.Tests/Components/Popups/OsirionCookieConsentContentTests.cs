@@ -33,7 +33,7 @@ public class OsirionCookieConsentContentTests : BunitContext
 
         cut.Find("form").GetAttribute("action").ShouldBe("/api/cookie-consent");
         cut.Find(".osirion-cookie-consent-title").TextContent.ShouldBe("Cookie Consent");
-        cut.Find(".osirion-cookie-consent-description").TextContent.ShouldContain("We use cookies");
+        cut.Find(".osirion-cookie-consent-description").TextContent.ShouldContain("Nothing optional is set until you choose.");
         cut.FindAll("button[name=consent]").Select(button => button.GetAttribute("value"))
             .ShouldBe(["declined", "customize", "accepted"]);
         cut.FindAll(".osirion-cookie-consent-link").ShouldBeEmpty();
@@ -71,6 +71,30 @@ public class OsirionCookieConsentContentTests : BunitContext
         var link = cut.Find("a.osirion-cookie-consent-link");
         link.GetAttribute("href").ShouldBe("/privacy");
         link.TextContent.ShouldBe("Privacy policy");
+    }
+
+    // Fails before the fix: the default said that continuing to browse meant agreeing, which is not valid consent.
+    [Fact]
+    public void OsirionCookieConsent_DefaultMessage_DoesNotImplyConsent()
+    {
+        var cut = RenderOnPage(parameters => { });
+
+        var message = cut.Find(".osirion-cookie-consent-description").TextContent;
+        message.ShouldNotContain("continuing to browse", Case.Insensitive);
+        message.ShouldNotContain("you agree", Case.Insensitive);
+    }
+
+    // Fails before the fix: the message and the link rendered with nothing between them ("cookies.Privacy policy").
+    [Fact]
+    public void OsirionCookieConsent_PolicyLink_IsSeparatedFromTheMessageByASpace()
+    {
+        var cut = RenderOnPage(parameters => parameters
+            .Add(p => p.Message, "We bake cookies.")
+            .Add(p => p.PolicyLink, "/privacy")
+            .Add(p => p.PolicyLinkText, "Privacy policy"));
+
+        var text = cut.Find(".osirion-cookie-consent-description").TextContent;
+        text.ShouldContain("We bake cookies. Privacy policy");
     }
 
     [Fact]

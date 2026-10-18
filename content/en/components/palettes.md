@@ -145,7 +145,9 @@ renderer's theme.
 
 A palette recolors Osirion's components through the `--osirion-*` tokens. The framework still paints what it owns:
 the page body under Bootstrap, the framework's own buttons and inputs, and the components an adapter styles with the
-framework's variables. Use `Framework` when the site's colors should come from the framework theme.
+framework's variables. Under Bootstrap, the primary buttons (`.btn-primary` and `.btn-outline-primary`) follow the
+palette's action colors while a palette is active. Use `Framework` when the site's colors should come from the
+framework theme.
 
 ## Your own colors
 

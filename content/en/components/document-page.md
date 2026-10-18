@@ -121,6 +121,7 @@ of the lookup parameters.
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ContentPath` | `string?` | `null` | The source path of the document to load from the default provider while `Content` is not set. When nothing is found, the page shows the not-found state and signals 404. A change of the path loads the new document, also on a page that is interactive; a `Content` you pass is never replaced by loading. |
+| `ShowUnpublished` | `bool` | `false` | Whether to show an item that is not published (`published: false` in its front matter) when the component loads it by `ContentPath`. Off by default: a draft then renders the not-found state and signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap and feeds leave drafts out either way. An item you pass in is shown whatever its status. |
 | `Content` | `ContentItem?` | `null` | The document to show. Pass it when you have loaded it, as this documentation site does; the page then loads only what is missing: the side navigation entries and the previous and next documents. Without `Content` and `ContentPath` the page renders its frame without a document. |
 | `ShowSideNavigation` | `bool` | `true` | Whether to show the side navigation, a list of pages beside the document. On narrow screens it folds behind a button. |
 | `NavigationTitle` | `string?` | `null` | The heading of the side navigation. No heading is shown when it is empty. |
@@ -240,6 +241,9 @@ of the lookup parameters.
   [OsirionContentNotFound](/components/content-not-found), shaped by the `NotFound*` and `BackLink*` parameters (`NotFoundTitle` and `NotFoundText` are its heading and message, and a button leads to `BackLinkUrl` with the text `BackLinkText` unless `ShowBackLink` is off or the address is empty.), and answers with status 404: `NavigationManager.NotFound()`
   on .NET 10, the status code of the request on .NET 9, while the response has not started. Without `Content` and
   without `ContentPath` the page renders its frame with no document and does not signal 404.
+- **Drafts.** An item loaded by `ContentPath` that is not published (`published: false`) is not served: the page
+  renders the not-found state and signals 404, as for a missing item. `ShowUnpublished` turns this off for
+  previews, and a `Content` you pass is shown as given.
 - **Security.** The body is sanitized by `ContentRenderer`, and `CustomFooterContent` passes through
   `OsirionHtmlRenderer`, which sanitizes it. The addresses `EditUrlFormatter`, `ContentUrlFormatter` and
   `NavigationUrlFormatter` return are written as given, so build them from values you control.

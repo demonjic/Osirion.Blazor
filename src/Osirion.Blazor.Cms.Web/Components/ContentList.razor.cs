@@ -5,6 +5,7 @@ using Osirion.Blazor.Cms.Domain.Enums;
 using Osirion.Blazor.Cms.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using Osirion.Blazor.Cms.Domain.Services;
+using Osirion.Blazor.Cms.Web.Components.Seo;
 
 namespace Osirion.Blazor.Cms.Web.Components;
 
@@ -185,6 +186,16 @@ public partial class ContentList : IDisposable
     public string? PageDescription { get; set; }
 
     /// <summary>
+    /// Gets or sets the image the list page shares in its social cards (<c>og:image</c> and <c>twitter:image</c>). A
+    /// relative address becomes absolute with the site address. Without it the list shares the image of the page it is
+    /// shown on, such as a section's <c>_index.md</c> (its <c>og_image_url</c>, <c>image</c> or featured image), then the
+    /// first listed item's featured image, then the site-wide default image of <c>AddOsirionSeoMetadata</c> or the
+    /// <c>Osirion:Seo</c> section.
+    /// </summary>
+    [Parameter]
+    public string? PageImageUrl { get; set; }
+
+    /// <summary>
     /// Gets or sets the website name override for SEO.
     /// </summary>
     [Parameter]
@@ -256,6 +267,9 @@ public partial class ContentList : IDisposable
 
     private readonly NotFoundSignal _notFound = new();
 
+    // The item at the address the list is shown on, such as a section's _index.md, left out of the list.
+    private ContentItem? _currentPageItem;
+
     ///// <summary>
     ///// Initializes the component.
     ///// </summary>
@@ -282,6 +296,7 @@ public partial class ContentList : IDisposable
     protected async Task LoadContentAsync()
     {
         IsLoading = true;
+        _currentPageItem = null;
         var loaded = false;
 #if NET10_0_OR_GREATER
         var cancellationToken = CancellationToken.None;
@@ -397,7 +412,8 @@ public partial class ContentList : IDisposable
 
     /// <summary>
     /// Removes the item the list is shown on. A section's index page (<c>_index.md</c>) has the section's own URL, so
-    /// the section's list would otherwise link to the page the reader is already on.
+    /// the section's list would otherwise link to the page the reader is already on. The removed item is kept as the
+    /// page's own item, whose image the list page shares.
     /// </summary>
     private List<ContentItem> WithoutCurrentPage(IEnumerable<ContentItem> items)
     {
@@ -407,14 +423,32 @@ public partial class ContentList : IDisposable
             ? currentPath[localePrefix.Length..]
             : currentPath;
 
-        return items
-            .Where(item =>
+        var listed = new List<ContentItem>();
+        foreach (var item in items)
+        {
+            var itemPath = PathOf(GetContentUrl(item));
+            if (string.Equals(itemPath, currentPath, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(itemPath, currentPathWithoutLocale, StringComparison.OrdinalIgnoreCase))
             {
-                var itemPath = PathOf(GetContentUrl(item));
-                return !string.Equals(itemPath, currentPath, StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(itemPath, currentPathWithoutLocale, StringComparison.OrdinalIgnoreCase);
-            })
-            .ToList();
+                _currentPageItem ??= item;
+                continue;
+            }
+
+            listed.Add(item);
+        }
+
+        return listed;
+    }
+
+    /// <summary>
+    /// Gets the image the list page shares: <see cref="PageImageUrl"/>, then the image of the page the list is shown on
+    /// (its <c>og_image_url</c>, <c>image</c> or featured image). Without either the SEO metadata falls back to the first
+    /// item's featured image, then to the site-wide default image.
+    /// </summary>
+    protected string? GetComputedPageImageUrl()
+    {
+        var seo = _currentPageItem?.Metadata?.SeoProperties;
+        return SeoText.FirstNonBlank(PageImageUrl, seo?.OgImageUrl, seo?.Image, _currentPageItem?.FeaturedImageUrl);
     }
 
     // The path of a link or location, without query, fragment or surrounding slashes.

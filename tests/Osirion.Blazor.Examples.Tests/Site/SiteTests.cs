@@ -385,18 +385,18 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
 
         // Assert
         html.ShouldContain(">Privacy policy</h1>");
-        foreach (var cookie in new[] { "osirion_cookie_consent", "osirion-preferred-theme", "osirion-preferred-palette", "osirion_announcement_" })
+        foreach (var cookie in new[] { "osirion_cookie_consent", "osirion-preferred-theme", "osirion-preferred-palette", "osirion_announcement_", ".AspNetCore.Antiforgery." })
         {
             html.ShouldContain(cookie);
         }
 
-        foreach (var service in new[] { "Google Analytics 4", "Microsoft Clarity", "Matomo", "Cloudflare" })
+        foreach (var service in new[] { "Google Analytics 4", "Microsoft Clarity", "Matomo", "Cloudflare Web Analytics" })
         {
             html.ShouldContain(service);
         }
 
         html.ShouldContain("Withdraw your consent");
-        html.ShouldContain("Last updated: 17 October 2026");
+        html.ShouldContain("Last updated: 18 October 2026");
     }
 
     [Fact]
@@ -625,11 +625,9 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
             // tools/site-media renders one card per page and uploads it under this key.
             var slug = path == "/" ? "home" : path.Trim('/').Replace('/', '-');
             var card = OgImage().Match(html);
-            // A list page shares its first item's image before its own (SeoMetadataRenderer, #291), so /blog only has to
-            // share a card until that changes.
             var expected = $"https://media.getosirion.com/og/{slug}.jpg";
             var shared = card.Success ? card.Groups["url"].Value : string.Empty;
-            if (path == "/blog" ? !shared.StartsWith("https://media.getosirion.com/og/", StringComparison.Ordinal) : shared != expected)
+            if (shared != expected)
             {
                 failures.Add($"{path} shares {(card.Success ? shared : "no og:image")}");
             }

@@ -27,6 +27,15 @@ public partial class ContentListPage
     [Parameter]
     public string? Description { get; set; }
 
+    /// <summary>
+    /// Gets or sets the image the page shares in its social cards, for example a card made for the blog index. Without
+    /// it the page shares the image of the section's own <c>_index.md</c> when the list is shown at the section's
+    /// address, then the first listed item's featured image, then the site-wide default image. See
+    /// <see cref="ContentList.PageImageUrl"/>.
+    /// </summary>
+    [Parameter]
+    public string? ImageUrl { get; set; }
+
     /// <summary>Gets or sets the content directory to list, for example <c>blog</c>.</summary>
     [Parameter]
     public string? Directory { get; set; }

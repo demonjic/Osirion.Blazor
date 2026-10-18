@@ -23,7 +23,7 @@ public partial class OsirionCookieConsent
     /// Gets or sets the banner text, rendered as encoded text.
     /// </summary>
     [Parameter]
-    public string Message { get; set; } = "We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies.";
+    public string Message { get; set; } = "This site would like to use optional cookies in addition to the ones it needs to work. Nothing optional is set until you choose.";
 
     /// <summary>
     /// Gets or sets the text of the button that accepts every category.
