@@ -8,6 +8,22 @@ public partial class ThemeTokenTests
 {
     // Fails before the fix: eleven components read --osirion-background-active, which no theme defined, so its light
     // fallback (#e0f2fe) stayed in the dark theme under light text (DocumentPage's active item: 2.21:1).
+    // Fails before the fix: the high-contrast dark block set the label to var(--osirion-color-black), which the dark
+    // theme's reversed scale resolves to white: 3.68:1 on the bright blue, and 3.06:1 on the pressed color.
+    [Theory]
+    [InlineData("index.css")]
+    [InlineData("index.min.css")]
+    [InlineData("themes/dark-theme.css")]
+    [InlineData("themes/dark-theme.min.css")]
+    public void HighContrastDarkBlock_WritesTheButtonLabelInBlack(string file)
+    {
+        var css = System.Text.RegularExpressions.Regex.Replace(File.ReadAllText(RepositoryFiles.ThemingCss(file)), @"\s+", string.Empty);
+        var dark = System.Text.RegularExpressions.Regex.Match(css, @"@media\(prefers-contrast:more\)\{[^{]*data-theme=""?dark""?[^{]*\{(?<body>[^}]*)\}");
+
+        dark.Success.ShouldBeTrue();
+        dark.Groups["body"].Value.ShouldContain("--osirion-action-primary-text:#000000");
+    }
+
     [Fact]
     public void ComponentStyles_DoNotReadTheUndefinedActiveBackgroundToken()
     {

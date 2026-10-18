@@ -538,7 +538,7 @@
     --osirion-border-color: var(--osirion-color-neutral-600); /* #9ca3af - Medium gray */
     /* Brighter accent colors */
     --osirion-action-primary: var(--osirion-color-primary-500); /* #3b82f6 - Blue */
-    --osirion-action-primary-text: var(--osirion-color-black); /* Pure black text on bright blue */
+    --osirion-action-primary-text: #000000; /* Black, written out: in the dark theme --osirion-color-black is the reversed scale's white */
     /* Stronger status colors */
     --osirion-status-success: var(--osirion-color-success-500); /* #22c55e - Medium green */
     --osirion-status-warning: var(--osirion-color-warning-500); /* #f59e0b - Medium amber */
