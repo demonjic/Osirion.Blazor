@@ -55,8 +55,8 @@ Then render the banner in your layout:
                       Message="We would like to use analytics cookies to see which pages are read. Nothing is set until you choose." />
 ```
 
-Write the message yourself. The default text says that continuing to browse means agreeing, which is probably not what
-you want a consent banner to say.
+Write the message yourself, so it names what your site asks for. Releases up to 4.2.0 used a default text that said
+continuing to browse means agreeing, which is not consent; the newer default does not, but it cannot know your purposes.
 
 The banner on getosirion.com, set up this way:
 
