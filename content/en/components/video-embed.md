@@ -8,7 +8,7 @@ description: "OsirionVideoEmbed shows a YouTube or Vimeo thumbnail and loads the
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-video-embed.jpg'
 categories:
 - Components
 - Core Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionVideoEmbed: click-to-play video for Blazor'
   description: 'OsirionVideoEmbed shows a YouTube or Vimeo thumbnail and loads the player only when pressed, privacy-enhanced by default; without script it links to the video.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-video-embed.jpg'
   canonical: 'https://getosirion.com/components/video-embed'
   lang: en
   robots: index, follow
   og_title: 'OsirionVideoEmbed - Osirion.Blazor'
   og_description: 'A YouTube or Vimeo thumbnail that loads the player when pressed.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-video-embed.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionVideoEmbed - Osirion.Blazor'
   twitter_description: 'A YouTube or Vimeo thumbnail that loads the player when pressed.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-video-embed.jpg'
   meta_tags: {}
 ---
 

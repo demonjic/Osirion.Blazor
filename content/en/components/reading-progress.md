@@ -8,7 +8,7 @@ description: "OsirionReadingProgress shows a bar at the top of the window that f
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-reading-progress.jpg'
 categories:
 - Components
 - Core Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionReadingProgress: reading progress bar for Blazor'
   description: 'OsirionReadingProgress shows a bar at the top of the window that fills as the reader scrolls, driven by a CSS scroll-driven animation with no script.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-reading-progress.jpg'
   canonical: 'https://getosirion.com/components/reading-progress'
   lang: en
   robots: index, follow
   og_title: 'OsirionReadingProgress - Osirion.Blazor'
   og_description: 'A bar at the top of the window that fills as the reader scrolls, with no script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-reading-progress.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionReadingProgress - Osirion.Blazor'
   twitter_description: 'A bar at the top of the window that fills as the reader scrolls, with no script.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-reading-progress.jpg'
   meta_tags: {}
 ---
 

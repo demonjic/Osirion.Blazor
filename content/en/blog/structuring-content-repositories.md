@@ -7,9 +7,10 @@ description: "Lay out a Markdown content repository for Osirion.Blazor: folders,
 slug: "structuring-content-repositories"
 categories: [CMS]
 tags: [GitHub, Markdown, Front Matter, Content Structure]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-structuring-content-repositories.jpg'
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-structuring-content-repositories.jpg'
   title: "Structuring a Markdown Content Repository"
   description: "Folders, _index.md, slugs, front matter keys, locales and drafts in a content repository read by Osirion.Blazor."
   type: "Article"

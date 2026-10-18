@@ -2,18 +2,18 @@
 title: "Hero Sections in Blazor with HeroSection"
 author: "Dejan Demonjić"
 date: "2025-01-22"
-last_modified: 2026-10-11
+last_modified: 2026-10-18
 description: "Build landing page and article headers with the HeroSection component: three variants, side or background images, patterns, buttons and metadata."
 tags: [Components, Hero Section, Landing Pages, SSR, Blazor]
 categories: [Components, Design]
 slug: "modern-hero-sections-blazor"
 is_featured: true
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-modern-hero-sections-blazor.jpg'
 seo_properties:
   title: "Hero Sections in Blazor with HeroSection"
   description: "Use HeroSection for landing pages and article headers: variants, side and background images, patterns, buttons and article metadata."
-  image: "/assets/images/blazor-cover.png"
-  og_image_url: "/assets/images/blazor-cover.png"
+  image: 'https://media.getosirion.com/og/blog-modern-hero-sections-blazor.jpg'
+  og_image_url: 'https://media.getosirion.com/og/blog-modern-hero-sections-blazor.jpg'
   type: "Article"
 ---
 
@@ -67,6 +67,8 @@ With `ImageUrl`, the image is shown next to the text by default:
              SecondaryButtonText="View on GitHub"
              SecondaryButtonUrl="https://github.com/demonjic/Osirion.Blazor" />
 ```
+
+![HeroSection with a side image, from its live demo on the component page](https://media.getosirion.com/shots/blog-modern-hero-sections-blazor/hero-variants-dark.webp){width=1600 height=900}
 
 The side image is an `<img>` with `fetchpriority="high"`, because the hero image is usually the largest thing on screen
 when the page loads. Its alt text falls back to the title when `ImageAlt` is not set; set it whenever the image carries

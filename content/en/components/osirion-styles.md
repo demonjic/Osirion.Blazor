@@ -8,7 +8,7 @@ description: OsirionStyles links the Osirion stylesheets and the CSS framework a
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-osirion-styles.jpg'
 categories:
 - Components
 - Theming Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionStyles: stylesheets and theme setup for Blazor'
   description: 'Link the Osirion stylesheets and framework adapter and apply the stored light or dark theme with OsirionStyles.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-osirion-styles.jpg'
   canonical: 'https://getosirion.com/components/osirion-styles'
   lang: en
   robots: index, follow
   og_title: 'OsirionStyles Component - Osirion.Blazor'
   og_description: 'Links the Osirion stylesheets and the framework adapter, and applies the visitor theme as the page loads.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-osirion-styles.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionStyles Component - Osirion.Blazor'
   twitter_description: 'Links the Osirion stylesheets and the framework adapter, and applies the visitor theme.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-osirion-styles.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: Components for the body of articles and docs pages in Osirion.Blazo
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor content components'
   description: 'Callouts, tabs, accordions, FAQs, responsive images, video embeds, article metadata, reveal on scroll and the HTML renderer for Blazor pages, working under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content.jpg'
   canonical: 'https://getosirion.com/components/content'
   lang: en
   robots: index, follow
   og_title: 'Core Content Components - Osirion.Blazor'
   og_description: 'Components for articles and docs pages that render under static SSR.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-content.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Core Content Components - Osirion.Blazor'
   twitter_description: 'Components for articles and docs pages that render under static SSR.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-content.jpg'
   meta_tags: {}
 ---
 

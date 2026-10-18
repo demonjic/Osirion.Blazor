@@ -8,7 +8,7 @@ description: "Common Osirion.Blazor problems as symptom, cause and fix: no conte
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-troubleshooting.jpg'
 categories:
 - Documentation
 - Guides
@@ -25,9 +25,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-troubleshooting.jpg'
   title: 'Troubleshoot an Osirion.Blazor site'
   description: 'Symptoms, causes and fixes taken from the log messages and exceptions of Osirion.Blazor: empty content, 404 pages, missing styles, CSP and form problems.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-troubleshooting.jpg'
   canonical: 'https://getosirion.com/docs/troubleshooting'
   robots: index, follow
 ---

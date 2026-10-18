@@ -8,7 +8,7 @@ description: "Configure Osirion.Blazor from the Osirion section of appsettings.j
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-configuration.jpg'
 categories:
 - Documentation
 - Guides
@@ -24,9 +24,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-configuration.jpg'
   title: 'Configure Osirion.Blazor: appsettings, code, secrets'
   description: 'Which keys the Osirion section binds, how to set them in appsettings.json or in code, per environment, and how to keep secrets out of the repository.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-configuration.jpg'
   canonical: 'https://getosirion.com/docs/configuration'
   robots: index, follow
 ---

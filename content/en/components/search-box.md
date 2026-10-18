@@ -7,7 +7,7 @@ description: "SearchBox renders a search form that submits the query with GET to
 author: Dejan Demonjić
 date: "2024-12-29"
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-search-box.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'SearchBox: a search form for Blazor'
   description: 'A search form for Blazor content sites that submits with GET to a results page built with ContentList. No script needed.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-search-box.jpg'
   canonical: 'https://getosirion.com/components/search-box'
   lang: en
   robots: index, follow
   og_title: 'SearchBox - Osirion.Blazor'
   og_description: 'A search field and button in a plain GET form that sends the query to your results page. No script needed.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-search-box.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'SearchBox - Osirion.Blazor'
   twitter_description: 'A search field and button in a plain GET form that sends the query to your results page. No script needed.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-search-box.jpg'
   meta_tags: {}
 ---
 

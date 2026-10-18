@@ -8,7 +8,7 @@ description: OsirionPageHeading renders a page title as the h1 with an optional 
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-page-heading.jpg'
 categories:
 - Components
 - Core Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionPageHeading: page title heading for Blazor'
   description: 'OsirionPageHeading renders a page title as the h1 with an optional sentence below it. Parameters, behavior and styling.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-page-heading.jpg'
   canonical: 'https://getosirion.com/components/page-heading'
   lang: en
   robots: index, follow
   og_title: 'OsirionPageHeading - Osirion.Blazor'
   og_description: 'OsirionPageHeading renders a page title as the h1 with an optional sentence below it. Parameters, behavior and styling.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-page-heading.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionPageHeading - Osirion.Blazor'
   twitter_description: 'OsirionPageHeading renders a page title as the h1 with an optional sentence below it. Parameters, behavior and styling.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-page-heading.jpg'
   meta_tags: {}
 ---
 

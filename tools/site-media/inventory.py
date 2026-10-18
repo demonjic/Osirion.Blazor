@@ -30,14 +30,14 @@ SHOTS = {
         {'shot': 'palettes', 'source': 'site', 'path': '/docs/getting-started', 'palettes': ['osirion', 'commit', 'editor', 'studio', 'studio-blue', 'contrast'], 'themes': ['dark', 'light'], 'alt': 'The getting started page of getosirion.com in the six palettes: Osirion, Commit, Editor, Studio, Studio Blue and Contrast'},
     ],
     '/blog/modern-hero-sections-blazor': [
-        {'shot': 'hero-variants', 'source': 'site', 'path': '/components/hero-section', 'selector': '.osirion-content-demo-preview', 'alt': 'HeroSection with a side image, as the post builds it'},
+        {'shot': 'hero-variants', 'source': 'site', 'path': '/components/hero-section', 'selector': '.osirion-content-demo-preview', 'alt': 'HeroSection with a side image, from its live demo on the component page'},
     ],
     '/blog/navigation-components': [
         {'shot': 'menu', 'source': 'site', 'path': '/components/menu', 'selector': '.osirion-content-demo-preview', 'hover': '.osirion-content-demo-preview .osirion-menu-item-has-submenu > a.osirion-menu-item', 'alt': 'An Osirion menu with the Docs dropdown open'},
     ],
     '/blog/gdpr-cookie-consent-blazor': [
         # The component page has no live demo of the banner; the site's own banner is the real thing.
-        {'shot': 'consent-banner', 'source': 'site', 'path': '/', 'bottom': 360, 'keepConsent': True, 'alt': 'The cookie consent banner at the bottom of getosirion.com, with Decline, Customize and Accept All'},
+        {'shot': 'consent-banner-v2', 'source': 'site', 'path': '/', 'bottom': 360, 'keepConsent': True, 'alt': 'The cookie consent banner at the bottom of getosirion.com: what it asks for, with Decline, Customize and Accept All'},
     ],
     '/blog/osirion-blazor-4-0-components': [
         {'shot': 'gallery', 'source': 'site', 'path': '/components', 'selector': 'main', 'maxHeight': 900, 'alt': 'The component gallery on getosirion.com'},

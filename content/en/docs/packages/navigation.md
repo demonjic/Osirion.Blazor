@@ -8,7 +8,7 @@ description: Scroll handling for Blazor enhanced navigation, a scroll-to-top but
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-packages-navigation.jpg'
 categories:
 - Components
 - Navigation Components
@@ -32,20 +32,20 @@ custom_fields:
 seo_properties:
   title: 'Navigation Components for Blazor - Osirion.Blazor'
   description: 'EnhancedNavigation, ScrollToTop and a responsive Menu with mega menus for Blazor, working under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-packages-navigation.jpg'
   canonical: 'https://getosirion.com/docs/packages/navigation'
   lang: en
   robots: index, follow
   og_title: 'Navigation Components for Blazor - Osirion.Blazor'
   og_description: 'Scroll handling for enhanced navigation, a scroll-to-top button and a responsive menu without JavaScript.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/docs-packages-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Navigation Components for Blazor - Osirion.Blazor'
   twitter_description: 'EnhancedNavigation, ScrollToTop and a responsive Menu for Blazor.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/docs-packages-navigation.jpg'
   meta_tags: {}
 ---
 

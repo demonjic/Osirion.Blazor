@@ -8,7 +8,7 @@ description: OsirionBaseSection renders a page section with an id, heading, desc
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-base-section.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionBaseSection: content section for Blazor'
   description: 'A Blazor page section with heading, description, framework container, padding and an optional background image or pattern.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-base-section.jpg'
   canonical: 'https://getosirion.com/components/base-section'
   lang: en
   robots: index, follow
   og_title: 'OsirionBaseSection - Osirion.Blazor'
   og_description: 'A page section with heading, container, padding and an optional background image or pattern.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-base-section.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionBaseSection - Osirion.Blazor'
   twitter_description: 'A page section with heading, container, padding and an optional background image or pattern.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-base-section.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: ThemePicker renders a labelled list from which visitors pick a colo
 author: Dejan Demonjić
 date: 2026-10-16
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-theme-picker.jpg'
 categories:
 - Components
 - Theming Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'ThemePicker: color palette picker for Blazor'
   description: 'Let visitors pick a color palette with a labelled list that works under static SSR and on static sites.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-theme-picker.jpg'
   canonical: 'https://getosirion.com/components/theme-picker'
   lang: en
   robots: index, follow
   og_title: 'ThemePicker Component - Osirion.Blazor'
   og_description: 'A labelled list from which visitors pick a color palette, applied at once and remembered.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-theme-picker.jpg'
   og_type: article
   json_ld: ''
   type: TechArticle
   twitter_card: summary_large_image
   twitter_title: 'ThemePicker Component - Osirion.Blazor'
   twitter_description: 'A labelled list from which visitors pick a color palette, applied at once and remembered.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-theme-picker.jpg'
   meta_tags: {}
 ---
 

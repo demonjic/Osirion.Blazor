@@ -6,7 +6,7 @@ description: "AboutPage renders an about page from one content item, found by th
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-about-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -25,20 +25,20 @@ custom_fields:
 seo_properties:
   title: 'AboutPage: an about page from content for Blazor'
   description: 'AboutPage renders an about page from one CMS content item: a heading, the Markdown body, AboutPage structured data and your own content.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-about-page.jpg'
   canonical: 'https://getosirion.com/components/about-page'
   lang: en
   robots: index, follow
   og_title: 'AboutPage - Osirion.Blazor'
   og_description: 'An about page from one content item: a heading, the Markdown body and your own content, rendered without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-about-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'AboutPage - Osirion.Blazor'
   twitter_description: 'An about page from one content item: a heading, the Markdown body and your own content.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-about-page.jpg'
   meta_tags: {}
 ---
 

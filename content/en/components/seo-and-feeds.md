@@ -8,7 +8,7 @@ description: The Osirion.Blazor.Cms.Web pieces that tell search engines and feed
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-seo-and-feeds.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor SEO metadata, sitemap and feeds'
   description: 'SeoMetadataRenderer writes head metadata and JSON-LD for Blazor content pages; MapOsirionFeeds serves the sitemap, RSS and Atom feeds.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-seo-and-feeds.jpg'
   canonical: 'https://getosirion.com/components/seo-and-feeds'
   lang: en
   robots: index, follow
   og_title: 'SEO and feeds - Osirion.Blazor'
   og_description: 'Head metadata and JSON-LD for content pages, plus an XML sitemap, an RSS feed and an Atom feed.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-seo-and-feeds.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'SEO and feeds - Osirion.Blazor'
   twitter_description: 'Head metadata and JSON-LD for content pages, plus an XML sitemap, an RSS feed and an Atom feed.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-seo-and-feeds.jpg'
   meta_tags: {}
 ---
 

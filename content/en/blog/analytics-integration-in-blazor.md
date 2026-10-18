@@ -5,7 +5,7 @@ description: Add Clarity, Matomo, GA4 or Yandex Metrica to a Blazor app with tra
 author: Dejan Demonjić
 date: 2025-04-12
 last_modified: 2026-10-11
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/blog-analytics-integration-in-blazor.jpg'
 categories: 
 - Analytics
 - Integration
@@ -37,6 +37,8 @@ seo:
   twitter_description: ""
   twitter_image_url: ""
 
+seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-analytics-integration-in-blazor.jpg'
 ---
 
 # Analytics in Blazor with Osirion.Blazor

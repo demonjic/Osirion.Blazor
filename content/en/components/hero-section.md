@@ -8,7 +8,7 @@ description: HeroSection renders a page header with a title, subtitle, buttons, 
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-hero-section.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'HeroSection: page header and hero for Blazor'
   description: 'A Blazor page header with title, subtitle, buttons, article metadata and a side image, background image or pattern, rendered without script.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-hero-section.jpg'
   canonical: 'https://getosirion.com/components/hero-section'
   lang: en
   robots: index, follow
   og_title: 'HeroSection - Osirion.Blazor'
   og_description: 'A page header with title, subtitle, buttons and a side or background image, rendered without script.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-hero-section.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'HeroSection - Osirion.Blazor'
   twitter_description: 'A page header with title, subtitle, buttons and a side or background image, rendered without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-hero-section.jpg'
   meta_tags: {}
 ---
 

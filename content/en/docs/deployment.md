@@ -8,7 +8,7 @@ description: "Publish an Osirion.Blazor site with its content, supply tokens thr
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-deployment.jpg'
 categories:
 - Documentation
 - Guides
@@ -25,9 +25,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-deployment.jpg'
   title: 'Deploy an Osirion.Blazor site: content, HTTPS, feeds'
   description: 'What a deployed Osirion.Blazor site needs: the content folder or GitHub token, forwarded headers behind a proxy, the public address, sitemap and feeds.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-deployment.jpg'
   canonical: 'https://getosirion.com/docs/deployment'
   robots: index, follow
 ---

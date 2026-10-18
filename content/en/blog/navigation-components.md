@@ -2,13 +2,15 @@
 title: "Navigation in Osirion.Blazor: Menus, Scroll and Breadcrumbs"
 author: "Dejan Demonjić"
 date: "2025-04-14"
-last_modified: 2026-10-11
+last_modified: 2026-10-18
 description: "A tour of the Osirion.Blazor navigation components: a menu that works without JavaScript, mega menus, a back-to-top button, scroll handling and breadcrumbs."
 tags: [Navigation, Menu, Breadcrumbs, Accessibility, SSR]
 categories: [Documentation]
 slug: "navigation-components"
 is_featured: false
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-navigation-components.jpg'
+seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-navigation-components.jpg'
 ---
 
 # Navigation in Osirion.Blazor: Menus, Scroll and Breadcrumbs
@@ -43,6 +45,8 @@ The breadcrumbs are in `Osirion.Blazor.Core`.
 ```
 
 `NavLinkMatch` comes from `Microsoft.AspNetCore.Components.Routing`, which the Blazor template already imports.
+
+![An Osirion menu with the Docs dropdown open](https://media.getosirion.com/shots/blog-navigation-components/menu-dark.webp){width=1600 height=498}
 
 A few things this markup gets you without any script:
 

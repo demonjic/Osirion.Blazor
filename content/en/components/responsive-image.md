@@ -8,7 +8,7 @@ description: "OsirionResponsiveImage renders an img with intrinsic size, srcset,
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-responsive-image.jpg'
 categories:
 - Components
 - Core Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionResponsiveImage: responsive images for Blazor'
   description: 'OsirionResponsiveImage renders an img with intrinsic size, srcset, sizes and lazy loading, so images neither shift the layout nor load too large.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-responsive-image.jpg'
   canonical: 'https://getosirion.com/components/responsive-image'
   lang: en
   robots: index, follow
   og_title: 'OsirionResponsiveImage - Osirion.Blazor'
   og_description: 'An img with intrinsic size, srcset, sizes and lazy loading. Renders without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-responsive-image.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionResponsiveImage - Osirion.Blazor'
   twitter_description: 'An img with intrinsic size, srcset, sizes and lazy loading. Renders without script.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-responsive-image.jpg'
   meta_tags: {}
 ---
 

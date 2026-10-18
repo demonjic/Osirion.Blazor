@@ -8,11 +8,12 @@ description: 'Osirion.Blazor is an open-source Blazor library for content sites,
 author: 'Dejan Demonjić'
 date: '2026-10-17'
 last_modified: 2026-10-17
-featured_image: '/assets/images/blazor-cover.png'
+featured_image: 'https://media.getosirion.com/og/about.jpg'
 published: true
 slug: 'about'
 lang: 'en'
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/about.jpg'
   title: 'About Osirion.Blazor and its maintainer'
   description: 'Osirion.Blazor is an open-source (MIT) Blazor library for content sites, maintained by Dejan Demonjić. Principles, licence and how to contribute.'
   canonical: 'https://getosirion.com/about'

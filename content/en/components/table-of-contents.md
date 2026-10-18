@@ -7,7 +7,7 @@ description: "TableOfContents reads the headings of an HTML string, such as a re
 author: Dejan Demonjić
 date: "2024-12-29"
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-table-of-contents.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'TableOfContents: a heading outline for Blazor'
   description: 'Build a table of contents from the headings of rendered Markdown or any HTML string, with heading level limits and no script.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-table-of-contents.jpg'
   canonical: 'https://getosirion.com/components/table-of-contents'
   lang: en
   robots: index, follow
   og_title: 'TableOfContents - Osirion.Blazor'
   og_description: 'A nested list of links to the headings of an HTML string, with the section being read marked as you scroll.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-table-of-contents.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'TableOfContents - Osirion.Blazor'
   twitter_description: 'A nested list of links to the headings of an HTML string, with the section being read marked as you scroll.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-table-of-contents.jpg'
   meta_tags: {}
 ---
 

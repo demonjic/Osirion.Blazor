@@ -8,7 +8,7 @@ description: OsirionReadMoreLink renders a read more or call-to-action link with
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-read-more-link.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionReadMoreLink: read more links for Blazor'
   description: 'A read more or call-to-action link for Blazor with an optional icon, six variants, three sizes and a stretched mode for cards.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-read-more-link.jpg'
   canonical: 'https://getosirion.com/components/read-more-link'
   lang: en
   robots: index, follow
   og_title: 'OsirionReadMoreLink - Osirion.Blazor'
   og_description: 'A read more or call-to-action link with an optional icon, variants, sizes and a stretched mode for cards.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-read-more-link.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionReadMoreLink - Osirion.Blazor'
   twitter_description: 'A read more or call-to-action link with an optional icon, variants, sizes and a stretched mode for cards.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-read-more-link.jpg'
   meta_tags: {}
 ---
 

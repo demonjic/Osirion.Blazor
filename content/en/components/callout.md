@@ -6,7 +6,7 @@ description: "Highlight a note, tip, important point, warning or caution in cont
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-callout.jpg'
 categories:
 - Components
 - Core Components
@@ -25,20 +25,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionCallout: notes, tips and warnings for Blazor'
   description: 'Highlight a note, tip, important point, warning or caution in content, written in Markdown with GitHub''s alert syntax or with the OsirionCallout component.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-callout.jpg'
   canonical: 'https://getosirion.com/components/callout'
   lang: en
   robots: index, follow
   og_title: 'OsirionCallout - Osirion.Blazor'
   og_description: 'Notes, tips, important points, warnings and cautions, from Razor or Markdown. Renders without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-callout.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionCallout - Osirion.Blazor'
   twitter_description: 'Notes, tips, important points, warnings and cautions, from Razor or Markdown. Renders without script.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-callout.jpg'
   meta_tags: {}
 ---
 

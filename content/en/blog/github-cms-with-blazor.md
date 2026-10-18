@@ -2,13 +2,15 @@
 title: "Build a Blog with GitHub as the CMS"
 author: "Dejan Demonjić"
 date: "2025-04-15"
-last_modified: 2026-10-11
+last_modified: 2026-10-18
 description: "Step by step: a statically rendered Blazor blog whose posts are Markdown files in a GitHub repository, with tags, categories, search and refresh on push."
 tags: [blazor, github, cms, static-ssr, tutorial]
 categories: [tutorials, blazor]
 slug: "github-cms-with-blazor"
 is_featured: true
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-github-cms-with-blazor.jpg'
+seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-github-cms-with-blazor.jpg'
 ---
 
 # Build a Blog with GitHub as the CMS
@@ -172,6 +174,10 @@ The cards link to each post's URL, its folder below `ContentPath` plus its slug 
 route above. `ArticlePage` renders the post with a hero, breadcrumbs, a table of contents, the categories and tags,
 and links to the previous and next post. When no post matches the slug, it answers with HTTP 404. Both write the page
 title, description, canonical URL and structured data into the head.
+
+The blog list, as getosirion.com renders it:
+
+![A blog list rendered from Markdown files in a GitHub repository](https://media.getosirion.com/shots/blog-github-cms-with-blazor/blog-from-github-dark.webp){width=1600 height=1125}
 
 Add pages for tags and categories, which is where `ArticlePage` and the cards link to. `Components/Pages/Tag.razor`:
 

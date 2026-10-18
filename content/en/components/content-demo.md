@@ -8,7 +8,7 @@ description: OsirionContentDemo renders a registered Razor component as a live e
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-demo.jpg'
 categories:
 - Components
 - Core Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionContentDemo: live demos in Markdown for Blazor'
   description: 'OsirionContentDemo renders a registered Razor component as a live example with Preview and Code tabs, from a fenced demo block in Markdown or from a page.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content-demo.jpg'
   canonical: 'https://getosirion.com/components/content-demo'
   lang: en
   robots: index, follow
   og_title: 'OsirionContentDemo - Osirion.Blazor'
   og_description: 'Live examples in Markdown content, with the source one tab away.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-content-demo.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionContentDemo - Osirion.Blazor'
   twitter_description: 'Live examples in Markdown content, with the source one tab away.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-content-demo.jpg'
   meta_tags: {}
 ---
 

@@ -7,7 +7,7 @@ description: "TagCloud renders a link to every content tag with its item count, 
 author: Dejan Demonjić
 date: "2024-12-29"
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-tag-cloud.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'TagCloud: tag links with counts for Blazor'
   description: 'Render links to every CMS tag with item counts, sorting, a limit, an active tag and your own URL scheme.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-tag-cloud.jpg'
   canonical: 'https://getosirion.com/components/tag-cloud'
   lang: en
   robots: index, follow
   og_title: 'TagCloud - Osirion.Blazor'
   og_description: 'A wrapping row of tag links with item counts, loaded from the default content provider or passed in.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-tag-cloud.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'TagCloud - Osirion.Blazor'
   twitter_description: 'A wrapping row of tag links with item counts, loaded from the default content provider or passed in.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-tag-cloud.jpg'
   meta_tags: {}
 ---
 

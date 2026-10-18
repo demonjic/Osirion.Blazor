@@ -8,7 +8,7 @@ description: A centered CSS spinner with an optional line of text, for content t
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-page-loading.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionPageLoading: loading spinner for Blazor'
   description: 'A centered CSS spinner with optional text for Blazor content that is still loading, during streaming rendering or interactively.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-page-loading.jpg'
   canonical: 'https://getosirion.com/components/page-loading'
   lang: en
   robots: index, follow
   og_title: 'OsirionPageLoading - Osirion.Blazor'
   og_description: 'A centered CSS spinner with optional text for content that is still loading.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-page-loading.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionPageLoading - Osirion.Blazor'
   twitter_description: 'A CSS loading spinner with optional text for Blazor pages.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-page-loading.jpg'
   meta_tags: {}
 ---
 

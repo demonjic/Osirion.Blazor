@@ -8,7 +8,7 @@ description: "Step-by-step guides for building, configuring and running a site w
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-guides.jpg'
 categories:
 - Documentation
 - Guides
@@ -21,9 +21,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-guides.jpg'
   title: 'Osirion.Blazor guides'
   description: 'Step-by-step guides for Osirion.Blazor: install, configure, write content, deploy, and keep a site fast, accessible and secure.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-guides.jpg'
   canonical: 'https://getosirion.com/docs/guides'
   robots: index, follow
 ---

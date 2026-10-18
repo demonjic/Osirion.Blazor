@@ -8,7 +8,7 @@ description: A contact form that validates on the server, blocks simple bots wit
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-contact-form.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionContactForm: contact form for Blazor'
   description: 'A Blazor contact form for static SSR: server validation, honeypot spam check and email delivery through SMTP, SendGrid or Infobip.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-contact-form.jpg'
   canonical: 'https://getosirion.com/components/contact-form'
   lang: en
   robots: index, follow
   og_title: 'OsirionContactForm - Osirion.Blazor'
   og_description: 'Server-validated contact form with a honeypot and built-in SMTP, SendGrid or Infobip delivery.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-contact-form.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionContactForm - Osirion.Blazor'
   twitter_description: 'Server-validated Blazor contact form with email delivery and no script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-contact-form.jpg'
   meta_tags: {}
 ---
 

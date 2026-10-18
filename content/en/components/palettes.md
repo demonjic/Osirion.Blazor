@@ -8,7 +8,7 @@ description: Named color palettes for Osirion components, each with a light and 
 author: Dejan Demonjić
 date: 2026-10-16
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-palettes.jpg'
 categories:
 - Components
 - Theming Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'Palettes: named color palettes for Blazor'
   description: 'Six named palettes with light and dark variants, checked for WCAG 2.2 contrast and applied before the first paint.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-palettes.jpg'
   canonical: 'https://getosirion.com/components/palettes'
   lang: en
   robots: index, follow
   og_title: 'Color palettes for Blazor - Osirion.Blazor'
   og_description: 'Named palettes with light and dark variants for Osirion components, checked for contrast.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-palettes.jpg'
   og_type: article
   json_ld: ''
   type: TechArticle
   twitter_card: summary_large_image
   twitter_title: 'Color palettes for Blazor - Osirion.Blazor'
   twitter_description: 'Named palettes with light and dark variants for Osirion components, checked for contrast.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-palettes.jpg'
   meta_tags: {}
 ---
 

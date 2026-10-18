@@ -8,7 +8,7 @@ description: "OsirionMetricCard shows one figure with a label and supporting tex
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-metric-card.jpg'
 categories:
 - Components
 - Core Components
@@ -23,6 +23,7 @@ lang: en
 custom_fields:
   group: cards
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/components-metric-card.jpg'
   title: 'OsirionMetricCard: metric cards for Blazor'
   description: 'A Blazor card for one figure, its label and supporting text, with an optional count-up animation that respects reduced motion.'
 ---

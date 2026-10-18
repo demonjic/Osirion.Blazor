@@ -8,7 +8,7 @@ description: Light and dark themes for Osirion components, adapters for Bootstra
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-16
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-packages-theming.jpg'
 categories:
 - Components
 - Theming Components
@@ -34,20 +34,20 @@ custom_fields:
 seo_properties:
   title: 'Theming for Blazor - Osirion.Blazor'
   description: 'Light and dark themes, CSS framework adapters and a theme toggle for Osirion.Blazor components.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-packages-theming.jpg'
   canonical: 'https://getosirion.com/docs/packages/theming'
   lang: en
   robots: index, follow
   og_title: 'Theming for Blazor - Osirion.Blazor'
   og_description: 'Light and dark themes, adapters for Bootstrap, Fluent UI, MudBlazor and Radzen, and a theme toggle.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/docs-packages-theming.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Theming for Blazor - Osirion.Blazor'
   twitter_description: 'Light and dark themes, CSS framework adapters and a theme toggle for Osirion.Blazor.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/docs-packages-theming.jpg'
   meta_tags: {}
 ---
 

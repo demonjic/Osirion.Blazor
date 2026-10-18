@@ -6,7 +6,7 @@ description: "Render one content item with links to its translations, locale-awa
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-localized-content-view.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'LocalizedContentView: translated articles for Blazor'
   description: 'LocalizedContentView renders one CMS content item with links to its translations and locale-aware category and tag links.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-localized-content-view.jpg'
   canonical: 'https://getosirion.com/components/localized-content-view'
   lang: en
   robots: index, follow
   og_title: 'LocalizedContentView - Osirion.Blazor'
   og_description: 'One content item with links to its translations, locale-aware category and tag links and a sanitized body.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-localized-content-view.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'LocalizedContentView - Osirion.Blazor'
   twitter_description: 'One content item with links to its translations, locale-aware category and tag links and a sanitized body.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-localized-content-view.jpg'
   meta_tags: {}
 ---
 

@@ -7,9 +7,10 @@ description: "Make a Blazor content site fast with Osirion.Blazor: static SSR, i
 slug: "performance-tuning-content-heavy-blazor-sites"
 categories: [Performance]
 tags: [Performance, Static SSR, Images, Caching, Core Web Vitals]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-performance-tuning-content-heavy-blazor-sites.jpg'
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-performance-tuning-content-heavy-blazor-sites.jpg'
   title: "Performance Tuning for Content-Heavy Blazor Sites"
   description: "Static SSR, in-memory content, webhook refresh, image loading and minimal script for a fast Osirion.Blazor content site."
   type: "Article"

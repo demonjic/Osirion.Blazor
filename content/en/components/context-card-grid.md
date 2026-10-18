@@ -8,7 +8,7 @@ description: OsirionContextCardGrid renders a heading and a grid of labeled deta
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-context-card-grid.jpg'
 categories:
 - Components
 - Core Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionContextCardGrid: detail card grid for Blazor'
   description: 'OsirionContextCardGrid renders a heading and a grid of labeled detail cards with an accent color. Parameters, behavior and styling.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-context-card-grid.jpg'
   canonical: 'https://getosirion.com/components/context-card-grid'
   lang: en
   robots: index, follow
   og_title: 'OsirionContextCardGrid - Osirion.Blazor'
   og_description: 'OsirionContextCardGrid renders a heading and a grid of labeled detail cards with an accent color. Parameters, behavior and styling.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-context-card-grid.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionContextCardGrid - Osirion.Blazor'
   twitter_description: 'OsirionContextCardGrid renders a heading and a grid of labeled detail cards with an accent color. Parameters, behavior and styling.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-context-card-grid.jpg'
   meta_tags: {}
 ---
 

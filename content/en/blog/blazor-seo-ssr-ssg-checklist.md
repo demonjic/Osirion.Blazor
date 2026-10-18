@@ -7,9 +7,10 @@ description: "Check rendering, titles, canonical URLs, robots rules, structured 
 slug: "blazor-seo-ssr-ssg-checklist"
 categories: [SEO]
 tags: [SEO, Static SSR, Canonical URL, Structured Data, Sitemap]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-blazor-seo-ssr-ssg-checklist.jpg'
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-blazor-seo-ssr-ssg-checklist.jpg'
   title: "Blazor SEO Checklist for Static SSR"
   description: "What Osirion.Blazor writes into the page head and what you configure yourself: canonical URLs, robots rules, JSON-LD, sitemap and feeds."
   type: "Article"

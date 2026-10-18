@@ -8,7 +8,7 @@ description: OsirionTestimonialCard shows a quote with the person's name, photo,
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-testimonial-card.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionTestimonialCard: testimonial cards for Blazor'
   description: 'OsirionTestimonialCard shows a quote with the person''s name, photo, role, an optional star rating and a link. Parameters and behavior.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-testimonial-card.jpg'
   canonical: 'https://getosirion.com/components/testimonial-card'
   lang: en
   robots: index, follow
   og_title: 'OsirionTestimonialCard - Osirion.Blazor'
   og_description: 'A quote card with name, photo, role, optional rating and a read more link. Renders without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-testimonial-card.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionTestimonialCard - Osirion.Blazor'
   twitter_description: 'A quote card with name, photo, role, optional rating and a read more link.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-testimonial-card.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: UmamiTracker writes the Umami script tag, configured through data a
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-umami-tracker.jpg'
 categories:
 - Components
 - Analytics Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'UmamiTracker: Umami tracking script for Blazor'
   description: 'UmamiTracker writes the Umami script tag, configured through data attributes, into the page head from configuration.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-umami-tracker.jpg'
   canonical: 'https://getosirion.com/components/umami-tracker'
   lang: en
   robots: index, follow
   og_title: 'UmamiTracker - Osirion.Blazor'
   og_description: 'Writes the Umami script tag, configured through data attributes, into the page head.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-umami-tracker.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'UmamiTracker - Osirion.Blazor'
   twitter_description: 'Writes the Umami script tag, configured through data attributes, into the page head.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-umami-tracker.jpg'
   meta_tags: {}
 ---
 

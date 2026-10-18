@@ -8,7 +8,7 @@ description: Osirion.Blazor.Core holds the layout, content, card, section, navig
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-11
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-packages-core.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'Core components - Osirion.Blazor'
   description: 'Osirion.Blazor.Core holds the layout, content, card, section, navigation and form components. Setup steps and every category.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-packages-core.jpg'
   canonical: 'https://getosirion.com/docs/packages/core'
   lang: en
   robots: index, follow
   og_title: 'Core components - Osirion.Blazor'
   og_description: 'Layout, content, card, section, navigation and form components that render under static SSR.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/docs-packages-core.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Core components - Osirion.Blazor'
   twitter_description: 'Layout, content, card, section, navigation and form components that render under static SSR.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/docs-packages-core.jpg'
   meta_tags: {}
 ---
 

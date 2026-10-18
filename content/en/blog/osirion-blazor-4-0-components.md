@@ -2,15 +2,16 @@
 title: "New in Osirion.Blazor 4.0: Content Components"
 author: "Dejan Demonjić"
 date: "2026-10-11"
-last_modified: 2026-10-11
+last_modified: 2026-10-18
 description: "Osirion.Blazor 4.0 adds tabs, accordions and FAQs, callouts, responsive images, video embeds, author pages, series, feeds and more."
 slug: "osirion-blazor-4-0-components"
 categories: [Releases]
 tags: [Release Notes, Components, Static SSR, Feeds, Analytics]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-osirion-blazor-4-0-components.jpg'
 is_featured: false
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-osirion-blazor-4-0-components.jpg'
   title: "New in Osirion.Blazor 4.0: Content Components"
   description: "The components and features new in Osirion.Blazor 4.0, each with a short example and a link to its documentation."
   type: "Article"
@@ -22,6 +23,10 @@ Version 4.0 adds the building blocks content sites ask for most: tabs, accordion
 images, video embeds, author pages, series, pricing tables, steps, an announcement bar, a reading progress bar, a
 sitemap with RSS and Atom feeds, and two cookie-free analytics providers. All of them render with static SSR, and most
 need no script at all.
+
+Every one of them has a page with a live demo, all listed in the component gallery:
+
+![The component gallery on getosirion.com](https://media.getosirion.com/shots/blog-osirion-blazor-4-0-components/gallery-dark.webp){width=1600 height=1125}
 
 > [!NOTE]
 > The same release also hardens the CMS and its security; see

@@ -7,7 +7,7 @@ description: "ContentSeriesNavigation shows an item's place in a series, lists t
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-series-navigation.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'ContentSeriesNavigation: series links for Blazor'
   description: 'Link the parts of a multi-part article with series and series_order front matter: Part 2 of 5, a list of parts and previous and next links.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-series-navigation.jpg'
   canonical: 'https://getosirion.com/components/series-navigation'
   lang: en
   robots: index, follow
   og_title: 'ContentSeriesNavigation - Osirion.Blazor'
   og_description: 'Shows where an item stands in a series, lists the parts and links the previous and next part.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-series-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ContentSeriesNavigation - Osirion.Blazor'
   twitter_description: 'Shows where an item stands in a series, lists the parts and links the previous and next part.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-series-navigation.jpg'
   meta_tags: {}
 ---
 

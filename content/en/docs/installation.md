@@ -8,7 +8,7 @@ description: "Add the Osirion.Blazor packages to a Blazor Web App, register AddO
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-installation.jpg'
 categories:
 - Documentation
 - Guides
@@ -24,9 +24,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-installation.jpg'
   title: 'Install Osirion.Blazor in a Blazor Web App'
   description: 'Add the Osirion.Blazor packages, call AddOsirion, link the stylesheets and pick a CSS framework in an existing Blazor Web App on .NET 9 or 10.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-installation.jpg'
   canonical: 'https://getosirion.com/docs/installation'
   robots: index, follow
 ---

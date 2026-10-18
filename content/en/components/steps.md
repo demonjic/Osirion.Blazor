@@ -8,7 +8,7 @@ description: OsirionSteps renders numbered how it works steps as an ordered list
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-steps.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionSteps: numbered steps for Blazor'
   description: 'Numbered how it works steps for Blazor as an ordered list, side by side or stacked, rendered without script under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-steps.jpg'
   canonical: 'https://getosirion.com/components/steps'
   lang: en
   robots: index, follow
   og_title: 'OsirionSteps - Osirion.Blazor'
   og_description: 'Numbered steps as an ordered list, side by side or stacked, rendered without script.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-steps.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionSteps - Osirion.Blazor'
   twitter_description: 'Numbered steps as an ordered list, side by side or stacked, rendered without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-steps.jpg'
   meta_tags: {}
 ---
 

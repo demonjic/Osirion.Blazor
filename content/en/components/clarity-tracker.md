@@ -8,7 +8,7 @@ description: ClarityTracker writes the Microsoft Clarity tracking script into th
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-clarity-tracker.jpg'
 categories:
 - Components
 - Analytics Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'ClarityTracker: Microsoft Clarity script for Blazor'
   description: 'ClarityTracker writes the Microsoft Clarity tracking script into the page head from configuration, with an optional consent gate.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-clarity-tracker.jpg'
   canonical: 'https://getosirion.com/components/clarity-tracker'
   lang: en
   robots: index, follow
   og_title: 'ClarityTracker - Osirion.Blazor'
   og_description: 'Writes the Microsoft Clarity tracking script into the page head from configuration.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-clarity-tracker.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ClarityTracker - Osirion.Blazor'
   twitter_description: 'Writes the Microsoft Clarity tracking script into the page head from configuration.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-clarity-tracker.jpg'
   meta_tags: {}
 ---
 

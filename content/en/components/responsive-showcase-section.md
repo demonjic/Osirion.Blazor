@@ -8,7 +8,7 @@ description: OsirionResponsiveShowcaseSection previews content in a frame that s
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-responsive-showcase-section.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionResponsiveShowcaseSection: preview for Blazor'
   description: 'Preview Blazor content in a frame that switches between desktop, tablet and mobile widths, with an optional code sample.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-responsive-showcase-section.jpg'
   canonical: 'https://getosirion.com/components/responsive-showcase-section'
   lang: en
   robots: index, follow
   og_title: 'OsirionResponsiveShowcaseSection - Osirion.Blazor'
   og_description: 'A preview frame that switches between desktop, tablet and mobile widths.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-responsive-showcase-section.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionResponsiveShowcaseSection - Osirion.Blazor'
   twitter_description: 'A preview frame that switches between desktop, tablet and mobile widths.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-responsive-showcase-section.jpg'
   meta_tags: {}
 ---
 

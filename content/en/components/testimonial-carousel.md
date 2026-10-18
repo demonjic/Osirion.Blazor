@@ -8,7 +8,7 @@ description: OsirionTestimonialCarousel shows testimonial cards in a continuousl
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-testimonial-carousel.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionTestimonialCarousel: testimonial rail for Blazor'
   description: 'Show testimonial cards in a looping rail with ratings, LinkedIn links and read more links; it pauses on focus and respects reduced motion.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-testimonial-carousel.jpg'
   canonical: 'https://getosirion.com/components/testimonial-carousel'
   lang: en
   robots: index, follow
   og_title: 'OsirionTestimonialCarousel Component - Osirion.Blazor'
   og_description: 'Testimonial cards in a looping rail, driven by CSS, with a pause button and reduced motion support.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-testimonial-carousel.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionTestimonialCarousel Component - Osirion.Blazor'
   twitter_description: 'Testimonial cards in a looping rail, driven by CSS.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-testimonial-carousel.jpg'
   meta_tags: {}
 ---
 

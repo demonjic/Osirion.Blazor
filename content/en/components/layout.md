@@ -8,7 +8,7 @@ description: 'Layout components in Osirion.Blazor.Core: page shell, footer, stic
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-layout.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor layout components'
   description: 'Page shell, footer, sticky sidebar, loading spinner and background patterns for Blazor sites, all working under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-layout.jpg'
   canonical: 'https://getosirion.com/components/layout'
   lang: en
   robots: index, follow
   og_title: 'Layout components - Osirion.Blazor'
   og_description: 'Page shell, footer, sticky sidebar, loading spinner and background patterns for Blazor sites.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-layout.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Layout components - Osirion.Blazor'
   twitter_description: 'Page shell, footer, sticky sidebar, loading spinner and background patterns.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-layout.jpg'
   meta_tags: {}
 ---
 

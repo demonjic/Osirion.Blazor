@@ -8,7 +8,7 @@ description: The card components in Osirion.Blazor.Core (feature, testimonial, s
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-cards.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor card components'
   description: 'The card components in Osirion.Blazor.Core (feature, testimonial, subscription, metric and author cards) and when to use each.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-cards.jpg'
   canonical: 'https://getosirion.com/components/cards'
   lang: en
   robots: index, follow
   og_title: 'Cards - Osirion.Blazor'
   og_description: 'Feature, testimonial, subscription, metric and author cards for Blazor content sites.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-cards.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Cards - Osirion.Blazor'
   twitter_description: 'Feature, testimonial, subscription, metric and author cards for Blazor content sites.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-cards.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: OsirionBreadcrumbs turns a URL path into an accessible breadcrumb t
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-breadcrumbs.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionBreadcrumbs: breadcrumb trails for Blazor'
   description: 'Build an accessible breadcrumb trail from a URL path in Blazor, with a home link, custom segment text and the page title as the last crumb.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-breadcrumbs.jpg'
   canonical: 'https://getosirion.com/components/breadcrumbs'
   lang: en
   robots: index, follow
   og_title: 'OsirionBreadcrumbs - Osirion.Blazor'
   og_description: 'An accessible breadcrumb trail built from a URL path, rendered without script.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-breadcrumbs.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionBreadcrumbs - Osirion.Blazor'
   twitter_description: 'An accessible breadcrumb trail built from a URL path, rendered without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-breadcrumbs.jpg'
   meta_tags: {}
 ---
 

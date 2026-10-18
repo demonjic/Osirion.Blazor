@@ -8,7 +8,7 @@ description: The navigation components in Osirion.Blazor (breadcrumbs, read more
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-navigation.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor navigation components'
   description: 'The navigation components in Osirion.Blazor (breadcrumbs, read more link, menu, scroll to top and enhanced navigation) and when to use each.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-navigation.jpg'
   canonical: 'https://getosirion.com/components/navigation'
   lang: en
   robots: index, follow
   og_title: 'Core Navigation Components - Osirion.Blazor'
   og_description: 'Breadcrumb trails and read more links for Blazor that render without script.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Core Navigation Components - Osirion.Blazor'
   twitter_description: 'Breadcrumb trails and read more links for Blazor that render without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-navigation.jpg'
   meta_tags: {}
 ---
 

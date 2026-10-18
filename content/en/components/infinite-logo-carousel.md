@@ -8,7 +8,7 @@ description: InfiniteLogoCarousel shows client or partner logos in a row that ca
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-infinite-logo-carousel.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'InfiniteLogoCarousel: logo carousel for Blazor'
   description: 'Show client or partner logos in a looping row with light and dark variants, links, grayscale and a pause button, rendered under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-infinite-logo-carousel.jpg'
   canonical: 'https://getosirion.com/components/infinite-logo-carousel'
   lang: en
   robots: index, follow
   og_title: 'InfiniteLogoCarousel Component - Osirion.Blazor'
   og_description: 'Client or partner logos in a looping row with light and dark variants and optional links.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-infinite-logo-carousel.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'InfiniteLogoCarousel Component - Osirion.Blazor'
   twitter_description: 'Client or partner logos in a looping row with light and dark variants.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-infinite-logo-carousel.jpg'
   meta_tags: {}
 ---
 

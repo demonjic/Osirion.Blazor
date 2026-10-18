@@ -21,7 +21,10 @@
 </OsirionPageLayout>
 
 <OsirionStyles />
-<OsirionCookieConsent />
+@* The library's default message says that browsing on means agreeing, which consent does not allow; say what is asked. *@
+<OsirionCookieConsent Message="getosirion.com would like to use analytics cookies to see which pages are read. Nothing is set until you choose."
+                      PolicyLink="/privacy-policy"
+                      PolicyLinkText="Privacy policy" />
 <ScrollToTopProvider />
 
 <div id="blazor-error-ui" data-nosnippet>

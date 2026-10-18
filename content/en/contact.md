@@ -8,11 +8,12 @@ description: 'How to reach the Osirion.Blazor maintainer: GitHub issues for bugs
 author: 'Dejan Demonjić'
 date: '2026-10-17'
 last_modified: 2026-10-17
-featured_image: '/assets/images/blazor-cover.png'
+featured_image: 'https://media.getosirion.com/og/contact.jpg'
 published: true
 slug: 'contact'
 lang: 'en'
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/contact.jpg'
   title: 'Contact the Osirion.Blazor maintainer'
   description: 'Report a bug, fix the docs or ask for a feature on GitHub, or reach the Osirion.Blazor maintainer through his own sites.'
   canonical: 'https://getosirion.com/contact'

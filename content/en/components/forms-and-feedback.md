@@ -8,7 +8,7 @@ description: The contact form, the cookie and announcement banners, and the not-
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-forms-and-feedback.jpg'
 categories:
 - Components
 - Core Components
@@ -32,20 +32,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor forms and feedback components'
   description: 'The contact form, cookie consent banner, announcement bar and not found state in Osirion.Blazor.Core, and when to use each.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-forms-and-feedback.jpg'
   canonical: 'https://getosirion.com/components/forms-and-feedback'
   lang: en
   robots: index, follow
   og_title: 'Forms - Osirion.Blazor'
   og_description: 'A contact form for static SSR with server validation, a honeypot and email delivery.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-forms-and-feedback.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Forms - Osirion.Blazor'
   twitter_description: 'A contact form for static SSR with server validation and email delivery.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-forms-and-feedback.jpg'
   meta_tags: {}
 ---
 

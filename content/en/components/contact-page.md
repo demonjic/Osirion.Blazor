@@ -6,7 +6,7 @@ description: "ContactPage renders a contact page: a heading, an optional Markdow
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-contact-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -25,20 +25,20 @@ custom_fields:
 seo_properties:
   title: 'ContactPage: a contact page with a form for Blazor'
   description: 'ContactPage renders a contact page: a heading, an optional Markdown introduction from CMS content, a contact form and your contact details.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-contact-page.jpg'
   canonical: 'https://getosirion.com/components/contact-page'
   lang: en
   robots: index, follow
   og_title: 'ContactPage - Osirion.Blazor'
   og_description: 'A contact page with a heading, an optional Markdown introduction and a contact form, rendered without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-contact-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ContactPage - Osirion.Blazor'
   twitter_description: 'A contact page with a heading, an optional Markdown introduction and a contact form.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-contact-page.jpg'
   meta_tags: {}
 ---
 

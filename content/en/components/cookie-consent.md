@@ -8,7 +8,7 @@ description: A cookie consent banner that works without script, records the visi
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-cookie-consent.jpg'
 categories:
 - Components
 - Core Components
@@ -33,20 +33,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionCookieConsent: cookie banner for Blazor'
   description: 'A Blazor cookie consent banner that works without script, stores consent per category and can gate analytics trackers.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-cookie-consent.jpg'
   canonical: 'https://getosirion.com/components/cookie-consent'
   lang: en
   robots: index, follow
   og_title: 'OsirionCookieConsent - Osirion.Blazor'
   og_description: 'Cookie consent banner without script, with categories and an analytics consent gate.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-cookie-consent.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionCookieConsent - Osirion.Blazor'
   twitter_description: 'Cookie consent banner for Blazor that works without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-cookie-consent.jpg'
   meta_tags: {}
 ---
 

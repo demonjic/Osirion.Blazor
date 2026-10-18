@@ -8,12 +8,12 @@ tags: [Navigation, Enhanced Navigation, Scrolling, SSR, Blazor]
 categories: [Components, Navigation]
 slug: "enhanced-navigation-interceptor"
 is_featured: true
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-enhanced-navigation-interceptor.jpg'
 seo_properties:
   title: "Scroll Position After Enhanced Navigation in Blazor"
   description: "Use EnhancedNavigation to scroll to the top after each Blazor enhanced navigation, with smooth, instant or browser-default scrolling."
-  image: "/assets/images/blazor-cover.png"
-  og_image_url: "/assets/images/blazor-cover.png"
+  image: 'https://media.getosirion.com/og/blog-enhanced-navigation-interceptor.jpg'
+  og_image_url: 'https://media.getosirion.com/og/blog-enhanced-navigation-interceptor.jpg'
   type: "Article"
 ---
 
