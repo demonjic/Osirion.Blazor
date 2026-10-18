@@ -4,10 +4,10 @@ order: 4
 layout: page
 title: 'Privacy policy'
 permalink: /privacy-policy
-description: 'What getosirion.com does with your data: the cookies it sets, the three analytics services that load only after you consent, and how to withdraw consent.'
+description: 'What getosirion.com does with your data: the cookies it sets, the cookieless page timing Cloudflare measures, the three analytics services that load only after you consent, and how to withdraw consent.'
 author: 'Dejan Demonjić'
 date: '2026-10-17'
-last_modified: 2026-10-17
+last_modified: 2026-10-18
 featured_image: 'https://media.getosirion.com/og/privacy-policy.jpg'
 published: true
 slug: 'privacy-policy'
@@ -20,7 +20,7 @@ seo_properties:
   robots: 'index, follow'
 ---
 
-Last updated: 17 October 2026.
+Last updated: 18 October 2026.
 
 This page describes what the website getosirion.com does, in plain language. It describes facts about the site; it does
 not claim that the site meets any particular law or standard.
@@ -34,7 +34,7 @@ The site has no sign-in, no contact form and no newsletter, so it does not ask y
 
 ## Cookies
 
-The site sets four kinds of cookies. None of them carries your name or any other personal detail.
+The site sets five kinds of cookies. None of them carries your name or any other personal detail.
 
 | Cookie | What it is for | When it is set | Lifetime and flags |
 | --- | --- | --- | --- |
@@ -42,15 +42,27 @@ The site sets four kinds of cookies. None of them carries your name or any other
 | `osirion-preferred-theme` | Remembers whether you chose the light or the dark theme, so the page is drawn in it from the first byte. | When you choose a theme. | One year. `Path=/`, `Secure`, `SameSite=Lax`. Not `HttpOnly`, because the page script reads it. |
 | `osirion-preferred-palette` | Remembers the color palette you chose with the palette picker. | When you choose a palette. | One year. `Path=/`, `Secure`, `SameSite=Lax`. Not `HttpOnly`, because the page script reads it. |
 | `osirion_announcement_<id>` | Remembers that you closed the announcement bar at the top of the page, so it stays closed. `<id>` names the announcement. | When you close the bar. | 30 days. `Path=/`, `HttpOnly`, `Secure`, `SameSite=Lax`. |
+| `.AspNetCore.Antiforgery.<name>` | Protects the forms of the site, such as the cookie banner and the announcement bar, against requests forged by another site. It holds a random token, nothing about you. | On your first page view. | Until you close the browser. `Path=/`, `HttpOnly`, `SameSite=Strict`. |
 
-The first one records a choice you made about cookies; the other three keep a display setting you chose. The
+The first one records a choice you made about cookies; the next three keep a display setting you chose; the last one is a security measure the site needs to accept a form, so it is set without asking. The
 [security guide](/docs/security) documents the same cookies and their flags from
 the library's side.
 
 ## Analytics
 
-The site can load three analytics services. They are off until you accept analytics cookies in the cookie banner, and
-none of them loads on your first page view, while you decline, or while you have not answered.
+### Page timing by Cloudflare
+
+Every page loads Cloudflare Web Analytics, which Cloudflare adds because the site is served through its network. It is
+not covered by the cookie banner, because it stores nothing in your browser: no cookies and no local storage (checked on
+2026-10-18). Its script, from static.cloudflareinsights.com, measures how fast the page loads and sends those timings
+to getosirion.com/cdn-cgi/rum, where Cloudflare counts them. Cloudflare states that Web Analytics does not collect or
+use visitors' personal data and does not track people across the sites it serves; its
+[privacy policy](https://www.cloudflare.com/privacypolicy/) applies.
+
+### Analytics after consent
+
+The site can also load three analytics services. They are off until you accept analytics cookies in the cookie banner,
+and none of them loads on your first page view, while you decline, or while you have not answered.
 
 | Service | Run by | What it is used for |
 | --- | --- | --- |
@@ -78,8 +90,9 @@ Deleting the cookie does not delete data an analytics service already holds. Ask
 
 - **Cloudflare.** The site is served through Cloudflare, so every request passes through its network, which sees your
   IP address and the request headers. Read [Cloudflare's privacy policy](https://www.cloudflare.com/privacypolicy/).
-- **Images and video.** The site menu shows a picture from Unsplash, and the video embed page shows the thumbnail
-  of a YouTube video. Your browser requests them from those services when it shows them, and they see that request.
+- **Images and video.** The link preview cards and screenshots come from media.getosirion.com, which is stored and
+  served by Cloudflare. The site menu shows a picture from Unsplash, and the video embed page shows the thumbnail of a
+  YouTube video. Your browser requests them from those services when it shows them, and they see that request.
 - **GitHub.** The contact channels are on GitHub. What you write in an issue or pull request is public and handled by
   GitHub under [its privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
   Links to the maintainer's other sites ([demonjic.com](https://demonjic.com), [Tridesetri](https://tridesetri.com) and
