@@ -39,10 +39,51 @@ $primary-700: $blazor-700;
 $primary-800: $blazor-800;
 $primary-900: $blazor-900;
 
-// Import Bootstrap
+// Import only the parts of Bootstrap this site can render. The site's pages are Osirion components, which style
+// themselves; Bootstrap supplies the reboot, the --bs-* variables the Bootstrap adapter maps the theme tokens to, and
+// the classes components emit under the Bootstrap framework (OsirionComponentBase.Definitions.cs: buttons, forms, cards,
+// alerts, badges, accordion, dropdown, nav tabs, progress, spinners, modal, tooltip, tables). The grid, navbar,
+// pagination, list groups, toasts, carousel, offcanvas and placeholders are left out, and the utilities are only the
+// ones the pages use. A class from a left-out part renders unstyled: add its partial here when a page needs it.
+// Compile: npx sass@1.77.8 --no-source-map --style=compressed app.scss app.min.css (and without --style for app.css).
 @import "lib/bootstrap/scss/variables";
+@import "lib/bootstrap/scss/variables-dark";
+@import "lib/bootstrap/scss/maps";
 @import "lib/bootstrap/scss/mixins";
-@import "lib/bootstrap/scss/bootstrap";
+@import "lib/bootstrap/scss/utilities";
+
+// The utilities the pages use (mt-3, mt-4, mb-0, mb-4, me-2, w-100, rounded-pill), without breakpoint variants
+$utilities: (
+    "margin-top": map-merge(map-get($utilities, "margin-top"), ("responsive": false)),
+    "margin-end": map-merge(map-get($utilities, "margin-end"), ("responsive": false)),
+    "margin-bottom": map-merge(map-get($utilities, "margin-bottom"), ("responsive": false)),
+    "width": map-get($utilities, "width"),
+    "rounded": map-get($utilities, "rounded"),
+);
+
+@import "lib/bootstrap/scss/root";
+@import "lib/bootstrap/scss/reboot";
+@import "lib/bootstrap/scss/type";
+@import "lib/bootstrap/scss/images";
+@import "lib/bootstrap/scss/containers";
+@import "lib/bootstrap/scss/tables";
+@import "lib/bootstrap/scss/forms";
+@import "lib/bootstrap/scss/buttons";
+@import "lib/bootstrap/scss/transitions";
+@import "lib/bootstrap/scss/dropdown";
+@import "lib/bootstrap/scss/nav";
+@import "lib/bootstrap/scss/card";
+@import "lib/bootstrap/scss/accordion";
+@import "lib/bootstrap/scss/breadcrumb";
+@import "lib/bootstrap/scss/badge";
+@import "lib/bootstrap/scss/alert";
+@import "lib/bootstrap/scss/progress";
+@import "lib/bootstrap/scss/close";
+@import "lib/bootstrap/scss/modal";
+@import "lib/bootstrap/scss/tooltip";
+@import "lib/bootstrap/scss/spinners";
+@import "lib/bootstrap/scss/helpers";
+@import "lib/bootstrap/scss/utilities/api";
 
 // Light theme (default)
 :root,
