@@ -8,11 +8,12 @@ description: 'Three sites that run on Osirion.Blazor: Tridesetri, Hexavera and d
 author: 'Dejan Demonjić'
 date: '2026-10-17'
 last_modified: 2026-10-17
-featured_image: '/assets/images/blazor-cover.png'
+featured_image: 'https://media.getosirion.com/og/showcase.jpg'
 published: true
 slug: 'showcase'
 lang: 'en'
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/showcase.jpg'
   title: 'Sites built with Osirion.Blazor'
   description: 'Tridesetri, Hexavera and demonjic.com run on Osirion.Blazor. See each site, what it is, and which Osirion features are visible on it.'
   canonical: 'https://getosirion.com/showcase'

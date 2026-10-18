@@ -8,7 +8,7 @@ description: OsirionReveal fades or slides content into view when it first scrol
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-reveal.jpg'
 categories:
 - Components
 - Core Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionReveal: reveal on scroll for Blazor'
   description: 'OsirionReveal fades or slides content into view when it first scrolls into the viewport. Parameters, behavior and styling.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-reveal.jpg'
   canonical: 'https://getosirion.com/components/reveal'
   lang: en
   robots: index, follow
   og_title: 'OsirionReveal - Osirion.Blazor'
   og_description: 'Fade or slide content into view when it first scrolls into the viewport.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-reveal.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionReveal - Osirion.Blazor'
   twitter_description: 'Fade or slide content into view when it first scrolls into the viewport.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-reveal.jpg'
   meta_tags: {}
 ---
 

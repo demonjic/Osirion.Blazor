@@ -8,7 +8,7 @@ description: "OsirionTabs and OsirionTab show alternative content behind tabs th
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-tabs.jpg'
 categories:
 - Components
 - Core Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionTabs: tabs without JavaScript for Blazor'
   description: 'OsirionTabs and OsirionTab show alternative content behind tabs that switch without script and work with the keyboard, under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-tabs.jpg'
   canonical: 'https://getosirion.com/components/tabs'
   lang: en
   robots: index, follow
   og_title: 'OsirionTabs - Osirion.Blazor'
   og_description: 'Tabs that switch without script, with keyboard support, under static SSR.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-tabs.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionTabs - Osirion.Blazor'
   twitter_description: 'Tabs that switch without script, with keyboard support, under static SSR.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-tabs.jpg'
   meta_tags: {}
 ---
 

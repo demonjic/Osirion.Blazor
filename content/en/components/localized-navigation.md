@@ -8,7 +8,7 @@ description: "LocalizedNavigation loads the CMS directory tree for one locale an
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-18
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-localized-navigation.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'LocalizedNavigation: a content tree sidebar for Blazor'
   description: 'Load and render the CMS directory tree of one locale, with links to directories and content items and your own URL formatters.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-localized-navigation.jpg'
   canonical: 'https://getosirion.com/components/localized-navigation'
   lang: en
   robots: index, follow
   og_title: 'LocalizedNavigation - Osirion.Blazor'
   og_description: 'Loads the CMS directory tree for one locale and renders it with links to directories and content items.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-localized-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'LocalizedNavigation - Osirion.Blazor'
   twitter_description: 'Loads the CMS directory tree for one locale and renders it with links to directories and content items.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-localized-navigation.jpg'
   meta_tags: {}
 ---
 

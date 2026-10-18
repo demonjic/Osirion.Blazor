@@ -8,7 +8,7 @@ description: A site-wide announcement above the page that visitors can close wit
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-announcement-bar.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionAnnouncementBar: site announcement for Blazor'
   description: 'A site-wide Blazor announcement bar that visitors can close without script, remembered per announcement in a cookie.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-announcement-bar.jpg'
   canonical: 'https://getosirion.com/components/announcement-bar'
   lang: en
   robots: index, follow
   og_title: 'OsirionAnnouncementBar - Osirion.Blazor'
   og_description: 'A dismissible site-wide announcement that closes without script.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-announcement-bar.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionAnnouncementBar - Osirion.Blazor'
   twitter_description: 'A dismissible site-wide announcement that closes without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-announcement-bar.jpg'
   meta_tags: {}
 ---
 

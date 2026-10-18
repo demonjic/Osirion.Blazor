@@ -7,9 +7,10 @@ description: "Version 1.5.0 (April 2025) added the AddOsirionBlazor fluent regis
 slug: "osirion-blazor-v1-5-release-notes"
 categories: [Releases]
 tags: [Release Notes, Theming, Service Registration]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-osirion-blazor-v1-5-release-notes.jpg'
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-osirion-blazor-v1-5-release-notes.jpg'
   title: "Osirion.Blazor v1.5: Release Notes"
   description: "What version 1.5.0 added and changed: fluent service registration, CSS framework integration and a renamed stylesheet."
   type: "Article"

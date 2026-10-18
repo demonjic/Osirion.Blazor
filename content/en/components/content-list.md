@@ -6,7 +6,7 @@ description: "List content items from the default provider as a grid of cards, f
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-list.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -24,6 +24,8 @@ redirect_from:
 - /docs/components/cms-web/core/content-list
 custom_fields:
   group: cms-pages
+seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/components-content-list.jpg'
 ---
 
 # ContentList

@@ -7,9 +7,10 @@ description: "Serve Markdown content in several languages with Osirion.Blazor: l
 slug: "localization-for-blazor-content-sites"
 categories: [Localization]
 tags: [Localization, Translations, hreflang, CMS]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-localization-for-blazor-content-sites.jpg'
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-localization-for-blazor-content-sites.jpg'
   title: "Localization for Blazor Content Sites"
   description: "Locale folders, translation pairing, locale routes, translation links and hreflang for a multilingual Osirion.Blazor site."
   type: "Article"

@@ -8,7 +8,9 @@ tags: [GitHub, CMS, Components, Markdown]
 categories: [Documentation]
 slug: "github-cms-components"
 is_featured: false
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-github-cms-components.jpg'
+seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-github-cms-components.jpg'
 ---
 
 # The Osirion.Blazor CMS Components

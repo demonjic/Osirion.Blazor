@@ -8,7 +8,7 @@ description: An aside that stays in view while the page scrolls, with its own sc
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-sticky-sidebar.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionStickySidebar: sticky sidebar for Blazor'
   description: 'A Blazor aside that stays in view while the page scrolls, for a table of contents or docs navigation. Pure CSS, no script.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-sticky-sidebar.jpg'
   canonical: 'https://getosirion.com/components/sticky-sidebar'
   lang: en
   robots: index, follow
   og_title: 'OsirionStickySidebar - Osirion.Blazor'
   og_description: 'A sticky aside with its own scroll area for a table of contents or docs navigation.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-sticky-sidebar.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionStickySidebar - Osirion.Blazor'
   twitter_description: 'A sticky aside for a table of contents or docs navigation.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-sticky-sidebar.jpg'
   meta_tags: {}
 ---
 

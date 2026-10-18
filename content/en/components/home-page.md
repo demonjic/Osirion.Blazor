@@ -6,7 +6,7 @@ description: "HomePage renders a home page from one content item: head metadata,
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-home-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'HomePage: a home page from content for Blazor'
   description: 'HomePage renders a home page from one CMS content item: head metadata, a hero, the body, featured content and a browse section.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-home-page.jpg'
   canonical: 'https://getosirion.com/components/home-page'
   lang: en
   robots: index, follow
   og_title: 'HomePage - Osirion.Blazor'
   og_description: 'A home page from one content item: hero, Markdown body, featured content and a browse section, rendered without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-home-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'HomePage - Osirion.Blazor'
   twitter_description: 'A home page from one content item: hero, Markdown body, featured content and a browse section.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-home-page.jpg'
   meta_tags: {}
 ---
 

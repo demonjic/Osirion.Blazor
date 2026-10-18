@@ -8,7 +8,7 @@ description: A header, main and footer page shell with a sticky footer, a header
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-page-layout.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionPageLayout: page shell for Blazor'
   description: 'A header, main and footer shell for Blazor layouts with a sticky footer, a header that hides on scroll and a skip link.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-page-layout.jpg'
   canonical: 'https://getosirion.com/components/page-layout'
   lang: en
   robots: index, follow
   og_title: 'OsirionPageLayout - Osirion.Blazor'
   og_description: 'Header, main and footer shell with a sticky footer, a hide-on-scroll header and a skip link.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-page-layout.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionPageLayout - Osirion.Blazor'
   twitter_description: 'Header, main and footer shell for Blazor layouts.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-page-layout.jpg'
   meta_tags: {}
 ---
 

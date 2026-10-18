@@ -23,6 +23,8 @@ public partial class Changelog(IMarkdownProcessor markdownProcessor)
         var page = ContentItem.Create("changelog", "Changelog", html, ResourceName, "site");
         page.SetUrl("changelog");
         page.SetDescription("Every change to the Osirion.Blazor packages, release by release: what was added, changed and fixed.");
+        // The front matter of CHANGELOG.md is not read, so the page sets its link preview card here (tools/site-media).
+        page.SetFeaturedImage("https://media.getosirion.com/og/changelog.jpg");
         _page = page;
     }
 }

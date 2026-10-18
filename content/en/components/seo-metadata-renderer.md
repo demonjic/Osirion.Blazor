@@ -6,7 +6,7 @@ description: "Write the page title, meta description, canonical URL, robots, Ope
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-seo-metadata-renderer.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'SeoMetadataRenderer: head metadata and JSON-LD for Blazor'
   description: 'Write the title, description, canonical URL, robots, Open Graph, Twitter Card and JSON-LD tags for a Blazor content page with SeoMetadataRenderer.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-seo-metadata-renderer.jpg'
   canonical: 'https://getosirion.com/components/seo-metadata-renderer'
   lang: en
   robots: index, follow
   og_title: 'SeoMetadataRenderer - Osirion.Blazor'
   og_description: 'Writes the head metadata of a content page: title, canonical URL, robots, Open Graph, Twitter Card and JSON-LD.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-seo-metadata-renderer.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'SeoMetadataRenderer - Osirion.Blazor'
   twitter_description: 'Writes the head metadata of a content page: title, canonical URL, robots, Open Graph, Twitter Card and JSON-LD.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-seo-metadata-renderer.jpg'
   meta_tags: {}
 ---
 

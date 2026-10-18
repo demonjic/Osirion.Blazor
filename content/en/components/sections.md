@@ -8,7 +8,7 @@ description: Page sections from Osirion.Blazor Core, from heroes and content sec
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-sections.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor section components'
   description: 'Hero, content section, contact details, pricing table, feature comparison and steps components for Blazor pages, rendering under static SSR.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-sections.jpg'
   canonical: 'https://getosirion.com/components/sections'
   lang: en
   robots: index, follow
   og_title: 'Core Section Components - Osirion.Blazor'
   og_description: 'Full-width page sections for Blazor landing pages and articles, rendering under static SSR.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-sections.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Core Section Components - Osirion.Blazor'
   twitter_description: 'Full-width page sections for Blazor landing pages and articles, rendering under static SSR.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-sections.jpg'
   meta_tags: {}
 ---
 

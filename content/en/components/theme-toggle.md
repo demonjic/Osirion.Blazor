@@ -8,7 +8,7 @@ description: ThemeToggle renders a button that switches the site between light a
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-theme-toggle.jpg'
 categories:
 - Components
 - Theming Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'ThemeToggle: light and dark mode button for Blazor'
   description: 'A light and dark mode button for Blazor that works under static SSR and remembers the visitor choice in a cookie.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-theme-toggle.jpg'
   canonical: 'https://getosirion.com/components/theme-toggle'
   lang: en
   robots: index, follow
   og_title: 'ThemeToggle Component - Osirion.Blazor'
   og_description: 'A light and dark mode button that works under static SSR and remembers the choice in a cookie.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-theme-toggle.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ThemeToggle Component - Osirion.Blazor'
   twitter_description: 'A light and dark mode button for Blazor that works under static SSR.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-theme-toggle.jpg'
   meta_tags: {}
 ---
 

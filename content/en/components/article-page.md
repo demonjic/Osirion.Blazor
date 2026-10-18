@@ -6,7 +6,7 @@ description: "ArticlePage renders a whole article page from one content item: he
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-article-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'ArticlePage: a whole article page for Blazor'
   description: 'ArticlePage renders an article page from one CMS content item: head metadata, hero, breadcrumbs, body, related articles and a sidebar.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-article-page.jpg'
   canonical: 'https://getosirion.com/components/article-page'
   lang: en
   robots: index, follow
   og_title: 'ArticlePage - Osirion.Blazor'
   og_description: 'An article page from one content item: head metadata, hero, breadcrumbs, body, related articles and a sidebar, rendered without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-article-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ArticlePage - Osirion.Blazor'
   twitter_description: 'An article page from one content item: head metadata, hero, breadcrumbs, body, related articles and a sidebar.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-article-page.jpg'
   meta_tags: {}
 ---
 

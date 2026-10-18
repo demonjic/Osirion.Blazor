@@ -8,7 +8,7 @@ description: Every Osirion.Blazor component by module and package (Core, CMS web
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-18
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-packages.jpg'
 categories:
 - Components
 - Documentation
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'Osirion.Blazor packages: modules and their components'
   description: 'The NuGet packages Osirion.Blazor is split into, the components each one holds, and the parameters and behavior they share.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-packages.jpg'
   canonical: 'https://getosirion.com/docs/packages'
   lang: en
   robots: index, follow
   og_title: 'Osirion.Blazor packages: modules and their components'
   og_description: 'The NuGet packages Osirion.Blazor is split into and the components each one holds.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/docs-packages.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Osirion.Blazor packages: modules and their components'
   twitter_description: 'The NuGet packages Osirion.Blazor is split into and the components each one holds.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/docs-packages.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: "Documentation for Osirion.Blazor 4.0: a setup guide and the compon
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-11
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs.jpg'
 categories:
 - Documentation
 - Blazor
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'Osirion.Blazor documentation'
   description: 'Set up Osirion.Blazor and look up its components: content, layout, navigation, analytics and theming for SSR-first Blazor sites.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs.jpg'
   canonical: 'https://getosirion.com/docs'
   lang: en
   robots: index, follow
   og_title: 'Osirion.Blazor documentation'
   og_description: 'Setup guide and component reference for Osirion.Blazor.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/docs.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Osirion.Blazor documentation'
   twitter_description: 'Setup guide and component reference for Osirion.Blazor.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/docs.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: "How Osirion.Blazor sanitizes content and URLs, which components ta
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-security.jpg'
 categories:
 - Documentation
 - Guides
@@ -26,9 +26,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-security.jpg'
   title: 'Secure an Osirion.Blazor site'
   description: 'Content and URL sanitizing, raw HTML parameters, Content Security Policy, cookie flags, secrets, the contact form honeypot, rate limiting and antiforgery.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-security.jpg'
   canonical: 'https://getosirion.com/docs/security'
   robots: index, follow
 ---

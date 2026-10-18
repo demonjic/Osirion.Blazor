@@ -8,7 +8,7 @@ description: "CategoriesList renders a link to every content category with its i
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-categories-list.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'CategoriesList: category links with counts for Blazor'
   description: 'Render links to every CMS category with item counts, sorting, a limit, an active category and your own URL scheme.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-categories-list.jpg'
   canonical: 'https://getosirion.com/components/categories-list'
   lang: en
   robots: index, follow
   og_title: 'CategoriesList - Osirion.Blazor'
   og_description: 'Links to every content category with its item count, loaded from the default content provider.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-categories-list.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'CategoriesList - Osirion.Blazor'
   twitter_description: 'Links to every content category with its item count, loaded from the default content provider.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-categories-list.jpg'
   meta_tags: {}
 ---
 

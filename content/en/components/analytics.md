@@ -8,7 +8,7 @@ description: The six analytics tracker components in Osirion.Blazor.Analytics (C
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-analytics.jpg'
 categories:
 - Components
 - Analytics Components
@@ -25,20 +25,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor analytics tracker components'
   description: 'Tracker components for Clarity, Google Analytics 4, Matomo, Plausible, Umami and Yandex Metrica in Blazor, with an optional consent gate.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-analytics.jpg'
   canonical: 'https://getosirion.com/components/analytics'
   lang: en
   robots: index, follow
   og_title: 'Analytics trackers - Osirion.Blazor'
   og_description: 'One tracker component per analytics service, configured from appsettings.json and gated on cookie consent.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-analytics.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Analytics trackers - Osirion.Blazor'
   twitter_description: 'One tracker component per analytics service, configured from appsettings.json and gated on cookie consent.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-analytics.jpg'
   meta_tags: {}
 ---
 

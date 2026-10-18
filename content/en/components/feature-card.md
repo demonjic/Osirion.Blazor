@@ -8,7 +8,7 @@ description: OsirionFeatureCard renders an image, a title, a description and opt
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-feature-card.jpg'
 categories:
 - Components
 - Core Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionFeatureCard: feature cards for Blazor'
   description: 'OsirionFeatureCard renders an image, a title, a description and optional links in one card. Parameters, behavior and styling.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-feature-card.jpg'
   canonical: 'https://getosirion.com/components/feature-card'
   lang: en
   robots: index, follow
   og_title: 'OsirionFeatureCard - Osirion.Blazor'
   og_description: 'A card with an image, title, description, a read more link and category links. Renders without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-feature-card.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionFeatureCard - Osirion.Blazor'
   twitter_description: 'A card with an image, title, description, a read more link and category links.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-feature-card.jpg'
   meta_tags: {}
 ---
 

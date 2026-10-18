@@ -8,7 +8,7 @@ description: Menu renders a responsive site menu with submenus, mega menus and a
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-menu.jpg'
 categories:
 - Components
 - Navigation Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'Menu: a site menu with mega menus for Blazor'
   description: 'Menu renders a responsive site menu with submenus, mega menus and a mobile drawer that open with CSS only. Parameters of the menu and its parts.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-menu.jpg'
   canonical: 'https://getosirion.com/components/menu'
   lang: en
   robots: index, follow
   og_title: 'Menu - Osirion.Blazor'
   og_description: 'A responsive site menu with submenus and mega menus that works under static SSR without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-menu.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Menu - Osirion.Blazor'
   twitter_description: 'A responsive site menu with submenus and mega menus that works under static SSR without script.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-menu.jpg'
   meta_tags: {}
 ---
 

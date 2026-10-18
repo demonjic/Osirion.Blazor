@@ -8,7 +8,7 @@ description: A decorative CSS background layer (dots, grid, diagonal lines, hone
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-background-pattern.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionBackgroundPattern: CSS patterns for Blazor'
   description: 'A decorative CSS background layer for Blazor sections: dots, grid, diagonal lines, honeycomb, circuit and more, in the theme color.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-background-pattern.jpg'
   canonical: 'https://getosirion.com/components/background-pattern'
   lang: en
   robots: index, follow
   og_title: 'OsirionBackgroundPattern - Osirion.Blazor'
   og_description: 'Decorative CSS background patterns drawn in the theme primary color.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-background-pattern.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionBackgroundPattern - Osirion.Blazor'
   twitter_description: 'Decorative CSS background patterns for Blazor sections.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-background-pattern.jpg'
   meta_tags: {}
 ---
 

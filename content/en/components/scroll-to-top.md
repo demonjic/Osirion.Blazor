@@ -8,7 +8,7 @@ description: ScrollToTop renders a fixed back to top button that appears after a
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-scroll-to-top.jpg'
 categories:
 - Components
 - Navigation Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'ScrollToTop: a back to top button for Blazor'
   description: 'ScrollToTop renders a fixed back to top button that appears after a scroll threshold. ScrollToTopProvider renders it from settings registered once.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-scroll-to-top.jpg'
   canonical: 'https://getosirion.com/components/scroll-to-top'
   lang: en
   robots: index, follow
   og_title: 'ScrollToTop - Osirion.Blazor'
   og_description: 'A fixed back to top button that appears after a scroll threshold, configured once or per layout.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-scroll-to-top.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ScrollToTop - Osirion.Blazor'
   twitter_description: 'A fixed back to top button that appears after a scroll threshold, configured once or per layout.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-scroll-to-top.jpg'
   meta_tags: {}
 ---
 

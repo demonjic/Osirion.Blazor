@@ -8,7 +8,7 @@ description: OsirionContactInfoSection lists an address, phone numbers, email ad
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-contact-info-section.jpg'
 categories:
 - Components
 - Core Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionContactInfoSection: contact details for Blazor'
   description: 'List an address, phone numbers, email addresses and websites as links in Blazor, with labels, icons, encoding and validated URLs.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-contact-info-section.jpg'
   canonical: 'https://getosirion.com/components/contact-info-section'
   lang: en
   robots: index, follow
   og_title: 'OsirionContactInfoSection - Osirion.Blazor'
   og_description: 'Contact details as tel, mailto and website links, with labels and icons.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-contact-info-section.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionContactInfoSection - Osirion.Blazor'
   twitter_description: 'Contact details as tel, mailto and website links, with labels and icons.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-contact-info-section.jpg'
   meta_tags: {}
 ---
 

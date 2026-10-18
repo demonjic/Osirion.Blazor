@@ -7,7 +7,7 @@ description: "OsirionContentNavigation renders previous and next links between C
 author: Dejan Demonjić
 date: "2024-12-29"
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-osirion-content-navigation.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionContentNavigation: previous and next for Blazor'
   description: 'Render previous and next links between CMS items of a directory, with descriptions, icons, three layouts and your own URLs.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-osirion-content-navigation.jpg'
   canonical: 'https://getosirion.com/components/osirion-content-navigation'
   lang: en
   robots: index, follow
   og_title: 'OsirionContentNavigation - Osirion.Blazor'
   og_description: 'Previous and next links between CMS items of the same directory, found by front matter order.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-osirion-content-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionContentNavigation - Osirion.Blazor'
   twitter_description: 'Previous and next links between CMS items of the same directory, found by front matter order.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-osirion-content-navigation.jpg'
   meta_tags: {}
 ---
 

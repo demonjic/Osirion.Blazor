@@ -7,8 +7,8 @@ permalink: /templates
 description: "Three dotnet new templates start a Markdown blog, a documentation site or a product site on Osirion.Blazor, server-rendered and ready to run."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+last_modified: 2026-10-18
+featured_image: 'https://media.getosirion.com/og/templates.jpg'
 categories:
 - Documentation
 - Getting Started
@@ -22,6 +22,7 @@ lang: en
 custom_fields:
   group: getting-started
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/templates.jpg'
   title: 'Blazor templates for blogs, docs and product sites'
   description: 'dotnet new templates for a Markdown blog, a documentation site and a product site on Osirion.Blazor, with static server-side rendering.'
 ---
@@ -47,6 +48,14 @@ dotnet run
 | `osirion-blog` | A blog: the newest posts on the home page, a blog list, post pages, an About page, a 404 page, RSS, Atom and a sitemap |
 | `osirion-docs` | A documentation site: a home page, pages in `content/docs` with side navigation in front matter `order`, a table of contents, previous and next links, a 404 page and a sitemap; `/docs` leads to the first page |
 | `osirion-site` | A product or company site: a home page with a hero, three steps and the latest news, news in `content/news` with RSS, About and Contact pages, and a sitemap |
+
+What each template creates, run straight after `dotnet new`:
+
+![A blog created with dotnet new osirion-blog: the newest posts on the home page](https://media.getosirion.com/shots/templates/osirion-blog-dark.webp){width=1600 height=1000}
+
+![A documentation site created with dotnet new osirion-docs: side navigation, a page and its table of contents](https://media.getosirion.com/shots/templates/osirion-docs-dark.webp){width=1600 height=1000}
+
+![A product site created with dotnet new osirion-site: a hero, three steps and the latest news](https://media.getosirion.com/shots/templates/osirion-site-dark.webp){width=1600 height=1000}
 
 ## Options
 

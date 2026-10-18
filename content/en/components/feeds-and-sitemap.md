@@ -5,7 +5,7 @@ description: "Serve /sitemap.xml, an RSS feed at /feed.xml and an Atom feed at /
 author: Dejan Demonjić
 date: 2026-10-11
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-feeds-and-sitemap.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'Feeds and sitemap: sitemap.xml, RSS and Atom for Blazor'
   description: 'Serve /sitemap.xml, an RSS feed at /feed.xml and an Atom feed at /atom.xml from your published Blazor content with MapOsirionFeeds.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-feeds-and-sitemap.jpg'
   canonical: 'https://getosirion.com/components/feeds-and-sitemap'
   lang: en
   robots: index, follow
   og_title: 'Feeds and sitemap - Osirion.Blazor'
   og_description: 'MapOsirionFeeds serves an XML sitemap, an RSS feed and an Atom feed built from your published content.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-feeds-and-sitemap.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Feeds and sitemap - Osirion.Blazor'
   twitter_description: 'MapOsirionFeeds serves an XML sitemap, an RSS feed and an Atom feed built from your published content.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-feeds-and-sitemap.jpg'
   meta_tags: {}
 ---
 

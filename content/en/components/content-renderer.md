@@ -6,7 +6,7 @@ description: "Render only the sanitized HTML body of a content item, with code h
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-renderer.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'ContentRenderer: a sanitized content body for Blazor'
   description: 'ContentRenderer renders only the sanitized HTML body of a CMS content item, with code highlighting, inside a layout you build.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content-renderer.jpg'
   canonical: 'https://getosirion.com/components/content-renderer'
   lang: en
   robots: index, follow
   og_title: 'ContentRenderer - Osirion.Blazor'
   og_description: 'The body of a content item and nothing else: sanitized HTML with code highlighting, for your own article layout.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-content-renderer.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ContentRenderer - Osirion.Blazor'
   twitter_description: 'The body of a content item and nothing else: sanitized HTML with code highlighting.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-content-renderer.jpg'
   meta_tags: {}
 ---
 

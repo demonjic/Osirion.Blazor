@@ -6,7 +6,7 @@ description: "Load a content item by URL and lay it out with breadcrumbs, transl
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'ContentPage: an article page by URL for Blazor'
   description: 'ContentPage loads a content item by URL and lays out breadcrumbs, the article, previous and next links, a sidebar, share links and related items.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content-page.jpg'
   canonical: 'https://getosirion.com/components/content-page'
   lang: en
   robots: index, follow
   og_title: 'ContentPage - Osirion.Blazor'
   og_description: 'A whole article page loaded by URL: breadcrumbs, sidebar, share links and related items, rendered without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-content-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ContentPage - Osirion.Blazor'
   twitter_description: 'A whole article page loaded by URL: breadcrumbs, sidebar, share links and related items.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-content-page.jpg'
   meta_tags: {}
 ---
 

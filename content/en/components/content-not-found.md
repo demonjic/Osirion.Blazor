@@ -8,7 +8,7 @@ description: OsirionContentNotFound renders a 404 or empty state with an error c
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-not-found.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionContentNotFound: 404 and empty state for Blazor'
   description: 'A 404 or empty state for Blazor with an error code, message, buttons, suggested links and a contact address, rendered without script.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content-not-found.jpg'
   canonical: 'https://getosirion.com/components/content-not-found'
   lang: en
   robots: index, follow
   og_title: 'OsirionContentNotFound - Osirion.Blazor'
   og_description: 'A 404 or empty state with a message, buttons and suggested links, rendered without script.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-content-not-found.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionContentNotFound - Osirion.Blazor'
   twitter_description: 'A 404 or empty state with a message, buttons and suggested links, rendered without script.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-content-not-found.jpg'
   meta_tags: {}
 ---
 

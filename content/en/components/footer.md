@@ -8,7 +8,7 @@ description: A site footer with link sections, social links, a copyright line, l
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-footer.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionFooter: site footer for Blazor'
   description: 'A Blazor site footer with link sections, social links, a copyright line, legal links and content slots, rendered without script.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-footer.jpg'
   canonical: 'https://getosirion.com/components/footer'
   lang: en
   robots: index, follow
   og_title: 'OsirionFooter - Osirion.Blazor'
   og_description: 'Site footer with link sections, social links, copyright and legal links.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-footer.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionFooter - Osirion.Blazor'
   twitter_description: 'Site footer with link sections, social links, copyright and legal links.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-footer.jpg'
   meta_tags: {}
 ---
 

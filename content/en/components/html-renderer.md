@@ -8,7 +8,7 @@ description: "OsirionHtmlRenderer sanitizes and renders HTML in Blazor, with Pri
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-html-renderer.jpg'
 categories:
 - Components
 - Core Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionHtmlRenderer: sanitized HTML for Blazor'
   description: 'OsirionHtmlRenderer sanitizes and renders HTML in Blazor, with Prism syntax highlighting loaded with SRI, line numbers, copy buttons and live demos.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-html-renderer.jpg'
   canonical: 'https://getosirion.com/components/html-renderer'
   lang: en
   robots: index, follow
   og_title: 'OsirionHtmlRenderer - Osirion.Blazor'
   og_description: 'Sanitized HTML rendering for Blazor with optional syntax highlighting for code blocks.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-html-renderer.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionHtmlRenderer - Osirion.Blazor'
   twitter_description: 'Sanitized HTML rendering for Blazor with optional syntax highlighting for code blocks.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-html-renderer.jpg'
   meta_tags: {}
 ---
 

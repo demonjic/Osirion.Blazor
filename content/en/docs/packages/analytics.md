@@ -8,7 +8,7 @@ description: Add Clarity, GA4, Matomo, Plausible, Umami or Yandex Metrica to a B
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-packages-analytics.jpg'
 categories:
 - Components
 - Analytics Components
@@ -34,20 +34,20 @@ custom_fields:
 seo_properties:
   title: 'Analytics Trackers for Blazor - Osirion.Blazor'
   description: 'Render Clarity, Matomo, GA4, Plausible, Umami and Yandex Metrica tracking scripts from configuration in Blazor, with an optional consent gate.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-packages-analytics.jpg'
   canonical: 'https://getosirion.com/docs/packages/analytics'
   lang: en
   robots: index, follow
   og_title: 'Analytics Trackers for Blazor - Osirion.Blazor'
   og_description: 'Tracker components for Clarity, Matomo, GA4, Plausible, Umami and Yandex Metrica, configured from appsettings.json and gated on consent.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/docs-packages-analytics.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'Analytics Trackers for Blazor - Osirion.Blazor'
   twitter_description: 'Tracker components for Clarity, Matomo, GA4, Plausible, Umami and Yandex Metrica, configured from appsettings.json.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/docs-packages-analytics.jpg'
   meta_tags: {}
 ---
 

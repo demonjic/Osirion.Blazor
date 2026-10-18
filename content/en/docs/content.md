@@ -8,7 +8,7 @@ description: "How folders, _index.md and slug decide a page's address and place 
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-content.jpg'
 categories:
 - Documentation
 - Guides
@@ -24,9 +24,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-content.jpg'
   title: 'How Osirion.Blazor content is organized'
   description: 'Folders, _index.md, slug, order, drafts and redirect_from: how a Markdown file becomes a page address and an entry in lists and the sitemap.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-content.jpg'
   canonical: 'https://getosirion.com/docs/content'
   robots: index, follow
 ---

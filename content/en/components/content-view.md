@@ -6,7 +6,7 @@ description: "Render one content item as an article: title, author, date, readin
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-view.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'ContentView: one content item as an article for Blazor'
   description: 'ContentView renders one CMS content item as an article with a header, a sanitized body, categories, tags and previous and next links.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content-view.jpg'
   canonical: 'https://getosirion.com/components/content-view'
   lang: en
   robots: index, follow
   og_title: 'ContentView - Osirion.Blazor'
   og_description: 'One content item as an article: header, sanitized body, categories, tags and previous and next links, rendered without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-content-view.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ContentView - Osirion.Blazor'
   twitter_description: 'One content item as an article: header, sanitized body, categories, tags and previous and next links.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-content-view.jpg'
   meta_tags: {}
 ---
 

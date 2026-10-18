@@ -8,7 +8,7 @@ description: OsirionSubscriptionCard is a newsletter signup form that works unde
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-subscription-card.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionSubscriptionCard: a newsletter form for Blazor'
   description: 'OsirionSubscriptionCard is a newsletter signup form that works under static SSR, with validation, a honeypot and optional topic choices.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-subscription-card.jpg'
   canonical: 'https://getosirion.com/components/subscription-card'
   lang: en
   robots: index, follow
   og_title: 'OsirionSubscriptionCard - Osirion.Blazor'
   og_description: 'A newsletter signup form for static SSR: email validation, privacy consent, a honeypot and topic choices.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-subscription-card.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionSubscriptionCard - Osirion.Blazor'
   twitter_description: 'A newsletter signup form for static SSR with validation and topic choices.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-subscription-card.jpg'
   meta_tags: {}
 ---
 

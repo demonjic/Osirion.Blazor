@@ -8,7 +8,7 @@ description: "Serve a site in more than one language with Osirion.Blazor: langua
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-18
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-localization.jpg'
 categories:
 - Documentation
 - Guides
@@ -24,9 +24,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-localization.jpg'
   title: 'Localize an Osirion.Blazor content site'
   description: 'Language folders, translations, locale routes and hreflang links for a Markdown site built with Osirion.Blazor, and the limits that exist today.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-localization.jpg'
   canonical: 'https://getosirion.com/docs/localization'
   robots: index, follow
 ---

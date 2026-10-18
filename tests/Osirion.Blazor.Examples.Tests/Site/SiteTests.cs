@@ -604,6 +604,50 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
     private static HashSet<string> Ids(string html) =>
         [.. IdAttribute().Matches(html).Select(id => WebUtility.HtmlDecode(id.Groups["id"].Value))];
 
+    [Fact]
+    public async Task SitemapPages_ShareTheirOwnCardAndSizeTheirContentImages()
+    {
+        // Arrange
+        using var client = CreateClient();
+        var sitemap = await client.GetStringAsync("/sitemap.xml");
+        var failures = new List<string>();
+
+        // Act
+        foreach (Match location in SitemapLocation().Matches(sitemap))
+        {
+            var path = new Uri(location.Groups["loc"].Value).AbsolutePath;
+            var html = await GetPageAsync(client, path, failures);
+            if (html.Length == 0)
+            {
+                continue;
+            }
+
+            // tools/site-media renders one card per page and uploads it under this key.
+            var slug = path == "/" ? "home" : path.Trim('/').Replace('/', '-');
+            var card = OgImage().Match(html);
+            // A list page shares its first item's image before its own (SeoMetadataRenderer, #291), so /blog only has to
+            // share a card until that changes.
+            var expected = $"https://media.getosirion.com/og/{slug}.jpg";
+            var shared = card.Success ? card.Groups["url"].Value : string.Empty;
+            if (path == "/blog" ? !shared.StartsWith("https://media.getosirion.com/og/", StringComparison.Ordinal) : shared != expected)
+            {
+                failures.Add($"{path} shares {(card.Success ? shared : "no og:image")}");
+            }
+
+            // A screenshot without a size makes the text below it jump when it loads.
+            foreach (Match image in ContentImage().Matches(CodeSample().Replace(html, string.Empty)))
+            {
+                if (!image.Value.Contains(" width=", StringComparison.Ordinal) || !image.Value.Contains(" height=", StringComparison.Ordinal))
+                {
+                    failures.Add($"{path} has an image without width and height: {image.Value}");
+                }
+            }
+        }
+
+        // Assert
+        failures.ShouldBeEmpty();
+    }
+
     private HttpClient CreateClient() =>
         factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
@@ -671,6 +715,12 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
 
     [GeneratedRegex(""""\sid="(?<id>[^"]+)"""")]
     private static partial Regex IdAttribute();
+
+    [GeneratedRegex(""""<meta property="og:image" content="(?<url>[^"]+)"""")]
+    private static partial Regex OgImage();
+
+    [GeneratedRegex(""""<img\s[^>]*src="https://media\.getosirion\.com/shots/[^"]*"[^>]*>"""")]
+    private static partial Regex ContentImage();
 
     [GeneratedRegex("""<loc>(?<loc>[^<]+)</loc>""")]
     private static partial Regex SitemapLocation();

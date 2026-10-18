@@ -6,7 +6,7 @@ description: "NotFoundPage renders a page not found page: a title, a way home, a
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-not-found-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'NotFoundPage: a 404 page for Blazor'
   description: 'NotFoundPage renders a page not found page with a way home, a search box and suggested pages, asks search engines not to index it and answers 404.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-not-found-page.jpg'
   canonical: 'https://getosirion.com/components/not-found-page'
   lang: en
   robots: index, follow
   og_title: 'NotFoundPage - Osirion.Blazor'
   og_description: 'A page not found page with a way home, a search box and suggested pages, rendered without script and answering 404.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-not-found-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'NotFoundPage - Osirion.Blazor'
   twitter_description: 'A page not found page with a way home, a search box and suggested pages.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-not-found-page.jpg'
   meta_tags: {}
 ---
 

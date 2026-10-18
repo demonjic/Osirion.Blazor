@@ -6,7 +6,7 @@ description: "LandingPage renders a marketing page from one content item or from
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-landing-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'LandingPage: a marketing page for Blazor'
   description: 'LandingPage renders a marketing page from one CMS content item or from parameters: a hero, a body section and your own content.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-landing-page.jpg'
   canonical: 'https://getosirion.com/components/landing-page'
   lang: en
   robots: index, follow
   og_title: 'LandingPage - Osirion.Blazor'
   og_description: 'A marketing page from one content item or from parameters: a hero, a body section and your own content.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-landing-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'LandingPage - Osirion.Blazor'
   twitter_description: 'A marketing page from one content item or from parameters: a hero, a body section and your own content.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-landing-page.jpg'
   meta_tags: {}
 ---
 

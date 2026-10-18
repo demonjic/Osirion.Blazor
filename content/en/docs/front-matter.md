@@ -8,7 +8,7 @@ description: "Every front matter key Osirion.Blazor reads, with its type, defaul
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-front-matter.jpg'
 categories:
 - Documentation
 - Guides
@@ -24,9 +24,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-front-matter.jpg'
   title: 'Osirion.Blazor front matter reference'
   description: 'The front matter keys a Markdown page can carry, their types, defaults and effects, plus seo_properties, dates, custom_fields and a full example.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-front-matter.jpg'
   canonical: 'https://getosirion.com/docs/front-matter'
   robots: index, follow
 ---

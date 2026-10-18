@@ -7,8 +7,8 @@ permalink: /docs/getting-started
 description: "Create a Markdown blog with dotnet new osirion-blog and run it in three commands, or add Osirion.Blazor to an existing Blazor Web App."
 author: Dejan Demonjić
 date: 2026-10-11
-last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+last_modified: 2026-10-18
+featured_image: 'https://media.getosirion.com/og/docs-getting-started.jpg'
 categories:
 - Documentation
 - Getting Started
@@ -25,9 +25,10 @@ lang: en
 custom_fields:
   group: getting-started
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-getting-started.jpg'
   title: 'Getting started with Osirion.Blazor'
   description: 'Start a Markdown blog with the osirion-blog template in three commands, or add Osirion.Blazor to an existing Blazor Web App.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-getting-started.jpg'
   canonical: 'https://getosirion.com/docs/getting-started'
   robots: index, follow
 ---
@@ -66,6 +67,8 @@ dotnet run
 
 The browser opens on the home page. In a run with an empty NuGet package cache, the three steps took between 24 and
 35 seconds, most of it the first restore and build.
+
+![The blog the getting started commands create, running on localhost](https://media.getosirion.com/shots/docs-getting-started/first-blog-dark.webp){width=1600 height=1000}
 
 ### What you have
 

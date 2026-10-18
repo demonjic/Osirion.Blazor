@@ -1,0 +1,12 @@
+{
+  "name": "osirion-site-media",
+  "private": true,
+  "description": "Renders the Open Graph cards and screenshots of getosirion.com from manifest.json.",
+  "type": "module",
+  "scripts": {
+    "cards": "node cards.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

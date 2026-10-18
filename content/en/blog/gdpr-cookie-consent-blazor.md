@@ -8,12 +8,12 @@ tags: [Privacy, Cookie Consent, GDPR, Analytics, Blazor]
 categories: [Components, Privacy]
 slug: "gdpr-cookie-consent-blazor"
 is_featured: true
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-gdpr-cookie-consent-blazor.jpg'
 seo_properties:
   title: "Cookie Consent in Blazor with Osirion.Blazor"
   description: "A consent banner that works without JavaScript, a server-side consent cookie, and analytics that waits for the visitor's choice."
-  image: "/assets/images/blazor-cover.png"
-  og_image_url: "/assets/images/blazor-cover.png"
+  image: 'https://media.getosirion.com/og/blog-gdpr-cookie-consent-blazor.jpg'
+  og_image_url: 'https://media.getosirion.com/og/blog-gdpr-cookie-consent-blazor.jpg'
   type: "Article"
 ---
 

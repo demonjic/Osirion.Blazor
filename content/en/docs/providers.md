@@ -8,7 +8,7 @@ description: "Read Markdown content from a local folder or a GitHub repository: 
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-providers.jpg'
 categories:
 - Documentation
 - Guides
@@ -25,9 +25,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-providers.jpg'
   title: 'Osirion.Blazor content providers: folder and GitHub'
   description: 'Set up the file system and GitHub content providers in Osirion.Blazor: options and defaults, the default provider, locales, tokens and refresh.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-providers.jpg'
   canonical: 'https://getosirion.com/docs/providers'
   robots: index, follow
 ---

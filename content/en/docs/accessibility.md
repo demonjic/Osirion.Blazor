@@ -8,7 +8,7 @@ description: "What Osirion.Blazor components do for keyboard and screen reader u
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-accessibility.jpg'
 categories:
 - Documentation
 - Guides
@@ -24,9 +24,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-accessibility.jpg'
   title: 'Accessibility checks for an Osirion.Blazor site'
   description: 'What the components do for accessibility, which checks the repository runs, and how to test your own site with a keyboard, a screen reader and axe.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-accessibility.jpg'
   canonical: 'https://getosirion.com/docs/accessibility'
   robots: index, follow
 ---

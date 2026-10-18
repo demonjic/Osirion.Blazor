@@ -8,7 +8,7 @@ description: Components that list, render and describe CMS content in Osirion.Bl
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-cms-pages.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor CMS page components'
   description: 'Components that list, render and describe CMS content in Osirion.Blazor, plus the sitemap and feed endpoints.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-cms-pages.jpg'
   canonical: 'https://getosirion.com/components/cms-pages'
   lang: en
   robots: index, follow
   og_title: 'CMS Web Core Components | Osirion.Blazor'
   og_description: 'List, render and describe CMS content in Blazor with Osirion.Blazor.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-cms-pages.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'CMS Web Core Components | Osirion.Blazor'
   twitter_description: 'List, render and describe CMS content in Blazor with Osirion.Blazor.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-cms-pages.jpg'
   meta_tags: {}
 ---
 

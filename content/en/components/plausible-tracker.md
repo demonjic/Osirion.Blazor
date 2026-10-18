@@ -8,7 +8,7 @@ description: PlausibleTracker writes the Plausible Analytics script and its init
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-plausible-tracker.jpg'
 categories:
 - Components
 - Analytics Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'PlausibleTracker: Plausible Analytics script for Blazor'
   description: 'PlausibleTracker writes the Plausible Analytics script and its init call into the page head from configuration.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-plausible-tracker.jpg'
   canonical: 'https://getosirion.com/components/plausible-tracker'
   lang: en
   robots: index, follow
   og_title: 'PlausibleTracker - Osirion.Blazor'
   og_description: 'Writes the Plausible Analytics script and init call into the page head from configuration.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-plausible-tracker.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'PlausibleTracker - Osirion.Blazor'
   twitter_description: 'Writes the Plausible Analytics script and init call into the page head from configuration.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-plausible-tracker.jpg'
   meta_tags: {}
 ---
 

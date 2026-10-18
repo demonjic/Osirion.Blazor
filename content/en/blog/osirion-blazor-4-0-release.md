@@ -7,10 +7,11 @@ description: "Osirion.Blazor 4.0.0 secures the CMS admin and webhooks, sanitizes
 slug: "osirion-blazor-4-0-release"
 categories: [Releases]
 tags: [Release Notes, Security, CMS, Analytics, Theming, Migration]
-featured_image: "/assets/images/blazor-cover.png"
+featured_image: 'https://media.getosirion.com/og/blog-osirion-blazor-4-0-release.jpg'
 is_featured: false
 published: true
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/blog-osirion-blazor-4-0-release.jpg'
   title: "Osirion.Blazor 4.0 Release: Security Hardening and Fluent UI v5"
   description: "What changes in Osirion.Blazor 4.0.0, which changes break existing sites, and how to upgrade."
   type: "Article"

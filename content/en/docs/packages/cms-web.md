@@ -8,7 +8,7 @@ description: Set up Osirion.Blazor.Cms.Web and render Markdown content from GitH
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-11
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-packages-cms-web.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -30,20 +30,20 @@ custom_fields:
 seo_properties:
   title: 'CMS Web Components | Osirion.Blazor'
   description: 'Set up Osirion.Blazor.Cms.Web and render Markdown content from GitHub or the file system in Blazor.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-packages-cms-web.jpg'
   canonical: 'https://getosirion.com/docs/packages/cms-web'
   lang: en
   robots: index, follow
   og_title: 'CMS Web Components | Osirion.Blazor'
   og_description: 'Render Markdown content from GitHub or the file system in Blazor.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/docs-packages-cms-web.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'CMS Web Components | Osirion.Blazor'
   twitter_description: 'Render Markdown content from GitHub or the file system in Blazor.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/docs-packages-cms-web.jpg'
   meta_tags: {}
 ---
 

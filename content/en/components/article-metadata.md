@@ -8,7 +8,7 @@ description: "OsirionArticleMetdata shows an article's author, publish date and 
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-article-metadata.jpg'
 categories:
 - Components
 - Core Components
@@ -31,20 +31,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionArticleMetdata: author, date and read time for Blazor'
   description: 'OsirionArticleMetdata shows an article''s author, publish date and read time in one line with icons, and renders nothing when all three are empty.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-article-metadata.jpg'
   canonical: 'https://getosirion.com/components/article-metadata'
   lang: en
   robots: index, follow
   og_title: 'OsirionArticleMetdata - Osirion.Blazor'
   og_description: 'Author, publish date and read time on one line, each with an icon. Renders without script.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-article-metadata.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionArticleMetdata - Osirion.Blazor'
   twitter_description: 'Author, publish date and read time on one line, each with an icon. Renders without script.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-article-metadata.jpg'
   meta_tags: {}
 ---
 

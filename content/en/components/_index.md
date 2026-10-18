@@ -8,7 +8,7 @@ description: "Every Osirion.Blazor component, grouped by what it is for: layout,
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components.jpg'
 categories:
 - Documentation
 - Components
@@ -23,6 +23,7 @@ redirect_from:
 custom_fields:
   group: getting-started
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/components.jpg'
   title: 'Blazor components for content sites'
   description: 'Every Osirion.Blazor component on one page, grouped by what it is for, with a line on what each renders under static SSR.'
 ---

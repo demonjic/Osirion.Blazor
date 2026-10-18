@@ -8,7 +8,7 @@ description: "DirectoryNavigation renders a list of CMS directories you pass, wi
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-directory-navigation.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'DirectoryNavigation: a directory list for Blazor'
   description: 'Render a sidebar list of CMS directories with one level of subdirectories, an active directory and your own directory URLs.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-directory-navigation.jpg'
   canonical: 'https://getosirion.com/components/directory-navigation'
   lang: en
   robots: index, follow
   og_title: 'DirectoryNavigation - Osirion.Blazor'
   og_description: 'A sidebar list of CMS directories with one level of subdirectories, an active directory and click callbacks.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-directory-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'DirectoryNavigation - Osirion.Blazor'
   twitter_description: 'A sidebar list of CMS directories with one level of subdirectories, an active directory and click callbacks.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-directory-navigation.jpg'
   meta_tags: {}
 ---
 

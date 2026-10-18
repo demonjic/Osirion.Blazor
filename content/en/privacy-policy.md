@@ -8,11 +8,12 @@ description: 'What getosirion.com does with your data: the cookies it sets, the 
 author: 'Dejan Demonjić'
 date: '2026-10-17'
 last_modified: 2026-10-17
-featured_image: '/assets/images/blazor-cover.png'
+featured_image: 'https://media.getosirion.com/og/privacy-policy.jpg'
 published: true
 slug: 'privacy-policy'
 lang: 'en'
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/privacy-policy.jpg'
   title: 'Privacy policy: cookies and analytics'
   description: 'The cookies getosirion.com sets, the analytics services that load only after you accept them, and how to withdraw your consent.'
   canonical: 'https://getosirion.com/privacy-policy'

@@ -8,7 +8,7 @@ description: GA4Tracker writes the Google Analytics 4 gtag.js snippet into the p
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-ga4-tracker.jpg'
 categories:
 - Components
 - Analytics Components
@@ -27,20 +27,20 @@ custom_fields:
 seo_properties:
   title: 'GA4Tracker: Google Analytics 4 tag for Blazor'
   description: 'GA4Tracker writes the Google Analytics 4 gtag.js snippet into the page head from configuration, with Consent Mode when the consent gate is on.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-ga4-tracker.jpg'
   canonical: 'https://getosirion.com/components/ga4-tracker'
   lang: en
   robots: index, follow
   og_title: 'GA4Tracker - Osirion.Blazor'
   og_description: 'Writes the Google Analytics 4 gtag.js snippet into the page head, with Consent Mode when the consent gate is on.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-ga4-tracker.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'GA4Tracker - Osirion.Blazor'
   twitter_description: 'Writes the Google Analytics 4 gtag.js snippet into the page head, with Consent Mode when the consent gate is on.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-ga4-tracker.jpg'
   meta_tags: {}
 ---
 

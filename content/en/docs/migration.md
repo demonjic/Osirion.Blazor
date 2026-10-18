@@ -8,7 +8,7 @@ description: "Upgrade Osirion.Blazor from 3.x to 4.0 and from 4.0 to 4.1: what c
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-migration.jpg'
 categories:
 - Documentation
 - Guides
@@ -23,9 +23,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-migration.jpg'
   title: 'Migrate Osirion.Blazor from 3.x to 4.x'
   description: 'Upgrade steps from Osirion.Blazor 3.x to 4.0 and from 4.0 to 4.1, built from the changelog: breaking changes, removed members and the code to change.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-migration.jpg'
   canonical: 'https://getosirion.com/docs/migration'
   robots: index, follow
 ---

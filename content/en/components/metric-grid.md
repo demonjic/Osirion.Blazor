@@ -8,7 +8,7 @@ description: OsirionMetricGrid lays out metric cards as a responsive list, descr
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-metric-grid.jpg'
 categories:
 - Components
 - Core Components
@@ -28,20 +28,20 @@ custom_fields:
 seo_properties:
   title: 'OsirionMetricGrid: metric card grid for Blazor'
   description: 'OsirionMetricGrid lays out metric cards as a responsive list, described by records. Parameters, behavior and styling.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-metric-grid.jpg'
   canonical: 'https://getosirion.com/components/metric-grid'
   lang: en
   robots: index, follow
   og_title: 'OsirionMetricGrid - Osirion.Blazor'
   og_description: 'OsirionMetricGrid lays out metric cards as a responsive list, described by records. Parameters, behavior and styling.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-metric-grid.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'OsirionMetricGrid - Osirion.Blazor'
   twitter_description: 'OsirionMetricGrid lays out metric cards as a responsive list, described by records. Parameters, behavior and styling.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-metric-grid.jpg'
   meta_tags: {}
 ---
 

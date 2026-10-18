@@ -8,7 +8,7 @@ description: "ContentBreadcrumbs renders a breadcrumb trail from a CMS item's di
 author: "Osirion Team"
 date: 2025-01-26
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-content-breadcrumbs.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -29,20 +29,20 @@ custom_fields:
 seo_properties:
   title: 'ContentBreadcrumbs: content tree breadcrumbs for Blazor'
   description: 'Render a breadcrumb trail from a CMS item''s directories, with a home link, a current item and your own directory URLs.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-content-breadcrumbs.jpg'
   canonical: 'https://getosirion.com/components/content-breadcrumbs'
   lang: en
   robots: index, follow
   og_title: 'ContentBreadcrumbs - Osirion.Blazor'
   og_description: 'A breadcrumb trail from a CMS item''s directories: home, each parent directory and the item title.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-content-breadcrumbs.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'ContentBreadcrumbs - Osirion.Blazor'
   twitter_description: 'A breadcrumb trail from a CMS item''s directories: home, each parent directory and the item title.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-content-breadcrumbs.jpg'
   meta_tags: {}
 ---
 

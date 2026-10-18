@@ -13,6 +13,7 @@ published: true
 slug: 'homepage'
 lang: 'en'
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/home.jpg'
   title: 'Osirion.Blazor: Blazor components for content sites'
   description: 'Open-source Blazor components that render Markdown from GitHub or a local folder as blogs, docs and product sites with static server-side rendering.'
   canonical: 'https://getosirion.com'

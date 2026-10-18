@@ -7,8 +7,8 @@ permalink: /themes
 description: "Six color palettes for Osirion.Blazor, in light and dark. Try them on this site, see every color token they set, and make your own."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+last_modified: 2026-10-18
+featured_image: 'https://media.getosirion.com/og/themes.jpg'
 categories:
 - Documentation
 - Theming
@@ -23,6 +23,7 @@ lang: en
 custom_fields:
   group: theming
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/themes.jpg'
   title: 'Blazor themes and color palettes'
   description: 'Light and dark palettes for Osirion.Blazor components, checked against WCAG 2.2 AA, with every color token they set and how to make your own.'
 ---
@@ -45,6 +46,12 @@ The library's tests check every variant against WCAG 2.2: text reaches 4.5:1 on 
 indicator 3:1, and the Contrast palette holds text to 7:1. Code blocks follow the palette too. The
 [Palettes](/components/palettes) page covers setup, how a palette is applied and where the colors come from; the
 [ThemePicker](/components/theme-picker) is the list at the top of this page.
+
+The getting started page in each palette, in the dark theme and then the light one:
+
+![The getting started page of getosirion.com in the six palettes: Osirion, Commit, Editor, Studio, Studio Blue and Contrast, in the dark theme](https://media.getosirion.com/shots/themes/palettes-dark.webp){width=1600 height=774}
+
+![The getting started page of getosirion.com in the six palettes: Osirion, Commit, Editor, Studio, Studio Blue and Contrast, in the light theme](https://media.getosirion.com/shots/themes/palettes-light.webp){width=1600 height=774}
 
 ## Make your own
 

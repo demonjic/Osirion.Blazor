@@ -6,7 +6,7 @@ description: "DocumentPage renders a documentation page from one content item: s
 author: "Osirion Team"
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-document-page.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -26,20 +26,20 @@ custom_fields:
 seo_properties:
   title: 'DocumentPage: a documentation page for Blazor'
   description: 'DocumentPage renders a documentation page from one CMS content item with side navigation, a table of contents, an edit link and a pager.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-document-page.jpg'
   canonical: 'https://getosirion.com/components/document-page'
   lang: en
   robots: index, follow
   og_title: 'DocumentPage - Osirion.Blazor'
   og_description: 'A documentation page from one content item: side navigation, breadcrumbs, table of contents, edit link and previous and next links.'
-  og_image_url: '/assets/images/blazor-cover.png'
+  og_image_url: 'https://media.getosirion.com/og/components-document-page.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'DocumentPage - Osirion.Blazor'
   twitter_description: 'A documentation page from one content item: side navigation, table of contents, edit link and pager.'
-  twitter_image_url: '/assets/images/blazor-cover.png'
+  twitter_image_url: 'https://media.getosirion.com/og/components-document-page.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: 'Components that link CMS content: categories, tags, breadcrumbs, d
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/components-cms-navigation.jpg'
 categories:
 - Components
 - CMS Web Components
@@ -32,20 +32,20 @@ custom_fields:
 seo_properties:
   title: 'Blazor CMS navigation components'
   description: 'Blazor components that link CMS content: categories, tags, breadcrumbs, directories, previous and next links, series, table of contents and search.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/components-cms-navigation.jpg'
   canonical: 'https://getosirion.com/components/cms-navigation'
   lang: en
   robots: index, follow
   og_title: 'CMS navigation - Osirion.Blazor'
   og_description: 'Blazor components that link CMS content: categories, tags, breadcrumbs, directories, series, table of contents and search.'
-  og_image_url: /assets/images/blazor-cover.png
+  og_image_url: 'https://media.getosirion.com/og/components-cms-navigation.jpg'
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
   twitter_title: 'CMS navigation - Osirion.Blazor'
   twitter_description: 'Blazor components that link CMS content: categories, tags, breadcrumbs, directories, series, table of contents and search.'
-  twitter_image_url: /assets/images/blazor-cover.png
+  twitter_image_url: 'https://media.getosirion.com/og/components-cms-navigation.jpg'
   meta_tags: {}
 ---
 

@@ -8,7 +8,7 @@ description: "What Osirion.Blazor writes for search engines (metadata, canonical
 author: Dejan Demonjić
 date: 2026-10-17
 last_modified: 2026-10-17
-featured_image: /assets/images/blazor-cover.png
+featured_image: 'https://media.getosirion.com/og/docs-seo.jpg'
 categories:
 - Documentation
 - Guides
@@ -25,9 +25,10 @@ lang: en
 custom_fields:
   group: guides
 seo_properties:
+  og_image_url: 'https://media.getosirion.com/og/docs-seo.jpg'
   title: 'SEO for Osirion.Blazor sites'
   description: 'The tags, sitemap, feeds and redirects Osirion.Blazor writes, what stays your job, and a checklist for a new site. No ranking promises.'
-  image: /assets/images/blazor-cover.png
+  image: 'https://media.getosirion.com/og/docs-seo.jpg'
   canonical: 'https://getosirion.com/docs/seo'
   robots: index, follow
 ---
