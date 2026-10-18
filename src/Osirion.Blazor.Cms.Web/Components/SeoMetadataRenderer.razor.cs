@@ -43,6 +43,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private int? _ogImageHeight;
     private string? _ogImageAlt;
 
+    // The DefaultImageUrl the page passed, before the site-wide default fills the parameter: a list page's own image.
+    private string? _pageImageUrl;
+
     // Twitter Card
     private string? _twitterTitle;
     private string? _twitterDescription;
@@ -211,8 +214,11 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     public string? AuthorUrl { get; set; }
 
     /// <summary>
-    /// Gets or sets the social image used when the item has no <c>og_image_url</c>, no <c>image</c> and no featured image. A relative
-    /// address becomes absolute with the site address.
+    /// Gets or sets the social image (<c>og:image</c> and <c>twitter:image</c>). A relative address becomes absolute with
+    /// the site address. On a content page it is used when the item has no <c>og_image_url</c>, no <c>image</c> and no
+    /// featured image. On a list page (<see cref="ContentItems"/>) an image passed here is the list's own image and comes
+    /// first; then the first item's featured image; then the configured <see cref="SeoMetadataOptions.DefaultImageUrl"/>,
+    /// which as a site-wide default never replaces an item's image.
     /// </summary>
     [Parameter]
     public string? DefaultImageUrl { get; set; }
@@ -349,6 +355,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     protected override void OnParametersSet()
     {
         ResetState();
+        _pageImageUrl = _explicitParameters.Contains(nameof(DefaultImageUrl)) ? DefaultImageUrl : null;
 
         // Require either Content or ContentItems
         if (Content is null && (ContentItems is null || !ContentItems.Any())) return;
@@ -639,7 +646,8 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     {
         _ogTitle = SeoText.TruncateTitle(CollectionTitle ?? _metaTitle, 60);
         _ogDescription = SeoText.TruncateDescription(CollectionDescription ?? _metaDescription, 200);
-        _ogImage = NormalizeImageUrl(contentItems.FirstOrDefault()?.FeaturedImageUrl ?? DefaultImageUrl);
+        // The list's own image, then its first item's, then the site-wide default (issue 291).
+        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(_pageImageUrl, contentItems.FirstOrDefault()?.FeaturedImageUrl, DefaultImageUrl));
         _ogType = "website";
         _ogImageAlt = CollectionTitle ?? _siteName;
     }

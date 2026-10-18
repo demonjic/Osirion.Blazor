@@ -130,7 +130,7 @@ effect.
 | `EnableAeoOptimization` | `bool` | `true` | Whether the generated answer tags are allowed. It must be on for `EnableGeneratedFaq` to have an effect. When not set, the configured value applies, then `true`. |
 | `GenerateMultipleSchemas` | `bool` | `true` | Whether a `BreadcrumbList` is added when exactly one schema type is generated for an item with a path. Several types given in `SchemaTypes` are used as listed. When not set, the configured value applies, then `true`. |
 | `AuthorUrl` | `string?` | `null` | A page that identifies the author, such as an About page, named as the author `url` in structured data. It is meant for a site with one author: every article and every posting in a list names it. Without one the author is named alone, because a guessed address that answers 404 is worse than none. |
-| `DefaultImageUrl` | `string?` | `null` | The social image used when the item has no `og_image_url`, no `image` and no featured image. A relative address becomes absolute with the site address. |
+| `DefaultImageUrl` | `string?` | `null` | The social image (`og:image` and `twitter:image`). A relative address becomes absolute with the site address. On a content page it is used when the item has no `og_image_url`, no `image` and no featured image. On a list page (`ContentItems`) an image passed here is the list's own image and comes first; then the first item's featured image; then the configured `SeoMetadataOptions.DefaultImageUrl`, which as a site-wide default never replaces an item's image. |
 | `DefaultImageWidth` | `int?` | `null` | The width written as `og:image:width`, in pixels. When not set, the configured width applies, then `1200`. |
 | `DefaultImageHeight` | `int?` | `null` | The height written as `og:image:height`, in pixels. When not set, the configured height applies, then `630`. |
 | `OrganizationName` | `string?` | `null` | The publisher name in structured data. It is also the site name when no site name is set. |
@@ -189,8 +189,11 @@ Relative image URLs become absolute with the site's base URL.
 - **Rendering.** It renders on the server as part of the head, with no script, and recomputes everything when its
   parameters change, so a reused instance never keeps the previous page's canonical URL or structured data.
 - **List pages.** With `ContentItems`, the title is `{CollectionTitle} | {site name}` (the site name alone when there
-  is no `CollectionTitle`), `og:type` is `website`, the image is the first item's featured image or
-  `DefaultImageUrl`, and JSON-LD holds a CollectionPage (when listed in `SchemaTypes`) plus a BlogPosting per item.
+  is no `CollectionTitle`), `og:type` is `website`, and JSON-LD holds a CollectionPage (when listed in `SchemaTypes`)
+  plus a BlogPosting per item. The list shares its own image first: a `DefaultImageUrl` the page passes as a
+  parameter. Without one it shares the first item's featured image, then the site-wide `DefaultImageUrl` of
+  `AddOsirionSeoMetadata` or `Osirion:Seo`, so a site-wide default never replaces an item's image. `ContentList` passes
+  its `PageImageUrl`, or the image of the section's own `_index.md` when the list is shown at the section's address.
 - **Breadcrumbs.** A single schema type for an item with a path gets a BreadcrumbList added when
   `GenerateMultipleSchemas` is on. Several types in `SchemaTypes` are used as listed.
 - **Security.** Meta values are HTML-encoded. JSON-LD is serialized with HTML-sensitive characters escaped; custom

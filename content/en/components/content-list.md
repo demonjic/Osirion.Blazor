@@ -99,6 +99,7 @@ A search page passes the `q` query-string value through:
 | `EnableSeoMetadata` | `bool` | `true` | Renders `SeoMetadataRenderer` for the list into the page head. |
 | `PageTitle` | `string?` | `null` | Title for the head and the CollectionPage data. |
 | `PageDescription` | `string?` | `null` | Description for the head. |
+| `PageImageUrl` | `string?` | `null` | The image the list shares in its social cards. Without it the list shares the image of the section's own `_index.md` when shown at the section's address, then the first item's featured image, then the site-wide default image. `ContentListPage` passes its `ImageUrl`. |
 | `WebsiteName` | `string?` | `null` | Site name for the title, in place of the configured one. |
 | `SchemaTypes` | `SchemaType[]?` | `CollectionPage`, `BreadcrumbList` | Structured data types for the list page. |
 | `Class` | `string?` | `null` | Extra CSS classes on the root element. |
