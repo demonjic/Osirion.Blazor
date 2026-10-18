@@ -379,6 +379,43 @@ public class NavigationComponentRenderingTests : CmsWebComponentTestBase
         links.Select(a => a.GetAttribute("href")).ShouldBe(["/", "/docs", "/docs/packages"]);
     }
 
+    // Fails before the fix: the GitHub provider keeps the repository's content folder in every directory path
+    // (content/en/docs), so the locale folder was not recognized. The crumbs read "Home / en / Documentation" and the
+    // "en" crumb linked to /content/en, as on getosirion.com.
+    [Fact]
+    public void ContentBreadcrumbs_GitHubPaths_LeaveOutTheLocaleFolderAndTheContentFolder()
+    {
+        var locale = DirectoryItem.Create("l", "content/en", "en", "test");
+        locale.SetLocale("en");
+        var docs = DirectoryItem.Create("d", "content/en/docs", "Documentation", "test");
+        docs.SetUrl("/docs");
+        var guides = DirectoryItem.Create("g", "content/en/docs/guides", "Guides", "test");
+        locale.AddChild(docs);
+        docs.AddChild(guides);
+        var item = ContentItem.Create("i", "Install", "<p>x</p>", "content/en/docs/guides/install.md", "test");
+        guides.AddItem(item);
+
+        var cut = RenderStatic<ContentBreadcrumbs>(p => p.Add(c => c.Content, item));
+
+        var links = cut.FindAll("a.osirion-breadcrumbs-link");
+        links.Select(a => a.TextContent).ShouldBe(["Home", "Documentation", "Guides"]);
+        links.Select(a => a.GetAttribute("href")).ShouldBe(["/", "/docs", "/docs/guides"]);
+    }
+
+    // Fails before the fix: without localization the folder links kept the content folder (/content/blog/2024).
+    [Fact]
+    public void ContentBreadcrumbs_GitHubPathsWithoutLocalization_LinkFoldersFromTheContentRoot()
+    {
+        var blog = DirectoryItem.Create("b", "content/blog", "Blog", "test");
+        blog.SetLocale("en");
+        var year = DirectoryItem.Create("y", "content/blog/2024", "2024", "test");
+        blog.AddChild(year);
+
+        var cut = RenderStatic<ContentBreadcrumbs>(p => p.Add(c => c.Directory, year));
+
+        cut.FindAll("a.osirion-breadcrumbs-link").Select(a => a.GetAttribute("href")).ShouldBe(["/", "/blog", "/blog/2024"]);
+    }
+
     [Fact]
     public void ContentBreadcrumbs_TopLevelFolderNamedLikeAnotherLocale_IsKept()
     {
