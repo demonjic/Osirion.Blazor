@@ -245,7 +245,16 @@ public class SectionRenderingTests : CmsWebComponentTestBase
         var cut = RenderStatic<OsirionContentListSection>(p => p.Add(c => c.Items, new List<ContentItem> { english, serbian }));
 
         var times = cut.FindAll(".osirion-article-metadata-date time");
-        times.Select(time => time.TextContent).ShouldBe(["10/17/2026", "17.10.2026."]);
+        // The short date pattern comes from the platform's ICU data (macOS writes Serbian dates with spaces), so the
+        // expected text is computed from the same cultures, and each must differ from the de-DE text the server would write.
+        var date = new DateTime(2026, 10, 17);
+        string[] expected =
+        [
+            date.ToString("d", System.Globalization.CultureInfo.GetCultureInfo("en")),
+            date.ToString("d", System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS")),
+        ];
+        times.Select(time => time.TextContent).ShouldBe(expected);
+        expected.ShouldNotContain(date.ToString("d", System.Globalization.CultureInfo.GetCultureInfo("de-DE")));
         times.Select(time => time.GetAttribute("datetime")).ShouldBe(["2026-10-17", "2026-10-17"]);
     }
 

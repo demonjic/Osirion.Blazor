@@ -8,6 +8,20 @@ namespace Osirion.Blazor.Cms.Web.Tests.Components;
 
 public class ContentDatesTests
 {
+    // The cache stops growing at its cap; a locale seen after that is still looked up and still falls back.
+    [Fact]
+    public void CultureOf_MoreLocalesThanTheCacheHolds_StillResolvesEachOne()
+    {
+        using var scope = new CultureScope("de-DE");
+
+        for (var index = 0; index < 300; index++)
+        {
+            ContentDates.CultureOf($"zz-cache-{index}").Name.ShouldBe("de-DE");
+        }
+
+        ContentDates.CultureOf("fr-FR").Name.ShouldBe("fr-FR");
+    }
+
     private static readonly DateTime Date = new(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc);
 
     [Theory]

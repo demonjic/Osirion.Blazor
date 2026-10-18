@@ -152,7 +152,10 @@ public class HeroSectionRenderingTests : OsirionComponentTestBase
             .Add(p => p.PublishDate, new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc))
             .Add(p => p.Culture, System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS")));
 
-        cut.Find(".osirion-article-metadata-date time").TextContent.ShouldBe("17.10.2026.");
+        // The short date pattern comes from the platform's ICU data (macOS writes Serbian dates with spaces).
+        var serbian = new DateTime(2026, 10, 17).ToString("d", System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS"));
+        cut.Find(".osirion-article-metadata-date time").TextContent.ShouldBe(serbian);
+        serbian.ShouldNotBe(new DateTime(2026, 10, 17).ToString("d", System.Globalization.CultureInfo.InvariantCulture));
     }
 
     [Fact]

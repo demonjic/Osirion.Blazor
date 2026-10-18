@@ -41,12 +41,8 @@ public partial class OsirionArticleMetdata
     /// <summary>
     /// Formats the publish date for display
     /// </summary>
-    private string FormatPublishDate()
-    {
-        return PublishDate?.ToString(DateFormat, Culture ?? CultureInfo.CurrentCulture) ?? string.Empty;
-    }
+    private string FormatDate(DateTime date) => date.ToString(DateFormat, Culture ?? CultureInfo.CurrentCulture);
 
     // The datetime attribute needs the Gregorian ISO form whatever culture the visible date is written in.
-    private string MachineReadablePublishDate() =>
-        PublishDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? string.Empty;
+    private static string MachineReadable(DateTime date) => date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 }
