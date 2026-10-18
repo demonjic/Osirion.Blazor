@@ -96,6 +96,25 @@ public class ContentViewRenderingTests : CmsWebComponentTestBase
         cut.Find("a.osirion-content-category").GetAttribute("href").ShouldBe("/category/news");
     }
 
+    // Fails before the fix: the date followed the server's culture instead of the content's language.
+    [Theory]
+    [InlineData("sr-Latn-RS", "en", "Oct 17, 2026")]
+    [InlineData("en-US", "sr-Latn-RS", "okt 17, 2026")]
+    [InlineData("sr-Latn-RS", "not-a-culture", "okt 17, 2026")]
+    public void ContentView_Date_FollowsTheContentLanguage(string serverCulture, string locale, string expected)
+    {
+        using var culture = new CultureScope(serverCulture);
+        var item = Item("post");
+        item.SetLocale(locale);
+        item.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<ContentView>(p => p.Add(c => c.Item, item));
+
+        var time = cut.Find(".osirion-content-date time");
+        time.GetAttribute("datetime").ShouldBe("2026-10-17");
+        time.TextContent.ShouldBe(expected);
+    }
+
     [Fact]
     public void ContentView_PlainItem_RendersNoOptionalSections()
     {

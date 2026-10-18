@@ -132,7 +132,8 @@ show navigation links, set `ContentUrlFormatter`, for example `item => "/" + ite
   kept.
 - **Images.** The featured image takes its `alt` text from the `featured_image_alt` entry of the front matter's `custom_fields`, for example `custom_fields:` with `featured_image_alt: A bridge at dusk` below it. The front matter model has no property of its own for it, and a `featured_image_alt` key outside `custom_fields` is ignored. Without the entry the `alt` is empty, which marks the image as decorative, instead of repeating the title that the heading beside it already shows. From 4.0 the image loads eagerly with
   `fetchpriority="high"` and async decoding, because it is usually the largest element on an article page.
-- **Dates.** The date is `DateCreated` (the `date` front matter), formatted as `MMM d, yyyy`.
+- **Dates.** The date is `DateCreated` (the `date` front matter), formatted as `MMM d, yyyy` in the language of the
+  item's locale, or in the current culture when the locale is missing or not a culture name, inside a `<time>` element.
 - **SEO.** `ContentView` writes nothing to the page head. Render a
   [SeoMetadataRenderer](/components/seo-metadata-renderer) inside `<HeadContent>` next to it.
 

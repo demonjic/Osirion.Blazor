@@ -68,6 +68,66 @@ public class DocumentPageTests : CmsWebComponentTestBase
         cut.Find(".osirion-document-date").TextContent.ShouldContain("September 30, 2026");
     }
 
+    // Fails before the fix: the date followed the server's culture, so an English page on a Serbian server read
+    // "Last updated: oktobar 17, 2026".
+    [Fact]
+    public void DocumentPage_EnglishContentOnASerbianServer_ShowsTheEnglishMonth()
+    {
+        using var culture = new CultureScope("sr-Latn-RS");
+        _configure.SetLocale("en");
+        _configure.LastModified = new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc);
+
+        var cut = RenderDocument();
+
+        cut.Find(".osirion-document-date").TextContent.ShouldContain("Last updated: October 17, 2026");
+        var time = cut.Find(".osirion-document-date time");
+        time.GetAttribute("datetime").ShouldBe("2026-10-17");
+        time.TextContent.ShouldBe("October 17, 2026");
+    }
+
+    // Fails before the fix: the content's language was ignored in favor of the server's.
+    [Fact]
+    public void DocumentPage_SerbianContentOnAnEnglishServer_ShowsTheSerbianMonth()
+    {
+        using var culture = new CultureScope("en-US");
+        _configure.SetLocale("sr-Latn-RS");
+        _configure.LastModified = new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc);
+
+        var cut = RenderDocument();
+
+        cut.Find(".osirion-document-date time").TextContent.ShouldBe("oktobar 17, 2026");
+    }
+
+    // Fails before the fix: the English label was hard-coded, so a Serbian page read "Last updated: oktobar 17, 2026".
+    [Fact]
+    public void DocumentPage_LastUpdatedText_ReplacesTheLabel()
+    {
+        using var culture = new CultureScope("en-US");
+        _configure.SetLocale("sr-Latn-RS");
+        _configure.LastModified = new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc);
+
+        var cut = RenderDocument(p => p.Add(c => c.LastUpdatedText, "Poslednja izmena:"));
+
+        var date = cut.Find(".osirion-document-date").TextContent;
+        date.ShouldContain("Poslednja izmena: oktobar 17, 2026");
+        date.ShouldNotContain("Last updated");
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("not-a-culture")]
+    [InlineData("xx")]
+    public void DocumentPage_MissingOrUnknownLocale_UsesTheCurrentCulture(string locale)
+    {
+        using var culture = new CultureScope("sr-Latn-RS");
+        _configure.SetLocale(locale);
+        _configure.LastModified = new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc);
+
+        var cut = RenderDocument();
+
+        cut.Find(".osirion-document-date time").TextContent.ShouldBe("oktobar 17, 2026");
+    }
+
     [Fact]
     public void DocumentPage_EditUrlFormatter_LinksToTheSource()
     {

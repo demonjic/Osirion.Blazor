@@ -329,6 +329,23 @@ public class PageLevelRenderingTests : CmsWebComponentTestBase
         cut.Find("a.osirion-sidebar-category").GetAttribute("href").ShouldBe("/c/News");
     }
 
+    // Fails before the fix: the hero's date followed the server's culture instead of the article's language.
+    [Fact]
+    public void ArticlePage_EnglishArticleOnASerbianServer_ShowsTheHeroDateInEnglish()
+    {
+        using var culture = new CultureScope("sr-Latn-RS");
+        var item = Doc("article");
+        item.SetLocale("en");
+        item.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<ArticlePage>(p => p
+            .Add(c => c.Item, item)
+            .Add(c => c.ShowRelatedContent, false)
+            .Add(c => c.ShowNavigation, false));
+
+        cut.Find(".osirion-article-metadata-date time").TextContent.ShouldBe("10/17/2026");
+    }
+
     [Fact]
     public void ArticlePage_SidebarHidden_LeavesOutTheSidebarClass()
     {

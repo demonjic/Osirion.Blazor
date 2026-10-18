@@ -69,10 +69,17 @@ public partial class DocumentPage
 
     /// <summary>
     /// Whether to show the author and the "Last updated" date under the title. The date is the item's last
-    /// modification, or its publication date when there is none.
+    /// modification, or its publication date when there is none, written in the language of the document's locale.
     /// </summary>
     [Parameter]
     public bool ShowMetadata { get; set; } = true;
+
+    /// <summary>
+    /// The label in front of the date under the title, for sites written in another language than English. Defaults
+    /// to <c>Last updated:</c>.
+    /// </summary>
+    [Parameter]
+    public string LastUpdatedText { get; set; } = "Last updated:";
 
     /// <summary>
     /// Whether to show a table of contents of the document's headings, between <see cref="TocMinLevel"/> and <see

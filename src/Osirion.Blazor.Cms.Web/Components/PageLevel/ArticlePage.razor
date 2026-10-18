@@ -52,6 +52,7 @@
                          ShowMetadata
                          Author="@Item?.Author"
                          PublishDate="@(Item?.PublishDate ?? @Item?.DateCreated)"
+                         Culture="@ContentDates.CultureOf(Item)"
                          ReadTime="@Item?.ReadTimeMinutes.ToString()" />
         }
 

@@ -358,6 +358,30 @@ public class ContentPageLoadingTests : CmsWebComponentTestBase
         cut.Find("time.osirion-content-related-date").GetAttribute("datetime").ShouldBe("2026-03-04");
     }
 
+    // Fails before the fix: each related item's date followed the server's culture instead of its own language.
+    [Fact]
+    public void ContentPage_RelatedItems_EachShowTheDateInTheirOwnLanguage()
+    {
+        using var culture = new CultureScope("de-DE");
+        _provider.GetItemByUrlAsync("tagged").Returns(Item("tagged", tags: ["a"]));
+        var english = Item("english", tags: ["a"]);
+        english.SetLocale("en");
+        english.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+        var serbian = Item("serbian", tags: ["a"]);
+        serbian.SetLocale("sr-Latn-RS");
+        serbian.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+        _provider.GetItemsByQueryAsync(Arg.Any<ContentQuery>())
+            .Returns(Task.FromResult<IReadOnlyList<ContentItem>?>([english, serbian]));
+
+        var cut = RenderPage(p => p
+            .Add(c => c.Path, "tagged")
+            .Add(c => c.ShowNavigationLinks, false)
+            .Add(c => c.ShowRelatedContent, true));
+
+        cut.FindAll("time.osirion-content-related-date").Select(time => time.TextContent.Trim())
+            .ShouldBe(["Oct 17, 2026", "okt 17, 2026"]);
+    }
+
     [Theory]
     [InlineData("blog/post.md", null, null, "/blog/post")]
     [InlineData("blog/post.markdown", null, null, "/blog/post")]

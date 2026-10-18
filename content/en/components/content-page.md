@@ -173,7 +173,7 @@ item you pass in `ContentItem` and loads no neighbors, related items or default 
 - **Share links.** They open in a new tab with `rel="noopener noreferrer"`. The default links carry the page's
   absolute URL without query string or fragment.
 - **Related items.** Each shows its featured image (when it has one, with the `featured_image_alt` custom field of its front matter as alt text, or an empty one), its title as a
-  link and its date. The default link is the item's source path with `.md` removed; set `ContentUrlFormatter` when
+  link and its date, written in the language of that item's locale. The default link is the item's source path with `.md` removed; set `ContentUrlFormatter` when
   your routes differ.
 - **Security.** `FooterContent` and each `ShareLink.Icon` are written as raw HTML without sanitizing. Never put
   user-supplied or content-supplied text in them.

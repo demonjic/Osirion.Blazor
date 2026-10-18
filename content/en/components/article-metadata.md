@@ -99,7 +99,8 @@ A realistic case is a post header fed from your own model, with a long date form
 | --- | --- | --- | --- |
 | `Author` | `string?` | `null` | The author's name, shown with a person icon. Hidden when empty or white space. |
 | `PublishDate` | `DateTime?` | `null` | The publication date, shown with a calendar icon in the format of `DateFormat`. Hidden when `null`. |
-| `DateFormat` | `string?` | `"d"` | The .NET date format string for `PublishDate`, applied with the current culture. |
+| `DateFormat` | `string?` | `"d"` | The .NET date format string for `PublishDate`, applied with `Culture`. |
+| `Culture` | `CultureInfo?` | `null` | The culture `PublishDate` is written in, normally the language of the article. When `null`, the current culture is used. |
 | `ReadTime` | `string?` | `null` | The read time in minutes, shown with a clock icon. The component appends " min", so pass the number only (`5`, not `5 min`). Hidden when empty or white space. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
@@ -114,13 +115,13 @@ class matches their specificity, and your rule wins when your stylesheet loads a
 ## Behavior
 
 - Renders plain HTML under static SSR and needs no script.
-- The date is formatted on the server with the request's current culture, so set up request localization if your
-  readers expect their own date format.
+- The date is formatted on the server with `Culture`, or with the request's current culture when it is null. The CMS
+  components pass the culture of the content's locale, so dates follow the content's language.
 - Values are written as text, so Razor encodes them; HTML in `Author` shows as text.
-- The date is plain text, not a `<time>` element.
+- The date is a `<time>` element whose `datetime` attribute holds the date as `yyyy-MM-dd`.
 - The icons are inline SVG without a text alternative. The text next to each icon carries the meaning.
 - `HeroSection` uses this component when its `ShowMetadata` parameter is `true`, passing its own `Author`,
-  `PublishDate` and `ReadTime`.
+  `PublishDate`, `Culture` and `ReadTime`.
 
 ## Styling
 

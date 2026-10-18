@@ -198,6 +198,7 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
   `SiteDescription`, `TwitterSite`, `TwitterCreator`, `FacebookAppId`, `DefaultImageUrl`, `DefaultImageWidth` and `DefaultImageHeight` reach the renderer when set, and so do `AllowAiDiscovery`, `AllowAiTraining`, `AllowSearchIndexing`, `EnableGeoOptimization` and `EnableAeoOptimization` when you set them: a switch you leave out keeps the value of `AddOsirionSeoMetadata` or the `Osirion:Seo` section.
 - **Header.** `HeaderContent`, when set, replaces the hero. Otherwise, with `ShowHero` on, a hero shows the item's
   title and description, its featured image (or `HeroImageUrl`), and the author, publication date and reading time.
+  The date follows the language of the item's locale.
   With `ShowHero` off and no `HeaderContent` the page has no heading. Whenever a hero or `HeaderContent` supplies the
   title, the body leaves out its own leading `h1`, so the page keeps a single `h1`.
 - **Breadcrumbs.** `ShowBreadcrumbs` renders [Breadcrumbs](/components/breadcrumbs) from the item's `Url`, ending with

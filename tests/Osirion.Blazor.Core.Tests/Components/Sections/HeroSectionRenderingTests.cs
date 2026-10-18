@@ -143,6 +143,21 @@ public class HeroSectionRenderingTests : OsirionComponentTestBase
         cut.Find(".osirion-article-metadata-read-time").TextContent.Trim().ShouldBe("4 min");
     }
 
+    // Fails before the fix: the hero had no way to pass the page's culture to the metadata date.
+    [Fact]
+    public void HeroSection_Culture_ReachesTheMetadataDate()
+    {
+        var cut = RenderStatic<HeroSection>(parameters => parameters
+            .Add(p => p.ShowMetadata, true)
+            .Add(p => p.PublishDate, new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc))
+            .Add(p => p.Culture, System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS")));
+
+        // The short date pattern comes from the platform's ICU data (macOS writes Serbian dates with spaces).
+        var serbian = new DateTime(2026, 10, 17).ToString("d", System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS"));
+        cut.Find(".osirion-article-metadata-date time").TextContent.ShouldBe(serbian);
+        serbian.ShouldNotBe(new DateTime(2026, 10, 17).ToString("d", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
     [Fact]
     public void HeroSection_ChildContent_RendersAdditionalBlock()
     {
