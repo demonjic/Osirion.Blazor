@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Docs: getosirion.com's `/robots.txt` comes from a `robots` content item that names the sitemap and keeps crawlers off `/search`; it served the generator's default rules, which named no sitemap. The packages page at `/docs/packages` declared `/components` as its canonical address, so search engines would have dropped it; its title and description now describe the packages. Tests hold every sitemap page to its own canonical address
+
 ## [4.2.0] - 2026-10-18
 
 ### Added

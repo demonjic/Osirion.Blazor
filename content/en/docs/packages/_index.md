@@ -7,7 +7,7 @@ permalink: /docs/packages
 description: Every Osirion.Blazor component by module and package (Core, CMS web, CMS admin, Navigation, Analytics, Theming) and what they share.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-11
+last_modified: 2026-10-18
 featured_image: /assets/images/blazor-cover.png
 categories:
 - Components
@@ -28,21 +28,21 @@ lang: en
 custom_fields:
   group: packages
 seo_properties:
-  title: 'Osirion.Blazor components overview'
-  description: 'The Osirion.Blazor components grouped by module and package, with the parameters and behavior they all share.'
+  title: 'Osirion.Blazor packages: modules and their components'
+  description: 'The NuGet packages Osirion.Blazor is split into, the components each one holds, and the parameters and behavior they share.'
   image: /assets/images/blazor-cover.png
-  canonical: 'https://getosirion.com/components'
+  canonical: 'https://getosirion.com/docs/packages'
   lang: en
   robots: index, follow
-  og_title: 'Osirion.Blazor components overview'
-  og_description: 'The Osirion.Blazor components grouped by module and package.'
+  og_title: 'Osirion.Blazor packages: modules and their components'
+  og_description: 'The NuGet packages Osirion.Blazor is split into and the components each one holds.'
   og_image_url: /assets/images/blazor-cover.png
   og_type: article
   json_ld: ''
   type: Article
   twitter_card: summary_large_image
-  twitter_title: 'Osirion.Blazor components overview'
-  twitter_description: 'The Osirion.Blazor components grouped by module and package.'
+  twitter_title: 'Osirion.Blazor packages: modules and their components'
+  twitter_description: 'The NuGet packages Osirion.Blazor is split into and the components each one holds.'
   twitter_image_url: /assets/images/blazor-cover.png
   meta_tags: {}
 ---
