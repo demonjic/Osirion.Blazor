@@ -25,22 +25,25 @@ SHOTS = {
         {'shot': 'first-blog', 'source': 'template:osirion-blog', 'path': '/', 'alt': 'The blog the getting started commands create, running on localhost'},
     ],
     '/themes': [
-        {'shot': 'palettes', 'source': 'site', 'path': '/themes', 'selector': '.themes-palettes', 'themes': ['dark', 'light'], 'alt': 'The Osirion palettes side by side'},
+        # The page lists the palettes in a table; the shot shows what they do: a documentation page in each one. The home
+        # page hero would not show it, because its buttons are Bootstrap buttons that keep their compiled color.
+        {'shot': 'palettes', 'source': 'site', 'path': '/docs/getting-started', 'palettes': ['osirion', 'commit', 'editor', 'studio', 'studio-blue', 'contrast'], 'themes': ['dark', 'light'], 'alt': 'The getting started page of getosirion.com in the six palettes: Osirion, Commit, Editor, Studio, Studio Blue and Contrast'},
     ],
     '/blog/modern-hero-sections-blazor': [
         {'shot': 'hero-variants', 'source': 'site', 'path': '/components/hero-section', 'selector': '.osirion-content-demo-preview', 'alt': 'HeroSection with a side image, as the post builds it'},
     ],
     '/blog/navigation-components': [
-        {'shot': 'menu', 'source': 'site', 'path': '/components/menu', 'selector': '.osirion-content-demo-preview', 'alt': 'An Osirion menu with a dropdown open'},
+        {'shot': 'menu', 'source': 'site', 'path': '/components/menu', 'selector': '.osirion-content-demo-preview', 'hover': '.osirion-content-demo-preview .osirion-menu-item-has-submenu > a.osirion-menu-item', 'alt': 'An Osirion menu with the Docs dropdown open'},
     ],
     '/blog/gdpr-cookie-consent-blazor': [
-        {'shot': 'consent-banner', 'source': 'site', 'path': '/components/cookie-consent', 'selector': '.osirion-content-demo-preview', 'alt': 'The cookie consent banner with its categories'},
+        # The component page has no live demo of the banner; the site's own banner is the real thing.
+        {'shot': 'consent-banner', 'source': 'site', 'path': '/', 'bottom': 360, 'keepConsent': True, 'alt': 'The cookie consent banner at the bottom of getosirion.com, with Decline, Customize and Accept All'},
     ],
     '/blog/osirion-blazor-4-0-components': [
-        {'shot': 'gallery', 'source': 'site', 'path': '/components', 'selector': 'main', 'alt': 'The component gallery on getosirion.com'},
+        {'shot': 'gallery', 'source': 'site', 'path': '/components', 'selector': 'main', 'maxHeight': 900, 'alt': 'The component gallery on getosirion.com'},
     ],
     '/blog/github-cms-with-blazor': [
-        {'shot': 'blog-from-github', 'source': 'site', 'path': '/blog', 'selector': 'main', 'alt': 'A blog list rendered from Markdown files in a GitHub repository'},
+        {'shot': 'blog-from-github', 'source': 'site', 'path': '/blog', 'selector': 'main', 'maxHeight': 900, 'alt': 'A blog list rendered from Markdown files in a GitHub repository'},
     ],
 }
 

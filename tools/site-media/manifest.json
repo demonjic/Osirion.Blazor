@@ -89,9 +89,10 @@
         {
           "shot": "consent-banner",
           "source": "site",
-          "path": "/components/cookie-consent",
-          "selector": ".osirion-content-demo-preview",
-          "alt": "The cookie consent banner with its categories",
+          "path": "/",
+          "bottom": 360,
+          "keepConsent": true,
+          "alt": "The cookie consent banner at the bottom of getosirion.com, with Decline, Customize and Accept All",
           "themes": [
             "dark"
           ],
@@ -131,6 +132,7 @@
           "source": "site",
           "path": "/blog",
           "selector": "main",
+          "maxHeight": 900,
           "alt": "A blog list rendered from Markdown files in a GitHub repository",
           "themes": [
             "dark"
@@ -197,7 +199,8 @@
           "source": "site",
           "path": "/components/menu",
           "selector": ".osirion-content-demo-preview",
-          "alt": "An Osirion menu with a dropdown open",
+          "hover": ".osirion-content-demo-preview .osirion-menu-item-has-submenu > a.osirion-menu-item",
+          "alt": "An Osirion menu with the Docs dropdown open",
           "themes": [
             "dark"
           ],
@@ -223,6 +226,7 @@
           "source": "site",
           "path": "/components",
           "selector": "main",
+          "maxHeight": 900,
           "alt": "The component gallery on getosirion.com",
           "themes": [
             "dark"
@@ -1829,13 +1833,20 @@
         {
           "shot": "palettes",
           "source": "site",
-          "path": "/themes",
-          "selector": ".themes-palettes",
+          "path": "/docs/getting-started",
+          "palettes": [
+            "osirion",
+            "commit",
+            "editor",
+            "studio",
+            "studio-blue",
+            "contrast"
+          ],
           "themes": [
             "dark",
             "light"
           ],
-          "alt": "The Osirion palettes side by side",
+          "alt": "The getting started page of getosirion.com in the six palettes: Osirion, Commit, Editor, Studio, Studio Blue and Contrast",
           "key": "shots/themes/palettes-{theme}.webp"
         }
       ]
