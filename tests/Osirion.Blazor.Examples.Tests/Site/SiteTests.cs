@@ -385,18 +385,18 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
 
         // Assert
         html.ShouldContain(">Privacy policy</h1>");
-        foreach (var cookie in new[] { "osirion_cookie_consent", "osirion-preferred-theme", "osirion-preferred-palette", "osirion_announcement_" })
+        foreach (var cookie in new[] { "osirion_cookie_consent", "osirion-preferred-theme", "osirion-preferred-palette", "osirion_announcement_", ".AspNetCore.Antiforgery." })
         {
             html.ShouldContain(cookie);
         }
 
-        foreach (var service in new[] { "Google Analytics 4", "Microsoft Clarity", "Matomo", "Cloudflare" })
+        foreach (var service in new[] { "Google Analytics 4", "Microsoft Clarity", "Matomo", "Cloudflare Web Analytics" })
         {
             html.ShouldContain(service);
         }
 
         html.ShouldContain("Withdraw your consent");
-        html.ShouldContain("Last updated: 17 October 2026");
+        html.ShouldContain("Last updated: 18 October 2026");
     }
 
     [Fact]
