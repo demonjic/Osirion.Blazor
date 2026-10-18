@@ -98,6 +98,7 @@ is left out.
 | --- | --- | --- | --- |
 | `LocalizationId` | `string?` | `null` | The id an item shares with its translations. The component sets it from the item's `ContentId`; leave it unset. |
 | `Path` | `string?` | `null` | The source path of the item to load from the default provider while `Item` is not set. A later change of the path is ignored once an item is shown, so pass `Item` on a page that changes address while it is interactive. |
+| `ShowUnpublished` | `bool` | `false` | Whether to show an item that is not published (`published: false` in its front matter) when the component loads it by `Path`. Off by default: a draft then renders the not-found state and signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap and feeds leave drafts out either way. An item you pass in is shown whatever its status. |
 | `CurrentLocale` | `string` | `"en"` | The locale of the page. It is left out of the translation links, it is the locale of the default category and tag links (`/{locale}/category/{slug}`) and of the neighbor query. |
 | `OnLocaleChanged` | `EventCallback<string>` | - | Has no effect: translation links are plain links and nothing in the markup raises it. |
 | `LoadingText` | `string` | `"Loading content..."` | The text shown while the item loads, in interactive render modes only. A statically rendered response is sent once the item has loaded. |
@@ -148,6 +149,9 @@ The `Theme` and `Style` rows come from the base class. `LocalizedContentView` do
 - **Not found.** Without an item the component renders `NotFoundText` in a plain block and signals 404, as
   `ArticlePage` does: `NavigationManager.NotFound()` on .NET 10, the status code of the request on .NET 9, while the
   response has not started. Render it only when you have an item or a path to load.
+- **Drafts.** An item loaded by `Path` that is not published (`published: false`) is not served: the component
+  renders the not-found state and signals 404, as for a missing item. `ShowUnpublished` turns this off for
+  previews, and a `Item` you pass is shown as given.
 - **Security.** The body passes through the registered `IHtmlContentSanitizer` before it is written as HTML, the
   same allow-list `ContentView` uses. Titles, names and locale labels are encoded as text.
 - **Images.** The featured image takes its `alt` text from the `featured_image_alt` entry of the front matter's `custom_fields`, for example `custom_fields:` with `featured_image_alt: A bridge at dusk` below it. The front matter model has no property of its own for it, and a `featured_image_alt` key outside `custom_fields` is ignored. Without the entry the `alt` is empty, which marks the image as decorative, instead of repeating the title that the heading beside it already shows. From 4.0 the image loads eagerly with

@@ -98,6 +98,7 @@ become enums in 5.0.
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ContentPath` | `string?` | `null` | The source path of the item to load from the default provider while `Content` is not set. When nothing is found, the page shows `NotFoundText` and signals 404. |
+| `ShowUnpublished` | `bool` | `false` | Whether to show an item that is not published (`published: false` in its front matter) when the component loads it by `ContentPath`. Off by default: a draft then renders the not-found state and signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap and feeds leave drafts out either way. An item you pass in is shown whatever its status. |
 | `Content` | `ContentItem?` | `null` | The item that makes the page: its title and description are the hero's, its featured image the hero's image and its body follows the hero. Without an item the page shows what the other parameters give it. |
 | `ShowHero` | `bool` | `true` | Whether to show a hero with the title, the description, the image and up to two buttons. |
 | `HeroTitle` | `string?` | `null` | The hero's title when there is no `Content`. The item's title wins when both are set. |
@@ -183,6 +184,9 @@ written as given, so build them from values you control.
   404, as `ArticlePage` does: `NavigationManager.NotFound()` on .NET 10, the status code of the request on .NET 9,
   while the response has not started. A page built from parameters alone, without a `ContentPath`, is not a missing
   page and answers 200.
+- **Drafts.** An item loaded by `ContentPath` that is not published (`published: false`) is not served: the page
+  renders the not-found state and signals 404, as for a missing item. `ShowUnpublished` turns this off for
+  previews, and a `Content` you pass is shown as given.
 - **Security.** The body and `CustomContent` pass through `OsirionHtmlRenderer`, which sanitizes them.
 
 ## Styling
