@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components.Web;
 using Osirion.Blazor.Cms.Domain.Entities;
+using Osirion.Blazor.Cms.Domain.Interfaces.Content;
+using Osirion.Blazor.Cms.Domain.Models;
 using Osirion.Blazor.Cms.Domain.Services;
 
 namespace Osirion.Blazor.Cms.Web.Components;
@@ -13,6 +15,8 @@ public partial class LocalizedNavigation
     private ILogger<LocalizedNavigation> Logger { get; set; } = default!;
 
     [Inject] private IContentProviderManager ContentProviderManager { get; set; } = default!;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
     /// <summary>Gets or sets the heading above the tree, rendered as an <c>h3</c>. No heading when <c>null</c>.</summary>
     [Parameter]
@@ -39,8 +43,9 @@ public partial class LocalizedNavigation
     public string? CurrentLocale { get; set; }
 
     /// <summary>
-    /// Gets or sets the callback run when the locale changes. Not used in 4.0: the locale buttons never render,
-    /// because the component does not load the available locales.
+    /// Gets or sets the callback run with the locale code when a locale link is clicked in an interactive render mode.
+    /// When it is set, the click no longer navigates: the component shows that locale's tree and runs the callback.
+    /// Under static SSR it is not called.
     /// </summary>
     [Parameter]
     public EventCallback<string> OnLocaleChanged { get; set; }
@@ -93,11 +98,21 @@ public partial class LocalizedNavigation
     public Func<ContentItem, string>? ContentUrlFormatter { get; set; }
 
     /// <summary>
-    /// Gets or sets a function that turns a locale code into the text of its button. Not used in 4.0: the locale
-    /// buttons never render.
+    /// Gets or sets a function that turns a locale code into the text of its link in the locale selector. Without it,
+    /// the text is the locale's native name as the provider reports it (<c>Deutsch</c> for <c>de</c>), or the code
+    /// when the code is not a known culture.
     /// </summary>
     [Parameter]
     public Func<string, string>? LocaleNameFormatter { get; set; }
+
+    /// <summary>
+    /// Gets or sets a function that builds the link of a locale in the locale selector from its code. Without it, the
+    /// link is the current page's path with the locale as its first segment (<c>/sr/docs/intro</c> from
+    /// <c>/en/docs/intro</c> or <c>/docs/intro</c>), replacing a first segment that is already one of the available
+    /// locales.
+    /// </summary>
+    [Parameter]
+    public Func<string, string>? LocaleUrlFormatter { get; set; }
 
     /// <summary>
     /// Gets or sets whether <see cref="CurrentLocale"/> is used. When <c>false</c>, the root directories are loaded.
@@ -110,7 +125,7 @@ public partial class LocalizedNavigation
     public string AriaLabel { get; set; } = "Localized navigation";
 
     private IReadOnlyList<DirectoryItem>? Directories { get; set; }
-    private List<string> AvailableLocales { get; set; } = new();
+    private IReadOnlyList<LocaleInfo> AvailableLocales { get; set; } = [];
     private bool IsLoading { get; set; } = true;
     private bool HasMultipleLocales => AvailableLocales.Count > 1;
     private bool ShowLocaleSelector => EnableLocalization && HasMultipleLocales;
@@ -124,11 +139,6 @@ public partial class LocalizedNavigation
     /// <summary>Performs the OnParametersSet operation asynchronously.</summary>
     protected override async Task OnParametersSetAsync()
     {
-        if (string.IsNullOrWhiteSpace(CurrentLocale) && AvailableLocales.Any())
-        {
-            CurrentLocale = AvailableLocales.First();
-        }
-
         await LoadNavigationAsync();
     }
 
@@ -140,16 +150,7 @@ public partial class LocalizedNavigation
             var provider = ContentProviderManager.GetDefaultProvider();
             if (provider is not null)
             {
-                // Get available locales
-                //var localizationInfo = await provider.GetLocalizationInfoAsync();
-                //AvailableLocales = EnableLocalization
-                //    ? localizationInfo.AvailableLocales.Select(locale => locale.Code).ToList()
-                //    : new List<string> { localizationInfo.DefaultLocale };
-
-                //if (string.IsNullOrWhiteSpace(CurrentLocale) && AvailableLocales.Any())
-                //{
-                //    CurrentLocale = localizationInfo.DefaultLocale;
-                //}
+                AvailableLocales = await LoadLocalesAsync(provider);
 
                 // Get directories for the current locale or all directories if localization is disabled
                 var directories = EnableLocalization
@@ -166,6 +167,26 @@ public partial class LocalizedNavigation
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    // The selector is an extra: a provider that cannot report its locales must not take the tree down with it.
+    private async Task<IReadOnlyList<LocaleInfo>> LoadLocalesAsync(IContentProvider provider)
+    {
+        if (!EnableLocalization || provider is not ILocalizationInfoProvider localeSource)
+        {
+            return [];
+        }
+
+        try
+        {
+            var info = await localeSource.GetLocalizationInfoAsync();
+            return info.AvailableLocales;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Failed to load the available locales; the locale selector is not shown");
+            return [];
         }
     }
 
@@ -195,21 +216,59 @@ public partial class LocalizedNavigation
         return ContentUrls.ItemUrl(item, ContentUrlFormatter);
     }
 
-    private string GetLocaleName(string locale)
+    private string GetLocaleName(LocaleInfo locale)
     {
-        return LocaleNameFormatter?.Invoke(locale) ?? locale.ToUpperInvariant();
+        if (LocaleNameFormatter is { } formatter)
+        {
+            return formatter(locale.Code);
+        }
+
+        return string.IsNullOrWhiteSpace(locale.NativeName) ? locale.Code : locale.NativeName;
     }
+
+    private bool IsCurrentLocale(string locale) =>
+        string.Equals(locale, CurrentLocale, StringComparison.OrdinalIgnoreCase);
 
     private string GetLocaleButtonClass(string locale)
     {
-        return locale == CurrentLocale
+        return IsCurrentLocale(locale)
             ? "osirion-locale-button osirion-active"
             : "osirion-locale-button";
     }
 
+    // Null leaves the attribute out of the markup.
+    private string? GetLocaleAriaCurrent(string locale) => IsCurrentLocale(locale) ? "true" : null;
+
+    private string GetLocaleUrl(string locale)
+    {
+        if (LocaleUrlFormatter is { } formatter)
+        {
+            return formatter(locale);
+        }
+
+        var path = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var end = path.IndexOfAny(['?', '#']);
+        if (end >= 0)
+        {
+            path = path[..end];
+        }
+
+        path = path.Trim('/');
+        var separator = path.IndexOf('/');
+        var firstSegment = separator >= 0 ? path[..separator] : path;
+        if (firstSegment.Length > 0 && (IsCurrentLocale(firstSegment)
+            || AvailableLocales.Any(available => string.Equals(available.Code, firstSegment, StringComparison.OrdinalIgnoreCase))))
+        {
+            path = separator >= 0 ? path[(separator + 1)..] : string.Empty;
+        }
+
+        var prefix = "/" + Uri.EscapeDataString(locale);
+        return path.Length == 0 ? prefix : $"{prefix}/{path}";
+    }
+
     private async Task SwitchLocale(string locale)
     {
-        if (locale != CurrentLocale)
+        if (!IsCurrentLocale(locale))
         {
             CurrentLocale = locale;
             await OnLocaleChanged.InvokeAsync(locale);

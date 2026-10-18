@@ -21,9 +21,17 @@
             <div class="osirion-locale-selector">
                 @foreach (var locale in AvailableLocales)
                 {
-                    <button class="@GetLocaleButtonClass(locale)" @onclick="() => SwitchLocale(locale)">
-                        @GetLocaleName(locale)
-                    </button>
+                    var localeCode = locale.Code;
+                    @* A handler is written only with a callback, so without one the link navigates in every render mode. *@
+                    if (OnLocaleChanged.HasDelegate)
+                    {
+                        <a href="@GetLocaleUrl(localeCode)" hreflang="@localeCode" class="@GetLocaleButtonClass(localeCode)" aria-current="@GetLocaleAriaCurrent(localeCode)"
+                           @onclick="() => SwitchLocale(localeCode)" @onclick:preventDefault="true">@GetLocaleName(locale)</a>
+                    }
+                    else
+                    {
+                        <a href="@GetLocaleUrl(localeCode)" hreflang="@localeCode" class="@GetLocaleButtonClass(localeCode)" aria-current="@GetLocaleAriaCurrent(localeCode)">@GetLocaleName(locale)</a>
+                    }
                 }
             </div>
         }

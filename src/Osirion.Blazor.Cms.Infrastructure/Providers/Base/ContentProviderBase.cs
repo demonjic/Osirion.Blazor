@@ -2,35 +2,41 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Osirion.Blazor.Cms.Domain.Entities;
+using Osirion.Blazor.Cms.Domain.Enums;
 using Osirion.Blazor.Cms.Domain.Exceptions;
+using Osirion.Blazor.Cms.Domain.Interfaces.Content;
+using Osirion.Blazor.Cms.Domain.Models;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.Repositories;
 using Osirion.Blazor.Cms.Domain.Services;
+using System.Globalization;
 
 namespace Osirion.Blazor.Cms.Infrastructure.Providers;
 
 /// <summary>
 /// Base class for content providers (simplified - no redundant caching)
 /// </summary>
-public abstract class ContentProviderBase : IContentProvider, IDisposable
+public abstract class ContentProviderBase : IContentProvider, ILocalizationInfoProvider, IDisposable
 {
     /// <summary>Performs the Logger operation.</summary>
     protected readonly ILogger Logger;
+    private readonly ContentProviderOptions _providerOptions;
     private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ContentProviderBase"/> class.
     /// </summary>
     /// <param name="memoryCache">The memory cache (kept for compatibility but not used for main data)</param>
-    /// <param name="options">Provider options</param>
+    /// <param name="options">Provider options, read for the locales <see cref="GetLocalizationInfoAsync"/> reports</param>
     /// <param name="logger">The logger</param>
     protected ContentProviderBase(
         IMemoryCache memoryCache,
         IOptions<ContentProviderOptions> options,
         ILogger logger)
     {
-        // Keep parameters for compatibility but don't use them for main caching
+        // The memory cache is kept for compatibility but not used for main caching
         Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _providerOptions = options?.Value ?? new ContentProviderOptions();
     }
 
     /// <inheritdoc/>
@@ -131,6 +137,82 @@ public abstract class ContentProviderBase : IContentProvider, IDisposable
             Logger.LogError(ex, "Error retrieving translations dictionary for localization ID {LocalizationId}", localizationId);
             return new Dictionary<string, ContentItem>();
         }
+    }
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// The locales with content are read from the items <see cref="GetAllItemsAsync"/> returns, which the built-in
+    /// providers serve from the cache they have already loaded, so no extra request reaches the content source. A
+    /// locale is named by its .NET culture; a code that is not a predefined culture keeps the code as its names.
+    /// </remarks>
+    public virtual async Task<LocalizationInfo> GetLocalizationInfoAsync(CancellationToken cancellationToken = default)
+    {
+        var defaultLocale = _providerOptions.DefaultLocale;
+        var codes = new List<string>();
+        if (!string.IsNullOrWhiteSpace(defaultLocale))
+        {
+            codes.Add(defaultLocale);
+        }
+
+        if (_providerOptions.EnableLocalization)
+        {
+            var items = await GetAllItemsAsync(cancellationToken);
+
+            // A locale whose items are all drafts has no page a visitor could open
+            var localesWithContent = items
+                .Where(item => item.Status == ContentStatus.Published && !string.IsNullOrWhiteSpace(item.Locale))
+                .Select(item => item.Locale)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            // A list configured as empty accepts any locale folder, so the locales found are the candidates
+            var supportedLocales = _providerOptions.GetEffectiveSupportedLocales();
+            IEnumerable<string> candidates = supportedLocales.Count > 0
+                ? supportedLocales
+                : localesWithContent.Order(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var code in candidates)
+            {
+                if (localesWithContent.Contains(code) && !codes.Contains(code, StringComparer.OrdinalIgnoreCase))
+                {
+                    codes.Add(code);
+                }
+            }
+        }
+
+        var info = new LocalizationInfo { DefaultLocale = defaultLocale };
+        foreach (var code in codes)
+        {
+            info.AvailableLocales.Add(DescribeLocale(code, isDefault: string.Equals(code, defaultLocale, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        return info;
+    }
+
+    private static LocaleInfo DescribeLocale(string code, bool isDefault)
+    {
+        var locale = new LocaleInfo { Code = code, Name = code, NativeName = code, IsDefault = isDefault };
+        try
+        {
+            // Only predefined cultures, so a folder name that merely looks like a locale is not given invented names
+            var culture = CultureInfo.GetCultureInfo(code, predefinedOnly: true);
+            if (!string.IsNullOrWhiteSpace(culture.EnglishName))
+            {
+                locale.Name = culture.EnglishName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(culture.NativeName))
+            {
+                locale.NativeName = culture.NativeName;
+            }
+
+            locale.Direction = culture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+        }
+        catch (CultureNotFoundException)
+        {
+            // The code stays as its names, which a page can replace through its own formatter
+        }
+
+        return locale;
     }
 
     /// <inheritdoc/>

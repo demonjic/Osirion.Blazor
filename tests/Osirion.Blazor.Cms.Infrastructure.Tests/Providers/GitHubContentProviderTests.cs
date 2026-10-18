@@ -621,6 +621,53 @@ public class GitHubContentProviderTests : IDisposable
         await _repositoryClient.Received(1).GetTreeAsync(Arg.Any<CancellationToken>());
     }
 
+    // Fails before the change: the provider had no API that reports its locales.
+    [Fact]
+    public async Task GetLocalizationInfoAsync_LocalizationEnabled_ListsTheLocaleFoldersOfTheLoadedTree()
+    {
+        // Arrange
+        _options.EnableLocalization = true;
+        _options.DefaultLocale = "en";
+        _options.SupportedLocales = ["en", "de", "fr"];
+        _repositoryClient.GetTreeAsync(Arg.Any<CancellationToken>()).Returns(new GitHubTree
+        {
+            Entries =
+            [
+                new GitHubTreeEntry { Path = "content/en/a.md", Type = "blob", Sha = "s-a" },
+                new GitHubTreeEntry { Path = "content/fr/b.md", Type = "blob", Sha = "s-b" }
+            ]
+        });
+        ServeFile("content/en/a.md", "s-a", "a-source", new FrontMatter { Title = "Alpha" });
+        ServeFile("content/fr/b.md", "s-b", "b-source", new FrontMatter { Title = "Beta" });
+        var provider = CreateProvider();
+
+        // Act
+        await provider.GetAllItemsAsync();
+        var info = await provider.GetLocalizationInfoAsync();
+
+        // Assert
+        info.DefaultLocale.ShouldBe("en");
+        info.AvailableLocales.Select(locale => locale.Code).ShouldBe(["en", "fr"]);
+        info.AvailableLocales.Single(locale => locale.Code == "fr").NativeName.ShouldBe("français");
+        await _repositoryClient.Received(1).GetTreeAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task GetLocalizationInfoAsync_LocalizationDisabled_ListsOnlyTheDefaultLocale()
+    {
+        // Arrange
+        _options.EnableLocalization = false;
+        _options.DefaultLocale = "en";
+        var provider = CreateProvider();
+
+        // Act
+        var info = await provider.GetLocalizationInfoAsync();
+
+        // Assert
+        info.AvailableLocales.Select(locale => locale.Code).ShouldBe(["en"]);
+        info.AvailableLocales.Single().IsDefault.ShouldBeTrue();
+    }
+
     private GitHubContentProvider CreateProvider(string? providerName = null)
     {
         return new GitHubContentProvider(

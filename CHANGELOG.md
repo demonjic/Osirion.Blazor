@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Osirion.Blazor.Cms.Domain, Osirion.Blazor.Cms.Infrastructure and Osirion.Blazor.Cms.Web: content providers report their locales through the new `ILocalizationInfoProvider.GetLocalizationInfoAsync`, which `ContentProviderBase` implements for the FileSystem and GitHub providers from the content already loaded: the default locale, then each of `SupportedLocales` that has published content, with English and native names (only the default locale while `EnableLocalization` is off). `LocalizedNavigation` uses it to render its locale selector, links to the current page in each locale named by `LocaleNameFormatter` (the native name by default), with `aria-current` on the current locale and a new `LocaleUrlFormatter` for other routes; `OnLocaleChanged` runs in interactive render modes
+
 ### Fixed
 - Docs: no heading on getosirion.com starts with a number any more. 111 headings in 15 guides and posts read "1. Install the templates" or "Step 2: Add content to GitHub", which the table of contents, numbering sections itself, showed as "1.1  1. Install the templates"; the text that said "see step 3" now links the section by name. A link from the `OsirionStyles` page to `/docs/security#4-write-a-content-security-policy` pointed at no section, because heading ids never carried the number. Two site tests check every sitemap page: no heading starts with a number, and every link to a section finds it
 - Osirion.Blazor.Theming and Osirion.Blazor.Core: `OsirionStyles`, `ThemePicker` and `OsirionHtmlRenderer` link their stylesheets through the component's `Assets`, so apps that use `MapStaticAssets` get fingerprinted addresses that browsers may cache for a year. The plain addresses were cached for four hours and revalidated after that

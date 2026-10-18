@@ -7,7 +7,7 @@ permalink: /docs/localization
 description: "Serve a site in more than one language with Osirion.Blazor: language folders, translations, locale routes, hreflang links, and what does not work yet."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-18
 featured_image: /assets/images/blazor-cover.png
 categories:
 - Documentation
@@ -176,6 +176,14 @@ per language and look the page up with its locale. This page serves `/blog/hello
 `Locale` is a parameter of the page components and of `ContentList`; the page components default to `en`, so pass it
 on every page of a non-English site. A list of Serbian posts is `<ContentList Directory="blog" Locale="sr" />`.
 
+To list the languages a site has, the built-in providers implement `ILocalizationInfoProvider`: cast
+`Content.GetDefaultProvider()` to it and call `GetLocalizationInfoAsync()`. It returns the default locale first, then
+each of `SupportedLocales` that has published content, each with its English and native name; with
+`EnableLocalization` off it returns only the default locale. It reads the content the provider has already loaded.
+[LocalizedNavigation](/components/localized-navigation) uses it for its language links, which put the locale in front of
+the current path (`/sr/blog/hello`); pass its `LocaleUrlFormatter` to leave the default language without a prefix, as
+the page above routes it.
+
 ## Write the hreflang links
 
 `SeoMetadataRenderer` writes one `<link rel="alternate" hreflang="...">` for each entry of its `AlternateLanguageUrls`
@@ -228,11 +236,6 @@ same locale show up once in the list above, the first of them, and the provider 
   after 4.1.0 reads a missing `lang` from the folder or `DefaultLocale`.
 - **Addresses carry no language.** Translations share one `Url`, so routes, sitemap and redirect addresses need the
   formatters above.
-- **`LocalizedNavigation` has no language switcher.** It does not load the list of available locales, so the selector
-  never renders and `OnLocaleChanged` is never raised. Its links default to the folder and file paths of the source
-  (`/en/docs`, `/en/docs/page.md`); pass `DirectoryUrlFormatter` and `ContentUrlFormatter`. Each link also raises
-  `OnDirectorySelected` or `OnContentSelected` and cancels the browser's navigation when the component is interactive,
-  so handle those events and navigate yourself. See [LocalizedNavigation](/components/localized-navigation).
 - **`LocalizedContentView` links each translation to its own `Url`**, which is the same address for translations at
   the same path, so pass `TranslationUrlFormatter` to give each language its route.
   Its category and tag links start with the current locale, and its previous and next links use the source path by

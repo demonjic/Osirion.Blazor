@@ -5,13 +5,9 @@ namespace Osirion.Blazor.Cms.Domain.Interfaces.Content;
 /// <summary>
 /// Interface for localization-related operations on content
 /// </summary>
+/// <remarks>The locales a provider has content in are reported by <see cref="ILocalizationInfoProvider"/>.</remarks>
 public interface IContentLocalization
 {
-    ///// <summary>
-    ///// Gets localization information for the provider
-    ///// </summary>
-    //Task<LocalizationInfo> GetLocalizationInfoAsync(CancellationToken cancellationToken = default);
-
     /// <summary>
     /// Gets translations for a specific content item
     /// </summary>
