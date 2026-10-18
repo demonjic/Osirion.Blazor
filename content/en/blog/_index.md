@@ -3,12 +3,12 @@ title: "Blog"
 description: "Articles on building content sites with Osirion.Blazor: the CMS, analytics and consent, navigation, SEO and release notes."
 date: 2025-05-30
 last_modified: 2026-10-11
-featured_image: 'https://media.getosirion.com/og/blog-blog.jpg'
+featured_image: 'https://media.getosirion.com/og/blog.jpg'
 featured: true
 layout: "post"
 slug: "blog"
 seo_properties:
-  og_image_url: 'https://media.getosirion.com/og/blog-blog.jpg'
+  og_image_url: 'https://media.getosirion.com/og/blog.jpg'
 ---
 
 # Blog

@@ -70,6 +70,9 @@ def site_path(relative, data):
     if permalink:
         return '/' + permalink.strip('/') if permalink.strip('/') else '/'
     folder, name = os.path.split(relative[:-3])
+    if name == '_index':
+        # A folder's _index.md is the folder's own page, at the folder's address.
+        return '/' + folder.replace(os.sep, '/').strip('/')
     slug = data.get('slug') or name
     return '/' + '/'.join(part for part in folder.replace(os.sep, '/').split('/') + [slug] if part)
 

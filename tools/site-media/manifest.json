@@ -18,6 +18,20 @@
   },
   "pages": [
     {
+      "file": "blog/_index.md",
+      "path": "/blog",
+      "section": "Blog",
+      "title": "Blog",
+      "card": {
+        "key": "og/blog.jpg",
+        "url": "https://media.getosirion.com/og/blog.jpg",
+        "heading": "Blog",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/blog-blog.jpg",
+      "shots": []
+    },
+    {
       "file": "blog/analytics-integration-in-blazor.md",
       "path": "/blog/analytics-integration-in-blazor",
       "section": "Blog",
@@ -43,20 +57,6 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/blog-blazor-seo-ssr-ssg-checklist.jpg",
-      "shots": []
-    },
-    {
-      "file": "blog/_index.md",
-      "path": "/blog/blog",
-      "section": "Blog",
-      "title": "Blog",
-      "card": {
-        "key": "og/blog-blog.jpg",
-        "url": "https://media.getosirion.com/og/blog-blog.jpg",
-        "heading": "Blog",
-        "theme": "dark"
-      },
-      "featured_image_now": "https://media.getosirion.com/og/blog-blog.jpg",
       "shots": []
     },
     {
