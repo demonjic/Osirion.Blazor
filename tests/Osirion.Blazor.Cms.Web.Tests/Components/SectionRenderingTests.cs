@@ -211,6 +211,44 @@ public class SectionRenderingTests : CmsWebComponentTestBase
         cut.Find(".osirion-featured-post-excerpt").TextContent.ShouldBe(expected);
     }
 
+    // Fails before the fix: every post's date followed the server's culture instead of the post's own language.
+    [Fact]
+    public void FeaturedPostsSection_Posts_EachShowTheDateInTheirOwnLanguage()
+    {
+        using var culture = new CultureScope("de-DE");
+        var english = Post("English");
+        english.SetLocale("en");
+        english.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+        var serbian = Post("Serbian");
+        serbian.SetLocale("sr-Latn-RS");
+        serbian.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<FeaturedPostsSection>(p => p.Add(c => c.Posts, [english, serbian]));
+
+        var times = cut.FindAll(".osirion-featured-post-date time");
+        times.Select(time => time.TextContent).ShouldBe(["Oct 17, 2026", "okt 17, 2026"]);
+        times.Select(time => time.GetAttribute("datetime")).ShouldBe(["2026-10-17", "2026-10-17"]);
+    }
+
+    // Fails before the fix: the metadata date followed the server's culture instead of the item's own language.
+    [Fact]
+    public void OsirionContentListSection_Items_EachShowTheDateInTheirOwnLanguage()
+    {
+        using var culture = new CultureScope("de-DE");
+        var english = Post("English");
+        english.SetLocale("en");
+        english.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+        var serbian = Post("Serbian");
+        serbian.SetLocale("sr-Latn-RS");
+        serbian.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<OsirionContentListSection>(p => p.Add(c => c.Items, new List<ContentItem> { english, serbian }));
+
+        var times = cut.FindAll(".osirion-article-metadata-date time");
+        times.Select(time => time.TextContent).ShouldBe(["10/17/2026", "17.10.2026."]);
+        times.Select(time => time.GetAttribute("datetime")).ShouldBe(["2026-10-17", "2026-10-17"]);
+    }
+
     [Fact]
     public void OsirionContentListSection_NoItems_QueriesTheManagerWithTheFilters()
     {

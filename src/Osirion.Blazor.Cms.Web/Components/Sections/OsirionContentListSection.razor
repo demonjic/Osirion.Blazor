@@ -74,7 +74,7 @@
                         {
                             @if (ShowMetadata)
                             {
-                                <OsirionArticleMetdata Author="@item.Author" PublishDate="item.PublishDate" ReadTime="@item.ReadTimeMinutes.ToString()" />
+                                <OsirionArticleMetdata Author="@item.Author" PublishDate="item.PublishDate" Culture="@ContentDates.CultureOf(item)" ReadTime="@item.ReadTimeMinutes.ToString()" />
                                 @if (item.Categories.Any() && ShowCategories)
                                 {
                                     <div class="osirion-featured-post-categories">

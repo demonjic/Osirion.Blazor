@@ -127,7 +127,8 @@ of the lookup parameters.
 | `SideNavigationToggleText` | `string` | `"Documentation menu"` | The text of the button that shows the side navigation on narrow screens, where it is folded away so the page starts with its content. Defaults to `Documentation menu`. |
 | `NavigationItems` | `IReadOnlyList<DocumentNavigationItem>?` | `null` | The entries of the side navigation, with optional children. When it is null, the page lists the documents of the shown document's folder, in their `order`, linked with `ContentUrlFormatter`. |
 | `CurrentPath` | `string?` | `null` | The path or address that marks an entry of the side navigation as the current page (`aria-current="page"`), compared without regard to case with each entry's `Path` or `Url`. It defaults to the shown document's path. |
-| `ShowMetadata` | `bool` | `true` | Whether to show the author and the "Last updated" date under the title. The date is the item's last modification, or its publication date when there is none. |
+| `ShowMetadata` | `bool` | `true` | Whether to show the author and the "Last updated" date under the title. The date is the item's last modification, or its publication date when there is none, written in the language of the document's locale. |
+| `LastUpdatedText` | `string` | `"Last updated:"` | The label in front of the date under the title, for sites written in another language than English. Defaults to `Last updated:`. |
 | `ShowTableOfContents` | `bool` | `true` | Whether to show a table of contents of the document's headings, between `TocMinLevel` and `TocMaxLevel`, above the body. |
 | `TableOfContentsTitle` | `string` | `"On this page"` | The table of contents title |
 | `TocMinLevel` | `int` | `2` | The highest heading level in the table of contents: `2` starts at `h2`. |
@@ -226,7 +227,9 @@ of the lookup parameters.
   becomes `FAQPage`. `WebsiteName`, `OrganizationName`, `SiteLogoUrl`, `GenerateMultipleSchemas`, `PrevPageUrl`,
   `NextPageUrl` and `AlternateLanguageUrls` reach the renderer. `SiteDescription`, `TwitterSite`, `TwitterCreator`, `FacebookAppId`, `DefaultImageUrl`, `DefaultImageWidth` and `DefaultImageHeight` reach the renderer when set, and so do `AllowAiDiscovery`, `AllowAiTraining`, `AllowSearchIndexing`, `EnableGeoOptimization` and `EnableAeoOptimization` when you set them: a switch you leave out keeps the value of `AddOsirionSeoMetadata` or the `Osirion:Seo` section.
 - **Title.** The title is the page's `h1`; the body leaves out its own leading `h1`. `ShowMetadata` adds the author and
-  a "Last updated" date, the last modification date or, without one, the publication date.
+  a "Last updated" date, the last modification date or, without one, the publication date. The date is written in
+  the language of the document's locale, or in the current culture when the locale is missing or not a culture name,
+  inside a `<time>` element; `LastUpdatedText` sets the label in front of it.
 - **Table of contents.** `ShowTableOfContents` builds it from the headings between `TocMinLevel` and `TocMaxLevel`
   and places it above the body.
 - **Edit link.** The link to the source of the page appears only when `EditUrlFormatter` returns an address. It opens

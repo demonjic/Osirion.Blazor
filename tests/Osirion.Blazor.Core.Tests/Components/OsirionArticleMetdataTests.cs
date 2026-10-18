@@ -54,6 +54,47 @@ public class OsirionArticleMetdataTests : OsirionComponentTestBase
         }
     }
 
+    // Fails before the fix: the date always followed the current culture, so a host could not write an English
+    // article's date in English on a server running under another culture.
+    [Fact]
+    public void ArticleMetadata_Culture_WritesTheDateInThatCulture()
+    {
+        var originalCulture = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+        try
+        {
+            var cut = RenderStatic<OsirionArticleMetdata>(parameters => parameters
+                .Add(p => p.PublishDate, PublishDate)
+                .Add(p => p.DateFormat, "MMMM d, yyyy")
+                .Add(p => p.Culture, CultureInfo.GetCultureInfo("en-US")));
+
+            cut.Find(".osirion-article-metadata-date").TextContent.Trim().ShouldBe("March 14, 2026");
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = originalCulture;
+        }
+    }
+
+    // Fails before the fix: the date was bare text, with no machine-readable form.
+    [Fact]
+    public void ArticleMetadata_Date_IsATimeElementWithTheIsoDate()
+    {
+        var originalCulture = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("th-TH");
+        try
+        {
+            var cut = RenderStatic<OsirionArticleMetdata>(parameters => parameters
+                .Add(p => p.PublishDate, PublishDate));
+
+            cut.Find(".osirion-article-metadata-date time").GetAttribute("datetime").ShouldBe("2026-03-14");
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = originalCulture;
+        }
+    }
+
     [Theory]
     [InlineData("Ada", null, ".osirion-article-metadata-author")]
     [InlineData(null, "3", ".osirion-article-metadata-read-time")]

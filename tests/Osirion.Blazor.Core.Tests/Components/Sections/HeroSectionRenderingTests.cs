@@ -143,6 +143,18 @@ public class HeroSectionRenderingTests : OsirionComponentTestBase
         cut.Find(".osirion-article-metadata-read-time").TextContent.Trim().ShouldBe("4 min");
     }
 
+    // Fails before the fix: the hero had no way to pass the page's culture to the metadata date.
+    [Fact]
+    public void HeroSection_Culture_ReachesTheMetadataDate()
+    {
+        var cut = RenderStatic<HeroSection>(parameters => parameters
+            .Add(p => p.ShowMetadata, true)
+            .Add(p => p.PublishDate, new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc))
+            .Add(p => p.Culture, System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS")));
+
+        cut.Find(".osirion-article-metadata-date time").TextContent.ShouldBe("17.10.2026.");
+    }
+
     [Fact]
     public void HeroSection_ChildContent_RendersAdditionalBlock()
     {

@@ -107,8 +107,8 @@
                                     <h3 class="osirion-content-related-item-title">
                                         <a href="@GetContentUrl(item)">@item.Title</a>
                                     </h3>
-                                    <time class="osirion-content-related-date" datetime="@item.DateCreated.ToString("yyyy-MM-dd")">
-                                        @item.DateCreated.ToString("MMM d, yyyy")
+                                    <time class="osirion-content-related-date" datetime="@ContentDates.MachineReadable(item.DateCreated)">
+                                        @ContentDates.Format(item.DateCreated, "MMM d, yyyy", item)
                                     </time>
                                 </div>
                             </article>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Osirion.Blazor.Core.Utils;
 
@@ -151,6 +152,13 @@ public partial class HeroSection
     /// </summary>
     [Parameter]
     public DateTime? PublishDate { get; set; }
+
+    /// <summary>
+    /// The culture <see cref="PublishDate"/> is written in, normally the language of the page. When
+    /// <see langword="null"/>, the current culture is used.
+    /// </summary>
+    [Parameter]
+    public CultureInfo? Culture { get; set; }
 
     /// <summary>
     /// The reading time in minutes, shown in the metadata line when <see cref="ShowMetadata"/> is on: <c>6</c> is
