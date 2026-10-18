@@ -398,3 +398,44 @@ html.osirion-bootstrap-integration[data-theme="light"],
         background-color: var(--bs-primary-bg-subtle, #cfe2ff);
         border-radius: var(--bs-border-radius-pill, 50rem);
     }
+
+    /* Palette buttons. Bootstrap compiles its primary buttons' colors from Sass $primary into the --bs-btn-*
+       variables on .btn-primary, which no theme token reaches, so a palette changed the whole page but its buttons.
+       While a palette is active they take its action colors; without one, the site's Bootstrap theme decides.
+       :where() keeps the palette attribute out of the specificity: .btn.btn-primary (0,2,0) beats Bootstrap's
+       .btn-primary (0,1,0) whichever stylesheet loads first, and a site rule of the same weight loaded later wins.
+       Disabled keeps the action color, as Bootstrap does, and fades it with Bootstrap's disabled opacity; the
+       palette's disabled color is already faded and would fade twice. */
+    :where(:root[data-osirion-palette]) .btn.btn-primary {
+        --bs-btn-color: var(--osirion-action-primary-text);
+        --bs-btn-bg: var(--osirion-action-primary);
+        --bs-btn-border-color: var(--osirion-action-primary);
+        --bs-btn-hover-color: var(--osirion-action-primary-text);
+        --bs-btn-hover-bg: var(--osirion-action-primary-hover);
+        --bs-btn-hover-border-color: var(--osirion-action-primary-hover);
+        --bs-btn-active-color: var(--osirion-action-primary-text);
+        --bs-btn-active-bg: var(--osirion-action-primary-active);
+        --bs-btn-active-border-color: var(--osirion-action-primary-active);
+        --bs-btn-disabled-color: var(--osirion-action-primary-text);
+        --bs-btn-disabled-bg: var(--osirion-action-primary);
+        --bs-btn-disabled-border-color: var(--osirion-action-primary);
+        /* Bootstrap's ring is the button color at half strength; the palette names its own focus color. */
+        --bs-btn-focus-box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--osirion-action-primary-focus) 50%, transparent);
+    }
+
+    /* The outline button's resting text sits on the page, so it takes the link color, which every palette holds to
+       its text target on the page backgrounds; the action color reads only 3.64:1 to 4.09:1 there in three dark
+       palettes. Filled on hover and when pressed, it matches the primary button. */
+    :where(:root[data-osirion-palette]) .btn.btn-outline-primary {
+        --bs-btn-color: var(--osirion-link-color);
+        --bs-btn-border-color: var(--osirion-action-primary);
+        --bs-btn-hover-color: var(--osirion-action-primary-text);
+        --bs-btn-hover-bg: var(--osirion-action-primary-hover);
+        --bs-btn-hover-border-color: var(--osirion-action-primary-hover);
+        --bs-btn-active-color: var(--osirion-action-primary-text);
+        --bs-btn-active-bg: var(--osirion-action-primary-active);
+        --bs-btn-active-border-color: var(--osirion-action-primary-active);
+        --bs-btn-disabled-color: var(--osirion-link-color);
+        --bs-btn-disabled-border-color: var(--osirion-action-primary);
+        --bs-btn-focus-box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--osirion-action-primary-focus) 50%, transparent);
+    }
