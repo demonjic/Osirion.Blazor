@@ -2,10 +2,12 @@
 
 @* ContentPage loads the item itself from the URL it is given, so it needs no provider code. It renders a whole article
    page, shown here in a scrolling frame. The defaults for category, tag and related links build addresses this site
-   does not route, so the formatters point them at its pages. Share links are off because they point to other sites. *@
+   does not route, so the formatters point them at its pages. Share links are off because they point to other sites.
+   The documentation page has its own h1, so the article title is an h2. *@
 <div style="max-height: 32rem; overflow: auto; padding: 1rem; border: 1px solid var(--osirion-border-color, #d1d5db); border-radius: 0.5rem;"
      tabindex="0" role="region" aria-label="The release notes page in a ContentPage">
     <ContentPage Path="blog/osirion-blazor-v1-5-release-notes"
+                 HeadingLevel="2"
                  ShowRelatedContent="true"
                  ContentUrlFormatter="@(item => "/" + item.Url)"
                  CategoryUrlFormatter="@(category => "/category/" + Slug(category))"

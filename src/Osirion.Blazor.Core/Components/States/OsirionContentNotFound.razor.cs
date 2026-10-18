@@ -14,10 +14,21 @@ public partial class OsirionContentNotFound
     public string? ErrorCode { get; set; } = "404";
 
     /// <summary>
-    /// Gets or sets the heading, rendered as an <c>h1</c>.
+    /// Gets or sets the heading, rendered at <see cref="HeadingLevel"/>.
     /// </summary>
     [Parameter]
     public string Title { get; set; } = "Page Not Found";
+
+    /// <summary>
+    /// Gets or sets the level of the heading that holds the title, <c>1</c> to <c>6</c> (<c>h1</c> to <c>h6</c>). It
+    /// defaults to <c>1</c>, the page's own heading; set <c>2</c> for an empty state inside a page that has its own
+    /// <c>h1</c>, so the page keeps a single one. A value outside the range is moved to the nearest level. The title
+    /// keeps its look at every level.
+    /// </summary>
+    [Parameter]
+    public int HeadingLevel { get; set; } = 1;
+
+    private int TitleLevel => Math.Clamp(HeadingLevel, 1, 6);
 
     /// <summary>
     /// Gets or sets the paragraph under the title. Empty hides it.

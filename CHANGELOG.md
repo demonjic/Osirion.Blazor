@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Osirion.Blazor.Core and Osirion.Blazor.Cms.Web: `OsirionContentNotFound` and `ContentPage` take a `HeadingLevel` parameter, `1` to `6` like `ContentView`, so a page that embeds them keeps a single `h1`. It defaults to `1`, which changes nothing for existing pages; a value outside the range moves to the nearest level, and the title keeps its look. The getosirion.com demos on `/components/content-not-found` and `/components/content-page` set `2`, so those pages no longer have two `h1` elements
+
 ### Fixed
 - Docs: no heading on getosirion.com starts with a number any more. 111 headings in 15 guides and posts read "1. Install the templates" or "Step 2: Add content to GitHub", which the table of contents, numbering sections itself, showed as "1.1  1. Install the templates"; the text that said "see step 3" now links the section by name. A link from the `OsirionStyles` page to `/docs/security#4-write-a-content-security-policy` pointed at no section, because heading ids never carried the number. Two site tests check every sitemap page: no heading starts with a number, and every link to a section finds it
 - Osirion.Blazor.Theming and Osirion.Blazor.Core: `OsirionStyles`, `ThemePicker` and `OsirionHtmlRenderer` link their stylesheets through the component's `Assets`, so apps that use `MapStaticAssets` get fingerprinted addresses that browsers may cache for a year. The plain addresses were cached for four hours and revalidated after that
