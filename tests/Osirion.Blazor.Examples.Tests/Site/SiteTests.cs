@@ -441,6 +441,50 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
         body.ShouldNotContain((char)0x2013);
     }
 
+    [Fact]
+    public async Task RobotsTxt_ServesTheContentRulesAsPlainTextAndNamesTheSitemap()
+    {
+        // Arrange
+        using var client = CreateClient();
+
+        // Act
+        using var response = await client.GetAsync(new Uri("/robots.txt", UriKind.Relative));
+        var robots = await response.Content.ReadAsStringAsync();
+        var sitemap = await client.GetStringAsync("/sitemap.xml");
+
+        // Assert
+        response.Content.Headers.ContentType?.MediaType.ShouldBe("text/plain");
+        robots.ShouldContain("Sitemap: https://getosirion.com/sitemap.xml");
+        robots.ShouldContain("Disallow: /search");
+        robots.ShouldNotContain("---");
+        robots.ShouldNotContain("<p>");
+        sitemap.ShouldNotContain("/robots</loc>");
+    }
+
+    [Fact]
+    public async Task SitemapPages_DeclareTheirOwnAddressAsCanonical()
+    {
+        // Arrange
+        using var client = CreateClient();
+        var sitemap = await client.GetStringAsync("/sitemap.xml");
+        var failures = new List<string>();
+
+        // Act
+        foreach (Match location in SitemapLocation().Matches(sitemap))
+        {
+            var path = new Uri(location.Groups["loc"].Value).AbsolutePath;
+            var html = await GetPageAsync(client, path, failures);
+            var canonical = Canonical().Match(html);
+            if (html.Length > 0 && (!canonical.Success || new Uri(canonical.Groups["href"].Value).AbsolutePath.TrimEnd('/') != path.TrimEnd('/')))
+            {
+                failures.Add($"{path} declares {(canonical.Success ? canonical.Groups["href"].Value : "no canonical")}");
+            }
+        }
+
+        // Assert
+        failures.ShouldBeEmpty();
+    }
+
     private HttpClient CreateClient() =>
         factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
@@ -489,6 +533,12 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
 (?<key>[a-z0-9-]+)?
 ```", RegexOptions.Multiline)]
     private static partial Regex DemoBlock();
+
+    [GeneratedRegex("""<loc>(?<loc>[^<]+)</loc>""")]
+    private static partial Regex SitemapLocation();
+
+    [GeneratedRegex(""""<link rel="canonical" href="(?<href>[^"]+)"""")]
+    private static partial Regex Canonical();
 
     [GeneratedRegex("""<nav class="osirion-document-sidenav".*?</nav>""", RegexOptions.Singleline)]
     private static partial Regex SideNavigation();
