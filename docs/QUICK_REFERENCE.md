@@ -670,5 +670,4 @@ builder.Services.AddOsirionStyle(CssFramework.Bootstrap);
 
 - ?? Check the [Documentation](../README.md)
 - ?? Report issues on [GitHub](https://github.com/demonjic/Osirion.Blazor/issues)
-- ?? Ask questions in [Discussions](https://github.com/demonjic/Osirion.Blazor/discussions)
 - ?? Contact via the [Repository](https://github.com/demonjic/Osirion.Blazor)

@@ -86,6 +86,13 @@ A sidebar outline limited to the second and third heading levels:
 }
 ```
 
+The entries are numbered by default, `1.` and `1.2`. Set `ShowNumbers="false"` for a plain list, for example when
+your headings already carry their own numbers:
+
+```razor
+<TableOfContents Content="@Item?.Content" ShowNumbers="false" />
+```
+
 The built-in `ArticlePage` and `DocumentPage` render it the same way, under their own `TableOfContentsTitle`
 heading.
 
@@ -101,6 +108,7 @@ heading.
 | `MaxDepth` | `int` | `3` | The nesting limit. `1` lists only top-level headings; the list renders at most two levels, so a value above `2` changes nothing. |
 | `EmptyText` | `string` | `"No headings found."` | The text shown when no heading matches. |
 | `TrackActiveHeading` | `bool` | `true` | Whether the link to the section being read is marked as it scrolls by: it gets the `osirion-toc-link-active` class and `aria-current="location"`. A script does it, so without script the contents work as plain links. |
+| `ShowNumbers` | `bool` | `true` | Whether the entries are numbered, `1.` for a top-level heading and `1.2` for one under it. When on, the root element gets the `osirion-toc-numbered` class that the numbering rules hang on; `false` renders a plain list. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -139,6 +147,7 @@ captured but not rendered.
 | Class | Element |
 | --- | --- |
 | `osirion-table-of-contents` | The `nav`, plus your `Class` |
+| `osirion-toc-numbered` | Also on the `nav` while `ShowNumbers` is on; the counters and number markers apply only under it |
 | `osirion-toc-list` | The top-level `ol` |
 | `osirion-toc-sublist` | The nested `ol` |
 | `osirion-toc-item` | Each `li`, together with `osirion-toc-level-{n}` for the heading level |
