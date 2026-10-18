@@ -75,6 +75,14 @@ status can be 429), and the site keeps showing older content.
 [No content is shown](#no-content-is-shown-and-the-log-says-access-token-is-required)). Reduce how often content is
 refreshed: with a webhook, refreshes happen on push, and polling (`EnablePolling`) is off by default.
 
+If the token is set and the limit is still reached, look for the warning `GitHub redirected requests for the
+configured repository ...` just before it. The repository in `Owner` and `Repository` was renamed or transferred, and
+GitHub answers each request with a redirect to its new location. Releases up to 4.2.0 followed that redirect without
+the token, so every request counted against the server's shared limit of 60 an hour. The provider now follows a
+redirect with the token while it stays on the API host, never sends the token to another host, and logs the warning
+once with the old name and the new location. Set `Owner` and `Repository` to the new name, so the requests stop
+taking the detour.
+
 ## A page returns 404 on the server but works on your machine
 
 **Symptom.** A page of the local folder provider works in development and answers 404 after a deployment, or a page
