@@ -6,7 +6,9 @@
 @inject IOptions<ThemingOptions>? Options
 @inject IThemeService ThemeService
 
-<link rel="stylesheet" href="_content/Osirion.Blazor.Core/css/index.min.css" />
+@* Assets gives the fingerprinted address under MapStaticAssets, which browsers may cache for a year; without it the
+   path is used as written. *@
+<link rel="stylesheet" href="@Assets["_content/Osirion.Blazor.Core/css/index.min.css"]" />
 @* No link to Osirion.Blazor.Core.bundle.scp.css: the host's {App}.styles.css imports every referenced package's scoped
    styles, so a link here downloaded that bundle (about 250 KB) a second time under another address. *@
 
@@ -15,14 +17,14 @@
     @* No adapter for this framework: an empty href would make the browser fetch the page itself as a stylesheet. *@
     @if (!string.IsNullOrEmpty(ThemeAdapter()))
     {
-        <link rel="stylesheet" href="@ThemeAdapter()" />
+        <link rel="stylesheet" href="@Assets[ThemeAdapter()]" />
     }
-    <link rel="stylesheet" href="_content/Osirion.Blazor.Theming/css/index.min.css" />
+    <link rel="stylesheet" href="@Assets["_content/Osirion.Blazor.Theming/css/index.min.css"]" />
 }
 
 @if (LinksPalettes)
 {
-    <link rel="stylesheet" href="@PaletteStylesheet" data-osirion-palettes />
+    <link rel="stylesheet" href="@Assets[PaletteStylesheet]" data-osirion-palettes />
 }
 
 @if (!string.IsNullOrWhiteSpace(CustomVariables))

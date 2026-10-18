@@ -485,6 +485,34 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
         failures.ShouldBeEmpty();
     }
 
+    [Fact]
+    public async Task Page_LinksPackageStylesheetsAndTheBlazorScriptByFingerprintedAddresses()
+    {
+        // Arrange
+        using var client = CreateClient();
+
+        // Act
+        var html = await client.GetStringAsync("/components/breadcrumbs");
+        var stylesheets = Stylesheet().Matches(html).Select(link => link.Groups["href"].Value).ToList();
+
+        // Assert
+        // A fingerprinted address changes with the file, so MapStaticAssets serves it as immutable for a year.
+        stylesheets.ShouldContain(href => FingerprintedPackageStylesheet("Osirion.Blazor.Core/css/index.min").IsMatch(href));
+        stylesheets.ShouldContain(href => FingerprintedPackageStylesheet("Osirion.Blazor.Core/css/osirion-html-renderer.min").IsMatch(href));
+        stylesheets.ShouldContain(href => FingerprintedPackageStylesheet("Osirion.Blazor.Theming/css/adapters/bootstrap-adapter.min").IsMatch(href));
+        stylesheets.ShouldContain(href => FingerprintedPackageStylesheet("Osirion.Blazor.Theming/css/index.min").IsMatch(href));
+        stylesheets.ShouldNotContain(href => href.EndsWith(".min.css", StringComparison.Ordinal) && href.StartsWith("_content/", StringComparison.Ordinal));
+        html.ShouldNotContain("src=\"_framework/blazor.web.js\"");
+        foreach (var href in stylesheets.Where(href => href.StartsWith("_content/", StringComparison.Ordinal)))
+        {
+            using var response = await client.GetAsync(new Uri("/" + href, UriKind.Relative));
+            response.StatusCode.ShouldBe(HttpStatusCode.OK, href);
+        }
+    }
+
+    private static Regex FingerprintedPackageStylesheet(string path) =>
+        new("^_content/" + Regex.Escape(path) + @"\.[a-z0-9]{10}\.css$", RegexOptions.None, TimeSpan.FromSeconds(1));
+
     private HttpClient CreateClient() =>
         factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
@@ -533,6 +561,9 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
 (?<key>[a-z0-9-]+)?
 ```", RegexOptions.Multiline)]
     private static partial Regex DemoBlock();
+
+    [GeneratedRegex(""""<link rel="stylesheet" href="(?<href>[^"]+)"""")]
+    private static partial Regex Stylesheet();
 
     [GeneratedRegex("""<loc>(?<loc>[^<]+)</loc>""")]
     private static partial Regex SitemapLocation();

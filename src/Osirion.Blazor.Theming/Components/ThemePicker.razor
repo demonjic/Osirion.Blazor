@@ -7,7 +7,7 @@
     <span class="osirion-theme-picker-label">@Label</span>
     <select class="osirion-theme-picker-select"
             data-osirion-palette-picker
-            data-osirion-palettes-href="@OsirionStyles.PaletteStylesheet">
+            data-osirion-palettes-href="@Assets[OsirionStyles.PaletteStylesheet]">
         @foreach (var palette in OfferedPalettes)
         {
             <option value="@palette.ToId()" selected="@(palette == SelectedPalette)">@OptionText(palette)</option>

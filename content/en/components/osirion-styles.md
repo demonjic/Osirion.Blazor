@@ -52,7 +52,7 @@ seo_properties:
 
 `OsirionStyles` links the stylesheets that Osirion components need, adds the adapter for your CSS framework, and
 applies the visitor's light or dark theme while the page loads. Render it once per page, in your main layout. It writes
-stylesheets and a script into the page head, not visible markup, so this page has no live demo.
+stylesheet links and a script where you place it, not visible markup, so this page has no live demo.
 
 Package `Osirion.Blazor.Theming`, namespace `Osirion.Blazor.Theming.Components`. [Source on GitHub](https://github.com/demonjic/Osirion.Blazor/blob/master/src/Osirion.Blazor.Theming/Components/OsirionStyles.razor).
 
@@ -123,6 +123,10 @@ The component renders, in this order:
    `_content/Osirion.Blazor.Theming/css/adapters/` and `_content/Osirion.Blazor.Theming/css/index.min.css`.
 3. `_content/Osirion.Blazor.Theming/css/palettes.min.css` when a [palette](/components/palettes) is in use
    or `AllowPaletteSelection` is set.
+
+   The links in steps 1 to 3 go through the component's `Assets`, so an app that serves static files with
+   `MapStaticAssets` gets fingerprinted addresses (`index.min.or0ndbmg4q.css`), which browsers may cache for a year
+   and which change when the package does. With `UseStaticFiles` the paths are written as shown.
 4. A `<style>` block with the `CustomVariables` parameter, then one with the configured `CustomVariables`. Both are
    `:root` rules, so for the same property the configured value, written last, wins.
 5. `osirion-styles.js`, loaded through the BlazorJSComponents script loader, which `AddOsirion` registers (a site

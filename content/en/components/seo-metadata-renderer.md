@@ -197,9 +197,9 @@ Relative image URLs become absolute with the site's base URL.
   `json_ld` from front matter is parsed and re-serialized the same way, and ignored with a logged warning when it is
   not a JSON object or array. When custom `json_ld` is used, `SchemaTypes` generates nothing.
 - **Fixed values.** It also writes `generator`, `referrer`, `language` and `content-language`, the robots value
-  again as `googlebot` and `bingbot`, publish date, last-modified and reading time meta tags, `dns-prefetch` and
-  `preconnect` hints for the site's own address. The Article schema gives the author a `url` only when `AuthorUrl` is
-  set.
+  again as `googlebot` and `bingbot`, and publish date, last-modified and reading time meta tags. It writes no
+  `dns-prefetch` or `preconnect` hint for the site's own address: the browser is already connected to it. The Article
+  schema gives the author a `url` only when `AuthorUrl` is set.
 - **Crawler tags.** With `AllowAiDiscovery` on, it writes `ai-crawling`, `ai-training` and a tag per named crawler;
   with it off, the opt-out versions. The component makes no AI content declaration of its own: write
   `ai-content-declaration` (or `ai-content-detection`, `ai-content-attribution`) under `meta_tags` in the front matter, or under `AdditionalMetaTags` in `SeoMetadataOptions` for every page. These names are not a standard either.
