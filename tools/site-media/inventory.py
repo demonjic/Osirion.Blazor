@@ -119,6 +119,17 @@ for directory, _, files in os.walk(CONTENT):
             ],
         })
 
+# Pages the site renders without a content file of their own.
+entries.append({
+    'file': 'CHANGELOG.md',
+    'path': '/changelog',
+    'section': 'Osirion.Blazor',
+    'title': 'Changelog',
+    'card': {'key': 'og/changelog.jpg', 'url': f'{MEDIA_HOST}/og/changelog.jpg', 'heading': 'Changelog: every Osirion.Blazor release', 'theme': 'dark'},
+    'featured_image_now': '',
+    'shots': [],
+})
+
 entries.sort(key=lambda entry: (entry['section'], entry['path']))
 missing = sorted(set(SHOTS) - {entry['path'] for entry in entries})
 manifest = {

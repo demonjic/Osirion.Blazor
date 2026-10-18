@@ -1713,6 +1713,20 @@
       "shots": []
     },
     {
+      "file": "CHANGELOG.md",
+      "path": "/changelog",
+      "section": "Osirion.Blazor",
+      "title": "Changelog",
+      "card": {
+        "key": "og/changelog.jpg",
+        "url": "https://media.getosirion.com/og/changelog.jpg",
+        "heading": "Changelog: every Osirion.Blazor release",
+        "theme": "dark"
+      },
+      "featured_image_now": "",
+      "shots": []
+    },
+    {
       "file": "contact.md",
       "path": "/contact",
       "section": "Osirion.Blazor",
