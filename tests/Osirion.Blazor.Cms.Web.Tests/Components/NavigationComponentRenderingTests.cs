@@ -416,6 +416,20 @@ public class NavigationComponentRenderingTests : CmsWebComponentTestBase
         cut.FindAll("a.osirion-breadcrumbs-link").Select(a => a.GetAttribute("href")).ShouldBe(["/", "/blog", "/blog/2024"]);
     }
 
+    // A tree a provider built inconsistently (a child whose path is not under its root) keeps the child's own path.
+    [Fact]
+    public void ContentBreadcrumbs_ChildPathOutsideItsRoot_LinksTheChildByItsOwnPath()
+    {
+        var root = DirectoryItem.Create("r", "content/en", "en", "test");
+        root.SetLocale("en");
+        var stray = DirectoryItem.Create("s", "elsewhere/notes", "Notes", "test");
+        root.AddChild(stray);
+
+        var cut = RenderStatic<ContentBreadcrumbs>(p => p.Add(c => c.Directory, stray));
+
+        cut.FindAll("a.osirion-breadcrumbs-link").Select(a => a.GetAttribute("href")).ShouldBe(["/", "/elsewhere/notes"]);
+    }
+
     [Fact]
     public void ContentBreadcrumbs_TopLevelFolderNamedLikeAnotherLocale_IsKept()
     {
