@@ -42,7 +42,7 @@ pages for a site built with the library.
 Read [How content is organized](/docs/content) first: it covers `slug`, `order`, `published` and `redirect_from` in
 context. The keys below are the ones the YAML parser of Osirion.Blazor 4.1.0 maps onto its front matter model.
 
-## 1. Write the block
+## Write the block
 
 ```markdown
 ---
@@ -55,20 +55,20 @@ The page text, in Markdown.
 
 Keys are snake_case (`last_modified`, not `lastModified`). Unknown keys are ignored: the parser maps the YAML onto the
 front matter model and skips what it does not know, without a warning. A typo in a key name therefore disappears
-silently. To keep values of your own, put them under `custom_fields` (step 4).
+silently. To keep values of your own, put them under `custom_fields` (see [Keep your own values in custom_fields](#keep-your-own-values-in-custom_fields)).
 
 A file with no front matter block still loads: its title is its file name, its language comes from its folder, its date
 is the creation time of the file and every other value takes its default.
 
-## 2. Use the keys
+## Use the keys
 
 | Key | Type | Default | Effect |
 | --- | --- | --- | --- |
 | `title` | string | none | The page's heading, its link text in lists and the base of the `<title>`. Without one the page takes its file name, and a folder's `_index.md` takes the folder's name. In 4.1.0 a file with a front matter block and no title does not load, so write one there. |
 | `description` | string | empty | The meta description (cut to 160 characters), the summary in lists and the feed description. |
 | `slug` | string | from the file name | The last part of the address. Lowercase letters, digits and hyphens only; anything else stops the file from loading. |
-| `date` | date text | the file's creation time (the date of its last commit with a GitHub provider) | The publication date: list order, the feed `pubDate`, `datePublished`. In 4.1.0 a missing `date` is the day the content was loaded. See step 3. |
-| `last_modified` | date text | `date` | When the page last changed: `dateModified`, `article:modified_time`, sitemap `lastmod`. See step 3. |
+| `date` | date text | the file's creation time (the date of its last commit with a GitHub provider) | The publication date: list order, the feed `pubDate`, `datePublished`. In 4.1.0 a missing `date` is the day the content was loaded. See [Write dates the parser can read](#write-dates-the-parser-can-read). |
+| `last_modified` | date text | `date` | When the page last changed: `dateModified`, `article:modified_time`, sitemap `lastmod`. See [Write dates the parser can read](#write-dates-the-parser-can-read). |
 | `author` | string | empty | The byline, `article:author` and the author in structured data. |
 | `categories` | list of strings | empty | Category pages and lists. The first one is `article:section`. |
 | `tags` | list of strings | empty | Tag pages, the tag cloud, the meta keywords and `article:tag`. |
@@ -83,8 +83,8 @@ is the creation time of the file and every other value takes its default.
 | `series_order` | integer | none | The page's position in its series, starting at 1. |
 | `permalink` | string | none | The address the page is served at, such as `/docs/deploy`; slashes at the ends are optional, no language folder is added, and placeholders such as `:year` are not expanded. An `_index.md` uses it as its folder's address. Arrives in the release after 4.1.0; 4.1.0 reads it but does not change the page's address. |
 | `layout` | string | none | Stored on the item as `Metadata.Layout`. No library component picks a template from it; your own code can. |
-| `custom_fields` | map | empty | Your own values. See step 4. |
-| `seo_properties` | map | see step 5 | Search and social overrides. |
+| `custom_fields` | map | empty | Your own values. See [Keep your own values in custom_fields](#keep-your-own-values-in-custom_fields). |
+| `seo_properties` | map | see [seo_properties](#control-search-and-social-tags-with-seo_properties) | Search and social overrides. |
 
 Write lists as YAML lists, or inline as `[a, b]`. A single value where a list belongs (`tags: foo`), and a value of the
 wrong type (`order: abc`, `published: maybe`), stop the file from loading. The provider logs the reason and goes on
@@ -93,7 +93,7 @@ with the other files.
 A value that contains a colon, or starts with a character YAML reads as syntax, needs quotes:
 `title: "Setup: step one"`.
 
-## 3. Write dates the parser can read
+## Write dates the parser can read
 
 `date` and `last_modified` are read as text and parsed with the invariant culture. Use ISO form, with or without a
 time:
@@ -118,7 +118,7 @@ the checkout. If you edit files in place and want write times, set `UseFileWrite
 FileSystem provider (it is off by default and applies only to that provider). Bump `last_modified` when you make a
 change worth telling a crawler about.
 
-## 4. Keep your own values in custom_fields
+## Keep your own values in custom_fields
 
 ```yaml
 custom_fields:
@@ -149,7 +149,7 @@ Values arrive as the YAML parser's plain objects: a scalar is always a `string`,
 yourself), a list is a `List<object>` and a map is a `Dictionary<object, object>`. The library reads none of them.
 The documentation site of Osirion.Blazor groups its sidebar by `custom_fields.group`.
 
-## 5. Control search and social tags with seo_properties
+## Control search and social tags with seo_properties
 
 `seo_properties` overrides what [`SeoMetadataRenderer`](/components/seo-metadata-renderer) writes for the page. Every
 key is optional.
@@ -181,7 +181,7 @@ The page components pick their own schema types (`DocumentPage` uses `TechArticl
 pass), so `type` matters mainly when you call the renderer yourself. See the [SEO guide](/docs/seo) for what the
 renderer writes as a whole.
 
-## 6. Put it together
+## Put it together
 
 A complete page, with the effect of each key in a comment:
 

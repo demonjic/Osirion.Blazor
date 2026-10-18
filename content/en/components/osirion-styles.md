@@ -159,7 +159,7 @@ element for `CustomVariables` and for generated theme variables. Under a Content
 of every `<style>` element, and `script-src 'nonce-...'` and `style-src 'nonce-...'` then allow them while the first
 paint still applies the theme without a flash. Use a new random value per response; a fixed value does not protect
 anything. `osirion-styles.js` and the stylesheets are files from your own origin, covered by `'self'`. The
-[security guide](/docs/security#4-write-a-content-security-policy) shows the middleware and the layout.
+[security guide](/docs/security#write-a-content-security-policy) shows the middleware and the layout.
 
 ## Styling
 

@@ -513,6 +513,79 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
     private static Regex FingerprintedPackageStylesheet(string path) =>
         new("^_content/" + Regex.Escape(path) + @"\.[a-z0-9]{10}\.css$", RegexOptions.None, TimeSpan.FromSeconds(1));
 
+    [Fact]
+    public async Task SitemapPages_HaveNoHeadingThatStartsWithANumber()
+    {
+        // Arrange
+        using var client = CreateClient();
+        var sitemap = await client.GetStringAsync("/sitemap.xml");
+        var failures = new List<string>();
+
+        // Act
+        foreach (Match location in SitemapLocation().Matches(sitemap))
+        {
+            var path = new Uri(location.Groups["loc"].Value).AbsolutePath;
+            var html = CodeSample().Replace(await GetPageAsync(client, path, failures), string.Empty);
+            foreach (Match heading in Heading().Matches(html))
+            {
+                var text = WebUtility.HtmlDecode(Tag().Replace(heading.Groups["text"].Value, string.Empty)).Trim();
+                if (NumberedHeading().IsMatch(text))
+                {
+                    failures.Add($"{path}: {text}");
+                }
+            }
+        }
+
+        // Assert
+        // The table of contents numbers the sections itself, and a number in the text also lands in search results.
+        failures.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task SitemapPages_LinkOnlyToSectionsThatExist()
+    {
+        // Arrange
+        using var client = CreateClient();
+        var sitemap = await client.GetStringAsync("/sitemap.xml");
+        var pages = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+        var links = new List<(string Source, string Target, string Fragment)>();
+        var failures = new List<string>();
+
+        // Act
+        foreach (Match location in SitemapLocation().Matches(sitemap))
+        {
+            var path = new Uri(location.Groups["loc"].Value).AbsolutePath;
+            var html = await GetPageAsync(client, path, failures);
+            pages[path] = Ids(html);
+            foreach (Match link in FragmentLink().Matches(CodeSample().Replace(html, string.Empty)))
+            {
+                var target = WebUtility.HtmlDecode(link.Groups["path"].Value);
+                var fragment = Uri.UnescapeDataString(WebUtility.HtmlDecode(link.Groups["fragment"].Value));
+                links.Add((path, target.Length == 0 ? path : target, fragment));
+            }
+        }
+
+        foreach (var (source, target, fragment) in links)
+        {
+            if (!pages.TryGetValue(target, out var ids))
+            {
+                ids = Ids(await GetPageAsync(client, target, failures));
+                pages[target] = ids;
+            }
+
+            if (!ids.Contains(fragment))
+            {
+                failures.Add($"{source} links to {target}#{fragment}, which has no such id");
+            }
+        }
+
+        // Assert
+        failures.Distinct().ShouldBeEmpty();
+    }
+
+    private static HashSet<string> Ids(string html) =>
+        [.. IdAttribute().Matches(html).Select(id => WebUtility.HtmlDecode(id.Groups["id"].Value))];
+
     private HttpClient CreateClient() =>
         factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
@@ -564,6 +637,22 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
 
     [GeneratedRegex(""""<link rel="stylesheet" href="(?<href>[^"]+)"""")]
     private static partial Regex Stylesheet();
+
+    [GeneratedRegex("""<h(?<level>[1-6])\b[^>]*>(?<text>.*?)</h\k<level>>""", RegexOptions.Singleline | RegexOptions.IgnoreCase)]
+    private static partial Regex Heading();
+
+    [GeneratedRegex("<[^>]+>")]
+    private static partial Regex Tag();
+
+    // "1. Install", "1) Install", "1.2 Install", "Step 1: Install"; a version heading such as "4.2.0 - 2026-10-18" is not one.
+    [GeneratedRegex("""^(?:\d+[.)]|\d+(?:\.\d+)+|Step\s+\d+[:.)]?)\s+(?=\p{L})""", RegexOptions.IgnoreCase)]
+    private static partial Regex NumberedHeading();
+
+    [GeneratedRegex(""""\shref="(?<path>/[^"#?]*)?#(?<fragment>[^"]+)"""", RegexOptions.IgnoreCase)]
+    private static partial Regex FragmentLink();
+
+    [GeneratedRegex(""""\sid="(?<id>[^"]+)"""")]
+    private static partial Regex IdAttribute();
 
     [GeneratedRegex("""<loc>(?<loc>[^<]+)</loc>""")]
     private static partial Regex SitemapLocation();

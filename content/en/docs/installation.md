@@ -44,7 +44,7 @@ site from a template instead, use [Getting started](/docs/getting-started).
   static server-side rendering, so no interactive render mode is needed.
 - This guide is written for Osirion.Blazor 4.1.0.
 
-## 1. Choose the packages
+## Choose the packages
 
 Install `Osirion.Blazor` unless you know you need less. It references the Core, Cms, Analytics, Navigation and Theming
 packages and adds the `AddOsirion` registration method and `OsirionSiteLayout`.
@@ -68,7 +68,7 @@ components use, but `AddOsirionTheming` does not, so a site that references `Osi
 `AddJSComponents()`, as the [Theming page](/docs/packages/theming) shows. See the [package pages](/docs/packages) for
 each module.
 
-## 2. Add the package
+## Add the package
 
 From the project folder:
 
@@ -78,7 +78,7 @@ dotnet add package Osirion.Blazor
 
 To take a single module, name it instead, for example `dotnet add package Osirion.Blazor.Theming`.
 
-## 3. Register the services
+## Register the services
 
 In `Program.cs`, add the `using` and one line after `AddRazorComponents()`:
 
@@ -123,7 +123,7 @@ builder.Services.AddOsirion(osirion => osirion
 This overload does not read the `Osirion` section; you set each value in the delegate. Use one of the two overloads,
 not both.
 
-## 4. Link the stylesheets and scripts
+## Link the stylesheets and scripts
 
 A site references three things. Everything else Osirion needs, it loads itself.
 
@@ -168,7 +168,7 @@ A site references three things. Everything else Osirion needs, it loads itself.
 `OsirionStyles` loads its own script (`osirion-styles.js`) through the script loader, so you reference no Osirion
 JavaScript by hand. Its parameters are on the [OsirionStyles page](/components/osirion-styles).
 
-## 5. Choose a CSS framework
+## Choose a CSS framework
 
 Osirion has its own design system and works without a CSS framework. If your app already uses one, tell Osirion so its
 colors and dark mode follow the framework:

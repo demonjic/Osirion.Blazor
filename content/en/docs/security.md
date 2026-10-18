@@ -48,7 +48,7 @@ configuration decide that.
 - Content from a source you do not fully control, such as pull requests to a content repository, is the case this
   guide protects against. Content that only you write is lower risk, but the same steps apply.
 
-## 1. Keep sanitizing on
+## Keep sanitizing on
 
 Markdown is rendered to HTML, and that HTML is sanitized with an allow-list (HtmlSanitizer on the AngleSharp HTML5
 parser) in two places: when content is ingested from a provider, and again where it is written into the page as raw
@@ -85,7 +85,7 @@ itself, never for content, user input or anything read from a repository:
 Front matter `json_ld` (under `seo_properties`) is parsed and written again with `<`, `>` and `&` escaped before it goes into a script element;
 invalid JSON-LD is dropped and a warning is logged.
 
-## 2. Know the URL rules
+## Know the URL rules
 
 Links and image addresses can come from content or configuration, so components check them before they write an
 `href` or `src`:
@@ -103,7 +103,7 @@ is called `SafeLink`. `InfiniteLogoCarousel` applies the same check in the relea
 `HeroSection` and `OsirionBaseSection` escape the image address before they write it into a CSS `url()`, so a front
 matter `featured_image` cannot add style rules.
 
-## 3. Pass only trusted text to raw HTML parameters
+## Pass only trusted text to raw HTML parameters
 
 A few parameters are written into the page as raw HTML, without sanitizing, so you can use inline markup in them.
 Pass only text you wrote:
@@ -120,7 +120,7 @@ Pass only text you wrote:
 Never bind these to visitor input or to text from a content repository. For a title that must contain content you do
 not control, use the component's template parameter (`TitleContent` on `OsirionBaseSection`) instead.
 
-## 4. Write a Content Security Policy
+## Write a Content Security Policy
 
 `OsirionStyles` takes a `Nonce` parameter and writes it on its inline script and inline `style` elements, so a site that
 uses only `OsirionStyles` and `ThemeToggle` or `ThemePicker` can run a policy without `'unsafe-inline'` for them (see
@@ -153,7 +153,7 @@ app.Use(async (context, next) =>
 ```
 
 Be clear about what this gives you: with `'unsafe-inline'` in `script-src`, the policy no longer stops an injected inline
-script. The sanitizer of step 1 is then the defense that matters, so do not weaken it. The script of `OsirionStyles`
+script. The sanitizer ([Keep sanitizing on](#keep-sanitizing-on)) is then the defense that matters, so do not weaken it. The script of `OsirionStyles`
 contains the current theme, so its text changes between requests and a fixed hash would not cover it; use a nonce.
 
 A strict policy for `OsirionStyles` needs a new random nonce for every response, the same value in the header and in the
@@ -183,7 +183,7 @@ app.Use(async (context, next) =>
 The nonce does not cover inline `style` attributes: a component with a `Style` parameter, or one that writes a `style`
 attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-inline'` without a nonce.
 
-## 5. Know which cookies the library sets
+## Know which cookies the library sets
 
 | Cookie | Set by | Flags |
 | --- | --- | --- |
@@ -196,9 +196,10 @@ The theme and palette cookies hold a short name such as `dark`, no personal data
 `Secure`, so a browser drops it on plain HTTP other than `localhost`, which browsers treat as secure: serve the site
 over HTTPS, or the banners can return on every page.
 
-The consent and announcement endpoints require an antiforgery token, which their forms carry. See step 7.
+The consent and announcement endpoints require an antiforgery token, which their forms carry. See
+[Protect the contact form](#protect-the-contact-form).
 
-## 6. Keep secrets out of source
+## Keep secrets out of source
 
 Tokens and keys do not belong in `appsettings.json`. These settings are secrets:
 
@@ -223,7 +224,7 @@ In production, use environment variables, where `:` becomes `__` (`Osirion__Cms_
 secret store. For a site that only reads content, give the GitHub token access to read that repository's contents and
 nothing more.
 
-## 7. Protect the contact form
+## Protect the contact form
 
 The `OsirionContactForm` has three layers, and only one of them is automatic:
 

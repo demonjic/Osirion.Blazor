@@ -48,7 +48,7 @@ is for developers who have a site that runs with `dotnet run`.
 An Osirion.Blazor site is an ASP.NET Core application that renders its pages on the server. The repository includes no
 static export tool, so this guide covers hosting the application.
 
-## 1. Publish with the content
+## Publish with the content
 
 ```bash
 dotnet publish -c Release -o publish
@@ -65,10 +65,10 @@ templates do, or the published site starts with no content:
 
 A relative `BasePath` is resolved against the process's working directory, and the host's content root is that same
 folder, so resolving the path against the content root in `Program.cs` does not change where it points. Start the app
-from the publish folder, or set an absolute `Osirion__Cms__Web__FileSystem__BasePath` on the host (step 2). A site that
+from the publish folder, or set an absolute `Osirion__Cms__Web__FileSystem__BasePath` on the host (see [Give the host its settings](#give-the-host-its-settings)). A site that
 reads a GitHub repository needs no content folder.
 
-## 2. Give the host its settings
+## Give the host its settings
 
 Set these on the host as environment variables. Nothing here belongs in a file you deploy.
 
@@ -76,16 +76,16 @@ Set these on the host as environment variables. Nothing here belongs in a file y
 | --- | --- |
 | `ASPNETCORE_ENVIRONMENT=Production` | Recommended. It selects `appsettings.Production.json` and keeps user secrets out; an unset variable already means `Production`, and setting it states the intent. |
 | `Osirion__Cms__Web__GitHub__Blog__ApiToken` | The site uses a GitHub provider named `Blog`. Replace `Blog` with your provider's name, the key under `Osirion:Cms:Web:GitHub`. |
-| `Osirion__Cms__Web__GitHub__Blog__WebhookSecret` | You register the GitHub webhook (step 5). |
+| `Osirion__Cms__Web__GitHub__Blog__WebhookSecret` | You register the GitHub webhook (see [Plan for refresh](#plan-for-refresh)). |
 | `Osirion__Cms__Web__FileSystem__BasePath` | The content folder sits at an absolute path on the host. |
-| `Feeds__SiteUrl` | The site maps the sitemap and feeds and binds a `Feeds` section, as the templates do (step 4). From the release after 4.1.0 `Osirion__Seo__SiteUrl` can stand in for it. |
+| `Feeds__SiteUrl` | The site maps the sitemap and feeds and binds a `Feeds` section, as the templates do (see [Set the public address](#set-the-public-address-then-check-the-sitemap-and-feeds)). From the release after 4.1.0 `Osirion__Seo__SiteUrl` can stand in for it. |
 | `Osirion__Seo__SiteUrl` | You want canonical URLs, and from the release after 4.1.0 the sitemap and feeds, to use your public address. Arrives in the release after 4.1.0. |
 | `Osirion__Email__Smtp__Password` or an API key | The contact form sends email. |
 
 The double underscore stands for the colon in a configuration key. Without a GitHub token the provider loads no content
 and the site renders empty lists; see the [providers guide](/docs/providers).
 
-## 3. Keep HTTPS and the scheme right behind a proxy
+## Keep HTTPS and the scheme right behind a proxy
 
 The templates redirect HTTP to HTTPS and send HSTS outside Development:
 
@@ -121,7 +121,7 @@ trust, which by default is only a proxy on the same machine; Microsoft's page on
 [proxy servers and load balancers](https://learn.microsoft.com/aspnet/core/host-and-deploy/proxy-load-balancer) explains
 how to list yours.
 
-## 4. Set the public address, then check the sitemap and feeds
+## Set the public address, then check the sitemap and feeds
 
 `MapOsirionFeeds` maps three endpoints from your published content: `/sitemap.xml`, `/feed.xml` (RSS) and `/atom.xml`.
 Its `SiteUrl` option is the public address every absolute URL in them starts with. The templates bind it from a
@@ -159,7 +159,7 @@ Point crawlers at the sitemap in `wwwroot/robots.txt`, with the same address:
 Sitemap: https://blog.example.com/sitemap.xml
 ```
 
-## 5. Plan for refresh
+## Plan for refresh
 
 How content changes after the deployment depends on the provider:
 
@@ -187,20 +187,22 @@ app.UseOsirionCms();
 It blocks startup until the providers are initialized, and it logs an initialization error instead of stopping the app.
 `UseOsirionCmsAsync` does the same without blocking the thread.
 
-## 6. Choose where to host it
+## Choose where to host it
 
 Osirion has no preference. It needs an ASP.NET Core host and, depending on the provider, a content folder or outbound
 HTTPS to GitHub. The choices differ in who ends TLS and where the files live:
 
 - **A server or virtual machine** running the app with Kestrel behind a reverse proxy such as nginx, Caddy or IIS. You
-  manage the runtime, the proxy and the certificate. Step 3 applies.
-- **A container**, run by an orchestrator or a container service. Publish into the image, pass the settings in step 2 as
-  environment variables, and let the platform's ingress end TLS. Step 3 applies.
+  manage the runtime, the proxy and the certificate. [Keep HTTPS and the scheme right behind a proxy](#keep-https-and-the-scheme-right-behind-a-proxy) applies.
+- **A container**, run by an orchestrator or a container service. Publish into the image, pass the settings from
+  [Give the host its settings](#give-the-host-its-settings) as environment variables, and let the platform's ingress end TLS.
+  [Keep HTTPS and the scheme right behind a proxy](#keep-https-and-the-scheme-right-behind-a-proxy) applies.
 - **A managed application host** for .NET. The platform builds or runs your publish output and usually ends TLS for you,
-  so check what scheme the app sees. Step 3 applies unless the platform already sets the forwarded headers for the app.
+  so check what scheme the app sees. [Keep HTTPS and the scheme right behind a proxy](#keep-https-and-the-scheme-right-behind-a-proxy) applies unless the platform already
+  sets the forwarded headers for the app.
 
 Whichever you choose, run the published output, not the project folder, and give the process only the settings in
-step 2.
+[Give the host its settings](#give-the-host-its-settings).
 
 ## Check that it works
 
@@ -224,7 +226,8 @@ starts with your public address, not an internal host name or `http://`.
   file system, the content folder was not published or `BasePath` is wrong; for GitHub, the token is missing or
   wrong. The log names which one (see the [providers guide](/docs/providers)).
 - `http://` addresses in the sitemap behind an HTTPS proxy: set `SiteUrl` (or, from the release after 4.1.0,
-  `Osirion:Seo:SiteUrl`), and add the forwarded headers from step 3.
+  `Osirion:Seo:SiteUrl`), and add the forwarded headers from
+  [Keep HTTPS and the scheme right behind a proxy](#keep-https-and-the-scheme-right-behind-a-proxy).
 - A 404 for `/sitemap.xml`: `MapOsirionFeeds` is not called in `Program.cs`.
 
 ## Next steps

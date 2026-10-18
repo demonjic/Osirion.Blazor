@@ -41,13 +41,13 @@ add Osirion to a Blazor app you already have.
 
 You need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
-### 1. Install the templates
+### Install the templates
 
 ```bash
 dotnet new install Osirion.Blazor.Templates
 ```
 
-### 2. Create the blog
+### Create the blog
 
 ```bash
 dotnet new osirion-blog -n MyBlog --SiteName "My Blog" --SiteUrl "https://blog.example.com"
@@ -58,7 +58,7 @@ cd MyBlog
 the sitemap and `robots.txt` link to. Both can be changed later in `appsettings.json`. The packages are restored as
 the project is created.
 
-### 3. Run it
+### Run it
 
 ```bash
 dotnet run
@@ -107,7 +107,7 @@ files, read from a local folder or from a GitHub repository. It follows the Boot
 is written for Osirion.Blazor 4.0.0, which targets .NET 9 and .NET 10. The steps were checked with the .NET 10
 Blazor Web App template.
 
-### 1. Create the project and add the package
+### Create the project and add the package
 
 ```bash
 dotnet new blazor -n MySite
@@ -121,7 +121,7 @@ registration method. You can reference single modules instead, but `AddOsirion` 
 The content pages in this guide render with static server-side rendering, so they need no interactive render mode.
 The template's interactive setup can stay as it is.
 
-### 2. Register the services
+### Register the services
 
 In `Program.cs`, add the `using` and one `builder.Services` line after `AddRazorComponents()`:
 
@@ -143,7 +143,7 @@ registers enhanced navigation, scroll to top, the HTML sanitizer that cleans ren
 Osirion components use to load their own small scripts, including `OsirionStyles`. You do not call `AddJSComponents()`
 yourself; a call you already have does no harm.
 
-### 3. Point the provider at your content
+### Point the provider at your content
 
 Choose a local folder or a GitHub repository. Both go in `appsettings.json` under `Osirion:Cms:Web`.
 
@@ -239,7 +239,7 @@ cannot be built and the app fails at startup in Development.
 If your files are split into language folders such as `content/en/blog`, also set `EnableLocalization` to `true`,
 `DefaultLocale` and `SupportedLocales`. The same keys work for the local folder provider.
 
-### 4. Add the styles and imports
+### Add the styles and imports
 
 Add the Osirion namespaces to `Components/_Imports.razor`:
 
@@ -268,7 +268,7 @@ Render `OsirionStyles` once in `Components/Layout/MainLayout.razor`, as the exam
 itself; the Blazor template already loads Bootstrap. Leave `Framework` out to use Osirion's own palette. See
 [OsirionStyles](/components/osirion-styles) for its parameters.
 
-### 5. Add a list page and an article page
+### Add a list page and an article page
 
 Create `Components/Pages/Blog.razor`:
 
@@ -301,7 +301,7 @@ and the page's SEO tags and structured data. An unknown slug answers with HTTP 4
 category. When there are none, for example while the folder holds a single post, that section shows a "Page Not
 Found" block; set `ShowRelatedContent="false"` until you have more posts.
 
-### 6. Write the first post
+### Write the first post
 
 Create `content/blog/hello-world.md` (in the folder, or under `ContentPath` in the repository):
 
@@ -325,7 +325,7 @@ Front matter keys are snake_case (`featured_image`, `is_featured`, `last_modifie
 lowercase letters, digits and hyphens. A file without a `published` key is published; add `published: false` to
 keep it hidden.
 
-### 7. Run
+### Run
 
 ```bash
 dotnet run
