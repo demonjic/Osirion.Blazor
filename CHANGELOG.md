@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Osirion.Blazor.Core and Osirion.Blazor.Cms.Web: `OsirionContentNotFound` and `ContentPage` take a `HeadingLevel` parameter, `1` to `6` like `ContentView`, so a page that embeds them keeps a single `h1`. It defaults to `1`, which changes nothing for existing pages; a value outside the range moves to the nearest level, and the title keeps its look. The getosirion.com demos on `/components/content-not-found` and `/components/content-page` set `2`, so those pages no longer have two `h1` elements
 - Osirion.Blazor.Cms.Web: `TableOfContents` has a `ShowNumbers` parameter, on by default. `ShowNumbers="false"` renders a plain list without the `1.` and `1.2` numbers, which the stylesheet added to every table of contents; the numbering rules now apply only under the `osirion-toc-numbered` class it puts on the `nav`. `DocumentPage` passes it on through `TocShowNumbers`
 
 ### Fixed

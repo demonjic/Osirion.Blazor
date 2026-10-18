@@ -443,6 +443,22 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
         body.ShouldNotContain((char)0x2013);
     }
 
+    // Fails before the fix: the live demo's own title was a second h1 on the page.
+    [Theory]
+    [InlineData("/components/content-not-found")]
+    [InlineData("/components/content-page")]
+    public async Task ComponentPageWithAPageLevelDemo_HasOneHeading(string address)
+    {
+        // Arrange
+        using var client = CreateClient();
+
+        // Act
+        var html = await client.GetStringAsync(address);
+
+        // Assert
+        Regex.Matches(html, "<h1[ >]").Count.ShouldBe(1);
+    }
+
     [Fact]
     public async Task RobotsTxt_ServesTheContentRulesAsPlainTextAndNamesTheSitemap()
     {
