@@ -7,7 +7,7 @@ permalink: /components/localized-navigation
 description: "LocalizedNavigation loads the CMS directory tree for one locale and renders it with links to directories and their content items."
 author: "Osirion Team"
 date: 2025-01-26
-last_modified: 2026-10-17
+last_modified: 2026-10-18
 featured_image: /assets/images/blazor-cover.png
 categories:
 - Components
@@ -49,7 +49,8 @@ seo_properties:
 # LocalizedNavigation
 
 `LocalizedNavigation` loads the directory tree of one locale from the default content provider and renders it as
-nested lists: a link per directory and, under an expanded directory, a link per content item. Use it as the
+nested lists: a link per directory and, under an expanded directory, a link per content item. When the provider has
+content in more than one locale, a locale selector above the tree links the current page in each of them. Use it as the
 sidebar of a documentation site whose content is organized in locale folders.
 
 Package `Osirion.Blazor.Cms.Web`, namespace `Osirion.Blazor.Cms.Web.Components`. [Source on GitHub](https://github.com/demonjic/Osirion.Blazor/blob/master/src/Osirion.Blazor.Cms.Web/Components/Navigation/LocalizedNavigation.razor).
@@ -101,7 +102,7 @@ The default links go to the public pages: a content link to the item's `Url` and
 | `LoadingText` | `string` | `"Loading navigation..."` | The text shown while the tree loads. |
 | `NoContentText` | `string` | `"No navigation available."` | The text shown when there are no directories, when no default content provider is registered or when loading failed. |
 | `CurrentLocale` | `string?` | `null` | The locale whose directories are shown: the top-level directories of that locale, directly below the locale folder. Their subdirectories are reached through each directory's children. When `null`, or when `EnableLocalization` is `false`, the root directories are shown, which are the locale folders when the content sits in them. |
-| `OnLocaleChanged` | `EventCallback<string>` | - | The callback run when the locale changes. Not used in 4.0: the locale buttons never render, because the component does not load the available locales. |
+| `OnLocaleChanged` | `EventCallback<string>` | - | The callback run with the locale code when a locale link is clicked in an interactive render mode. When it is set, the click no longer navigates: the component shows that locale's tree and runs the callback. Under static SSR it is not called. |
 | `OnDirectorySelected` | `EventCallback<DirectoryItem>` | - | The callback run with the directory when its link is clicked in an interactive render mode. When it is set, the click no longer navigates. Under static SSR it is not called. |
 | `OnContentSelected` | `EventCallback<ContentItem>` | - | The callback run with the content item when its link is clicked in an interactive render mode. When it is set, the click no longer navigates. Under static SSR it is not called. |
 | `ExpandAllDirectories` | `bool` | `false` | Whether every directory is expanded, which shows the whole tree. |
@@ -109,7 +110,8 @@ The default links go to the public pages: a content link to the item's `Url` and
 | `ShowContentItems` | `bool` | `true` | Whether the content items of an expanded directory are listed, sorted by title, before its subdirectories. |
 | `DirectoryUrlFormatter` | `Func<DirectoryItem, string>?` | `null` | A function that builds each directory link. Without it, a link goes to the address the directory's `_index.md` declares in `permalink`, otherwise to the directory's path without the locale folder. |
 | `ContentUrlFormatter` | `Func<ContentItem, string>?` | `null` | A function that builds each content link. Without it, a link goes to the item's URL from the site root, the address its page is served at. |
-| `LocaleNameFormatter` | `Func<string, string>?` | `null` | A function that turns a locale code into the text of its button. Not used in 4.0: the locale buttons never render. |
+| `LocaleNameFormatter` | `Func<string, string>?` | `null` | A function that turns a locale code into the text of its link in the locale selector. Without it, the text is the locale's native name as the provider reports it (`Deutsch` for `de`), or the code when the code is not a known culture. |
+| `LocaleUrlFormatter` | `Func<string, string>?` | `null` | A function that builds the link of a locale in the locale selector from its code. Without it, the link is the current page's path with the locale as its first segment (`/sr/docs/intro` from `/en/docs/intro` or `/docs/intro`), replacing a first segment that is already one of the available locales. |
 | `EnableLocalization` | `bool` | `true` | Whether `CurrentLocale` is used. When `false`, the root directories are loaded. |
 | `AriaLabel` | `string` | `"Localized navigation"` | The accessible name of the `nav` element. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
@@ -118,11 +120,37 @@ The default links go to the public pages: a content link to the item's `Url` and
 
 <!-- /osirion:parameters -->
 
-`OnLocaleChanged` and `LocaleNameFormatter` are for a locale switcher. The component does not load the list of
-available locales, because the content provider has no API that returns them, so the switcher never renders and these
-two parameters have no effect. Use your own language
-links and pass the chosen locale in `CurrentLocale`. `Class` goes on the `nav`. `Style` and `Theme` are accepted but
-not written, and other attributes on the tag are captured but not rendered.
+`OnLocaleChanged`, `LocaleNameFormatter` and `LocaleUrlFormatter` belong to the locale selector (see
+[Locale selector](#locale-selector)). `Class` goes on the `nav`. `Style` and `Theme` are accepted but not written, and
+other attributes on the tag are captured but not rendered.
+
+## Locale selector
+
+The component asks the default provider for its locales through `ILocalizationInfoProvider.GetLocalizationInfoAsync`,
+which the FileSystem and GitHub providers implement from the content they have already loaded. With `EnableLocalization`
+on in the provider options, the list is the provider's `DefaultLocale` first, then each of its `SupportedLocales` that
+has published content, in the configured order. When the list has two locales or more, and the component's own
+`EnableLocalization` is on, a `div` above the tree holds one link per locale:
+
+```html
+<div class="osirion-locale-selector">
+    <a href="/en/docs/intro" hreflang="en" class="osirion-locale-button osirion-active" aria-current="true">English</a>
+    <a href="/sr/docs/intro" hreflang="sr" class="osirion-locale-button">српски</a>
+</div>
+```
+
+- A link goes to the current page in that locale: the locale becomes the first segment of the current path, replacing
+  a first segment that is already one of the locales, and the query string is dropped. Pass `LocaleUrlFormatter` when
+  your routes are built another way, for example to leave the default language without a prefix:
+  `LocaleUrlFormatter="@(code => code == "en" ? "/docs" : $"/{code}/docs")"`.
+- The text is the locale's native name from its .NET culture, or the code when it is not a known culture. Pass
+  `LocaleNameFormatter` to name the locales yourself, for example `code => code.ToUpperInvariant()`.
+- The link of `CurrentLocale` (compared without case) has the `osirion-active` class and `aria-current="true"`.
+- Under static SSR the links are plain links. In an interactive render mode, setting `OnLocaleChanged` makes a click
+  stay on the page: the component shows that locale's tree and runs the callback with the code. Without it, no handler
+  attribute is written and the link navigates.
+- A provider that does not implement `ILocalizationInfoProvider` gets no selector. When loading the locales throws, the
+  error is logged as a warning and the tree renders without a selector.
 
 ## Behavior
 
@@ -156,9 +184,12 @@ not written, and other attributes on the tag are captured but not rendered.
 | `osirion-nav-item`, `osirion-nav-link` | A directory's `li` and link |
 | `osirion-nav-sublist` | The `ul` under an expanded directory |
 | `osirion-nav-content-item`, `osirion-nav-content-link` | A content item's `li` and link |
+| `osirion-locale-selector` | The `div` of locale links |
+| `osirion-locale-button`, `osirion-active` | A locale link, and the link of the current locale |
 | `osirion-loading`, `osirion-no-directories` | Loading and empty states |
 
-The component's scoped stylesheet styles the `nav`, the heading, the outer list and the loading and empty states.
+The component's scoped stylesheet styles the `nav`, the heading, the locale selector, the outer list and the loading
+and empty states.
 The directory and content entries are built in code, so its rules for `osirion-nav-item`, `osirion-nav-link`,
 `osirion-nav-sublist` and the content classes do not reach them. Style those classes from your own stylesheet, for
 example:
