@@ -41,6 +41,9 @@ jobs:
           for project in src/*/*.csproj; do
             sed -i "s|<Version>[^<]*</Version>|<Version>$VERSION</Version>|" "$project"
           done
+          # The templates create sites that reference the library version they are released with.
+          sed -i "s|<PackageReference Include=\"Osirion.Blazor\" Version=\"[^\"]*\" />|<PackageReference Include=\"Osirion.Blazor\" Version=\"$VERSION\" />|" \
+            src/Osirion.Blazor.Templates/templates/_shared/OsirionApp-CSharp.csproj
           sed -i "0,/^## \[Unreleased\]/s//## [Unreleased]\n\n## [$VERSION] - $(date -u +%Y-%m-%d)/" CHANGELOG.md
           git diff --stat
 
