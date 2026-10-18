@@ -27,7 +27,7 @@ visitor.
 - A GitHub account, a repository for the content, and a personal access token that can read it
 - Basic Blazor knowledge
 
-## Step 1: Create the project
+## Create the project
 
 Create a Blazor Web App without interactivity, which gives you static server rendering:
 
@@ -39,7 +39,7 @@ dotnet add package Osirion.Blazor
 
 `Osirion.Blazor` is the meta-package: it brings the CMS, theming, navigation and analytics packages.
 
-## Step 2: Add content to GitHub
+## Add content to GitHub
 
 In your content repository, create `content/blog/hello-blazor.md`:
 
@@ -63,10 +63,10 @@ Markdown works as you would expect, including code blocks.
 
 The front matter keys are snake_case (`featured_image`, `is_featured`, `last_modified`). A file without `published` is
 published; add `published: false` to keep a draft off the site. Write multi-word tags with hyphens instead of spaces:
-tag links turn spaces into hyphens, and the tag pages in step 5 compare the URL value with each whole tag (case does not
+tag links turn spaces into hyphens, and the tag pages under [The pages](#the-pages) compare the URL value with each whole tag (case does not
 matter, spaces do).
 
-## Step 3: Point the site at the repository
+## Point the site at the repository
 
 Add the provider to `appsettings.json`. The key under `GitHub` (`Blog` here) names the provider:
 
@@ -121,7 +121,7 @@ builder.Services.AddJSComponents();
 navigation defaults. `AddJSComponents` registers the script loader that `OsirionStyles` and the article renderer use;
 without it those components fail to render.
 
-## Step 4: Imports and styles
+## Imports and styles
 
 Add the namespaces to `Components/_Imports.razor`:
 
@@ -143,7 +143,7 @@ Then render the Osirion stylesheets and a search box in `Components/Layout/MainL
 </div>
 ```
 
-## Step 5: The pages
+## The pages
 
 One component serves both the post list and the posts. Create `Components/Pages/Blog.razor`:
 
@@ -210,7 +210,7 @@ Finally, the search page that `SearchBox` submits to, `Components/Pages/Search.r
 
 The search matches any of the words in a post's title, description, content, categories or tags.
 
-## Step 6: Run it
+## Run it
 
 ```bash
 dotnet run
@@ -219,7 +219,7 @@ dotnet run
 Open `/blog`. The first request waits while the provider reads the repository; after that, the content is served
 from memory.
 
-## Step 7: Refresh on push
+## Refresh on push
 
 To pick up a new commit as soon as you push it, let GitHub tell the site. Register the webhook handler in
 `Program.cs`:

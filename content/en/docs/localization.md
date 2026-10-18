@@ -42,7 +42,7 @@ them; the site chooses the addresses and writes the language links, and this gui
 You need the site from [Getting started](/docs/getting-started) and the ideas in [How content is organized](/docs/content).
 The examples use two languages, English (`en`, the default) and Serbian (`sr`), and a `blog` folder.
 
-## 1. Put each language in its own folder
+## Put each language in its own folder
 
 ```text
 content/
@@ -54,9 +54,9 @@ content/
       hello.md
 ```
 
-A translation sits at the same path in each language folder. That shared path is what pairs the files (step 3).
+A translation sits at the same path in each language folder. That shared path is what pairs the files (see [Write `lang` in every translation](#write-lang-in-every-translation)).
 
-## 2. Turn localization on
+## Turn localization on
 
 The same keys exist for the local folder provider (`Osirion:Cms:Web:FileSystem`) and for each GitHub provider
 (`Osirion:Cms:Web:GitHub:<Name>`):
@@ -83,7 +83,7 @@ The same keys exist for the local folder provider (`Osirion:Cms:Web:FileSystem`)
 the item's language and left out of its address: `sr/blog/hello.md` has the address `blog/hello`. `SupportedLocales`
 defaults to `["en"]`, so list every language, with the exact folder name (`sr-Latn-RS` is fine if that is the folder).
 
-## 3. Write `lang` in every translation
+## Write `lang` in every translation
 
 ```yaml
 ---
@@ -105,11 +105,11 @@ Translations are paired by an id the provider builds from the path without the l
 `en/blog/hello.md` and `sr/blog/hello.md` belong together even when their slugs differ. Files at different paths, such as
 `en/blog/hello.md` and `sr/blog/zdravo.md`, pair only if you give both the same `id` in front matter.
 
-## 4. Route by language
+## Route by language
 
 Two translations share one address (`blog/hello`), so the address alone cannot choose a language. Give the site a route
 per language and look the page up with its locale. This page serves `/blog/hello` in the default language and
-`/sr/blog/hello` in Serbian, and writes the `hreflang` links (step 5):
+`/sr/blog/hello` in Serbian, and writes the `hreflang` links (see [Write the hreflang links](#write-the-hreflang-links)):
 
 ```razor
 @page "/blog/{Slug}"
@@ -176,7 +176,7 @@ per language and look the page up with its locale. This page serves `/blog/hello
 `Locale` is a parameter of the page components and of `ContentList`; the page components default to `en`, so pass it
 on every page of a non-English site. A list of Serbian posts is `<ContentList Directory="blog" Locale="sr" />`.
 
-## 5. Write the hreflang links
+## Write the hreflang links
 
 `SeoMetadataRenderer` writes one `<link rel="alternate" hreflang="...">` for each entry of its `AlternateLanguageUrls`
 parameter, an entry being a language code and an address joined by a vertical bar (`sr|https://example.com/sr/blog/hello`).
@@ -187,7 +187,7 @@ Google's rules for these tags: each address must be fully qualified (`https://..
 list itself and all the others, or the tags are ignored. The page above builds its list from the translations, which
 include the page itself, and adds an `x-default` entry for the default language.
 
-## 6. Put every language in the sitemap and feeds
+## Put every language in the sitemap and feeds
 
 The sitemap writes each address once, so translations that share an address appear only once. Build language-aware
 addresses with `ContentUrlFormatter`, and pass the same formatter to `UseOsirionRedirects` if you use `redirect_from`:
@@ -224,7 +224,7 @@ same locale show up once in the list above, the first of them, and the provider 
 
 ## What does not work yet
 
-- **`lang` is required in 4.1.0** (step 3): `DefaultLocale` does not apply to a file that has front matter. The release
+- **`lang` is required in 4.1.0** (see [Write `lang` in every translation](#write-lang-in-every-translation)): `DefaultLocale` does not apply to a file that has front matter. The release
   after 4.1.0 reads a missing `lang` from the folder or `DefaultLocale`.
 - **Addresses carry no language.** Translations share one `Url`, so routes, sitemap and redirect addresses need the
   formatters above.

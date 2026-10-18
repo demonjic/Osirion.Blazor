@@ -48,7 +48,7 @@ The full list of 4.0 changes, with more detail on the admin and on custom implem
 
 ## Part 1. From 3.x to 4.0
 
-### 1. Update the packages
+### Update the packages
 
 ```bash
 dotnet add package Osirion.Blazor --version 4.1.0
@@ -57,7 +57,7 @@ dotnet add package Osirion.Blazor --version 4.1.0
 Version 4.1.0 is the current release. If you reference single modules instead of `Osirion.Blazor`, update each one to
 the same version.
 
-### 2. Decide which content is a draft (every site)
+### Decide which content is a draft (every site)
 
 A content file without a `published` key in its front matter is now published. In 3.x it was hidden as a draft.
 Add the key to every file that must stay hidden:
@@ -69,7 +69,7 @@ published: false
 ---
 ```
 
-### 3. Review HTML sanitizing (every site that renders content)
+### Review HTML sanitizing (every site that renders content)
 
 Rendered Markdown and ingested content are sanitized with an allow-list. `OsirionHtmlRenderer.SanitizeHtml` now defaults
 to `true` (it was `false`), which also covers HTML you pass yourself, for example the custom content of a home page.
@@ -87,7 +87,7 @@ builder.Services.AddOsirionHtmlSanitizer(options =>
 
 Set `SanitizeHtml="false"` only for markup your own code builds. Read [Security](/docs/security) first.
 
-### 4. Add antiforgery (sites that use cookie consent)
+### Add antiforgery (sites that use cookie consent)
 
 `MapOsirionCookieConsent` requires an antiforgery token, which the banner form carries. Call
 `UseAntiforgery` after `UseAuthentication` and `UseAuthorization`, and before the endpoints. The Blazor Web App template
@@ -102,7 +102,7 @@ Custom forms that post to the consent endpoint must include `<AntiforgeryToken /
 `returnUrl`; any other value redirects to `/`. `UseOsirionCookieConsent` no longer writes a `Permissions-Policy`
 header: set one yourself if you relied on it.
 
-### 5. Set the webhook secret (sites that call `UseGitHubWebhook`)
+### Set the webhook secret (sites that call `UseGitHubWebhook`)
 
 The webhook verifies `X-Hub-Signature-256` against the provider's `WebhookSecret` and rejects every delivery while no
 provider has one. Set the secret and use the same value in the webhook settings on GitHub, with content type
@@ -115,7 +115,7 @@ dotnet user-secrets set "Osirion:Cms:Web:GitHub:Site:WebhookSecret" "<long rando
 A verified delivery that matches no provider now answers 202 instead of 400, and tags and deleted branches no longer
 refresh content.
 
-### 6. Add authentication to the admin (sites that map the admin pages)
+### Add authentication to the admin (sites that map the admin pages)
 
 Every routed admin page requires the authorization policy `CmsAdminAuthorization.PolicyName` (`"Osirion.Cms.Admin"`).
 The default policy lets in any authenticated user. The library adds no authentication scheme, so add one, and replace
@@ -145,7 +145,7 @@ services never use a content provider's `ApiToken`. GitHub sign-in with OAuth no
 your OAuth app, or set `Osirion:Cms:Admin:Authentication:GitHubRedirectUri` to the address you registered. A site that never maps the admin needs none of
 this.
 
-### 7. Move the FileSystem section
+### Move the FileSystem section
 
 The local folder provider reads `Osirion:Cms:Web:FileSystem` (`FileSystemOptions.WebSection`). The old section
 `Osirion:Cms:FileSystem:Web` is still read when the new one is missing, so nothing breaks, but change it:
@@ -169,7 +169,7 @@ The provider marked `IsDefault` is now the default even when you do not call `Us
 registered provider won. A folder's `_index.md` is served at the folder's URL, as the GitHub provider already did:
 remove `_index.md` files you do not want published.
 
-### 8. Fix code that breaks the build or the startup
+### Fix code that breaks the build or the startup
 
 | If your code does this | Change it to |
 | --- | --- |
@@ -196,7 +196,7 @@ The changelog also deprecates `DomainEntityBase<TId>`, `CommandDispatcher`, `Sta
 `CmsAdminStartupService` and `BaseContentRepository.GenerateMarkdownWithFrontMatter`. They still compile. The first five
 will be removed in the next major release; use `GenerateMarkdownWithFrontMatterAsync` instead of the last one.
 
-### 9. Check markup and CSS you depend on
+### Check markup and CSS you depend on
 
 If you wrote CSS or script against Osirion markup, check these:
 
@@ -210,7 +210,7 @@ If you wrote CSS or script against Osirion markup, check these:
   are URL-encoded slugs (`C#` becomes `c%23`).
 - Media queries now use literal breakpoint values; a custom property in a media condition never matched.
 
-### 10. Check ids, analytics and SEO output
+### Check ids, analytics and SEO output
 
 - **Stored ids.** Content, directory, localization and FileSystem provider ids are now SHA-256 based and stable. They
   used to change on every restart, so a site that stored them (bookmarks, database rows, cache keys) must look them up
@@ -240,7 +240,7 @@ If you wrote CSS or script against Osirion markup, check these:
 
 The changelog lists no removed members for 4.1.0. Four changes can alter what a site does:
 
-### 11. Link your app's stylesheet (every site)
+### Link your app's stylesheet (every site)
 
 `OsirionStyles` no longer links `Osirion.Blazor.Core.bundle.scp.css`. Your app's own `{App}.styles.css` already imports
 the scoped styles of every referenced package, so 4.0 downloaded that bundle twice. Make sure the head of your
@@ -255,7 +255,7 @@ the scoped styles of every referenced package, so 4.0 downloaded that bundle twi
 
 Use the name of your project in place of `MySite`. Without the link, components lose their own styles.
 
-### 12. Decide how last-modified dates are set (sites that use the local folder provider)
+### Decide how last-modified dates are set (sites that use the local folder provider)
 
 A file's write time no longer stands in for the last-modified date. Without `last_modified` in front matter, an item
 is last modified on its `date`. A fresh checkout gives every file the time of the checkout, and that time had reached
@@ -276,7 +276,7 @@ you edit, or turn the old behavior back on where files are edited in place:
 }
 ```
 
-### 13. Check the SEO output
+### Check the SEO output
 
 - `SeoMetadataRenderer` now applies `AllowAiDiscovery`, `AllowAiTraining`, `AllowSearchIndexing`,
   `EnableGeoOptimization`, `EnableAeoOptimization` and `GenerateMultipleSchemas` from `SeoMetadataOptions` unless the
@@ -287,7 +287,7 @@ you edit, or turn the old behavior back on where files are edited in place:
   author, such as `/about`, to get one.
 - The publisher logo no longer declares a fixed width and height, and the share image is no longer preloaded.
 
-### 14. Expect focusable code blocks and different list matches
+### Expect focusable code blocks and different list matches
 
 - `OsirionHtmlRenderer` gives code blocks and tables `tabindex="0"`, so a keyboard user can scroll them. Set
   `FocusableScrollBlocks="false"` to turn it off.
@@ -299,11 +299,13 @@ you edit, or turn the old behavior back on where files are edited in place:
 
 ## Check that it works
 
-- `dotnet build` passes with no obsolete warnings from the table in step 8.
+- `dotnet build` passes with no obsolete warnings from the table in
+  [Fix code that breaks the build or the startup](#fix-code-that-breaks-the-build-or-the-startup).
 - The site starts, and the log has no "Access token is required" or analytics validation errors.
 - A draft file with `published: false` is not listed; a file without the key is.
 - The cookie banner accepts a choice and redirects back (it returns 400 without `UseAntiforgery`).
-- Pages look as before: if component styles are missing, revisit step 11.
+- Pages look as before: if component styles are missing, revisit
+  [Link your app's stylesheet](#link-your-apps-stylesheet-every-site).
 
 ## Next steps
 

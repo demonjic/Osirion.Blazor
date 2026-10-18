@@ -21,7 +21,7 @@ Search engines and link previews read the HTML your server sends. This checklist
 site built with Osirion.Blazor: what the library writes into each page for you, and what you still set up yourself.
 Work through it top to bottom on a new site, or use it to audit one that is already live.
 
-## 1. Send the article in the first response
+## Send the article in the first response
 
 Blazor Web Apps render pages with static server-side rendering (static SSR) unless a page or component asks for an
 interactive render mode. Keep content pages static. Osirion's page components (`ArticlePage`, `DocumentPage` and
@@ -55,7 +55,7 @@ curl -s https://example.com/blog/my-post | grep "<h1"
 Osirion.Blazor renders pages on request; it does not export a static copy of the site. If you need static files,
 crawl the running site with a tool of your choice: it saves the same HTML.
 
-## 2. Give every page its own title, description and preview image
+## Give every page its own title, description and preview image
 
 `ArticlePage`, `HomePage`, `LandingPage` and `ContentList` place `SeoMetadataRenderer` in the head through
 `HeadContent`, so your `App.razor` needs `<HeadOutlet />`. The renderer writes the `<title>` (the page title, a
@@ -97,7 +97,7 @@ The preview image is `og_image_url`, then `featured_image`, then the site defaul
 Checklist: every published file has a `title` and a `description` of about 150 characters, and pages that people
 share have an image of 1200 by 630 pixels.
 
-## 3. Declare one canonical URL per page
+## Declare one canonical URL per page
 
 Since 4.0 the canonical URL, `og:url` and the URLs in structured data are the current address without its query
 string and fragment, so tracking parameters do not create duplicate pages. `ContentList` keeps the `page` parameter
@@ -121,7 +121,7 @@ var rewriteOptions = new RewriteOptions()
 app.UseRewriter(rewriteOptions);
 ```
 
-## 4. Control what gets indexed
+## Control what gets indexed
 
 - **One page.** `seo_properties.robots` replaces the default robots directive. A value that contains `noindex` also
   keeps the page out of the sitemap.
@@ -146,7 +146,7 @@ app.UseRewriter(rewriteOptions);
   default that disallows `/search/`. From the release after 4.1.0 it serves the item's source text, as plain text. Use one approach, not both: registered before the static files, as in the
   example app, the middleware answers and the static file is never served.
 
-## 5. Describe the page with structured data
+## Describe the page with structured data
 
 `SchemaTypes` chooses the schema.org types the renderer generates, for example `BlogPosting` for posts, or `Article`
 with `BreadcrumbList` for documentation. Without it, the renderer uses the site default from
@@ -172,7 +172,7 @@ to the FAQ data the renderer can derive from titles, which is off by default (`E
 shows FAQ rich results (since May 2026) or HowTo rich results (since 2023), so this data describes the page without
 changing how it looks in Google results.
 
-## 6. Publish a sitemap and feeds
+## Publish a sitemap and feeds
 
 Available from 4.1. `MapOsirionFeeds` maps `/sitemap.xml`, an RSS 2.0 feed at `/feed.xml` and an Atom feed at
 `/atom.xml`, built from the published content:
@@ -198,7 +198,7 @@ Point feed readers to the feed from the head in `App.razor`:
 <link rel="alternate" type="application/rss+xml" title="My Site" href="/feed.xml" />
 ```
 
-## 7. Link translations to each other
+## Link translations to each other
 
 On a multilingual site, tell search engines which pages translate each other. `ArticlePage` passes
 `AlternateLanguageUrls` to the renderer, one `language|url` entry per translation:

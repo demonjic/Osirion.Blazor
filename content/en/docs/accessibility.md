@@ -43,10 +43,10 @@ the repository runs; whether your pages conform depends on your content and your
 ## Before you start
 
 - A running site that uses Osirion.Blazor 4.1.0 or later. [Getting started](/docs/getting-started) builds one.
-- A desktop browser. A screen reader is useful for step 3: NVDA on Windows, VoiceOver on macOS.
-- Node.js, only if you want the command line checker in step 4.
+- A desktop browser. A screen reader is useful for [the screen reader pass](#do-a-keyboard-pass-and-a-screen-reader-pass): NVDA on Windows, VoiceOver on macOS.
+- Node.js, only if you want the command line checker in [Run an automated checker](#run-an-automated-checker).
 
-## 1. Know what the components do
+## Know what the components do
 
 This is what the code of the 4.1.0 release does. Each row names the component, so you can read its page.
 
@@ -65,7 +65,7 @@ Some motion fixes arrive in the release after 4.1.0: the changelog lists `Osirio
 and `OsirionReveal` under Unreleased for their behavior under reduced motion. Read
 [the changelog](https://github.com/demonjic/Osirion.Blazor/blob/master/CHANGELOG.md) for the version you run.
 
-## 2. Know what the repository tests
+## Know what the repository tests
 
 The contrast of the theme colors is held by tests in `tests/Osirion.Blazor.Theming.Tests`:
 
@@ -88,7 +88,7 @@ Run the contrast tests yourself from a clone of the repository:
 dotnet test tests/Osirion.Blazor.Theming.Tests -c Release
 ```
 
-## 3. Do a keyboard pass and a screen reader pass
+## Do a keyboard pass and a screen reader pass
 
 These two passes find what no stylesheet check can. Run them on your own pages, not on the examples.
 
@@ -102,7 +102,7 @@ These two passes find what no stylesheet check can. Run them on your own pages, 
    main region and the footer, and a heading outline with one `h1` that does not skip levels.
 5. Move to each control and listen to its name. A control announced as "button" or "link" alone has no name.
 
-## 4. Run an automated checker
+## Run an automated checker
 
 An automated checker finds a part of the problems: missing names, duplicate ids, the contrast of text it can compute.
 Use the axe browser extension, or the command line:
@@ -112,9 +112,10 @@ npx @axe-core/cli http://localhost:5000
 ```
 
 Replace the address with the one your site listens on. Fix what it reports on your own pages. A clean report does not
-mean the page works with a keyboard or a screen reader, so keep the passes of step 3 for what a tool cannot judge.
+mean the page works with a keyboard or a screen reader, so keep the [keyboard and screen reader passes](#do-a-keyboard-pass-and-a-screen-reader-pass) for what a tool
+cannot judge.
 
-## 5. Do the part the library cannot do
+## Do the part the library cannot do
 
 The library renders what you give it. These stay your job:
 

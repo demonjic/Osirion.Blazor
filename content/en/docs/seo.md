@@ -44,7 +44,7 @@ You need a site with content pages, as built in [Getting started](/docs/getting-
 (`https://example.com` below). The pages should render with static server-side rendering, so crawlers get the finished
 HTML.
 
-## 1. Know what the library writes
+## Know what the library writes
 
 | Output | Written by | Notes |
 | --- | --- | --- |
@@ -52,12 +52,12 @@ HTML.
 | `hreflang` links | `SeoMetadataRenderer` | Only from the `AlternateLanguageUrls` you pass; see [Localization](/docs/localization) |
 | `/sitemap.xml`, `/feed.xml` (RSS 2.0), `/atom.xml` | `MapOsirionFeeds` | From published content; available since 4.0 |
 | 301 redirects from old addresses | `UseOsirionRedirects` | From `redirect_from` front matter; available since 4.0 |
-| `/robots.txt` | `UseOsirionRobotsGenerator`, optional | See step 5; a static file works in every release |
+| `/robots.txt` | `UseOsirionRobotsGenerator`, optional | See [Serve a sitemap, feeds and robots.txt](#serve-a-sitemap-feeds-and-robots.txt); a static file works in every release |
 
 What the library does not do: write your titles and descriptions, choose your addresses, set your public host, submit the
 sitemap to a search engine, or measure anything. That is the site's job.
 
-## 2. Set the site's identity
+## Set the site's identity
 
 In `appsettings.json`, under `Osirion:Seo`, which `AddOsirion(builder.Configuration)` reads:
 
@@ -81,7 +81,7 @@ In `appsettings.json`, under `Osirion:Seo`, which `AddOsirion(builder.Configurat
 `DefaultImageUrl` is the share image for pages that have no `og_image_url`, `image` or `featured_image`. The other options and the parameters that
 override them are on the [SeoMetadataRenderer](/components/seo-metadata-renderer) page.
 
-## 3. Write a title and description for every page
+## Write a title and description for every page
 
 The renderer takes them from front matter. Write both, and keep the description to a sentence or two (it is cut to 160
 characters):
@@ -97,7 +97,7 @@ seo_properties:
 lists every override. The library never cuts the `<title>`; search engines shorten a title link themselves, so keep it
 short enough to read.
 
-## 4. Declare the public address
+## Declare the public address
 
 The canonical URL is the address the page was requested at, without query string and fragment, so tracking parameters such
 as `utm_source` never make a second canonical. In 4.1.0 that address uses the scheme and host your app sees. Behind a
@@ -110,7 +110,7 @@ The release after 4.1.0 adds `Osirion:Seo:SiteUrl`: when it is an absolute `http
 Set `canonical` in front matter only when another address is the preferred one. A wrong canonical tells search engines to
 ignore the page.
 
-## 5. Serve a sitemap, feeds and robots.txt
+## Serve a sitemap, feeds and robots.txt
 
 Map the endpoints in `Program.cs`, after the content services are registered:
 
@@ -182,12 +182,12 @@ Let browsers and feed readers find the feeds from your layout, in `App.razor`:
 </head>
 ```
 
-## 6. Redirect moved pages
+## Redirect moved pages
 
 List old addresses in `redirect_from` and register `app.UseOsirionRedirects()` before the endpoints that render pages,
 as described in [How content is organized](/docs/content). A 301 tells search engines the page moved for good.
 
-## 7. Know the structured data
+## Know the structured data
 
 JSON-LD is chosen by the `SchemaTypes` parameter, else `seo_properties.type`, else `WebPage`. A page with a front matter
 block has `type: Article` unless it sets another, so it gets `Article`; a file with no front matter gets `WebPage`.

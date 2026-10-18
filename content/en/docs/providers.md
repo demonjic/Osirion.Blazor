@@ -44,7 +44,7 @@ content refreshes. It is for developers who have [installed Osirion.Blazor](/doc
 - You know where `Osirion` settings go, from the [configuration guide](/docs/configuration).
 - This guide is written for Osirion.Blazor 4.1.0.
 
-## 1. Choose a provider
+## Choose a provider
 
 | Provider | Reads from | Configured under | How many |
 | --- | --- | --- | --- |
@@ -59,7 +59,7 @@ own implements
 Use the file system provider when the content ships with the app, and the GitHub provider when editors change content
 in a repository without a deployment.
 
-## 2. Read a local folder
+## Read a local folder
 
 ```json
 {
@@ -92,7 +92,7 @@ path against it in `Program.cs`, as the templates do, makes it absolute but does
 starting folder, set an absolute `BasePath` on the host (the [configuration guide](/docs/configuration) shows how) or
 start the app from the folder that holds `content`.
 
-## 3. Read a GitHub repository
+## Read a GitHub repository
 
 ```json
 {
@@ -122,8 +122,8 @@ start the app from the folder that holds `content`.
 | `ContentPath` | empty | The folder inside the repository that holds the content. |
 | `ApiToken` | empty | The token the provider reads the repository with. Required; see below. |
 | `ApiUrl` | `https://api.github.com` | The base address of the GitHub API. |
-| `WebhookSecret` | none | The secret that verifies GitHub webhook deliveries; see step 6. |
-| `EnablePolling` | `false` | Checks the branch for new commits on a timer; see step 6. |
+| `WebhookSecret` | none | The secret that verifies GitHub webhook deliveries; see [Refresh content](#refresh-content). |
+| `EnablePolling` | `false` | Checks the branch for new commits on a timer; see [Refresh content](#refresh-content). |
 | `PollingIntervalSeconds` | `86400` | Seconds between checks when `EnablePolling` is on, one day by default. |
 | `UseBackgroundCacheUpdate` | `true` | Applies the cache updates that polling triggers in the background instead of waiting for them. Webhook updates always run in the background. |
 
@@ -141,7 +141,7 @@ replaced by your provider's name. The [configuration guide](/docs/configuration)
 If GitHub's rate limit is reached, the provider keeps the content it already has and does not start another load
 before the limit resets.
 
-## 4. Choose the default provider
+## Choose the default provider
 
 When more than one provider is registered, the components that show a page of content, such as `ContentList` and
 `ContentPage`, ask the default provider. The sitemap and the feeds read every provider.
@@ -176,7 +176,7 @@ stays the default. If you run 4.1.0, set one. A provider id is any string that i
 A file system provider needs no `ProviderId` for `IsDefault` to work. Without a `ProviderId`, its id is derived from
 its `BasePath`, and a GitHub provider's from `Owner` and `Repository`.
 
-## 5. Localize content
+## Localize content
 
 If your files are split by language, with a folder per locale such as `content/en/blog` and `content/de/blog`, set
 these options on the provider. They have the same names and defaults for both providers:
@@ -208,7 +208,7 @@ these options on the provider. They have the same names and defaults for both pr
 The content root is `BasePath` for the file system provider and `ContentPath` for the GitHub provider. See
 [LocalizedContentView](/components/localized-content-view) for showing the translation that matches the visitor.
 
-## 6. Refresh content
+## Refresh content
 
 How new content reaches a running site depends on the provider.
 
@@ -249,7 +249,7 @@ should see your items. If you see none, read the log:
 - `Cannot set up file watcher - base path does not exist` or `Base content directory does not exist`: `BasePath`
   points at a folder that is not there. Check the working directory the app started in.
 - Content from the wrong provider: more than one provider is registered and the default is not the one you meant.
-  See step 4.
+  See [Choose the default provider](#choose-the-default-provider).
 
 ## Next steps
 

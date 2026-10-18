@@ -44,7 +44,7 @@ but does not show what they expect.
   provider hides them. The default ASP.NET Core host writes to the console.
 - Know your version. Where a problem is specific to one, the item says so. The released version is 4.1.0.
 
-## 1. No content is shown, and the log says "Access token is required"
+## No content is shown, and the log says "Access token is required"
 
 **Symptom.** Lists are empty or pages answer 404, and the log has the error `Access token is required for GitHub API
 requests`.
@@ -64,17 +64,18 @@ In production use the environment variable `Osirion__Cms__Web__GitHub__Site__Api
 instead says `Repository owner and name must be set before making requests`, `Owner` or `Repository` is empty in the
 provider's section.
 
-## 2. The GitHub content stops updating, and the log mentions a rate limit
+## The GitHub content stops updating, and the log mentions a rate limit
 
 **Symptom.** The warning `GitHub rate limit reached (status 403); requests are allowed again at ...` appears (the
 status can be 429), and the site keeps showing older content.
 
 **Cause.** GitHub refused the requests. The provider stops the refresh and keeps the content it has.
 
-**Fix.** Wait for the time in the message, and check that the token is set (see item 1). Reduce how often content is
+**Fix.** Wait for the time in the message, and check that the token is set (see
+[No content is shown](#no-content-is-shown-and-the-log-says-access-token-is-required)). Reduce how often content is
 refreshed: with a webhook, refreshes happen on push, and polling (`EnablePolling`) is off by default.
 
-## 3. A page returns 404 on the server but works on your machine
+## A page returns 404 on the server but works on your machine
 
 **Symptom.** A page of the local folder provider works in development and answers 404 after a deployment, or a page
 you committed does not appear with the GitHub provider.
@@ -97,7 +98,7 @@ with an exception under the rule:
 !content/**/[Pp]ackages/*
 ```
 
-## 4. Components have no styles
+## Components have no styles
 
 **Symptom.** The page renders, but components look unstyled: no spacing, no colors, plain lists.
 
@@ -122,7 +123,7 @@ layout:
 If the theme is wrong but components have their layout, check `Osirion:Theming:Framework` and that the framework's own
 stylesheet is loaded: `OsirionStyles` links the adapter for the framework, not the framework itself.
 
-## 5. The theme toggle does nothing under a Content Security Policy
+## The theme toggle does nothing under a Content Security Policy
 
 **Symptom.** With a `Content-Security-Policy` header in place, clicking `ThemeToggle` changes nothing, and the browser
 console reports a blocked inline script or event handler.
@@ -144,7 +145,7 @@ app.Use(async (context, next) =>
 
 `ThemePicker` needs no inline script, but it chooses a palette, not light or dark, so it does not replace the toggle.
 
-## 6. The contact form never submits and shows no error
+## The contact form never submits and shows no error
 
 **Symptom.** You press Send with every field filled and nothing happens: no success message, no validation message.
 
@@ -161,7 +162,7 @@ model always requires `AgreeToPrivacyPolicy` to be `true`, and no message is sho
 
 `PrivacyPolicyText` is written as raw HTML, so pass only text you wrote.
 
-## 7. The contact form reports an error and the message is lost
+## The contact form reports an error and the message is lost
 
 **Symptom.** After a valid submission the form shows the error message. The log has one of these:
 
@@ -195,7 +196,7 @@ Set the key as a secret: `dotnet user-secrets set "Osirion:Email:SendGrid:ApiKey
 failed`, the provider's own error is logged next to it (`SendGrid API error`, `Infobip API error` or `Failed to send
 email via SMTP`).
 
-## 8. The cookie banner answers 400 or the app throws on a post
+## The cookie banner answers 400 or the app throws on a post
 
 **Symptom.** Accepting the cookie banner returns status 400 and records no choice, or the request throws an
 `InvalidOperationException`.
@@ -213,7 +214,7 @@ app.MapOsirionCookieConsent();
 
 If the banner returns on every page, check that the site is served over HTTPS: the consent cookie is always `Secure`.
 
-## 9. A GitHub webhook delivery is rejected
+## A GitHub webhook delivery is rejected
 
 **Symptom.** GitHub shows a failed delivery, and the log has a line that starts with `Rejected GitHub webhook`.
 
@@ -233,7 +234,7 @@ are read at startup:
 dotnet user-secrets set "Osirion:Cms:Web:GitHub:Site:WebhookSecret" "<long random value>"
 ```
 
-## 10. The app stops at startup with an analytics message
+## The app stops at startup with an analytics message
 
 **Symptom.** The app fails to start with an `OptionsValidationException` such as
 `Osirion:Analytics:Umami:SiteId must be the website ID, a GUID.`
@@ -244,7 +245,7 @@ dotnet user-secrets set "Osirion:Cms:Web:GitHub:Site:WebhookSecret" "<long rando
 disabled, its provider is not configured, or the consent gate is on (`RequireConsent`) and the visitor has not accepted
 the analytics category.
 
-## 11. A tab component throws
+## A tab component throws
 
 **Symptom.** A page fails to render with `OsirionTab must be placed inside OsirionTabs.`
 
@@ -252,7 +253,7 @@ the analytics category.
 
 **Fix.** Put every tab in an `OsirionTabs` element.
 
-## 12. Custom JSON-LD or a subscription is ignored
+## Custom JSON-LD or a subscription is ignored
 
 Two warnings tell you that the library did not use what you gave it:
 

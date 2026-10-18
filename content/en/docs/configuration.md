@@ -42,7 +42,7 @@ environment, and where secrets such as a GitHub token belong. It is for develope
 - This guide is written for Osirion.Blazor 4.1.0. One key, `Osirion:Seo:SiteUrl`, arrives in the release after 4.1.0 and
   is marked where it appears.
 
-## 1. Know the sections
+## Know the sections
 
 Everything binds from the `Osirion` section. `AddOsirion(builder.Configuration)` configures a module only when its
 section exists, so a site that sets nothing for a module gets that module's defaults.
@@ -63,7 +63,7 @@ section exists, so a site that sets nothing for a module gets that module's defa
 The sitemap and feeds are not under `Osirion`. `MapOsirionFeeds` takes its own options object, and the templates fill
 it from a top-level `Feeds` section that their `Program.cs` binds. The [deployment guide](/docs/deployment) shows how.
 
-## 2. Configure in appsettings.json
+## Configure in appsettings.json
 
 A small site that reads Markdown from a folder, uses Osirion's own colors and renders its shell with
 `OsirionSiteLayout`:
@@ -105,7 +105,7 @@ without a message, so check a new key by looking at its effect.
 URL, `og:url` and the addresses in structured data use it instead of the host that served the request. The sitemap and
 the feeds use it too when `Feeds:SiteUrl` is not set. It arrives in the release after 4.1.0.
 
-## 3. Configure in code
+## Configure in code
 
 Two ways, depending on whether the values come from `appsettings.json` too.
 
@@ -159,7 +159,7 @@ The first `PostConfigure` is the one the templates use: it turns a relative `Bas
 host's content root and leaves an absolute path as it is. The content root is the folder the process starts in, so this
 does not make the path independent of the starting folder; the [providers guide](/docs/providers) says what does.
 
-## 4. Vary settings per environment
+## Vary settings per environment
 
 ASP.NET Core reads `appsettings.json` first, then `appsettings.{Environment}.json`, where the environment comes from
 `ASPNETCORE_ENVIRONMENT` (`Development` under `dotnet run` with the default launch profile, `Production` when it is
@@ -207,7 +207,7 @@ A site that reads a local folder while you write and a GitHub repository in prod
 
 Providers are registered from whatever sections exist, so each environment gets exactly one.
 
-## 5. Keep secrets out of appsettings.json
+## Keep secrets out of appsettings.json
 
 These keys are secrets. They never belong in a file under source control:
 
@@ -243,7 +243,7 @@ List items take their index as a path segment, for example `Osirion__Site__Menu_
 override both JSON files and user secrets, so a value set on the host wins over the same key in a file. A secret store
 that your host maps to environment variables works the same way.
 
-## 6. Know what is checked at startup
+## Know what is checked at startup
 
 Only some options are validated, and each fails differently:
 

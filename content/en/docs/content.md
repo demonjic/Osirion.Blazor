@@ -43,7 +43,7 @@ You need a site that reads a local content folder, as set up in [Getting started
 use `BasePath` set to `content`. Every address below is the one the library gives the item (`ContentItem.Url`); your
 own routes decide which of them the site serves.
 
-## 1. Put files in folders
+## Put files in folders
 
 The provider reads every `.md` and `.markdown` file under `BasePath`, including subfolders:
 
@@ -70,7 +70,7 @@ a page with front matter and no `title` does not load, so write one. A folder wi
 An `_index.md` is also a page of its own, at the folder's address. A list of that folder includes it, except on the
 page it is shown on, so put real text in it or leave it out of lists you build yourself.
 
-## 2. Give each page a slug
+## Give each page a slug
 
 A page's address is its folder path below `BasePath` plus its `slug`:
 
@@ -96,7 +96,7 @@ arrives in the release after 4.1.0; in 4.1.0 the `permalink` of a page is read b
 path and slug. To serve a page at another address in 4.1.0, route to it yourself, or pass a `ContentUrlFormatter` to the
 components, the feeds and the redirects.
 
-## 3. Keep the language folder out of the address
+## Keep the language folder out of the address
 
 If your files sit in language folders such as `content/en`, turn localization on and the first folder is dropped from
 the address when it is one of `SupportedLocales`:
@@ -109,7 +109,7 @@ the address when it is one of `SupportedLocales`:
 With localization off, the folder stays in the address, so a single-language site keeps its files in the content
 root. Two translations of one page share one address, which the [localization guide](/docs/localization) deals with.
 
-## 4. Order pages
+## Order pages
 
 Lists show the newest page first, by `date`. To order by hand, give each page an integer `order` and sort by it:
 
@@ -130,12 +130,12 @@ ascending without being asked, including `DocumentPage` and the previous and nex
 [`OsirionContentNavigation`](/components/osirion-content-navigation). A directory takes its `order` from its
 `_index.md`.
 
-## 5. Hide a draft
+## Hide a draft
 
 Add `published: false` to the front matter. Lists, the sitemap and feeds, the redirect map and the page components
 leave the page out, so its address answers like an unknown one. A file without a `published` key is published.
 
-## 6. Move a page without breaking its old address
+## Move a page without breaking its old address
 
 List the earlier addresses under `redirect_from` in the page that moved:
 
@@ -173,7 +173,7 @@ app.UseOsirionRedirects(redirects =>
 
 Set `Permanent` to `false` for a 302 while you are unsure about the move.
 
-## 7. Show live demos in a page
+## Show live demos in a page
 
 A fenced code block whose language is `demo` renders a registered Razor component in its place. It needs a
 registration in `Program.cs`, so it is covered on the [OsirionContentDemo](/components/content-demo) page.
