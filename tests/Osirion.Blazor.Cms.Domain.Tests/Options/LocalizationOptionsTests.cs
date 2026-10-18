@@ -1,10 +1,72 @@
-﻿using Osirion.Blazor.Cms.Domain.Options.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Osirion.Blazor.Cms.Domain.Options.Configuration;
 using Shouldly;
 
 namespace Osirion.Blazor.Cms.Domain.Tests.Options;
 
 public class LocalizationOptionsTests
 {
+    private static IConfigurationSection Section(params string[] cultures) =>
+        new ConfigurationBuilder()
+            .AddInMemoryCollection(cultures.Select((culture, index) =>
+                KeyValuePair.Create($"Localization:SupportedCultures:{index}", (string?)culture)))
+            .Build()
+            .GetSection("Localization");
+
+    [Fact]
+    public void Bind_ConfiguredCultures_ReplaceTheDefault()
+    {
+        // Binding appends to a list that already has items, so the old non-empty default turned ["sr-Latn-RS"] into
+        // en-US, sr-Latn-RS.
+        var options = new LocalizationOptions();
+
+        Section("sr-Latn-RS").Bind(options);
+
+        options.SupportedCultures.ShouldBe(["sr-Latn-RS"]);
+        options.GetEffectiveSupportedCultures().ShouldBe(["sr-Latn-RS"]);
+    }
+
+    [Fact]
+    public void Bind_ConfiguredCulturesWithTheDefault_AreNotDuplicated()
+    {
+        var options = new LocalizationOptions();
+
+        Section("en-US", "fr-FR").Bind(options);
+
+        options.SupportedCultures.ShouldBe(["en-US", "fr-FR"]);
+    }
+
+    [Fact]
+    public void GetEffectiveSupportedCultures_NothingConfigured_IsAmericanEnglish()
+    {
+        new LocalizationOptions().GetEffectiveSupportedCultures().ShouldBe(["en-US"]);
+    }
+
+    [Fact]
+    public void GetEffectiveSupportedCultures_AssignedEmptyList_StaysEmpty()
+    {
+        new LocalizationOptions { SupportedCultures = [] }.GetEffectiveSupportedCultures().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void SupportedCultures_AssignedNull_IsAnEmptyList()
+    {
+        var options = new LocalizationOptions { SupportedCultures = null! };
+
+        options.SupportedCultures.ShouldBeEmpty();
+        options.GetEffectiveSupportedCultures().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void AddSupportedCultures_ToAListAssignedEmpty_DoesNotBringBackTheDefault()
+    {
+        var options = new LocalizationOptions { SupportedCultures = [] };
+
+        options.AddSupportedCultures("fr-FR");
+
+        options.SupportedCultures.ShouldBe(["fr-FR"]);
+    }
+
     [Fact]
     public void DefaultProperties_HaveExpectedValues()
     {
@@ -13,8 +75,8 @@ public class LocalizationOptionsTests
 
         // Assert
         options.SupportedCultures.ShouldNotBeNull();
-        options.SupportedCultures.Count.ShouldBe(1);
-        options.SupportedCultures.ShouldContain("en-US");
+        options.SupportedCultures.ShouldBeEmpty();
+        options.GetEffectiveSupportedCultures().ShouldBe(["en-US"]);
         options.DefaultCulture.ShouldBe("en-US");
         options.EnableCultureFallback.ShouldBeTrue();
         options.ShowCultureSelector.ShouldBeTrue();
