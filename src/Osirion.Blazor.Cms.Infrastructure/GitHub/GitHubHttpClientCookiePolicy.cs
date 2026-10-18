@@ -6,7 +6,7 @@ namespace Osirion.Blazor.Cms.Infrastructure.GitHub;
 
 /// <summary>
 /// Turns off cookie handling and shortens the default timeout of every <see cref="IHttpClientFactory"/> client that
-/// talks to GitHub.
+/// talks to GitHub, and leaves the redirects of the API clients to <see cref="GitHubApiClient"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -20,6 +20,12 @@ namespace Osirion.Blazor.Cms.Infrastructure.GitHub;
 /// point, so a primary handler configured by the host (for example a proxy) is kept, with cookies turned off.
 /// In the browser the fetch API owns cookies and the handler has no cookie container, so the policy does nothing
 /// there.
+/// </para>
+/// <para>
+/// The handler of an API client does not follow redirects: it would drop the Authorization header on the way, and
+/// the request would go on without the token. <see cref="GitHubApiClient"/> follows a redirect itself, with the
+/// token, when it stays on the API host. In the browser the fetch API follows redirects and keeps the header on the
+/// same origin, so this is not changed there either.
 /// </para>
 /// </remarks>
 internal sealed class GitHubHttpClientCookiePolicy : IPostConfigureOptions<HttpClientFactoryOptions>
@@ -48,6 +54,22 @@ internal sealed class GitHubHttpClientCookiePolicy : IPostConfigureOptions<HttpC
         }
 
         options.HttpMessageHandlerBuilderActions.Add(builder => DisableCookies(builder.PrimaryHandler));
+
+        if (IsApiClient(name))
+        {
+            options.HttpMessageHandlerBuilderActions.Add(builder => DisableAutoRedirect(builder.PrimaryHandler));
+        }
+    }
+
+    /// <summary>
+    /// Returns whether the named client is used by <see cref="GitHubApiClient"/>, which follows redirects itself.
+    /// The token provider and authentication clients keep the handler's own redirect handling.
+    /// </summary>
+    internal static bool IsApiClient(string? name)
+    {
+        return !string.IsNullOrEmpty(name)
+            && (name.StartsWith(GitHubApiClientFactory.HttpClientNamePrefix, StringComparison.Ordinal)
+                || string.Equals(name, nameof(IGitHubApiClient), StringComparison.Ordinal));
     }
 
     /// <summary>
@@ -71,6 +93,19 @@ internal sealed class GitHubHttpClientCookiePolicy : IPostConfigureOptions<HttpC
         if (client.Timeout == TimeSpan.FromSeconds(100))
         {
             client.Timeout = DefaultRequestTimeout;
+        }
+    }
+
+    private static void DisableAutoRedirect(HttpMessageHandler primaryHandler)
+    {
+        switch (primaryHandler)
+        {
+            case HttpClientHandler { AllowAutoRedirect: true } httpClientHandler:
+                httpClientHandler.AllowAutoRedirect = false;
+                break;
+            case SocketsHttpHandler { AllowAutoRedirect: true } socketsHandler:
+                socketsHandler.AllowAutoRedirect = false;
+                break;
         }
     }
 

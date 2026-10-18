@@ -130,6 +130,25 @@ public class GitHubAdminServiceRegistrationTests
         UsesCookies(GetPrimaryHandler(handler)).ShouldBeFalse();
     }
 
+    // Fails before the fix: the primary handler followed a redirect itself and dropped the token on the way, so
+    // the API client never saw the redirect and every later request went out unauthenticated.
+    [Theory]
+    [InlineData("GitHub_Blog", false)]
+    [InlineData("IGitHubApiClient", false)]
+    [InlineData("IGitHubTokenProvider", true)]
+    [InlineData("IAuthenticationService", true)]
+    [InlineData("Unrelated", true)]
+    public void HttpClientPolicy_LeavesRedirectsOfApiClientsToTheClient(string clientName, bool followsRedirects)
+    {
+        var services = CreateServices();
+        services.AddGitHubProvidersFromConfiguration(_configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var handler = provider.GetRequiredService<IHttpMessageHandlerFactory>().CreateHandler(clientName);
+
+        FollowsRedirects(GetPrimaryHandler(handler)).ShouldBe(followsRedirects);
+    }
+
     [Fact]
     public void UnrelatedHttpClient_PrimaryHandler_KeepsCookies()
     {
@@ -246,6 +265,16 @@ public class GitHubAdminServiceRegistrationTests
         {
             HttpClientHandler httpClientHandler => httpClientHandler.UseCookies,
             SocketsHttpHandler socketsHandler => socketsHandler.UseCookies,
+            _ => throw new InvalidOperationException($"Unexpected primary handler {handler.GetType()}")
+        };
+    }
+
+    private static bool FollowsRedirects(HttpMessageHandler handler)
+    {
+        return handler switch
+        {
+            HttpClientHandler httpClientHandler => httpClientHandler.AllowAutoRedirect,
+            SocketsHttpHandler socketsHandler => socketsHandler.AllowAutoRedirect,
             _ => throw new InvalidOperationException($"Unexpected primary handler {handler.GetType()}")
         };
     }
