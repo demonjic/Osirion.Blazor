@@ -5,13 +5,18 @@ name: Publish to NuGet
 # no tag yet, which is the case right after a release pull request (Prepare Release) merges. Pushing the tag
 # v<version> or running it by hand on master also works.
 #
+# Servicing branches named release/<line>.x (release/4.x, release/4.2.x) publish the same way, for a patch to an older
+# line while master moves on: branch from the release tag, fix, set the patch version and its CHANGELOG section, push.
+# Their releases are not marked as the repository's latest. The release pull request branches that Prepare Release
+# opens (release/<version>) do not match, so nothing publishes before a release is reviewed and merged.
+#
 # Publishing uses NuGet trusted publishing: nuget.org trades this workflow's GitHub OIDC token for an API key that
 # lasts one hour. The policy on nuget.org names the repository owner, the repository and this file name
 # (nuget-publish.yml), so renaming the file stops publishing until the policy is updated.
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, 'release/*.x' ]
     tags: [ 'v*' ]
   workflow_dispatch:
 
@@ -132,8 +137,10 @@ jobs:
   publish:
     name: Publish
     needs: pack
-    # Only a version tag or master publishes; a run started on any other branch stops after packing.
-    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
+    # Only a version tag, master or a servicing branch publishes; a run started on any other branch stops after packing.
+    if: >-
+      startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master' ||
+      (startsWith(github.ref, 'refs/heads/release/') && endsWith(github.ref, '.x'))
     runs-on: ubuntu-latest
     permissions:
       contents: write # creates the GitHub release and, for a run started by hand, its tag
@@ -182,10 +189,12 @@ jobs:
           fi
           awk -v heading="## [$VERSION]" 'index($0, heading) == 1 { found = 1; next } /^## \[/ { found = 0 } found' \
             CHANGELOG.md > release-notes.md
-          prerelease=()
-          if [[ "$VERSION" == *-* ]]; then prerelease=(--prerelease); fi
+          flags=()
+          if [[ "$VERSION" == *-* ]]; then flags+=(--prerelease); fi
+          # A patch to an older line must not replace the newest release as the repository's latest.
+          if [[ "$GITHUB_REF" == refs/heads/release/*.x ]]; then flags+=(--latest=false); fi
           gh release create "$tag" ./nupkgs/*.nupkg \
             --target "$GITHUB_SHA" \
             --title "$VERSION" \
             --notes-file release-notes.md \
-            "${prerelease[@]}"
+            "${flags[@]}"

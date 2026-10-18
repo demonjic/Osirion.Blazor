@@ -54,3 +54,8 @@ To deploy the newest build again, run the script with `-Force`. To roll back by 
 project files has no tag yet. To release: run **Prepare Release** with the new version, read and merge its pull
 request, and the packages, the tag and the GitHub release follow on their own. Prepare Release opens its pull request
 with the repository secret `PAT_TOKEN`, a token of an account with write access (Contents and Pull requests).
+
+To patch an older line while `master` moves on, create a servicing branch from its release tag, named
+`release/<line>.x` (for example `git switch -c release/4.2.x v4.2.0`), apply the fix, set the patch version in every
+project file and add its CHANGELOG section, then push. The branch publishes the same way, and its release is not
+marked as the latest. The release pull request branches `release/<version>` do not publish.
