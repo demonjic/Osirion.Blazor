@@ -49,6 +49,25 @@ public class LocalizationOptionsTests
     }
 
     [Fact]
+    public void SupportedCultures_AssignedNull_IsAnEmptyList()
+    {
+        var options = new LocalizationOptions { SupportedCultures = null! };
+
+        options.SupportedCultures.ShouldBeEmpty();
+        options.GetEffectiveSupportedCultures().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void AddSupportedCultures_ToAListAssignedEmpty_DoesNotBringBackTheDefault()
+    {
+        var options = new LocalizationOptions { SupportedCultures = [] };
+
+        options.AddSupportedCultures("fr-FR");
+
+        options.SupportedCultures.ShouldBe(["fr-FR"]);
+    }
+
+    [Fact]
     public void DefaultProperties_HaveExpectedValues()
     {
         // Arrange
