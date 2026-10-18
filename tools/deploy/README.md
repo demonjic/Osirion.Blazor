@@ -4,8 +4,8 @@ getosirion.com is the Bootstrap example app, hosted in IIS on a Windows server. 
 nothing in this public repository can reach the server.
 
 1. CI passes on a push to `master`.
-2. The workflow **Build the site** (`.github/workflows/deploy-site.yml`) publishes the app and keeps it for 14 days as
-   the artifact `getosirion-site`.
+2. The CI job **Build the site** (`.github/workflows/ci.yml`), which runs after every other check passed, publishes
+   the app and keeps it for 14 days as the artifact `getosirion-site`.
 3. On the server, a scheduled task runs `Deploy-Getosirion.ps1` every five minutes. When a newer artifact exists, it
    downloads it, backs up the live site, swaps the build in behind `app_offline.htm`, checks that the site answers
    200, and restores the backup if it does not. It logs to `C:\deploy\getosirion\deploy.log`.

@@ -3,8 +3,8 @@
     Deploys the newest getosirion.com build from GitHub Actions to the IIS site on this server.
 
 .DESCRIPTION
-    The workflow "Build the site" (.github/workflows/deploy-site.yml) publishes the site after CI passes on master and
-    keeps it as the artifact getosirion-site. This script runs on the server on a schedule. It asks GitHub for the
+    The CI job "Build the site" (.github/workflows/ci.yml) publishes the site after every check passes on a push to
+    master and keeps it as the artifact getosirion-site. This script runs on the server on a schedule. It asks GitHub for the
     newest artifact, and when that is not the one already deployed it:
 
     1. downloads and unpacks it into a staging folder;

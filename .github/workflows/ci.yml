@@ -189,3 +189,33 @@ jobs:
             exit 1
           }
           Write-Host "All components documented"
+
+  # getosirion.com is the Bootstrap example app. After every check passes on a push to master, its build is kept as the
+  # artifact getosirion-site, and the server pulls it (tools/deploy/Deploy-Getosirion.ps1). Nothing connects to the
+  # server from here, so no server port or credential is exposed to this public repository.
+  site:
+    name: Build the site
+    needs: [ format, test, coverage, docs ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish
+        run: dotnet publish examples/Osirion.Blazor.Example.Bootstrap --configuration Release --output site
+
+      # The deploy script records which commit is live by this file.
+      - name: Stamp the commit
+        run: echo "$GITHUB_SHA" > site/deployed-commit.txt
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: getosirion-site
+          path: site
+          if-no-files-found: error
+          retention-days: 14
