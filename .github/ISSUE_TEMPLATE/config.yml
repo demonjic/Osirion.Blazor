@@ -1,11 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Osirion.Blazor Documentation
-    url: https://github.com/demonjic/Osirion.Blazor/blob/master/README.md
-    about: Check our documentation before creating an issue
-  - name: Discussions
-    url: https://github.com/demonjic/Osirion.Blazor/discussions
-    about: Please ask and answer questions here
-  - name: Security Issues
-    url: https://github.com/demonjic/Osirion.Blazor/security/policy
-    about: Please report security vulnerabilities here
+  - name: Osirion.Blazor documentation
+    url: https://getosirion.com/docs/getting-started
+    about: The guides and component pages. A question about using the library can still be an issue; say it is a question.
+  - name: Report a security vulnerability
+    url: https://github.com/demonjic/Osirion.Blazor/security/advisories/new
+    about: Report it privately here, never in a public issue. The security policy has the details.

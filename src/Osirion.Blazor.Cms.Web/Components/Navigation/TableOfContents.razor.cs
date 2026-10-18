@@ -64,6 +64,14 @@ public partial class TableOfContents(NavigationManager navigationManager)
     public bool TrackActiveHeading { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets whether the entries are numbered, <c>1.</c> for a top-level heading and <c>1.2</c> for one under
+    /// it. When on, the root element gets the <c>osirion-toc-numbered</c> class that the numbering rules hang on;
+    /// <see langword="false"/> renders a plain list.
+    /// </summary>
+    [Parameter]
+    public bool ShowNumbers { get; set; } = true;
+
+    /// <summary>
     /// Gets the extracted headings
     /// </summary>
     private IReadOnlyList<HeadingItem> Headings { get; set; } = Array.Empty<HeadingItem>();
@@ -201,7 +209,8 @@ public partial class TableOfContents(NavigationManager navigationManager)
     /// </summary>
     private string GetTableOfContentsClass()
     {
-        return $"osirion-table-of-contents {Class}".Trim();
+        var numbered = ShowNumbers ? " osirion-toc-numbered" : string.Empty;
+        return $"osirion-table-of-contents{numbered} {Class}".Trim();
     }
 }
 
