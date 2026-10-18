@@ -312,10 +312,17 @@ public class GitHubDirectoryRepository : DirectoryRepositoryBase, IDirectoryRepo
                     }
                 }
 
-                // Extract locale from path if enabled
+                // Extract locale from path if enabled. The shared path utilities are configured from the file system
+                // provider's options, which do not know this repository's content folder, so the folder is read
+                // against this provider's own ContentPath and locales, as GitHubContentRepository reads files.
                 if (_options.EnableLocalization)
                 {
-                    directory.SetLocale(PathUtils.ExtractLocaleFromPath(item.Path));
+                    directory.SetLocale(UrlGenerator.ExtractLocaleFromPath(
+                        item.Path,
+                        _options.ContentPath,
+                        _options.EnableLocalization,
+                        _options.GetEffectiveSupportedLocales(),
+                        _options.DefaultLocale));
                 }
                 else
                 {
