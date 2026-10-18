@@ -1,0 +1,1914 @@
+{
+  "mediaHost": "https://media.getosirion.com",
+  "card": {
+    "width": 1200,
+    "height": 630,
+    "format": "jpeg",
+    "quality": 85
+  },
+  "shot": {
+    "viewport": [
+      1280,
+      800
+    ],
+    "deviceScaleFactor": 2,
+    "format": "webp",
+    "quality": 80,
+    "maxWidth": 1600
+  },
+  "pages": [
+    {
+      "file": "blog/analytics-integration-in-blazor.md",
+      "path": "/blog/analytics-integration-in-blazor",
+      "section": "Blog",
+      "title": "Analytics in Blazor with Osirion.Blazor",
+      "card": {
+        "key": "og/blog-analytics-integration-in-blazor.jpg",
+        "url": "https://media.getosirion.com/og/blog-analytics-integration-in-blazor.jpg",
+        "heading": "Analytics in Blazor with Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/blazor-seo-ssr-ssg-checklist.md",
+      "path": "/blog/blazor-seo-ssr-ssg-checklist",
+      "section": "Blog",
+      "title": "Blazor SEO Checklist for Static SSR Content Sites",
+      "card": {
+        "key": "og/blog-blazor-seo-ssr-ssg-checklist.jpg",
+        "url": "https://media.getosirion.com/og/blog-blazor-seo-ssr-ssg-checklist.jpg",
+        "heading": "Blazor SEO Checklist for Static SSR",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/_index.md",
+      "path": "/blog/blog",
+      "section": "Blog",
+      "title": "Blog",
+      "card": {
+        "key": "og/blog-blog.jpg",
+        "url": "https://media.getosirion.com/og/blog-blog.jpg",
+        "heading": "Blog",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/enhanced-navigation-interceptor.md",
+      "path": "/blog/enhanced-navigation-interceptor",
+      "section": "Blog",
+      "title": "Scroll Position After Enhanced Navigation in Blazor",
+      "card": {
+        "key": "og/blog-enhanced-navigation-interceptor.jpg",
+        "url": "https://media.getosirion.com/og/blog-enhanced-navigation-interceptor.jpg",
+        "heading": "Scroll Position After Enhanced Navigation in Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/gdpr-cookie-consent-blazor.md",
+      "path": "/blog/gdpr-cookie-consent-blazor",
+      "section": "Blog",
+      "title": "Cookie Consent in Blazor: Banner, Consent Cookie and Analytics Gate",
+      "card": {
+        "key": "og/blog-gdpr-cookie-consent-blazor.jpg",
+        "url": "https://media.getosirion.com/og/blog-gdpr-cookie-consent-blazor.jpg",
+        "heading": "Cookie Consent in Blazor with Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "consent-banner",
+          "source": "site",
+          "path": "/components/cookie-consent",
+          "selector": ".osirion-content-demo-preview",
+          "alt": "The cookie consent banner with its categories",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/blog-gdpr-cookie-consent-blazor/consent-banner-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "blog/github-cms-components.md",
+      "path": "/blog/github-cms-components",
+      "section": "Blog",
+      "title": "The Osirion.Blazor CMS Components",
+      "card": {
+        "key": "og/blog-github-cms-components.jpg",
+        "url": "https://media.getosirion.com/og/blog-github-cms-components.jpg",
+        "heading": "The Osirion.Blazor CMS Components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/github-cms-with-blazor.md",
+      "path": "/blog/github-cms-with-blazor",
+      "section": "Blog",
+      "title": "Build a Blog with GitHub as the CMS",
+      "card": {
+        "key": "og/blog-github-cms-with-blazor.jpg",
+        "url": "https://media.getosirion.com/og/blog-github-cms-with-blazor.jpg",
+        "heading": "Build a Blog with GitHub as the CMS",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "blog-from-github",
+          "source": "site",
+          "path": "/blog",
+          "selector": "main",
+          "alt": "A blog list rendered from Markdown files in a GitHub repository",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/blog-github-cms-with-blazor/blog-from-github-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "blog/localization-for-blazor-content-sites.md",
+      "path": "/blog/localization-for-blazor-content-sites",
+      "section": "Blog",
+      "title": "Localization for Blazor Content Sites",
+      "card": {
+        "key": "og/blog-localization-for-blazor-content-sites.jpg",
+        "url": "https://media.getosirion.com/og/blog-localization-for-blazor-content-sites.jpg",
+        "heading": "Localization for Blazor Content Sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/modern-hero-sections-blazor.md",
+      "path": "/blog/modern-hero-sections-blazor",
+      "section": "Blog",
+      "title": "Hero Sections in Blazor with HeroSection",
+      "card": {
+        "key": "og/blog-modern-hero-sections-blazor.jpg",
+        "url": "https://media.getosirion.com/og/blog-modern-hero-sections-blazor.jpg",
+        "heading": "Hero Sections in Blazor with HeroSection",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "hero-variants",
+          "source": "site",
+          "path": "/components/hero-section",
+          "selector": ".osirion-content-demo-preview",
+          "alt": "HeroSection with a side image, as the post builds it",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/blog-modern-hero-sections-blazor/hero-variants-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "blog/navigation-components.md",
+      "path": "/blog/navigation-components",
+      "section": "Blog",
+      "title": "Navigation in Osirion.Blazor: Menus, Scroll and Breadcrumbs",
+      "card": {
+        "key": "og/blog-navigation-components.jpg",
+        "url": "https://media.getosirion.com/og/blog-navigation-components.jpg",
+        "heading": "Navigation in Osirion.Blazor: Menus, Scroll and Breadcrumbs",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "menu",
+          "source": "site",
+          "path": "/components/menu",
+          "selector": ".osirion-content-demo-preview",
+          "alt": "An Osirion menu with a dropdown open",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/blog-navigation-components/menu-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "blog/osirion-blazor-4-0-components.md",
+      "path": "/blog/osirion-blazor-4-0-components",
+      "section": "Blog",
+      "title": "New in Osirion.Blazor 4.0: Content Components",
+      "card": {
+        "key": "og/blog-osirion-blazor-4-0-components.jpg",
+        "url": "https://media.getosirion.com/og/blog-osirion-blazor-4-0-components.jpg",
+        "heading": "New in Osirion.Blazor 4.0: Content Components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "gallery",
+          "source": "site",
+          "path": "/components",
+          "selector": "main",
+          "alt": "The component gallery on getosirion.com",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/blog-osirion-blazor-4-0-components/gallery-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "blog/osirion-blazor-4-0-release.md",
+      "path": "/blog/osirion-blazor-4-0-release",
+      "section": "Blog",
+      "title": "Osirion.Blazor 4.0: Security Hardening and Fluent UI v5",
+      "card": {
+        "key": "og/blog-osirion-blazor-4-0-release.jpg",
+        "url": "https://media.getosirion.com/og/blog-osirion-blazor-4-0-release.jpg",
+        "heading": "Osirion.Blazor 4.0 Release: Security Hardening and Fluent UI v5",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/osirion-blazor-v1-5-release-notes.md",
+      "path": "/blog/osirion-blazor-v1-5-release-notes",
+      "section": "Blog",
+      "title": "Osirion.Blazor v1.5: Release Notes",
+      "card": {
+        "key": "og/blog-osirion-blazor-v1-5-release-notes.jpg",
+        "url": "https://media.getosirion.com/og/blog-osirion-blazor-v1-5-release-notes.jpg",
+        "heading": "Osirion.Blazor v1.5: Release Notes",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/performance-tuning-content-heavy-blazor-sites.md",
+      "path": "/blog/performance-tuning-content-heavy-blazor-sites",
+      "section": "Blog",
+      "title": "Performance Tuning for Content-Heavy Blazor Sites",
+      "card": {
+        "key": "og/blog-performance-tuning-content-heavy-blazor-sites.jpg",
+        "url": "https://media.getosirion.com/og/blog-performance-tuning-content-heavy-blazor-sites.jpg",
+        "heading": "Performance Tuning for Content-Heavy Blazor Sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "blog/structuring-content-repositories.md",
+      "path": "/blog/structuring-content-repositories",
+      "section": "Blog",
+      "title": "Structuring Content Repositories",
+      "card": {
+        "key": "og/blog-structuring-content-repositories.jpg",
+        "url": "https://media.getosirion.com/og/blog-structuring-content-repositories.jpg",
+        "heading": "Structuring a Markdown Content Repository",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/_index.md",
+      "path": "/components",
+      "section": "Components",
+      "title": "Components",
+      "card": {
+        "key": "og/components.jpg",
+        "url": "https://media.getosirion.com/og/components.jpg",
+        "heading": "Blazor components for content sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/about-page.md",
+      "path": "/components/about-page",
+      "section": "Components",
+      "title": "AboutPage",
+      "card": {
+        "key": "og/components-about-page.jpg",
+        "url": "https://media.getosirion.com/og/components-about-page.jpg",
+        "heading": "AboutPage: an about page from content for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/accordion-and-faq.md",
+      "path": "/components/accordion-and-faq",
+      "section": "Components",
+      "title": "Accordion and FAQ",
+      "card": {
+        "key": "og/components-accordion-and-faq.jpg",
+        "url": "https://media.getosirion.com/og/components-accordion-and-faq.jpg",
+        "heading": "OsirionAccordion and OsirionFaq: accordions for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/analytics.md",
+      "path": "/components/analytics",
+      "section": "Components",
+      "title": "Analytics",
+      "card": {
+        "key": "og/components-analytics.jpg",
+        "url": "https://media.getosirion.com/og/components-analytics.jpg",
+        "heading": "Blazor analytics tracker components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/announcement-bar.md",
+      "path": "/components/announcement-bar",
+      "section": "Components",
+      "title": "OsirionAnnouncementBar",
+      "card": {
+        "key": "og/components-announcement-bar.jpg",
+        "url": "https://media.getosirion.com/og/components-announcement-bar.jpg",
+        "heading": "OsirionAnnouncementBar: site announcement for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/article-metadata.md",
+      "path": "/components/article-metadata",
+      "section": "Components",
+      "title": "OsirionArticleMetdata",
+      "card": {
+        "key": "og/components-article-metadata.jpg",
+        "url": "https://media.getosirion.com/og/components-article-metadata.jpg",
+        "heading": "OsirionArticleMetdata: author, date and read time for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/article-page.md",
+      "path": "/components/article-page",
+      "section": "Components",
+      "title": "ArticlePage",
+      "card": {
+        "key": "og/components-article-page.jpg",
+        "url": "https://media.getosirion.com/og/components-article-page.jpg",
+        "heading": "ArticlePage: a whole article page for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/author-card.md",
+      "path": "/components/author-card",
+      "section": "Components",
+      "title": "OsirionAuthorCard",
+      "card": {
+        "key": "og/components-author-card.jpg",
+        "url": "https://media.getosirion.com/og/components-author-card.jpg",
+        "heading": "OsirionAuthorCard: author cards for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/background-pattern.md",
+      "path": "/components/background-pattern",
+      "section": "Components",
+      "title": "OsirionBackgroundPattern",
+      "card": {
+        "key": "og/components-background-pattern.jpg",
+        "url": "https://media.getosirion.com/og/components-background-pattern.jpg",
+        "heading": "OsirionBackgroundPattern: CSS patterns for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/base-section.md",
+      "path": "/components/base-section",
+      "section": "Components",
+      "title": "OsirionBaseSection",
+      "card": {
+        "key": "og/components-base-section.jpg",
+        "url": "https://media.getosirion.com/og/components-base-section.jpg",
+        "heading": "OsirionBaseSection: content section for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/breadcrumbs.md",
+      "path": "/components/breadcrumbs",
+      "section": "Components",
+      "title": "OsirionBreadcrumbs",
+      "card": {
+        "key": "og/components-breadcrumbs.jpg",
+        "url": "https://media.getosirion.com/og/components-breadcrumbs.jpg",
+        "heading": "OsirionBreadcrumbs: breadcrumb trails for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/callout.md",
+      "path": "/components/callout",
+      "section": "Components",
+      "title": "OsirionCallout",
+      "card": {
+        "key": "og/components-callout.jpg",
+        "url": "https://media.getosirion.com/og/components-callout.jpg",
+        "heading": "OsirionCallout: notes, tips and warnings for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/cards.md",
+      "path": "/components/cards",
+      "section": "Components",
+      "title": "Cards",
+      "card": {
+        "key": "og/components-cards.jpg",
+        "url": "https://media.getosirion.com/og/components-cards.jpg",
+        "heading": "Blazor card components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/categories-list.md",
+      "path": "/components/categories-list",
+      "section": "Components",
+      "title": "CategoriesList",
+      "card": {
+        "key": "og/components-categories-list.jpg",
+        "url": "https://media.getosirion.com/og/components-categories-list.jpg",
+        "heading": "CategoriesList: category links with counts for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/clarity-tracker.md",
+      "path": "/components/clarity-tracker",
+      "section": "Components",
+      "title": "ClarityTracker",
+      "card": {
+        "key": "og/components-clarity-tracker.jpg",
+        "url": "https://media.getosirion.com/og/components-clarity-tracker.jpg",
+        "heading": "ClarityTracker: Microsoft Clarity script for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/cms-navigation.md",
+      "path": "/components/cms-navigation",
+      "section": "Components",
+      "title": "CMS navigation",
+      "card": {
+        "key": "og/components-cms-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-cms-navigation.jpg",
+        "heading": "Blazor CMS navigation components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/cms-pages.md",
+      "path": "/components/cms-pages",
+      "section": "Components",
+      "title": "CMS pages",
+      "card": {
+        "key": "og/components-cms-pages.jpg",
+        "url": "https://media.getosirion.com/og/components-cms-pages.jpg",
+        "heading": "Blazor CMS page components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/contact-form.md",
+      "path": "/components/contact-form",
+      "section": "Components",
+      "title": "OsirionContactForm",
+      "card": {
+        "key": "og/components-contact-form.jpg",
+        "url": "https://media.getosirion.com/og/components-contact-form.jpg",
+        "heading": "OsirionContactForm: contact form for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/contact-info-section.md",
+      "path": "/components/contact-info-section",
+      "section": "Components",
+      "title": "OsirionContactInfoSection",
+      "card": {
+        "key": "og/components-contact-info-section.jpg",
+        "url": "https://media.getosirion.com/og/components-contact-info-section.jpg",
+        "heading": "OsirionContactInfoSection: contact details for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/contact-page.md",
+      "path": "/components/contact-page",
+      "section": "Components",
+      "title": "ContactPage",
+      "card": {
+        "key": "og/components-contact-page.jpg",
+        "url": "https://media.getosirion.com/og/components-contact-page.jpg",
+        "heading": "ContactPage: a contact page with a form for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content.md",
+      "path": "/components/content",
+      "section": "Components",
+      "title": "Content",
+      "card": {
+        "key": "og/components-content.jpg",
+        "url": "https://media.getosirion.com/og/components-content.jpg",
+        "heading": "Blazor content components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-breadcrumbs.md",
+      "path": "/components/content-breadcrumbs",
+      "section": "Components",
+      "title": "ContentBreadcrumbs",
+      "card": {
+        "key": "og/components-content-breadcrumbs.jpg",
+        "url": "https://media.getosirion.com/og/components-content-breadcrumbs.jpg",
+        "heading": "ContentBreadcrumbs: content tree breadcrumbs for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-demo.md",
+      "path": "/components/content-demo",
+      "section": "Components",
+      "title": "OsirionContentDemo",
+      "card": {
+        "key": "og/components-content-demo.jpg",
+        "url": "https://media.getosirion.com/og/components-content-demo.jpg",
+        "heading": "OsirionContentDemo: live demos in Markdown for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-list.md",
+      "path": "/components/content-list",
+      "section": "Components",
+      "title": "ContentList",
+      "card": {
+        "key": "og/components-content-list.jpg",
+        "url": "https://media.getosirion.com/og/components-content-list.jpg",
+        "heading": "ContentList",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-not-found.md",
+      "path": "/components/content-not-found",
+      "section": "Components",
+      "title": "OsirionContentNotFound",
+      "card": {
+        "key": "og/components-content-not-found.jpg",
+        "url": "https://media.getosirion.com/og/components-content-not-found.jpg",
+        "heading": "OsirionContentNotFound: 404 and empty state for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-page.md",
+      "path": "/components/content-page",
+      "section": "Components",
+      "title": "ContentPage",
+      "card": {
+        "key": "og/components-content-page.jpg",
+        "url": "https://media.getosirion.com/og/components-content-page.jpg",
+        "heading": "ContentPage: an article page by URL for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-renderer.md",
+      "path": "/components/content-renderer",
+      "section": "Components",
+      "title": "ContentRenderer",
+      "card": {
+        "key": "og/components-content-renderer.jpg",
+        "url": "https://media.getosirion.com/og/components-content-renderer.jpg",
+        "heading": "ContentRenderer: a sanitized content body for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/content-view.md",
+      "path": "/components/content-view",
+      "section": "Components",
+      "title": "ContentView",
+      "card": {
+        "key": "og/components-content-view.jpg",
+        "url": "https://media.getosirion.com/og/components-content-view.jpg",
+        "heading": "ContentView: one content item as an article for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/context-card-grid.md",
+      "path": "/components/context-card-grid",
+      "section": "Components",
+      "title": "OsirionContextCardGrid",
+      "card": {
+        "key": "og/components-context-card-grid.jpg",
+        "url": "https://media.getosirion.com/og/components-context-card-grid.jpg",
+        "heading": "OsirionContextCardGrid: detail card grid for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/cookie-consent.md",
+      "path": "/components/cookie-consent",
+      "section": "Components",
+      "title": "OsirionCookieConsent",
+      "card": {
+        "key": "og/components-cookie-consent.jpg",
+        "url": "https://media.getosirion.com/og/components-cookie-consent.jpg",
+        "heading": "OsirionCookieConsent: cookie banner for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/directory-navigation.md",
+      "path": "/components/directory-navigation",
+      "section": "Components",
+      "title": "DirectoryNavigation",
+      "card": {
+        "key": "og/components-directory-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-directory-navigation.jpg",
+        "heading": "DirectoryNavigation: a directory list for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/document-page.md",
+      "path": "/components/document-page",
+      "section": "Components",
+      "title": "DocumentPage",
+      "card": {
+        "key": "og/components-document-page.jpg",
+        "url": "https://media.getosirion.com/og/components-document-page.jpg",
+        "heading": "DocumentPage: a documentation page for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/enhanced-navigation.md",
+      "path": "/components/enhanced-navigation",
+      "section": "Components",
+      "title": "EnhancedNavigation",
+      "card": {
+        "key": "og/components-enhanced-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-enhanced-navigation.jpg",
+        "heading": "EnhancedNavigation: scroll control for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/feature-card.md",
+      "path": "/components/feature-card",
+      "section": "Components",
+      "title": "OsirionFeatureCard",
+      "card": {
+        "key": "og/components-feature-card.jpg",
+        "url": "https://media.getosirion.com/og/components-feature-card.jpg",
+        "heading": "OsirionFeatureCard: feature cards for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/feeds-and-sitemap.md",
+      "path": "/components/feeds-and-sitemap",
+      "section": "Components",
+      "title": "Feeds and Sitemap",
+      "card": {
+        "key": "og/components-feeds-and-sitemap.jpg",
+        "url": "https://media.getosirion.com/og/components-feeds-and-sitemap.jpg",
+        "heading": "Feeds and sitemap: sitemap.xml, RSS and Atom for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/footer.md",
+      "path": "/components/footer",
+      "section": "Components",
+      "title": "OsirionFooter",
+      "card": {
+        "key": "og/components-footer.jpg",
+        "url": "https://media.getosirion.com/og/components-footer.jpg",
+        "heading": "OsirionFooter: site footer for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/forms-and-feedback.md",
+      "path": "/components/forms-and-feedback",
+      "section": "Components",
+      "title": "Forms and feedback",
+      "card": {
+        "key": "og/components-forms-and-feedback.jpg",
+        "url": "https://media.getosirion.com/og/components-forms-and-feedback.jpg",
+        "heading": "Blazor forms and feedback components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/ga4-tracker.md",
+      "path": "/components/ga4-tracker",
+      "section": "Components",
+      "title": "GA4Tracker",
+      "card": {
+        "key": "og/components-ga4-tracker.jpg",
+        "url": "https://media.getosirion.com/og/components-ga4-tracker.jpg",
+        "heading": "GA4Tracker: Google Analytics 4 tag for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/hero-section.md",
+      "path": "/components/hero-section",
+      "section": "Components",
+      "title": "HeroSection",
+      "card": {
+        "key": "og/components-hero-section.jpg",
+        "url": "https://media.getosirion.com/og/components-hero-section.jpg",
+        "heading": "HeroSection: page header and hero for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/home-page.md",
+      "path": "/components/home-page",
+      "section": "Components",
+      "title": "HomePage",
+      "card": {
+        "key": "og/components-home-page.jpg",
+        "url": "https://media.getosirion.com/og/components-home-page.jpg",
+        "heading": "HomePage: a home page from content for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/html-renderer.md",
+      "path": "/components/html-renderer",
+      "section": "Components",
+      "title": "OsirionHtmlRenderer",
+      "card": {
+        "key": "og/components-html-renderer.jpg",
+        "url": "https://media.getosirion.com/og/components-html-renderer.jpg",
+        "heading": "OsirionHtmlRenderer: sanitized HTML for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/infinite-logo-carousel.md",
+      "path": "/components/infinite-logo-carousel",
+      "section": "Components",
+      "title": "InfiniteLogoCarousel",
+      "card": {
+        "key": "og/components-infinite-logo-carousel.jpg",
+        "url": "https://media.getosirion.com/og/components-infinite-logo-carousel.jpg",
+        "heading": "InfiniteLogoCarousel: logo carousel for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/landing-page.md",
+      "path": "/components/landing-page",
+      "section": "Components",
+      "title": "LandingPage",
+      "card": {
+        "key": "og/components-landing-page.jpg",
+        "url": "https://media.getosirion.com/og/components-landing-page.jpg",
+        "heading": "LandingPage: a marketing page for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/layout.md",
+      "path": "/components/layout",
+      "section": "Components",
+      "title": "Layout",
+      "card": {
+        "key": "og/components-layout.jpg",
+        "url": "https://media.getosirion.com/og/components-layout.jpg",
+        "heading": "Blazor layout components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/localized-content-view.md",
+      "path": "/components/localized-content-view",
+      "section": "Components",
+      "title": "LocalizedContentView",
+      "card": {
+        "key": "og/components-localized-content-view.jpg",
+        "url": "https://media.getosirion.com/og/components-localized-content-view.jpg",
+        "heading": "LocalizedContentView: translated articles for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/localized-navigation.md",
+      "path": "/components/localized-navigation",
+      "section": "Components",
+      "title": "LocalizedNavigation",
+      "card": {
+        "key": "og/components-localized-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-localized-navigation.jpg",
+        "heading": "LocalizedNavigation: a content tree sidebar for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/matomo-tracker.md",
+      "path": "/components/matomo-tracker",
+      "section": "Components",
+      "title": "MatomoTracker",
+      "card": {
+        "key": "og/components-matomo-tracker.jpg",
+        "url": "https://media.getosirion.com/og/components-matomo-tracker.jpg",
+        "heading": "MatomoTracker: Matomo tracking script for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/menu.md",
+      "path": "/components/menu",
+      "section": "Components",
+      "title": "Menu",
+      "card": {
+        "key": "og/components-menu.jpg",
+        "url": "https://media.getosirion.com/og/components-menu.jpg",
+        "heading": "Menu: a site menu with mega menus for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/metric-card.md",
+      "path": "/components/metric-card",
+      "section": "Components",
+      "title": "OsirionMetricCard",
+      "card": {
+        "key": "og/components-metric-card.jpg",
+        "url": "https://media.getosirion.com/og/components-metric-card.jpg",
+        "heading": "OsirionMetricCard: metric cards for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/metric-grid.md",
+      "path": "/components/metric-grid",
+      "section": "Components",
+      "title": "OsirionMetricGrid",
+      "card": {
+        "key": "og/components-metric-grid.jpg",
+        "url": "https://media.getosirion.com/og/components-metric-grid.jpg",
+        "heading": "OsirionMetricGrid: metric card grid for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/navigation.md",
+      "path": "/components/navigation",
+      "section": "Components",
+      "title": "Navigation",
+      "card": {
+        "key": "og/components-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-navigation.jpg",
+        "heading": "Blazor navigation components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/not-found-page.md",
+      "path": "/components/not-found-page",
+      "section": "Components",
+      "title": "NotFoundPage",
+      "card": {
+        "key": "og/components-not-found-page.jpg",
+        "url": "https://media.getosirion.com/og/components-not-found-page.jpg",
+        "heading": "NotFoundPage: a 404 page for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/osirion-content-navigation.md",
+      "path": "/components/osirion-content-navigation",
+      "section": "Components",
+      "title": "OsirionContentNavigation",
+      "card": {
+        "key": "og/components-osirion-content-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-osirion-content-navigation.jpg",
+        "heading": "OsirionContentNavigation: previous and next for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/osirion-styles.md",
+      "path": "/components/osirion-styles",
+      "section": "Components",
+      "title": "OsirionStyles",
+      "card": {
+        "key": "og/components-osirion-styles.jpg",
+        "url": "https://media.getosirion.com/og/components-osirion-styles.jpg",
+        "heading": "OsirionStyles: stylesheets and theme setup for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/page-heading.md",
+      "path": "/components/page-heading",
+      "section": "Components",
+      "title": "OsirionPageHeading",
+      "card": {
+        "key": "og/components-page-heading.jpg",
+        "url": "https://media.getosirion.com/og/components-page-heading.jpg",
+        "heading": "OsirionPageHeading: page title heading for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/page-layout.md",
+      "path": "/components/page-layout",
+      "section": "Components",
+      "title": "OsirionPageLayout",
+      "card": {
+        "key": "og/components-page-layout.jpg",
+        "url": "https://media.getosirion.com/og/components-page-layout.jpg",
+        "heading": "OsirionPageLayout: page shell for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/page-loading.md",
+      "path": "/components/page-loading",
+      "section": "Components",
+      "title": "OsirionPageLoading",
+      "card": {
+        "key": "og/components-page-loading.jpg",
+        "url": "https://media.getosirion.com/og/components-page-loading.jpg",
+        "heading": "OsirionPageLoading: loading spinner for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/palettes.md",
+      "path": "/components/palettes",
+      "section": "Components",
+      "title": "Palettes",
+      "card": {
+        "key": "og/components-palettes.jpg",
+        "url": "https://media.getosirion.com/og/components-palettes.jpg",
+        "heading": "Palettes: named color palettes for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/plausible-tracker.md",
+      "path": "/components/plausible-tracker",
+      "section": "Components",
+      "title": "PlausibleTracker",
+      "card": {
+        "key": "og/components-plausible-tracker.jpg",
+        "url": "https://media.getosirion.com/og/components-plausible-tracker.jpg",
+        "heading": "PlausibleTracker: Plausible Analytics script for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/pricing-table.md",
+      "path": "/components/pricing-table",
+      "section": "Components",
+      "title": "OsirionPricingTable and OsirionFeatureComparison",
+      "card": {
+        "key": "og/components-pricing-table.jpg",
+        "url": "https://media.getosirion.com/og/components-pricing-table.jpg",
+        "heading": "OsirionPricingTable: pricing and plan comparison for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/read-more-link.md",
+      "path": "/components/read-more-link",
+      "section": "Components",
+      "title": "OsirionReadMoreLink",
+      "card": {
+        "key": "og/components-read-more-link.jpg",
+        "url": "https://media.getosirion.com/og/components-read-more-link.jpg",
+        "heading": "OsirionReadMoreLink: read more links for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/reading-progress.md",
+      "path": "/components/reading-progress",
+      "section": "Components",
+      "title": "OsirionReadingProgress",
+      "card": {
+        "key": "og/components-reading-progress.jpg",
+        "url": "https://media.getosirion.com/og/components-reading-progress.jpg",
+        "heading": "OsirionReadingProgress: reading progress bar for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/responsive-image.md",
+      "path": "/components/responsive-image",
+      "section": "Components",
+      "title": "OsirionResponsiveImage",
+      "card": {
+        "key": "og/components-responsive-image.jpg",
+        "url": "https://media.getosirion.com/og/components-responsive-image.jpg",
+        "heading": "OsirionResponsiveImage: responsive images for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/responsive-showcase-section.md",
+      "path": "/components/responsive-showcase-section",
+      "section": "Components",
+      "title": "OsirionResponsiveShowcaseSection",
+      "card": {
+        "key": "og/components-responsive-showcase-section.jpg",
+        "url": "https://media.getosirion.com/og/components-responsive-showcase-section.jpg",
+        "heading": "OsirionResponsiveShowcaseSection: preview for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/reveal.md",
+      "path": "/components/reveal",
+      "section": "Components",
+      "title": "OsirionReveal",
+      "card": {
+        "key": "og/components-reveal.jpg",
+        "url": "https://media.getosirion.com/og/components-reveal.jpg",
+        "heading": "OsirionReveal: reveal on scroll for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/scroll-to-top.md",
+      "path": "/components/scroll-to-top",
+      "section": "Components",
+      "title": "ScrollToTop",
+      "card": {
+        "key": "og/components-scroll-to-top.jpg",
+        "url": "https://media.getosirion.com/og/components-scroll-to-top.jpg",
+        "heading": "ScrollToTop: a back to top button for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/search-box.md",
+      "path": "/components/search-box",
+      "section": "Components",
+      "title": "SearchBox",
+      "card": {
+        "key": "og/components-search-box.jpg",
+        "url": "https://media.getosirion.com/og/components-search-box.jpg",
+        "heading": "SearchBox: a search form for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/sections.md",
+      "path": "/components/sections",
+      "section": "Components",
+      "title": "Sections",
+      "card": {
+        "key": "og/components-sections.jpg",
+        "url": "https://media.getosirion.com/og/components-sections.jpg",
+        "heading": "Blazor section components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/seo-and-feeds.md",
+      "path": "/components/seo-and-feeds",
+      "section": "Components",
+      "title": "SEO and feeds",
+      "card": {
+        "key": "og/components-seo-and-feeds.jpg",
+        "url": "https://media.getosirion.com/og/components-seo-and-feeds.jpg",
+        "heading": "Blazor SEO metadata, sitemap and feeds",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/seo-metadata-renderer.md",
+      "path": "/components/seo-metadata-renderer",
+      "section": "Components",
+      "title": "SeoMetadataRenderer",
+      "card": {
+        "key": "og/components-seo-metadata-renderer.jpg",
+        "url": "https://media.getosirion.com/og/components-seo-metadata-renderer.jpg",
+        "heading": "SeoMetadataRenderer: head metadata and JSON-LD for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/series-navigation.md",
+      "path": "/components/series-navigation",
+      "section": "Components",
+      "title": "ContentSeriesNavigation",
+      "card": {
+        "key": "og/components-series-navigation.jpg",
+        "url": "https://media.getosirion.com/og/components-series-navigation.jpg",
+        "heading": "ContentSeriesNavigation: series links for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/steps.md",
+      "path": "/components/steps",
+      "section": "Components",
+      "title": "OsirionSteps",
+      "card": {
+        "key": "og/components-steps.jpg",
+        "url": "https://media.getosirion.com/og/components-steps.jpg",
+        "heading": "OsirionSteps: numbered steps for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/sticky-sidebar.md",
+      "path": "/components/sticky-sidebar",
+      "section": "Components",
+      "title": "OsirionStickySidebar",
+      "card": {
+        "key": "og/components-sticky-sidebar.jpg",
+        "url": "https://media.getosirion.com/og/components-sticky-sidebar.jpg",
+        "heading": "OsirionStickySidebar: sticky sidebar for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/subscription-card.md",
+      "path": "/components/subscription-card",
+      "section": "Components",
+      "title": "OsirionSubscriptionCard",
+      "card": {
+        "key": "og/components-subscription-card.jpg",
+        "url": "https://media.getosirion.com/og/components-subscription-card.jpg",
+        "heading": "OsirionSubscriptionCard: a newsletter form for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/table-of-contents.md",
+      "path": "/components/table-of-contents",
+      "section": "Components",
+      "title": "TableOfContents",
+      "card": {
+        "key": "og/components-table-of-contents.jpg",
+        "url": "https://media.getosirion.com/og/components-table-of-contents.jpg",
+        "heading": "TableOfContents: a heading outline for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/tabs.md",
+      "path": "/components/tabs",
+      "section": "Components",
+      "title": "OsirionTabs",
+      "card": {
+        "key": "og/components-tabs.jpg",
+        "url": "https://media.getosirion.com/og/components-tabs.jpg",
+        "heading": "OsirionTabs: tabs without JavaScript for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/tag-cloud.md",
+      "path": "/components/tag-cloud",
+      "section": "Components",
+      "title": "TagCloud",
+      "card": {
+        "key": "og/components-tag-cloud.jpg",
+        "url": "https://media.getosirion.com/og/components-tag-cloud.jpg",
+        "heading": "TagCloud: tag links with counts for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/testimonial-card.md",
+      "path": "/components/testimonial-card",
+      "section": "Components",
+      "title": "OsirionTestimonialCard",
+      "card": {
+        "key": "og/components-testimonial-card.jpg",
+        "url": "https://media.getosirion.com/og/components-testimonial-card.jpg",
+        "heading": "OsirionTestimonialCard: testimonial cards for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/testimonial-carousel.md",
+      "path": "/components/testimonial-carousel",
+      "section": "Components",
+      "title": "OsirionTestimonialCarousel",
+      "card": {
+        "key": "og/components-testimonial-carousel.jpg",
+        "url": "https://media.getosirion.com/og/components-testimonial-carousel.jpg",
+        "heading": "OsirionTestimonialCarousel: testimonial rail for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/theme-picker.md",
+      "path": "/components/theme-picker",
+      "section": "Components",
+      "title": "ThemePicker",
+      "card": {
+        "key": "og/components-theme-picker.jpg",
+        "url": "https://media.getosirion.com/og/components-theme-picker.jpg",
+        "heading": "ThemePicker: color palette picker for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/theme-toggle.md",
+      "path": "/components/theme-toggle",
+      "section": "Components",
+      "title": "ThemeToggle",
+      "card": {
+        "key": "og/components-theme-toggle.jpg",
+        "url": "https://media.getosirion.com/og/components-theme-toggle.jpg",
+        "heading": "ThemeToggle: light and dark mode button for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/umami-tracker.md",
+      "path": "/components/umami-tracker",
+      "section": "Components",
+      "title": "UmamiTracker",
+      "card": {
+        "key": "og/components-umami-tracker.jpg",
+        "url": "https://media.getosirion.com/og/components-umami-tracker.jpg",
+        "heading": "UmamiTracker: Umami tracking script for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/video-embed.md",
+      "path": "/components/video-embed",
+      "section": "Components",
+      "title": "OsirionVideoEmbed",
+      "card": {
+        "key": "og/components-video-embed.jpg",
+        "url": "https://media.getosirion.com/og/components-video-embed.jpg",
+        "heading": "OsirionVideoEmbed: click-to-play video for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "components/yandex-metrica-tracker.md",
+      "path": "/components/yandex-metrica-tracker",
+      "section": "Components",
+      "title": "YandexMetricaTracker",
+      "card": {
+        "key": "og/components-yandex-metrica-tracker.jpg",
+        "url": "https://media.getosirion.com/og/components-yandex-metrica-tracker.jpg",
+        "heading": "YandexMetricaTracker: Yandex Metrica counter for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/getting-started.md",
+      "path": "/docs/getting-started",
+      "section": "Getting started",
+      "title": "Getting started",
+      "card": {
+        "key": "og/docs-getting-started.jpg",
+        "url": "https://media.getosirion.com/og/docs-getting-started.jpg",
+        "heading": "Getting started with Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "first-blog",
+          "source": "template:osirion-blog",
+          "path": "/",
+          "alt": "The blog the getting started commands create, running on localhost",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/docs-getting-started/first-blog-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "docs/_index.md",
+      "path": "/docs",
+      "section": "Guides",
+      "title": "Documentation",
+      "card": {
+        "key": "og/docs.jpg",
+        "url": "https://media.getosirion.com/og/docs.jpg",
+        "heading": "Osirion.Blazor documentation",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/accessibility.md",
+      "path": "/docs/accessibility",
+      "section": "Guides",
+      "title": "Accessibility",
+      "card": {
+        "key": "og/docs-accessibility.jpg",
+        "url": "https://media.getosirion.com/og/docs-accessibility.jpg",
+        "heading": "Accessibility checks for an Osirion.Blazor site",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/configuration.md",
+      "path": "/docs/configuration",
+      "section": "Guides",
+      "title": "Configure Osirion.Blazor",
+      "card": {
+        "key": "og/docs-configuration.jpg",
+        "url": "https://media.getosirion.com/og/docs-configuration.jpg",
+        "heading": "Configure Osirion.Blazor: appsettings, code, secrets",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/content.md",
+      "path": "/docs/content",
+      "section": "Guides",
+      "title": "How content is organized",
+      "card": {
+        "key": "og/docs-content.jpg",
+        "url": "https://media.getosirion.com/og/docs-content.jpg",
+        "heading": "How Osirion.Blazor content is organized",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/deployment.md",
+      "path": "/docs/deployment",
+      "section": "Guides",
+      "title": "Deploy an Osirion.Blazor site",
+      "card": {
+        "key": "og/docs-deployment.jpg",
+        "url": "https://media.getosirion.com/og/docs-deployment.jpg",
+        "heading": "Deploy an Osirion.Blazor site: content, HTTPS, feeds",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/front-matter.md",
+      "path": "/docs/front-matter",
+      "section": "Guides",
+      "title": "Front matter reference",
+      "card": {
+        "key": "og/docs-front-matter.jpg",
+        "url": "https://media.getosirion.com/og/docs-front-matter.jpg",
+        "heading": "Osirion.Blazor front matter reference",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/guides.md",
+      "path": "/docs/guides",
+      "section": "Guides",
+      "title": "Guides",
+      "card": {
+        "key": "og/docs-guides.jpg",
+        "url": "https://media.getosirion.com/og/docs-guides.jpg",
+        "heading": "Osirion.Blazor guides",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/installation.md",
+      "path": "/docs/installation",
+      "section": "Guides",
+      "title": "Install Osirion.Blazor",
+      "card": {
+        "key": "og/docs-installation.jpg",
+        "url": "https://media.getosirion.com/og/docs-installation.jpg",
+        "heading": "Install Osirion.Blazor in a Blazor Web App",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/localization.md",
+      "path": "/docs/localization",
+      "section": "Guides",
+      "title": "Localization",
+      "card": {
+        "key": "og/docs-localization.jpg",
+        "url": "https://media.getosirion.com/og/docs-localization.jpg",
+        "heading": "Localize an Osirion.Blazor content site",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/migration.md",
+      "path": "/docs/migration",
+      "section": "Guides",
+      "title": "Migration",
+      "card": {
+        "key": "og/docs-migration.jpg",
+        "url": "https://media.getosirion.com/og/docs-migration.jpg",
+        "heading": "Migrate Osirion.Blazor from 3.x to 4.x",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/providers.md",
+      "path": "/docs/providers",
+      "section": "Guides",
+      "title": "Content providers",
+      "card": {
+        "key": "og/docs-providers.jpg",
+        "url": "https://media.getosirion.com/og/docs-providers.jpg",
+        "heading": "Osirion.Blazor content providers: folder and GitHub",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/security.md",
+      "path": "/docs/security",
+      "section": "Guides",
+      "title": "Security",
+      "card": {
+        "key": "og/docs-security.jpg",
+        "url": "https://media.getosirion.com/og/docs-security.jpg",
+        "heading": "Secure an Osirion.Blazor site",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/seo.md",
+      "path": "/docs/seo",
+      "section": "Guides",
+      "title": "SEO",
+      "card": {
+        "key": "og/docs-seo.jpg",
+        "url": "https://media.getosirion.com/og/docs-seo.jpg",
+        "heading": "SEO for Osirion.Blazor sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/troubleshooting.md",
+      "path": "/docs/troubleshooting",
+      "section": "Guides",
+      "title": "Troubleshooting",
+      "card": {
+        "key": "og/docs-troubleshooting.jpg",
+        "url": "https://media.getosirion.com/og/docs-troubleshooting.jpg",
+        "heading": "Troubleshoot an Osirion.Blazor site",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "home.md",
+      "path": "/",
+      "section": "Osirion.Blazor",
+      "title": "Blazor sites from Markdown, rendered on the server",
+      "card": {
+        "key": "og/home.jpg",
+        "url": "https://media.getosirion.com/og/home.jpg",
+        "heading": "Osirion.Blazor: Blazor components for content sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "/images/osirion-hero.png",
+      "shots": []
+    },
+    {
+      "file": "about.md",
+      "path": "/about",
+      "section": "Osirion.Blazor",
+      "title": "About Osirion.Blazor",
+      "card": {
+        "key": "og/about.jpg",
+        "url": "https://media.getosirion.com/og/about.jpg",
+        "heading": "About Osirion.Blazor and its maintainer",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "contact.md",
+      "path": "/contact",
+      "section": "Osirion.Blazor",
+      "title": "Contact",
+      "card": {
+        "key": "og/contact.jpg",
+        "url": "https://media.getosirion.com/og/contact.jpg",
+        "heading": "Contact the Osirion.Blazor maintainer",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "privacy-policy.md",
+      "path": "/privacy-policy",
+      "section": "Osirion.Blazor",
+      "title": "Privacy policy",
+      "card": {
+        "key": "og/privacy-policy.jpg",
+        "url": "https://media.getosirion.com/og/privacy-policy.jpg",
+        "heading": "Privacy policy: cookies and analytics",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "showcase.md",
+      "path": "/showcase",
+      "section": "Osirion.Blazor",
+      "title": "Sites built with Osirion.Blazor",
+      "card": {
+        "key": "og/showcase.jpg",
+        "url": "https://media.getosirion.com/og/showcase.jpg",
+        "heading": "Sites built with Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "templates.md",
+      "path": "/templates",
+      "section": "Osirion.Blazor",
+      "title": "Templates",
+      "card": {
+        "key": "og/templates.jpg",
+        "url": "https://media.getosirion.com/og/templates.jpg",
+        "heading": "Blazor templates for blogs, docs and product sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "osirion-blog",
+          "source": "template:osirion-blog",
+          "path": "/",
+          "alt": "A blog created with dotnet new osirion-blog: the newest posts on the home page",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/templates/osirion-blog-{theme}.webp"
+        },
+        {
+          "shot": "osirion-docs",
+          "source": "template:osirion-docs",
+          "path": "/docs",
+          "alt": "A documentation site created with dotnet new osirion-docs: side navigation, a page and its table of contents",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/templates/osirion-docs-{theme}.webp"
+        },
+        {
+          "shot": "osirion-site",
+          "source": "template:osirion-site",
+          "path": "/",
+          "alt": "A product site created with dotnet new osirion-site: a hero, three steps and the latest news",
+          "themes": [
+            "dark"
+          ],
+          "key": "shots/templates/osirion-site-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "themes.md",
+      "path": "/themes",
+      "section": "Osirion.Blazor",
+      "title": "Themes",
+      "card": {
+        "key": "og/themes.jpg",
+        "url": "https://media.getosirion.com/og/themes.jpg",
+        "heading": "Blazor themes and color palettes",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": [
+        {
+          "shot": "palettes",
+          "source": "site",
+          "path": "/themes",
+          "selector": ".themes-palettes",
+          "themes": [
+            "dark",
+            "light"
+          ],
+          "alt": "The Osirion palettes side by side",
+          "key": "shots/themes/palettes-{theme}.webp"
+        }
+      ]
+    },
+    {
+      "file": "docs/packages/_index.md",
+      "path": "/docs/packages",
+      "section": "Packages",
+      "title": "Packages",
+      "card": {
+        "key": "og/docs-packages.jpg",
+        "url": "https://media.getosirion.com/og/docs-packages.jpg",
+        "heading": "Osirion.Blazor packages: modules and their components",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/packages/analytics.md",
+      "path": "/docs/packages/analytics",
+      "section": "Packages",
+      "title": "Osirion.Blazor.Analytics",
+      "card": {
+        "key": "og/docs-packages-analytics.jpg",
+        "url": "https://media.getosirion.com/og/docs-packages-analytics.jpg",
+        "heading": "Analytics Trackers for Blazor - Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/packages/cms-web.md",
+      "path": "/docs/packages/cms-web",
+      "section": "Packages",
+      "title": "Osirion.Blazor.Cms.Web",
+      "card": {
+        "key": "og/docs-packages-cms-web.jpg",
+        "url": "https://media.getosirion.com/og/docs-packages-cms-web.jpg",
+        "heading": "CMS Web Components | Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/packages/core.md",
+      "path": "/docs/packages/core",
+      "section": "Packages",
+      "title": "Osirion.Blazor.Core",
+      "card": {
+        "key": "og/docs-packages-core.jpg",
+        "url": "https://media.getosirion.com/og/docs-packages-core.jpg",
+        "heading": "Core components - Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/packages/navigation.md",
+      "path": "/docs/packages/navigation",
+      "section": "Packages",
+      "title": "Osirion.Blazor.Navigation",
+      "card": {
+        "key": "og/docs-packages-navigation.jpg",
+        "url": "https://media.getosirion.com/og/docs-packages-navigation.jpg",
+        "heading": "Navigation Components for Blazor - Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    },
+    {
+      "file": "docs/packages/theming.md",
+      "path": "/docs/packages/theming",
+      "section": "Packages",
+      "title": "Osirion.Blazor.Theming",
+      "card": {
+        "key": "og/docs-packages-theming.jpg",
+        "url": "https://media.getosirion.com/og/docs-packages-theming.jpg",
+        "heading": "Theming for Blazor - Osirion.Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "/assets/images/blazor-cover.png",
+      "shots": []
+    }
+  ]
+}
