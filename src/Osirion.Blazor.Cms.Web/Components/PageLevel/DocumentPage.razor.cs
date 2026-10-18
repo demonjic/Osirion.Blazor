@@ -107,6 +107,12 @@ public partial class DocumentPage
     public int TocMaxLevel { get; set; } = 4;
 
     /// <summary>
+    /// Whether the table of contents numbers its entries, passed on to its <c>ShowNumbers</c>.
+    /// </summary>
+    [Parameter]
+    public bool TocShowNumbers { get; set; } = true;
+
+    /// <summary>
     /// Whether to show previous and next links under the document. When <see
     /// cref="OsirionContentDetailPageBase.PreviousItem"/> or <see cref="OsirionContentDetailPageBase.NextItem"/> is
     /// null, the page looks the missing one up in the document's folder, in <c>order</c>. A value you pass is kept.

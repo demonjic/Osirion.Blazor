@@ -170,7 +170,6 @@ Welcome to the comprehensive documentation for Osirion.Blazor. This index provid
 - [Sample Configurations](EXAMPLES.md#quick-start-examples)
 
 ### Community Resources
-- [GitHub Discussions](https://github.com/demonjic/Osirion.Blazor/discussions)
 - [Issue Tracker](https://github.com/demonjic/Osirion.Blazor/issues)
 - [Release Notes](../CHANGELOG.md)
 
@@ -193,7 +192,7 @@ This documentation is actively maintained and updated with each release. Key inf
 We welcome contributions to improve our documentation:
 
 1. **Report Issues**: Found something unclear? [Open an issue](https://github.com/demonjic/Osirion.Blazor/issues/new)
-2. **Suggest Improvements**: Have ideas? [Start a discussion](https://github.com/demonjic/Osirion.Blazor/discussions)
+2. **Suggest Improvements**: Have ideas? [Open an issue](https://github.com/demonjic/Osirion.Blazor/issues/new/choose)
 3. **Submit PRs**: Direct improvements via [pull requests](../CONTRIBUTING.md)
 4. **Share Examples**: Contribute your own examples and tutorials
 
@@ -206,4 +205,4 @@ We welcome contributions to improve our documentation:
 
 ---
 
-**Need help?** Can't find what you're looking for? [Start a discussion](https://github.com/demonjic/Osirion.Blazor/discussions) or [open an issue](https://github.com/demonjic/Osirion.Blazor/issues/new) and we'll help you out!
+**Need help?** Can't find what you're looking for? [Open an issue](https://github.com/demonjic/Osirion.Blazor/issues/new) and we'll help you out!

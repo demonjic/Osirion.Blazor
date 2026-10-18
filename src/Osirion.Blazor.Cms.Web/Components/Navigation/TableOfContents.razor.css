@@ -12,23 +12,19 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    counter-reset: toc-counter;
 }
 
 .osirion-toc-sublist {
     list-style: none;
     padding-left: var(--osirion-spacing-4, 1rem);
     margin: var(--osirion-spacing-1, 0.25rem) 0 0;
-    counter-reset: toc-subcounter;
 }
 
 .osirion-toc-item {
     margin-bottom: var(--osirion-spacing-2, 0.5rem);
-    counter-increment: toc-counter;
 }
 
 .osirion-toc-sublist .osirion-toc-item {
-    counter-increment: toc-subcounter;
     margin-bottom: var(--osirion-spacing-1, 0.25rem);
 }
 
@@ -62,15 +58,31 @@
         background-color: var(--osirion-toc-active-background, transparent);
     }
 
-    /* Add numbering */
-    .osirion-toc-link::before {
-        content: counter(toc-counter) ". ";
-        color: var(--osirion-text-tertiary, #9ca3af);
-        font-weight: var(--osirion-font-weight-medium, 500);
-        margin-right: var(--osirion-spacing-1, 0.25rem);
-    }
+/* Numbering, only under the class ShowNumbers puts on the root, so ShowNumbers="false" renders a plain list */
+.osirion-toc-numbered .osirion-toc-list {
+    counter-reset: toc-counter;
+}
 
-.osirion-toc-sublist .osirion-toc-link::before {
+.osirion-toc-numbered .osirion-toc-sublist {
+    counter-reset: toc-subcounter;
+}
+
+.osirion-toc-numbered .osirion-toc-item {
+    counter-increment: toc-counter;
+}
+
+.osirion-toc-numbered .osirion-toc-sublist .osirion-toc-item {
+    counter-increment: toc-subcounter;
+}
+
+.osirion-toc-numbered .osirion-toc-link::before {
+    content: counter(toc-counter) ". ";
+    color: var(--osirion-text-tertiary, #9ca3af);
+    font-weight: var(--osirion-font-weight-medium, 500);
+    margin-right: var(--osirion-spacing-1, 0.25rem);
+}
+
+.osirion-toc-numbered .osirion-toc-sublist .osirion-toc-link::before {
     content: counter(toc-counter) "." counter(toc-subcounter) " ";
 }
 
