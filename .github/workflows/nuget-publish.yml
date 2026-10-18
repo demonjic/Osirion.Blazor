@@ -1,7 +1,9 @@
 name: Publish to NuGet
 
 # Builds, tests and packs every package under src at the version its project file carries, pushes them to nuget.org
-# and creates the GitHub release. Start it by pushing the tag v<version>, or run it on master by hand.
+# and creates the GitHub release with its tag. It runs on every push to master and publishes only when that version has
+# no tag yet, which is the case right after a release pull request (Prepare Release) merges. Pushing the tag
+# v<version> or running it by hand on master also works.
 #
 # Publishing uses NuGet trusted publishing: nuget.org trades this workflow's GitHub OIDC token for an API key that
 # lasts one hour. The policy on nuget.org names the repository owner, the repository and this file name
@@ -9,6 +11,7 @@ name: Publish to NuGet
 
 on:
   push:
+    branches: [ master ]
     tags: [ 'v*' ]
   workflow_dispatch:
 
@@ -26,8 +29,33 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
+  # A push to master publishes only a version that has no tag yet; every other push to master stops here.
+  release-check:
+    name: Is there a version to release
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.check.outputs.release }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check for an untagged version
+        id: check
+        run: |
+          version=$(grep -oP '(?<=<Version>)[^<]+' src/Osirion.Blazor/Osirion.Blazor.csproj)
+          if [ "$GITHUB_REF_TYPE" = "branch" ] && [ "$GITHUB_EVENT_NAME" = "push" ] \
+            && git rev-parse -q --verify "refs/tags/v$version" > /dev/null; then
+            echo "::notice title=Nothing to publish::v$version is already released"
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
+
   pack:
     name: Build, test and pack
+    needs: release-check
+    if: needs.release-check.outputs.release == 'true'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
