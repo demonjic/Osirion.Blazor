@@ -187,7 +187,9 @@ The output is wrapped in `<article class="osirion-html-renderer osirion-content"
 when the accessible theme is in use. The component also links
 `_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css`, which styles headings, lists, tables, links and code
 inside the article from the theme tokens (`--osirion-text-primary`, `--osirion-font-family-base`,
-`--osirion-font-family-mono` and others).
+`--osirion-font-family-mono` and others). That stylesheet is the only source of the content typography: to change it,
+override its rules or set the tokens in your app's stylesheet. The component's scoped styles only set the article's base
+font, size and color, because the rendered HTML does not carry their scope attribute.
 
 Two custom properties are yours to set:
 
