@@ -60,7 +60,7 @@ content-page
 
 The demo loads this site's own page for the 1.5 release notes by its URL (`blog/osirion-blazor-v1-5-release-notes`)
 and shows it in a scrolling frame. The formatters point the category, tag and related links at this site's routes.
-The page has its own heading, so the demo adds a second `h1` to this documentation page.
+This documentation page has its own `h1`, so the demo sets `HeadingLevel="2"` and the article title is an `h2`.
 
 ## Usage
 
@@ -146,6 +146,7 @@ item you pass in `ContentItem` and loads no neighbors, related items or default 
 | `ShowRelatedContent` | `bool` | `false` | Whether to show related items, from `RelatedItems` or, when that is empty, found by the page. |
 | `RelatedContentTitle` | `string` | `"Related Content"` | The heading of the related section. |
 | `SchemaType` | `string` | `"Article"` | The schema.org type written into the article's `itemtype` attribute (`https://schema.org/Article` by default). ContentPage writes no head metadata; render a `SeoMetadataRenderer` for that. |
+| `HeadingLevel` | `int` | `1` | The level of the heading that holds the article title, `1` to `6` (`h1` to `h6`), passed to the `LocalizedContentView` inside. It defaults to `1`, the page's own heading; set `2` for a page embedded in another that has its own `h1`, so that page keeps a single one. A value outside the range is moved to the nearest level. The title keeps its look at every level. |
 | `DirectoryUrlFormatter` | `Func<DirectoryItem, string>?` | `null` | Has no effect: the page renders no directory links. |
 | `CategoryUrlFormatter` | `Func<string, string>?` | `null` | Builds a category link from the category name, for the links under the article and the sidebar list. Without it the links under the article are `/{locale}/category/{slug}` and the sidebar list uses its own default. |
 | `TagUrlFormatter` | `Func<string, string>?` | `null` | Builds a tag link from the tag name, for the links under the article and the tag cloud. Without it the links under the article are `/{locale}/tag/{slug}` and the tag cloud uses its own default. |
@@ -173,7 +174,7 @@ item you pass in `ContentItem` and loads no neighbors, related items or default 
 - **Share links.** They open in a new tab with `rel="noopener noreferrer"`. The default links carry the page's
   absolute URL without query string or fragment.
 - **Related items.** Each shows its featured image (when it has one, with the `featured_image_alt` custom field of its front matter as alt text, or an empty one), its title as a
-  link and its date. The default link is the item's source path with `.md` removed; set `ContentUrlFormatter` when
+  link and its date, written in the language of that item's locale. The default link is the item's source path with `.md` removed; set `ContentUrlFormatter` when
   your routes differ.
 - **Security.** `FooterContent` and each `ShareLink.Icon` are written as raw HTML without sanitizing. Never put
   user-supplied or content-supplied text in them.

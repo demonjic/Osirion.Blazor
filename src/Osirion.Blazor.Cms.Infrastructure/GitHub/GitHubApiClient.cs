@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Osirion.Blazor.Cms.Domain.Interfaces;
 using Osirion.Blazor.Cms.Domain.Models.GitHub;
 using Osirion.Blazor.Cms.Domain.Options;
+using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -19,8 +20,15 @@ namespace Osirion.Blazor.Cms.Infrastructure.GitHub;
 /// the underlying client are never modified, so two instances that share an <see cref="HttpClient"/> never
 /// see each other's token, repository or branch.
 /// </remarks>
-public class GitHubApiClient : IGitHubApiClient
+public partial class GitHubApiClient : IGitHubApiClient
 {
+    /// <summary>
+    /// The number of redirects one request follows before its last redirect response is returned
+    /// </summary>
+    internal const int MaxRedirects = 5;
+
+    private const int MaxReportedRedirects = 1024;
+
     private const string DefaultApiUrl = "https://api.github.com";
     private const string GitHubMediaType = "application/vnd.github.v3+json";
     private const string UserAgentProduct = "OsirionBlogCMS";
@@ -35,6 +43,9 @@ public class GitHubApiClient : IGitHubApiClient
     {
         PropertyNameCaseInsensitive = true
     };
+
+    // The configured repositories whose redirect has been reported, so each is reported once per process
+    private static readonly ConcurrentDictionary<string, byte> ReportedRedirects = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly Func<HttpClient> _acquireHttpClient;
     private readonly ILogger<GitHubApiClient> _logger;
@@ -672,8 +683,22 @@ public class GitHubApiClient : IGitHubApiClient
     }
 
     /// <summary>
-    /// Sends a request whose headers come from <paramref name="settings"/>, never from shared client state
+    /// Sends a request whose headers come from <paramref name="settings"/>, never from shared client state, and
+    /// follows a redirect on the same scheme, host and port with those headers
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The <see cref="IHttpClientFactory"/> clients of the provider do not follow redirects themselves (see
+    /// <see cref="GitHubHttpClientCookiePolicy"/>), because the framework drops the Authorization header on a
+    /// redirect and every request after it would count against the server's shared unauthenticated limit.
+    /// GitHub answers with a redirect when the configured repository was renamed or transferred.
+    /// </para>
+    /// <para>
+    /// A redirect to another scheme, host or port is not followed and its response is returned, so the token never
+    /// leaves the API host and no request silently continues without it. Following GitHub's guidance, a redirected
+    /// request is repeated verbatim: the same method, headers and body.
+    /// </para>
+    /// </remarks>
     private async Task<HttpResponseMessage> SendAsync(
         HttpMethod method,
         string url,
@@ -682,12 +707,100 @@ public class GitHubApiClient : IGitHubApiClient
         HttpContent? content = null)
     {
         var httpClient = _acquireHttpClient();
+        var originalUri = new Uri(url, UriKind.Absolute);
+        var requestUri = originalUri;
 
-        using var request = new HttpRequestMessage(method, url) { Content = content };
-        ApplyHeaders(request, httpClient, settings);
+        try
+        {
+            for (var redirects = 0; ; redirects++)
+            {
+                var response = await SendOnceAsync(httpClient, method, requestUri, settings, content, cancellationToken);
 
-        return await httpClient.SendAsync(request, cancellationToken);
+                if (!IsRedirect(response.StatusCode) || response.Headers.Location is not { } location)
+                {
+                    return response;
+                }
+
+                var target = location.IsAbsoluteUri ? location : new Uri(requestUri, location);
+                WarnRepositoryRedirectedOnce(settings, target);
+
+                if (!IsSameOrigin(target, originalUri))
+                {
+                    LogRedirectToOtherOriginNotFollowed(_logger, (int)response.StatusCode, target);
+                    return response;
+                }
+
+                if (redirects == MaxRedirects)
+                {
+                    LogTooManyRedirects(_logger, MaxRedirects, originalUri);
+                    return response;
+                }
+
+                response.Dispose();
+                cancellationToken.ThrowIfCancellationRequested();
+                requestUri = target;
+            }
+        }
+        finally
+        {
+            content?.Dispose();
+        }
     }
+
+    private static async Task<HttpResponseMessage> SendOnceAsync(
+        HttpClient httpClient,
+        HttpMethod method,
+        Uri requestUri,
+        ClientSettings settings,
+        HttpContent? content,
+        CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(method, requestUri) { Content = content };
+        try
+        {
+            ApplyHeaders(request, httpClient, settings);
+            return await httpClient.SendAsync(request, cancellationToken);
+        }
+        finally
+        {
+            // Disposing the request would dispose its body, which a redirect sends again
+            request.Content = null;
+            request.Dispose();
+        }
+    }
+
+    private static bool IsRedirect(System.Net.HttpStatusCode statusCode)
+    {
+        return statusCode is System.Net.HttpStatusCode.MovedPermanently
+            or System.Net.HttpStatusCode.Found
+            or System.Net.HttpStatusCode.TemporaryRedirect
+            or System.Net.HttpStatusCode.PermanentRedirect;
+    }
+
+    private static bool IsSameOrigin(Uri target, Uri original)
+    {
+        return Uri.Compare(target, original, UriComponents.SchemeAndServer, UriFormat.SafeUnescaped, StringComparison.OrdinalIgnoreCase) == 0;
+    }
+
+    private void WarnRepositoryRedirectedOnce(ClientSettings settings, Uri target)
+    {
+        // Clients are created per operation, so the warning is kept to once per configured repository for the
+        // process; past the cap the warning is logged every time rather than growing the set without bound.
+        var key = $"{settings.ApiUrl}|{settings.Owner}/{settings.Repository}";
+        if (ReportedRedirects.Count >= MaxReportedRedirects || ReportedRedirects.TryAdd(key, 0))
+        {
+            LogRepositoryRedirected(_logger, settings.Owner, settings.Repository, target);
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "GitHub redirected requests for the configured repository {Owner}/{Repository} to {Location}. The repository was probably renamed or transferred; update the provider's Owner and Repository settings to its new name")]
+    private static partial void LogRepositoryRedirected(ILogger logger, string owner, string repository, Uri location);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "GitHub redirect (status {StatusCode}) to {Location} was not followed, because it leaves the configured API host; the access token is only sent to that host")]
+    private static partial void LogRedirectToOtherOriginNotFollowed(ILogger logger, int statusCode, Uri location);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "GitHub request to {Url} stopped after {MaxRedirects} redirects")]
+    private static partial void LogTooManyRedirects(ILogger logger, int maxRedirects, Uri url);
 
     private static void ApplyHeaders(HttpRequestMessage request, HttpClient httpClient, ClientSettings settings)
     {

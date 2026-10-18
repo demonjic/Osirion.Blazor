@@ -31,7 +31,27 @@
             <div class="osirion-content-not-found-code">@ErrorCode</div>
         }
 
-        <h1 class="osirion-content-not-found-title">@Title</h1>
+        @switch (TitleLevel)
+        {
+            case 2:
+                <h2 class="osirion-content-not-found-title">@Title</h2>
+                break;
+            case 3:
+                <h3 class="osirion-content-not-found-title">@Title</h3>
+                break;
+            case 4:
+                <h4 class="osirion-content-not-found-title">@Title</h4>
+                break;
+            case 5:
+                <h5 class="osirion-content-not-found-title">@Title</h5>
+                break;
+            case 6:
+                <h6 class="osirion-content-not-found-title">@Title</h6>
+                break;
+            default:
+                <h1 class="osirion-content-not-found-title">@Title</h1>
+                break;
+        }
 
         @if (!string.IsNullOrWhiteSpace(Message))
         {

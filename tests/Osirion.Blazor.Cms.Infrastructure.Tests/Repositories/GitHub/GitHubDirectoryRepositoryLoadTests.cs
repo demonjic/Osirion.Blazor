@@ -113,6 +113,28 @@ public class GitHubDirectoryRepositoryLoadTests
         await _apiClient.DidNotReceive().GetRepositoryContentsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
+    // Fails before the fix: folder locales came from the path settings of the file system provider, which do not know
+    // this repository's content folder, so a Serbian folder was read with the default locale.
+    [Fact]
+    public async Task GetAllAsync_LocalizedContent_TakesEachFolderLocaleFromItsFolderUnderTheContentPath()
+    {
+        _options.EnableLocalization = true;
+        _options.SupportedLocales = ["en", "sr"];
+        SetTree(false,
+            ("content/en", "tree"),
+            ("content/en/blog", "tree"),
+            ("content/sr", "tree"),
+            ("content/sr/blog", "tree"));
+        var repository = CreateRepository();
+
+        var roots = await repository.GetAllAsync();
+
+        roots.Single(d => d.Name == "en").Locale.ShouldBe("en");
+        var serbian = roots.Single(d => d.Name == "sr");
+        serbian.Locale.ShouldBe("sr");
+        serbian.Children.ShouldHaveSingleItem().Locale.ShouldBe("sr");
+    }
+
     [Fact]
     public async Task GetAllAsync_WithoutTree_ListsDirectoriesAndProbesEveryIndexFile()
     {
@@ -221,8 +243,9 @@ public class GitHubDirectoryRepositoryLoadTests
     [Fact]
     public async Task GetAllAsync_WithLocalization_TakesLocaleFromPath()
     {
+        // The folder is a locale when this provider lists it, the same rule its content files follow.
         _options.EnableLocalization = true;
-        _pathUtils.ExtractLocaleFromPath("content/de").Returns("de");
+        _options.SupportedLocales = ["en", "de"];
         SetTree(false, ("content/de", "tree"));
         var repository = CreateRepository();
 

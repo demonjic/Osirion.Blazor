@@ -62,7 +62,7 @@ content-not-found
 ```
 
 The demo only renders the markup. It does not set the status code of this page, which stays 200. The component's
-title is an `<h1>`, so the demo adds a second one to this page; on your own page it would be the only one.
+title is an `<h1>` by default; this page has its own, so the demo sets `HeadingLevel="2"`.
 
 ## Usage
 
@@ -94,8 +94,9 @@ A not found page that points readers to likely destinations:
 }
 ```
 
-An empty state: clear the error code and the default button, and make it smaller. The title is still an `<h1>`, so
-use this where the empty state is the page's main content, such as a blog index with no posts yet:
+An empty state: clear the error code and the default button, and make it smaller. The title is still an `<h1>`, which
+suits an empty state that is the page's main content, such as a blog index with no posts yet. Inside a page that has
+its own `<h1>`, add `HeadingLevel="2"`:
 
 ```razor
 <OsirionContentNotFound ErrorCode="@null"
@@ -113,7 +114,8 @@ use this where the empty state is the page's main content, such as a blog index 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ErrorCode` | `string?` | `"404"` | The large code above the title, such as `404`. Null or empty hides it, which suits an empty state. |
-| `Title` | `string` | `"Page Not Found"` | The heading, rendered as an `h1`. |
+| `Title` | `string` | `"Page Not Found"` | The heading, rendered at `HeadingLevel`. |
+| `HeadingLevel` | `int` | `1` | The level of the heading that holds the title, `1` to `6` (`h1` to `h6`). It defaults to `1`, the page's own heading; set `2` for an empty state inside a page that has its own `h1`, so the page keeps a single one. A value outside the range is moved to the nearest level. The title keeps its look at every level. |
 | `Message` | `string` | `"The page you're looking for doesn't exist or has been moved."` | The paragraph under the title. Empty hides it. |
 | `ShowIcon` | `bool` | `true` | Whether an icon is shown above the text. |
 | `UseDefaultIcon` | `bool` | `true` | Whether the built-in magnifier icon is shown when neither `Icon` nor `IconUrl` is set. |

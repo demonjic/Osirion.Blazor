@@ -151,6 +151,28 @@ public class ShippedStylesheetTests
         script.ShouldNotContain("Copy code to clipboard");
     }
 
+    // Fails before the fix: the scoped stylesheet held a full copy of the content typography (headings, lists, tables,
+    // code blocks, the dark theme variables). Scoped CSS adds the component's attribute to the last part of every
+    // selector, and the rendered content is a MarkupString without it, so none of those rules could ever match; the
+    // typography that pages show comes from wwwroot/css/osirion-html-renderer.css, which the component links.
+    [Fact]
+    public void HtmlRenderer_ScopedStylesheet_HoldsOnlyRulesThatCanMatch()
+    {
+        // Act
+        var css = System.Text.RegularExpressions.Regex.Replace(
+            File.ReadAllText(ComponentCss("Rendering", "OsirionHtmlRenderer.razor.css")),
+            @"/\*.*?\*/",
+            string.Empty,
+            System.Text.RegularExpressions.RegexOptions.Singleline);
+        var selectors = System.Text.RegularExpressions.Regex.Matches(css, @"([^{}]+)\{")
+            .Select(match => System.Text.RegularExpressions.Regex.Replace(match.Groups[1].Value, @"\s+", " ").Trim())
+            .ToList();
+
+        // Assert: the wrapper the component renders, or content reached through ::deep
+        selectors.ShouldNotBeEmpty();
+        selectors.ShouldAllBe(selector => selector == ".osirion-html-renderer" || selector.Contains("::deep", StringComparison.Ordinal));
+    }
+
     private static string Squash(string css) => System.Text.RegularExpressions.Regex.Replace(
         System.Text.RegularExpressions.Regex.Replace(css, @"/\*.*?\*/", string.Empty, System.Text.RegularExpressions.RegexOptions.Singleline),
         @"\s+",

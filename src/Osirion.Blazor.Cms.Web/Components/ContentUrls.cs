@@ -49,8 +49,8 @@ internal static class ContentUrls
         formatter?.Invoke(item) ?? "/" + item.Url.TrimStart('/');
 
     /// <summary>
-    /// Builds the link to a folder: the address its <c>_index.md</c> declares, otherwise its path from the site root
-    /// without the locale folder, as content URLs leave it out.
+    /// Builds the link to a folder: the address its <c>_index.md</c> declares, otherwise its path below the content
+    /// folder, without the locale folder, as content URLs leave it out.
     /// </summary>
     internal static string DirectoryUrl(DirectoryItem directory)
     {
@@ -59,29 +59,45 @@ internal static class ContentUrls
             return "/" + directory.Url.Trim('/');
         }
 
-        var path = directory.Path.Trim('/');
         var root = directory;
         while (root.Parent is not null)
         {
             root = root.Parent;
         }
 
-        if (!ReferenceEquals(root, directory) && IsLocaleFolder(root))
+        var rootPath = root.Path.Trim('/');
+        var path = directory.Path.Trim('/');
+        if (!path.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase))
         {
-            path = path[root.Path.Trim('/').Length..].TrimStart('/');
+            return "/" + path;
         }
 
-        return "/" + path;
+        var belowRoot = path[rootPath.Length..].TrimStart('/');
+        if (!ReferenceEquals(root, directory) && IsLocaleFolder(root))
+        {
+            return "/" + belowRoot;
+        }
+
+        return "/" + string.Join('/', new[] { FolderName(rootPath), belowRoot }.Where(part => part.Length > 0));
     }
 
     /// <summary>
     /// Whether a folder only sorts content by language: a top-level folder named after its locale, such as
     /// <c>content/en</c>. It has no page of its own.
     /// </summary>
+    /// <remarks>
+    /// The name is the last segment of the path because providers differ in what a path holds: the file system
+    /// provider's paths start below the content folder (<c>/en/</c>), the GitHub provider's start at the repository
+    /// root (<c>content/en</c>). A top-level folder is always directly below the content folder.
+    /// </remarks>
     internal static bool IsLocaleFolder(DirectoryItem directory) =>
         directory.Parent is null
         && !string.IsNullOrWhiteSpace(directory.Locale)
-        && string.Equals(directory.Path.Trim('/'), directory.Locale, StringComparison.OrdinalIgnoreCase);
+        && string.Equals(FolderName(directory.Path.Trim('/')), directory.Locale, StringComparison.OrdinalIgnoreCase);
+
+    // A top-level folder's own name, which is its path below the content folder whatever folder the provider's
+    // paths start from.
+    private static string FolderName(string path) => path[(path.LastIndexOf('/') + 1)..];
 
     /// <summary>Builds the default tag page URL, optionally below a locale segment.</summary>
     internal static string TagUrl(string tag, string? locale = null) => $"{LocalePrefix(locale)}/tag/{Slug(tag)}";

@@ -114,7 +114,8 @@
                                             <line x1="8" y1="2" x2="8" y2="6"></line>
                                             <line x1="3" y1="10" x2="21" y2="10"></line>
                                         </svg>
-                                        Last updated: @((Content.LastModified ?? Content.PublishDate).ToString("MMMM d, yyyy"))
+                                        @{ var lastUpdated = Content.LastModified ?? Content.PublishDate; }
+                                        <span>@LastUpdatedText <time datetime="@ContentDates.MachineReadable(lastUpdated)">@ContentDates.Format(lastUpdated, "MMMM d, yyyy", Content)</time></span>
                                     </span>
                                 </div>
                             }
@@ -124,7 +125,7 @@
                         {
                             <aside class="osirion-document-toc">
                                 <h2 class="osirion-toc-title">@TableOfContentsTitle</h2>
-                                <TableOfContents Content="@Content.Content" MinLevel="@TocMinLevel" MaxLevel="@TocMaxLevel" />
+                                <TableOfContents Content="@Content.Content" MinLevel="@TocMinLevel" MaxLevel="@TocMaxLevel" ShowNumbers="@TocShowNumbers" />
                             </aside>
                         }
 

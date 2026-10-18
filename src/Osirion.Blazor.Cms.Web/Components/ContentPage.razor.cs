@@ -238,6 +238,15 @@ public partial class ContentPage
     public string SchemaType { get; set; } = "Article";
 
     /// <summary>
+    /// The level of the heading that holds the article title, <c>1</c> to <c>6</c> (<c>h1</c> to <c>h6</c>), passed to
+    /// the <c>LocalizedContentView</c> inside. It defaults to <c>1</c>, the page's own heading; set <c>2</c> for a page
+    /// embedded in another that has its own <c>h1</c>, so that page keeps a single one. A value outside the range is
+    /// moved to the nearest level. The title keeps its look at every level.
+    /// </summary>
+    [Parameter]
+    public int HeadingLevel { get; set; } = 1;
+
+    /// <summary>
     /// Has no effect: the page renders no directory links.
     /// </summary>
     [Parameter]

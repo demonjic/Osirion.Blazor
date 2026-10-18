@@ -25,6 +25,35 @@ public class OsirionContentNotFoundTests : OsirionComponentTestBase
         actions[0].GetAttribute("href").ShouldBe("/");
     }
 
+    // Fails before the fix: the title was always an h1, so an empty state inside a page added a second h1.
+    [Theory]
+    [InlineData(2, "h2")]
+    [InlineData(3, "h3")]
+    [InlineData(4, "h4")]
+    [InlineData(5, "h5")]
+    [InlineData(6, "h6")]
+    public void ContentNotFound_HeadingLevel_SetsTheTitleElement(int level, string tag)
+    {
+        var cut = RenderStatic<OsirionContentNotFound>(parameters => parameters
+            .Add(p => p.Title, "Nothing here")
+            .Add(p => p.HeadingLevel, level));
+
+        cut.Find($"{tag}.osirion-content-not-found-title").TextContent.ShouldBe("Nothing here");
+        cut.FindAll("h1").ShouldBeEmpty();
+    }
+
+    // Fails before the fix: there was no level to set; a value outside 1 to 6 now moves to the nearest level.
+    [Theory]
+    [InlineData(0, "h1")]
+    [InlineData(-4, "h1")]
+    [InlineData(7, "h6")]
+    public void ContentNotFound_HeadingLevelOutsideTheRange_IsClamped(int level, string tag)
+    {
+        var cut = RenderStatic<OsirionContentNotFound>(parameters => parameters.Add(p => p.HeadingLevel, level));
+
+        cut.FindAll($"{tag}.osirion-content-not-found-title").ShouldHaveSingleItem();
+    }
+
     [Fact]
     public void ContentNotFound_Defaults_RendersDefaultClasses()
     {

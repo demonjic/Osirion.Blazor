@@ -74,6 +74,41 @@ public class ContentViewHeadingAndAltTests : CmsPageComponentTestBase
         cut.FindAll("h1").ShouldBeEmpty();
     }
 
+    [Fact]
+    public void ContentPage_DefaultHeadingLevel_IsAnH1()
+    {
+        var cut = RenderPage(heading: null);
+
+        cut.Find(".osirion-content-header h1").TextContent.ShouldBe("main");
+    }
+
+    // Fails before the fix: the page did not pass a level to its view, so the title was always an h1.
+    [Theory]
+    [InlineData(2, "h2")]
+    [InlineData(3, "h3")]
+    [InlineData(4, "h4")]
+    [InlineData(5, "h5")]
+    [InlineData(6, "h6")]
+    public void ContentPage_HeadingLevel_SetsTheTitleElement(int level, string tag)
+    {
+        var cut = RenderPage(level);
+
+        cut.Find($".osirion-content-header {tag}").TextContent.ShouldBe("main");
+        cut.FindAll("h1").ShouldBeEmpty();
+    }
+
+    // Fails before the fix: there was no level to set; a value outside 1 to 6 now moves to the nearest level.
+    [Theory]
+    [InlineData(0, "h1")]
+    [InlineData(-4, "h1")]
+    [InlineData(7, "h6")]
+    public void ContentPage_HeadingLevelOutsideTheRange_IsClamped(int level, string tag)
+    {
+        var cut = RenderPage(level);
+
+        cut.FindAll($".osirion-content-header {tag}").ShouldHaveSingleItem();
+    }
+
     // Fails before the fix: the featured image used the title as alt text, which repeats the heading above it.
     [Fact]
     public void ContentView_FeaturedImageWithoutAltText_IsDecorative()
@@ -140,6 +175,20 @@ public class ContentViewHeadingAndAltTests : CmsPageComponentTestBase
             .Add(c => c.ShowRelatedContent, true));
 
         cut.FindAll("img.osirion-content-related-image").Select(i => i.GetAttribute("alt")).ShouldBe([string.Empty, "A lighthouse"], ignoreOrder: true);
+    }
+
+    private IRenderedComponent<ContentPage> RenderPage(int? heading)
+    {
+        Provider.GetItemByUrlAsync("docs/main").Returns(Doc("main"));
+
+        return RenderStatic<ContentPage>(p =>
+        {
+            p.Add(c => c.Path, "docs/main");
+            if (heading is { } level)
+            {
+                p.Add(c => c.HeadingLevel, level);
+            }
+        });
     }
 
     private static ContentItem WithImageAlt(ContentItem item, string alt)

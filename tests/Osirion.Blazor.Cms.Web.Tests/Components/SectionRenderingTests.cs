@@ -211,6 +211,53 @@ public class SectionRenderingTests : CmsWebComponentTestBase
         cut.Find(".osirion-featured-post-excerpt").TextContent.ShouldBe(expected);
     }
 
+    // Fails before the fix: every post's date followed the server's culture instead of the post's own language.
+    [Fact]
+    public void FeaturedPostsSection_Posts_EachShowTheDateInTheirOwnLanguage()
+    {
+        using var culture = new CultureScope("de-DE");
+        var english = Post("English");
+        english.SetLocale("en");
+        english.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+        var serbian = Post("Serbian");
+        serbian.SetLocale("sr-Latn-RS");
+        serbian.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<FeaturedPostsSection>(p => p.Add(c => c.Posts, [english, serbian]));
+
+        var times = cut.FindAll(".osirion-featured-post-date time");
+        times.Select(time => time.TextContent).ShouldBe(["Oct 17, 2026", "okt 17, 2026"]);
+        times.Select(time => time.GetAttribute("datetime")).ShouldBe(["2026-10-17", "2026-10-17"]);
+    }
+
+    // Fails before the fix: the metadata date followed the server's culture instead of the item's own language.
+    [Fact]
+    public void OsirionContentListSection_Items_EachShowTheDateInTheirOwnLanguage()
+    {
+        using var culture = new CultureScope("de-DE");
+        var english = Post("English");
+        english.SetLocale("en");
+        english.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+        var serbian = Post("Serbian");
+        serbian.SetLocale("sr-Latn-RS");
+        serbian.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<OsirionContentListSection>(p => p.Add(c => c.Items, new List<ContentItem> { english, serbian }));
+
+        var times = cut.FindAll(".osirion-article-metadata-date time");
+        // The short date pattern comes from the platform's ICU data (macOS writes Serbian dates with spaces), so the
+        // expected text is computed from the same cultures, and each must differ from the de-DE text the server would write.
+        var date = new DateTime(2026, 10, 17);
+        string[] expected =
+        [
+            date.ToString("d", System.Globalization.CultureInfo.GetCultureInfo("en")),
+            date.ToString("d", System.Globalization.CultureInfo.GetCultureInfo("sr-Latn-RS")),
+        ];
+        times.Select(time => time.TextContent).ShouldBe(expected);
+        expected.ShouldNotContain(date.ToString("d", System.Globalization.CultureInfo.GetCultureInfo("de-DE")));
+        times.Select(time => time.GetAttribute("datetime")).ShouldBe(["2026-10-17", "2026-10-17"]);
+    }
+
     [Fact]
     public void OsirionContentListSection_NoItems_QueriesTheManagerWithTheFilters()
     {

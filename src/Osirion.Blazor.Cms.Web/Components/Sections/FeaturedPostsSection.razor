@@ -62,7 +62,7 @@
                                     </a>
                                 }
                                 <span class="osirion-featured-post-date">
-                                    @post.DateCreated.ToString(DateFormat)
+                                    <time datetime="@ContentDates.MachineReadable(post.DateCreated)">@ContentDates.Format(post.DateCreated, DateFormat, post)</time>
                                 </span>
                             </div>
                         }

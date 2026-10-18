@@ -48,6 +48,25 @@ public class LocalizedContentViewRenderingTests : CmsWebComponentTestBase
         cut.Find("img.osirion-content-featured-image").GetAttribute("src").ShouldBe("/img/post.png");
     }
 
+    // Fails before the fix: the date followed the server's culture instead of the content's language.
+    [Theory]
+    [InlineData("sr-Latn-RS", "en", "October 17, 2026")]
+    [InlineData("en-US", "sr-Latn-RS", "oktobar 17, 2026")]
+    [InlineData("sr-Latn-RS", "not-a-culture", "oktobar 17, 2026")]
+    public void LocalizedContentView_Date_FollowsTheContentLanguage(string serverCulture, string locale, string expected)
+    {
+        using var culture = new CultureScope(serverCulture);
+        var item = Item("post");
+        item.SetLocale(locale);
+        item.SetCreatedDate(new DateTime(2026, 10, 17, 0, 0, 0, DateTimeKind.Utc));
+
+        var cut = RenderStatic<LocalizedContentView>(p => p.Add(c => c.Item, item));
+
+        var time = cut.Find(".osirion-content-date time");
+        time.GetAttribute("datetime").ShouldBe("2026-10-17");
+        time.TextContent.ShouldBe(expected);
+    }
+
     [Fact]
     public void LocalizedContentView_JumbotronHidden_RendersNoHeader()
     {

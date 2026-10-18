@@ -125,6 +125,7 @@ An article header with the image behind the text and the author, date and readin
 | `MinHeight` | `string` | `"60vh"` | The section's minimum height as a CSS length, written to the inline style as given. |
 | `Author` | `string?` | `null` | The author name shown in the metadata line when `ShowMetadata` is on. |
 | `PublishDate` | `DateTime?` | `null` | The publication date shown in the metadata line when `ShowMetadata` is on. |
+| `Culture` | `CultureInfo?` | `null` | The culture `PublishDate` is written in, normally the language of the page. When `null`, the current culture is used. |
 | `ReadTime` | `string?` | `null` | The reading time in minutes, shown in the metadata line when `ShowMetadata` is on: `6` is shown as `6 min`. |
 | `ShowMetadata` | `bool` | `false` | Whether `Author`, `PublishDate` and `ReadTime` are shown under the text. |
 | `ImagePosition` | `Alignment` | `Alignment.Right` | The side of the text the side image sits on. `Left` and `Justify` are treated as `Right`, so the image is always on the right. |
@@ -150,6 +151,7 @@ Unmatched attributes are written to the `<section>`.
 - The side image carries `width` and `height` attributes for its variant (600 by 315 for `Hero`, 600 by 600 for
   `Jumbotron`, 315 by 315 for `Minimal`) to avoid layout shift, and `fetchpriority="high"` because it is usually the
   largest element in view.
+- `Culture` sets the language of the date in the metadata line; without it the current culture is used.
 - A button is rendered only when it is shown and has both its text and its address.
 - The buttons take the configured CSS framework's large primary and outlined primary button classes.
 - A background image has no alternative text, so use it for decoration only. The side image has `ImageAlt`.

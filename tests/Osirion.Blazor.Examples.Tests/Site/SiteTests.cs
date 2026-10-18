@@ -369,6 +369,8 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
         // Assert
         html.ShouldContain("href=\"https://github.com/demonjic/Osirion.Blazor/issues/new/choose\"");
         html.ShouldContain("href=\"https://demonjic.com/contact\"");
+        // Vulnerabilities go to GitHub's private reporting, never to a public issue.
+        html.ShouldContain("href=\"https://github.com/demonjic/Osirion.Blazor/security/advisories/new\"");
         html.ShouldNotContain("osirion-contact-form-wrapper");
     }
 
@@ -439,6 +441,22 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
         html.ShouldContain("name=\"description\"");
         body.ShouldNotContain((char)0x2014);
         body.ShouldNotContain((char)0x2013);
+    }
+
+    // Fails before the fix: the live demo's own title was a second h1 on the page.
+    [Theory]
+    [InlineData("/components/content-not-found")]
+    [InlineData("/components/content-page")]
+    public async Task ComponentPageWithAPageLevelDemo_HasOneHeading(string address)
+    {
+        // Arrange
+        using var client = CreateClient();
+
+        // Act
+        var html = await client.GetStringAsync(address);
+
+        // Assert
+        Regex.Matches(html, "<h1[ >]").Count.ShouldBe(1);
     }
 
     [Fact]

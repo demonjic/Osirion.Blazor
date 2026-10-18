@@ -127,11 +127,13 @@ of the lookup parameters.
 | `SideNavigationToggleText` | `string` | `"Documentation menu"` | The text of the button that shows the side navigation on narrow screens, where it is folded away so the page starts with its content. Defaults to `Documentation menu`. |
 | `NavigationItems` | `IReadOnlyList<DocumentNavigationItem>?` | `null` | The entries of the side navigation, with optional children. When it is null, the page lists the documents of the shown document's folder, in their `order`, linked with `ContentUrlFormatter`. |
 | `CurrentPath` | `string?` | `null` | The path or address that marks an entry of the side navigation as the current page (`aria-current="page"`), compared without regard to case with each entry's `Path` or `Url`. It defaults to the shown document's path. |
-| `ShowMetadata` | `bool` | `true` | Whether to show the author and the "Last updated" date under the title. The date is the item's last modification, or its publication date when there is none. |
+| `ShowMetadata` | `bool` | `true` | Whether to show the author and the "Last updated" date under the title. The date is the item's last modification, or its publication date when there is none, written in the language of the document's locale. |
+| `LastUpdatedText` | `string` | `"Last updated:"` | The label in front of the date under the title, for sites written in another language than English. Defaults to `Last updated:`. |
 | `ShowTableOfContents` | `bool` | `true` | Whether to show a table of contents of the document's headings, between `TocMinLevel` and `TocMaxLevel`, above the body. |
 | `TableOfContentsTitle` | `string` | `"On this page"` | The table of contents title |
 | `TocMinLevel` | `int` | `2` | The highest heading level in the table of contents: `2` starts at `h2`. |
 | `TocMaxLevel` | `int` | `4` | The lowest heading level in the table of contents: `4` goes down to `h4`. |
+| `TocShowNumbers` | `bool` | `true` | Whether the table of contents numbers its entries, passed on to its `ShowNumbers`. |
 | `ShowNavigationLinks` | `bool` | `true` | Whether to show previous and next links under the document. When `OsirionContentDetailPageBase.PreviousItem` or `OsirionContentDetailPageBase.NextItem` is null, the page looks the missing one up in the document's folder, in `order`. A value you pass is kept. |
 | `CustomFooterContent` | `string?` | `null` | HTML shown under the document in a highlighted section. It is written through `OsirionHtmlRenderer`, which sanitizes it with the registered HTML sanitizer. |
 | `EditUrlFormatter` | `Func<ContentItem, string>?` | `null` | How the address of a page's source for editing is built, for example `item => $"https://github.com/owner/repo/edit/main/content/{item.Path}"`. When it returns an address, the page links to it after the body; no link is shown when it is `null` or returns nothing. |
@@ -226,9 +228,11 @@ of the lookup parameters.
   becomes `FAQPage`. `WebsiteName`, `OrganizationName`, `SiteLogoUrl`, `GenerateMultipleSchemas`, `PrevPageUrl`,
   `NextPageUrl` and `AlternateLanguageUrls` reach the renderer. `SiteDescription`, `TwitterSite`, `TwitterCreator`, `FacebookAppId`, `DefaultImageUrl`, `DefaultImageWidth` and `DefaultImageHeight` reach the renderer when set, and so do `AllowAiDiscovery`, `AllowAiTraining`, `AllowSearchIndexing`, `EnableGeoOptimization` and `EnableAeoOptimization` when you set them: a switch you leave out keeps the value of `AddOsirionSeoMetadata` or the `Osirion:Seo` section.
 - **Title.** The title is the page's `h1`; the body leaves out its own leading `h1`. `ShowMetadata` adds the author and
-  a "Last updated" date, the last modification date or, without one, the publication date.
+  a "Last updated" date, the last modification date or, without one, the publication date. The date is written in
+  the language of the document's locale, or in the current culture when the locale is missing or not a culture name,
+  inside a `<time>` element; `LastUpdatedText` sets the label in front of it.
 - **Table of contents.** `ShowTableOfContents` builds it from the headings between `TocMinLevel` and `TocMaxLevel`
-  and places it above the body.
+  and places it above the body. `TocShowNumbers="false"` drops the `1.` and `1.2` numbers in front of its entries.
 - **Edit link.** The link to the source of the page appears only when `EditUrlFormatter` returns an address. It opens
   in a new tab with `rel="noopener"`.
 - **Pager.** The previous and next links appear with `ShowNavigationLinks` when at least one neighbor exists.

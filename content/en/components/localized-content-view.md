@@ -141,6 +141,8 @@ The `Theme` and `Style` rows come from the base class. `LocalizedContentView` do
   directory, matched by its path, and locale, unless you pass `PreviousItem` or `NextItem`; what you pass is kept and
   nothing is looked up. Inside [ContentPage](/components/content-page) the neighbors the page computed are the ones
   shown.
+- **Dates.** The date in the header follows the language of the item's locale, or the current culture when the locale
+  is missing or not a culture name, and is written inside a `<time>` element.
 - **Locale changes.** `OnLocaleChanged` is never raised. The translation links are ordinary links that load another
   page, so the component never changes locale itself; read the locale from the new page's route instead.
 - **Not found.** Without an item the component renders `NotFoundText` in a plain block and signals 404, as

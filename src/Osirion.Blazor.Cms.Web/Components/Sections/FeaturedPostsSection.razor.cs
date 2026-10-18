@@ -87,7 +87,7 @@ public partial class FeaturedPostsSection
     public string? Locale { get; set; }
 
     /// <summary>
-    /// Gets or sets the date format.
+    /// Gets or sets the .NET date format of each post's date, written in the language of the post's locale.
     /// </summary>
     [Parameter]
     public string DateFormat { get; set; } = "MMM d, yyyy";

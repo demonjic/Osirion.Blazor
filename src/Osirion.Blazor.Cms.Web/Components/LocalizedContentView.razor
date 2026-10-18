@@ -51,7 +51,7 @@
                         {
                             <span class="osirion-content-author">By @Item.Author</span>
                         }
-                        <span class="osirion-content-date">@Item.DateCreated.ToString("MMMM d, yyyy")</span>
+                        <span class="osirion-content-date"><time datetime="@ContentDates.MachineReadable(Item.DateCreated)">@ContentDates.Format(Item.DateCreated, "MMMM d, yyyy", Item)</time></span>
                         <span class="osirion-content-read-time">@Item.ReadTimeMinutes min read</span>
                     </div>
                     @if (!string.IsNullOrWhiteSpace(Item.FeaturedImageUrl))
