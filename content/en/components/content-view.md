@@ -89,6 +89,7 @@ Or let the component load it by the item's source path (`ContentItem.Path`, as t
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Path` | `string` | `""` | The source path of the item to load from the default provider (`ContentItem.Path`, for example `blog/getting-started.md`) while `Item` is not set. A null or white-space path loads nothing. |
+| `ShowUnpublished` | `bool` | `false` | Whether to show an item that is not published (`published: false` in its front matter) when the component loads it by `Path`. Off by default: a draft then renders the not-found state and signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap and feeds leave drafts out either way. An item you pass in is shown whatever its status. |
 | `LoadingText` | `string` | `"Loading content..."` | The text shown while the item loads, in interactive render modes only. A statically rendered response is sent once the item has loaded. |
 | `NotFoundText` | `string` | `"Content not found."` | The message of the not-found block, shown under a fixed `Content Not Found` heading and above a link back to `/`. The block appears when no item is found, when loading fails (the error is logged) and when neither `Item` nor `Path` is set. |
 | `CategoryUrlFormatter` | `Func<string, string>?` | `null` | Builds a category link from the category name. Without it the link is `/category/{slug}`. |
@@ -120,6 +121,9 @@ show navigation links, set `ContentUrlFormatter`, for example `item => "/" + ite
   back to `/`. The heading and the link text are fixed. The component also signals 404, as `ArticlePage` does:
   `NavigationManager.NotFound()` on .NET 10, the status code of the request on .NET 9, while the response has not
   started. A view you embed in a page that must stay at 200 without its item should not be rendered without one.
+- **Drafts.** An item loaded by `Path` that is not published (`published: false`) is not served: the component
+  renders the not-found state and signals 404, as for a missing item. `ShowUnpublished` turns this off for
+  previews, and a `Item` you pass is shown as given.
 - **Security.** The body is written as HTML after it passes through the registered `IHtmlContentSanitizer` (the
   default allow-list when none is registered), even when the item comes from a custom provider or from your code.
   Script, event handler attributes, `javascript:`, `vbscript:` and `data:` URLs, forms, iframes, inline SVG and

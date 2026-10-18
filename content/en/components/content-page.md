@@ -115,6 +115,7 @@ item you pass in `ContentItem` and loads no neighbors, related items or default 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Path` | `string?` | `null` | The URL of the item to load from the default content provider, as the provider stores it: no leading slash, no file extension and, for localized content, no locale folder (`blog/my-post`). The match is exact, including case. `IgnorePathSegment` and `PathReplacePattern` are applied first. Without a path, the page shows the item in `ContentItem`, or the not-found state when that is null too. |
+| `ShowUnpublished` | `bool` | `false` | Whether to show an item that is not published (`published: false` in its front matter) when the component loads it by `Path`. Off by default: a draft then renders the not-found state and signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap and feeds leave drafts out either way. An item you pass in is shown whatever its status. |
 | `ContentItem` | `ContentItem?` | `null` | The item shown. When `Path` loads, the page sets this property and replaces a value you passed; it is not two-way bound, so use `OnContentLoaded` to receive the item. Without a path the page shows the item you pass and loads no neighbors, related items or default share links. |
 | `PreviousItem` | `ContentItem?` | `null` | The item the previous link points to. When `ShowNavigationLinks` is on and this or `NextItem` is null, the page looks both up with a query for the item's directory and locale, newest first, and replaces your values with what it finds. |
 | `NextItem` | `ContentItem?` | `null` | The item the next link points to. See `PreviousItem` for how a missing neighbor is looked up. |
@@ -183,6 +184,9 @@ item you pass in `ContentItem` and loads no neighbors, related items or default 
   The page also signals 404, as `ArticlePage` does: `NavigationManager.NotFound()` on .NET 10, the status code of the
   request on .NET 9, while the response has not started. It has no effect in an interactive render, where the not-found
   state is all that can be shown.
+- **Drafts.** An item loaded by `Path` that is not published (`published: false`) is not served: the page
+  renders the not-found state and signals 404, as for a missing item. `ShowUnpublished` turns this off for
+  previews, and a `ContentItem` you pass is shown as given.
 
 ## Styling
 

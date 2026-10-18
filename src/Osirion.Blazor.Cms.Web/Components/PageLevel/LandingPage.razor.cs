@@ -33,6 +33,15 @@ public partial class LandingPage
     public string? ContentPath { get; set; }
 
     /// <summary>
+    /// Whether to show an item that is not published (<c>published: false</c> in its front matter) when the
+    /// component loads it by <see cref="ContentPath"/>. Off by default: a draft then renders the not-found state and
+    /// signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap
+    /// and feeds leave drafts out either way. An item you pass in is shown whatever its status.
+    /// </summary>
+    [Parameter]
+    public bool ShowUnpublished { get; set; }
+
+    /// <summary>
     /// The item that makes the page: its title and description are the hero's, its featured image the hero's image
     /// and its body follows the hero. Without an item the page shows what the other parameters give it.
     /// </summary>
@@ -349,7 +358,8 @@ public partial class LandingPage
             var provider = ContentProviderManager.GetDefaultProvider();
             if (provider is not null && ContentPath is { } contentPath && !string.IsNullOrWhiteSpace(contentPath))
             {
-                Content = await provider.GetItemByPathAsync(contentPath, RequestAborted);
+                Content = PublishedContent.ShownOrNull(
+                    await provider.GetItemByPathAsync(contentPath, RequestAborted), ShowUnpublished);
             }
         }
         catch (Exception ex)

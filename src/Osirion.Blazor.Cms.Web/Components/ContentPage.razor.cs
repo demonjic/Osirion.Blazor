@@ -35,6 +35,15 @@ public partial class ContentPage
     public string? Path { get; set; }
 
     /// <summary>
+    /// Whether to show an item that is not published (<c>published: false</c> in its front matter) when the
+    /// component loads it by <see cref="Path"/>. Off by default: a draft then renders the not-found state and
+    /// signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap
+    /// and feeds leave drafts out either way. An item you pass in is shown whatever its status.
+    /// </summary>
+    [Parameter]
+    public bool ShowUnpublished { get; set; }
+
+    /// <summary>
     /// The item shown. When <see cref="Path"/> loads, the page sets this property and replaces a value you passed; it
     /// is not two-way bound, so use <see cref="OnContentLoaded"/> to receive the item. Without a path the page shows
     /// the item you pass and loads no neighbors, related items or default share links.
@@ -372,7 +381,8 @@ public partial class ContentPage
             var provider = ContentProviderManager.GetDefaultProvider();
             if (provider is not null && !string.IsNullOrWhiteSpace(Path))
             {
-                ContentItem = await provider.GetItemByUrlAsync(BuildSearchPath(Path), RequestAborted);
+                ContentItem = PublishedContent.ShownOrNull(
+                    await provider.GetItemByUrlAsync(BuildSearchPath(Path), RequestAborted), ShowUnpublished);
                 await LoadSupplementaryContentAsync(provider);
             }
         }

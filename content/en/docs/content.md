@@ -136,6 +136,11 @@ ascending without being asked, including `DocumentPage` and the previous and nex
 Add `published: false` to the front matter. Lists, the sitemap and feeds, the redirect map and the page components
 leave the page out, so its address answers like an unknown one. A file without a `published` key is published.
 
+A draft is neither listed nor served: a component that loads it by its path or address (`DocumentPage`,
+`ContentPage`, `ContentView`, `LocalizedContentView`, `LandingPage`, `ArticlePage`) renders its not-found state and
+answers 404. The admin still opens drafts. For a preview behind your own authorization, set `ShowUnpublished` on
+the first five, or give `ArticlePage` a `Query` with `IncludeUnpublished = true`.
+
 ## Move a page without breaking its old address
 
 List the earlier addresses under `redirect_from` in the page that moved:
