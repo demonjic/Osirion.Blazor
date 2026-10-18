@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.0] - 2026-10-18
+
 ### Added
 - Osirion.Blazor.Templates: a new template package. `dotnet new install Osirion.Blazor.Templates` then `dotnet new osirion-blog -n MyBlog` creates a Markdown blog on .NET 10 with static server-side rendering: the newest posts on the home page, a blog list, posts, an About page, a 404 page, RSS, Atom and a sitemap, with the menu and footer from `appsettings.json`. `--SiteName` and `--SiteUrl` fill in the name and public address. The template references the library version it is released with; tests hold the two equal. `tools/verify-template.sh` times the walkthrough on a clean NuGet cache against packed packages
 - Osirion.Blazor.Templates: `dotnet new osirion-docs` creates a Markdown documentation site: a home page, pages in `content/docs` with side navigation in front matter `order`, a table of contents, previous and next links, a 404 page and a sitemap; `/docs` leads to the first page
