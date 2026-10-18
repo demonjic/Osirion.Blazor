@@ -253,6 +253,18 @@ the analytics category.
 
 **Fix.** Put every tab in an `OsirionTabs` element.
 
+## A parameter has no effect
+
+**Symptom.** A component renders as if a parameter were not set, for example `<OsirionHtmlRenderer Html="..." />`
+shows nothing, and the element carries an `html` attribute.
+
+**Cause.** Components pass any attribute they do not know through to their root element, so a misspelled parameter
+compiles and becomes an HTML attribute.
+
+**Fix.** Use the parameter's exact name (`HtmlContent` here). In Development the log names it:
+`OsirionHtmlRenderer has no parameter 'Html'; did you mean 'HtmlContent'? The value was passed through as an HTML
+attribute.` This warning arrives in the release after 4.2.0.
+
 ## Custom JSON-LD or a subscription is ignored
 
 Two warnings tell you that the library did not use what you gave it:

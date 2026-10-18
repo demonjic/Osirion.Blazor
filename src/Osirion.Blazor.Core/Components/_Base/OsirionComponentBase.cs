@@ -70,11 +70,13 @@ public abstract partial class OsirionComponentBase : ComponentBase
     /// <inheritdoc />
     /// <remarks>
     /// Applies the theme attribute on every parameter update, so a changed <see cref="Theme"/> reaches the markup and
-    /// the dictionary a parent supplied is copied instead of modified.
+    /// the dictionary a parent supplied is copied instead of modified. In Development it also warns when a captured
+    /// attribute resembles one of the component's parameters, the usual sign of a misspelled parameter name.
     /// </remarks>
     public override Task SetParametersAsync(ParameterView parameters)
     {
         parameters.SetParameterProperties(this);
+        WarnAboutAttributesThatResembleParameters();
         ApplyThemeAttribute();
 
         return base.SetParametersAsync(ParameterView.Empty);
