@@ -132,6 +132,7 @@ of the lookup parameters.
 | `TableOfContentsTitle` | `string` | `"On this page"` | The table of contents title |
 | `TocMinLevel` | `int` | `2` | The highest heading level in the table of contents: `2` starts at `h2`. |
 | `TocMaxLevel` | `int` | `4` | The lowest heading level in the table of contents: `4` goes down to `h4`. |
+| `TocShowNumbers` | `bool` | `true` | Whether the table of contents numbers its entries, passed on to its `ShowNumbers`. |
 | `ShowNavigationLinks` | `bool` | `true` | Whether to show previous and next links under the document. When `OsirionContentDetailPageBase.PreviousItem` or `OsirionContentDetailPageBase.NextItem` is null, the page looks the missing one up in the document's folder, in `order`. A value you pass is kept. |
 | `CustomFooterContent` | `string?` | `null` | HTML shown under the document in a highlighted section. It is written through `OsirionHtmlRenderer`, which sanitizes it with the registered HTML sanitizer. |
 | `EditUrlFormatter` | `Func<ContentItem, string>?` | `null` | How the address of a page's source for editing is built, for example `item => $"https://github.com/owner/repo/edit/main/content/{item.Path}"`. When it returns an address, the page links to it after the body; no link is shown when it is `null` or returns nothing. |
@@ -228,7 +229,7 @@ of the lookup parameters.
 - **Title.** The title is the page's `h1`; the body leaves out its own leading `h1`. `ShowMetadata` adds the author and
   a "Last updated" date, the last modification date or, without one, the publication date.
 - **Table of contents.** `ShowTableOfContents` builds it from the headings between `TocMinLevel` and `TocMaxLevel`
-  and places it above the body.
+  and places it above the body. `TocShowNumbers="false"` drops the `1.` and `1.2` numbers in front of its entries.
 - **Edit link.** The link to the source of the page appears only when `EditUrlFormatter` returns an address. It opens
   in a new tab with `rel="noopener"`.
 - **Pager.** The previous and next links appear with `ShowNavigationLinks` when at least one neighbor exists.

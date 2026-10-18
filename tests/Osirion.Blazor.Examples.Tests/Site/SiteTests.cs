@@ -369,6 +369,8 @@ public partial class SiteTests(SiteFactory factory) : IClassFixture<SiteFactory>
         // Assert
         html.ShouldContain("href=\"https://github.com/demonjic/Osirion.Blazor/issues/new/choose\"");
         html.ShouldContain("href=\"https://demonjic.com/contact\"");
+        // Vulnerabilities go to GitHub's private reporting, never to a public issue.
+        html.ShouldContain("href=\"https://github.com/demonjic/Osirion.Blazor/security/advisories/new\"");
         html.ShouldNotContain("osirion-contact-form-wrapper");
     }
 
