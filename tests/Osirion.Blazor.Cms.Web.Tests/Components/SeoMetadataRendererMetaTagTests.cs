@@ -68,7 +68,9 @@ public class SeoMetadataRendererMetaTagTests : CmsWebComponentTestBase
         Meta(cut, "estimated_reading_time").ShouldBe("1");
         // The share image is not shown on the page, so preloading it only made browsers warn that it went unused.
         cut.FindAll("link[rel='preload']").ShouldBeEmpty();
-        cut.Find("link[rel='dns-prefetch']").GetAttribute("href").ShouldBe(SeoTestContent.Origin);
+        // The page's own origin is already resolved and connected when the head is read, so hints to it only cost a
+        // second, unused connection (preconnect with crossorigin opens one).
+        cut.FindAll("link[rel='dns-prefetch'], link[rel='preconnect']").ShouldBeEmpty();
     }
 
     // Known defect, pinned as current behavior: a one-minute read is written as "1 minutes". Update this expectation when it is fixed.

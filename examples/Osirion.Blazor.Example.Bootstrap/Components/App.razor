@@ -9,10 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     
-    @* Resource hints for performance optimization *@
-    <link rel="preconnect" href="https://images.unsplash.com">
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
-    
     <link rel="stylesheet" href="@Assets["Osirion.Blazor.Example.Bootstrap.styles.css"]" />
     <link rel="stylesheet" href="@Assets["app.min.css"]" />
 
@@ -29,7 +25,7 @@
 
 <body>
     <Routes />
-    <script src="_framework/blazor.web.js"></script>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
 
     <EnhancedNavigation />
 </body>

@@ -4,7 +4,7 @@
 
 @if (!string.IsNullOrWhiteSpace(HtmlContent))
 {
-    <link rel="stylesheet" href="_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css" />
+    <link rel="stylesheet" href="@Assets["_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css"]" />
 
     @* A class, not an id: several renderers can share a page and an id would repeat. *@
     <div class="osirion-syntax-highlighter-config"

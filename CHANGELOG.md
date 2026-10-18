@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Osirion.Blazor.Theming and Osirion.Blazor.Core: `OsirionStyles`, `ThemePicker` and `OsirionHtmlRenderer` link their stylesheets through the component's `Assets`, so apps that use `MapStaticAssets` get fingerprinted addresses that browsers may cache for a year. The plain addresses were cached for four hours and revalidated after that
+- Osirion.Blazor.Cms.Web: `SeoMetadataRenderer` no longer writes `dns-prefetch` and `preconnect` hints for the site's own address. The browser is already connected to it, and the `crossorigin` preconnect opened a second connection that nothing used
+- Examples: the Bootstrap example site's hero and cover image (`osirion-hero.png`, `blazor-cover.png`) is a 256-color PNG of 29 KB instead of 160 KB, links `blazor.web.js` by its fingerprinted address, and drops the Unsplash preconnect that only a lazy menu image used. Lighthouse mobile on a local build: the home page's largest contentful paint fell from 2.7 s to 2.0 s and a blog post's from 2.8 s to 2.2 s
 - Docs: getosirion.com's `/robots.txt` comes from a `robots` content item that names the sitemap and keeps crawlers off `/search`; it served the generator's default rules, which named no sitemap. The packages page at `/docs/packages` declared `/components` as its canonical address, so search engines would have dropped it; its title and description now describe the packages. Tests hold every sitemap page to its own canonical address
 
 ## [4.2.0] - 2026-10-18

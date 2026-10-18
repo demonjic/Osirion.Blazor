@@ -205,9 +205,11 @@ dotnet build
 dotnet run
 ```
 
-Open any page and view its source. You should see a `<link>` to `_content/Osirion.Blazor.Core/css/index.min.css`, one to
-`_content/Osirion.Blazor.Theming/css/index.min.css`, and one to your style bundle, which `@Assets` writes with a
-fingerprint, for example `MySite.0uxv3q46bu.styles.css`. In the browser's network tab each loads with status 200.
+Open any page and view its source. You should see a `<link>` to your style bundle, which `@Assets` writes with a
+fingerprint, for example `MySite.0uxv3q46bu.styles.css`, and links to the Osirion stylesheets, which come with a
+fingerprint the same way under `MapStaticAssets`: `_content/Osirion.Blazor.Core/css/index.min.or0ndbmg4q.css` and
+`_content/Osirion.Blazor.Theming/css/index.min.zwhu21npjb.css` (the codes differ per version). In the browser's
+network tab each loads with status 200.
 
 If the page has no Osirion styling, check the network tab:
 
