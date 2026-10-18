@@ -2,7 +2,7 @@
 title: "Cookie Consent in Blazor: Banner, Consent Cookie and Analytics Gate"
 author: "Dejan Demonjić"
 date: "2025-01-23"
-last_modified: 2026-10-11
+last_modified: 2026-10-18
 description: "Ask for cookie consent in a Blazor app with OsirionCookieConsent, keep analytics off until visitors agree, and let them change their choice."
 tags: [Privacy, Cookie Consent, GDPR, Analytics, Blazor]
 categories: [Components, Privacy]
@@ -57,6 +57,10 @@ Then render the banner in your layout:
 
 Write the message yourself. The default text says that continuing to browse means agreeing, which is probably not what
 you want a consent banner to say.
+
+The banner on getosirion.com, set up this way:
+
+![The cookie consent banner at the bottom of getosirion.com: what it asks for, with Decline, Customize and Accept All](https://media.getosirion.com/shots/blog-gdpr-cookie-consent-blazor/consent-banner-v2-dark.webp){width=1600 height=450}
 
 ## What happens when the visitor chooses
 
