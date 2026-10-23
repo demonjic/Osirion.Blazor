@@ -20,17 +20,31 @@ const MESSAGES = {
 
 let turnstileLoading;
 
+// The API is recognized by its render method, not by the name: an element with the id or name "turnstile", such as a
+// heading's generated id, is also window.turnstile until the script assigns the API.
+function loadedTurnstile() {
+    return typeof window.turnstile?.render === 'function' ? window.turnstile : undefined;
+}
+
 // One script element for the page, however many forms ask for it.
 function loadTurnstile() {
-    if (window.turnstile) {
-        return Promise.resolve(window.turnstile);
+    const loaded = loadedTurnstile();
+    if (loaded) {
+        return Promise.resolve(loaded);
     }
 
     turnstileLoading ??= new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = TURNSTILE_SCRIPT;
         script.async = true;
-        script.addEventListener('load', () => window.turnstile ? resolve(window.turnstile) : reject(new Error('Turnstile is not available.')));
+        script.addEventListener('load', () => {
+            const api = loadedTurnstile();
+            if (api) {
+                resolve(api);
+            } else {
+                reject(new Error('Turnstile is not available.'));
+            }
+        });
         script.addEventListener('error', () => reject(new Error('Turnstile did not load.')));
         document.head.append(script);
     });
@@ -71,6 +85,7 @@ export default class extends BlazorJSComponents.Component {
         this.status = status;
         this.submit = submit;
         this.needsToken = Boolean(turnstile);
+        this.checkUnavailable = false;
         this.token = '';
         this.sending = false;
         this.setEventListener(form, 'submit', event => this.send(event));
@@ -87,7 +102,7 @@ export default class extends BlazorJSComponents.Component {
         try {
             api = await loadTurnstile();
         } catch {
-            this.say('check');
+            this.failCheck();
             return;
         }
 
@@ -96,18 +111,29 @@ export default class extends BlazorJSComponents.Component {
             return;
         }
 
-        this.turnstile = api;
-        this.widget = api.render(container, {
-            sitekey: container.dataset.sitekey,
-            action: TURNSTILE_ACTION,
-            theme: themeFor(form),
-            callback: token => { this.token = token; },
-            'expired-callback': () => { this.token = ''; },
-            'error-callback': () => {
-                this.token = '';
-                this.say('check');
-            }
-        });
+        try {
+            this.widget = api.render(container, {
+                sitekey: container.dataset.sitekey,
+                action: TURNSTILE_ACTION,
+                theme: themeFor(form),
+                callback: token => { this.token = token; },
+                'expired-callback': () => { this.token = ''; },
+                // Turnstile retries on its own after an error, so a token can still arrive.
+                'error-callback': () => {
+                    this.token = '';
+                    this.say('check');
+                }
+            });
+            this.turnstile = api;
+        } catch {
+            this.failCheck();
+        }
+    }
+
+    // Without a widget no token can ever arrive, so a send says the check failed instead of asking the visitor to wait.
+    failCheck() {
+        this.checkUnavailable = true;
+        this.say('check');
     }
 
     async send(event) {
@@ -117,7 +143,7 @@ export default class extends BlazorJSComponents.Component {
         }
 
         if (this.needsToken && !this.token) {
-            this.say('pending');
+            this.say(this.checkUnavailable ? 'check' : 'pending');
             return;
         }
 
@@ -132,6 +158,8 @@ export default class extends BlazorJSComponents.Component {
             token: this.token
         };
 
+        // A disabled button loses focus to the page, so focus is put back afterwards unless the visitor moved it.
+        const hadFocus = document.activeElement === this.submit;
         this.sending = true;
         this.submit.disabled = true;
         this.submit.textContent = this.texts.submittingText;
@@ -162,6 +190,10 @@ export default class extends BlazorJSComponents.Component {
 
         this.submit.textContent = this.texts.submitText;
         this.submit.disabled = false;
+        if (hadFocus && (document.activeElement === null || document.activeElement === document.body)) {
+            this.submit.focus();
+        }
+
         this.sending = false;
         this.say(outcome);
     }
