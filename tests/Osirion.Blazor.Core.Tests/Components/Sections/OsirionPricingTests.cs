@@ -66,6 +66,105 @@ public class OsirionPricingTests : OsirionComponentTestBase
         Render<OsirionPricingTable>(p => p.Add(t => t.Plans, [])).Markup.Trim().ShouldBeEmpty();
     }
 
+    // Guard test: plans with a price and no PlanHeadingLevel keep the markup they had before either option existed.
+    [Fact]
+    public void OsirionPricingTable_PricesWithoutPlanHeadingLevel_KeepTheirMarkup()
+    {
+        var cut = Render<OsirionPricingTable>(p => p.Add(t => t.Plans, Plans));
+
+        cut.MarkupMatches(
+            """
+            <ul class="osirion-pricing-table" role="list">
+              <li class="osirion-pricing-plan">
+                <p class="osirion-pricing-name">Starter</p>
+                <p class="osirion-pricing-price"><span class="osirion-pricing-amount">Free</span></p>
+                <ul class="osirion-pricing-features"><li>1 site</li></ul>
+                <a class="osirion-pricing-action osirion-button osirion-button-secondary" href="/start" aria-label="Get started: Starter">Get started</a>
+              </li>
+              <li class="osirion-pricing-plan osirion-pricing-plan-highlighted">
+                <p class="osirion-pricing-badge">Most popular</p>
+                <p class="osirion-pricing-name">Team</p>
+                <p class="osirion-pricing-price">
+                  <span class="osirion-pricing-amount">$29</span>
+                  <span class="osirion-pricing-period">per month</span>
+                </p>
+                <p class="osirion-pricing-description">For small teams</p>
+                <ul class="osirion-pricing-features"><li>5 sites</li><li>Analytics</li></ul>
+                <a class="osirion-pricing-action osirion-button osirion-button-primary" href="https://example.com/trial" aria-label="Start trial: Team">Start trial</a>
+              </li>
+            </ul>
+            """);
+    }
+
+    [Fact]
+    public void OsirionPricingTable_PlanWithoutPrice_LeavesTheAmountAndPeriodOut()
+    {
+        var plan = new PricingPlan
+        {
+            Name = "Enterprise",
+            Period = "per year",
+            Description = "Quoted on request",
+            Features = ["Unlimited sites"],
+            CallToActionText = "Contact sales",
+            CallToActionUrl = "/contact",
+        };
+
+        var cut = Render<OsirionPricingTable>(p => p.Add(t => t.Plans, [plan]));
+
+        plan.Price.ShouldBeEmpty();
+        var card = cut.Find("li.osirion-pricing-plan");
+        card.QuerySelector(".osirion-pricing-price").ShouldBeNull();
+        card.QuerySelector(".osirion-pricing-amount").ShouldBeNull();
+        card.QuerySelector(".osirion-pricing-period").ShouldBeNull();
+        card.QuerySelector(".osirion-pricing-name")!.TextContent.ShouldBe("Enterprise");
+        card.QuerySelector(".osirion-pricing-description")!.TextContent.ShouldBe("Quoted on request");
+        card.QuerySelector("a.osirion-pricing-action")!.GetAttribute("href").ShouldBe("/contact");
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void OsirionPricingTable_BlankPrice_LeavesTheAmountAndPeriodOut(string price)
+    {
+        PricingPlan[] plans = [new() { Name = "Enterprise", Price = price, Period = "per year" }];
+
+        var cut = Render<OsirionPricingTable>(p => p.Add(t => t.Plans, plans));
+
+        cut.FindAll(".osirion-pricing-price").ShouldBeEmpty();
+        cut.FindAll(".osirion-pricing-period").ShouldBeEmpty();
+    }
+
+    [Theory]
+    [InlineData(1, "h1")]
+    [InlineData(2, "h2")]
+    [InlineData(3, "h3")]
+    [InlineData(4, "h4")]
+    [InlineData(5, "h5")]
+    [InlineData(6, "h6")]
+    public void OsirionPricingTable_PlanHeadingLevel_RendersEachNameAsThatHeading(int level, string tag)
+    {
+        var cut = Render<OsirionPricingTable>(p => p
+            .Add(t => t.Plans, Plans)
+            .Add(t => t.PlanHeadingLevel, level));
+
+        cut.FindAll($"li.osirion-pricing-plan > {tag}.osirion-pricing-name").Select(h => h.TextContent).ShouldBe(["Starter", "Team"]);
+        cut.FindAll("h1, h2, h3, h4, h5, h6").Count.ShouldBe(2);
+        cut.FindAll("p.osirion-pricing-name").ShouldBeEmpty();
+    }
+
+    [Theory]
+    [InlineData(0, "h1")]
+    [InlineData(-2, "h1")]
+    [InlineData(7, "h6")]
+    public void OsirionPricingTable_PlanHeadingLevelOutsideTheRange_IsMovedToTheNearestLevel(int level, string tag)
+    {
+        var cut = Render<OsirionPricingTable>(p => p
+            .Add(t => t.Plans, Plans)
+            .Add(t => t.PlanHeadingLevel, level));
+
+        cut.FindAll($"{tag}.osirion-pricing-name").Count.ShouldBe(2);
+    }
+
     [Fact]
     public void OsirionFeatureComparison_Rows_RenderMarksTextAndHeaders()
     {

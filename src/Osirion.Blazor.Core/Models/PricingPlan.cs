@@ -8,8 +8,11 @@ public sealed record PricingPlan
     /// <summary>Gets the plan's name, for example <c>Team</c>.</summary>
     public required string Name { get; init; }
 
-    /// <summary>Gets the price as shown, with its currency, for example <c>$29</c> or <c>Free</c>.</summary>
-    public required string Price { get; init; }
+    /// <summary>
+    /// Gets the price as shown, with its currency, for example <c>$29</c> or <c>Free</c>. Empty by default: a plan
+    /// without a price, such as one quoted on request, shows no amount and no <see cref="Period"/>.
+    /// </summary>
+    public string Price { get; init; } = string.Empty;
 
     /// <summary>Gets what the price covers, for example <c>per month</c>.</summary>
     public string? Period { get; init; }

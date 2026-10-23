@@ -120,6 +120,39 @@ The plans and rows are data types from `Osirion.Blazor.Core.Models`:
 A cell is a `ComparisonCell`. A `bool` converts to a check mark (`true`) or a dash (`false`), and a `string` to text,
 so rows can mix both. `ComparisonCell.Yes` and `ComparisonCell.No` are the same marks written out.
 
+### Plans quoted on request
+
+Leave `Price` out for a plan you quote on request: the card shows its name, description, features and button
+without a price. `PlanHeadingLevel` makes each plan's name a heading, so screen reader users can move from plan to
+plan by heading; pick the level under the section's own heading:
+
+```razor
+<h2>Plans</h2>
+
+<OsirionPricingTable Plans="@plans" PlanHeadingLevel="3" />
+
+@code {
+    private readonly PricingPlan[] plans =
+    [
+        new()
+        {
+            Name = "Team",
+            Price = "$29",
+            Period = "per month",
+            CallToActionText = "Start a trial",
+            CallToActionUrl = "/signup?plan=team"
+        },
+        new()
+        {
+            Name = "Enterprise",
+            Description = "Priced for your sites and support.",
+            CallToActionText = "Ask for a quote",
+            CallToActionUrl = "/contact"
+        },
+    ];
+}
+```
+
 ## Parameters
 
 ### OsirionPricingTable
@@ -129,6 +162,7 @@ so rows can mix both. `ComparisonCell.Yes` and `ComparisonCell.No` are the same 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Plans` | `IReadOnlyList<PricingPlan>` | `[]` | The plans, in the order they are shown. Required; with no plans nothing is rendered. |
+| `PlanHeadingLevel` | `int?` | `null` | The level of the heading that holds each plan's name, `1` to `6` (`h1` to `h6`), so the plans can be reached with a screen reader's heading navigation. Pick the level under the section's own heading, such as `3` under an `h2`. A value outside the range is moved to the nearest level, and the name keeps its look at every level. Null, the default, writes the name as a paragraph. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -140,7 +174,7 @@ so rows can mix both. `ComparisonCell.Yes` and `ComparisonCell.No` are the same 
 | Property | Type | Description |
 | --- | --- | --- |
 | `Name` | `string` | The plan's name. Required. |
-| `Price` | `string` | The price as shown, with its currency, such as `$29` or `Free`. Required. |
+| `Price` | `string` | The price as shown, with its currency, such as `$29` or `Free`. Empty by default; a plan without a price, such as one quoted on request, shows neither the amount nor the `Period`. |
 | `Period` | `string?` | What the price covers, such as `per month`. |
 | `Description` | `string?` | One line on who the plan is for. |
 | `Features` | `IReadOnlyList<string>` | Features listed under the price. Empty by default. |
@@ -178,6 +212,9 @@ Both components write unmatched attributes to their root element.
 - Both render plain HTML and need no script.
 - The pricing table is a `<ul>` with `role="list"`, so screen readers still announce it as a list of plans after
   its bullets are removed.
+- Each plan's name is a paragraph unless `PlanHeadingLevel` is set; then it is an `h1` to `h6` with the same look,
+  and a level outside 1 to 6 moves to the nearest one.
+- A plan whose `Price` is empty or white space has no price line: neither the amount nor the period is rendered.
 - A plan's button is rendered only when it has `CallToActionText` and a safe `CallToActionUrl`: a path starting
   with `/` (not `//` or `/\`), or an `http`, `https` or `mailto` address. Anything else, such as a `javascript:` URL or a relative path
   without the leading slash, leaves the button out.
