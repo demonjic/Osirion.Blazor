@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Analytics.Options;
 using Osirion.Blazor.Internal;
 using Osirion.Blazor.Options;
 
@@ -18,6 +19,9 @@ public partial class OsirionSiteLayout
 {
     [Inject]
     private IOptions<OsirionSiteOptions> SiteOptions { get; set; } = default!;
+
+    [Inject]
+    private IOptions<AnalyticsConsentOptions> AnalyticsConsent { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the page when the layout wraps it in your own layout (<c>&lt;OsirionSiteLayout&gt;@Body&lt;/OsirionSiteLayout&gt;</c>).
@@ -43,6 +47,9 @@ public partial class OsirionSiteLayout
     public string MenuLabel { get; set; } = "Main navigation";
 
     private OsirionSiteOptions Site => SiteOptions.Value;
+
+    // The banner records consent where the trackers look for it, so Osirion:Analytics:Consent:Evaluation moves both.
+    private ConsentEvaluation CookieConsentEvaluation => AnalyticsConsent.Value.Evaluation;
 
     private IReadOnlyList<FooterSection>? FooterSections => NullIfEmpty(Site.FooterSections);
 

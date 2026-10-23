@@ -9,8 +9,9 @@ public sealed class AnalyticsScriptContext
     public static AnalyticsScriptContext Default { get; } = new();
 
     /// <summary>
-    /// Gets whether the consent gate is on. When it is, the markup is only built after the visitor
-    /// consented, and providers with a consent API (Google Consent Mode) declare it explicitly.
+    /// Gets whether the consent gate is on. When it is, the markup only runs after the visitor consented: on the server
+    /// it is built only then, and in the browser (<c>ConsentEvaluation.Browser</c>) its scripts are held until then. Providers
+    /// with a consent API (Google Consent Mode) declare it explicitly.
     /// </summary>
     public bool ConsentGateActive { get; init; }
 }

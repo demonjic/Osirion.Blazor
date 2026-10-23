@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Analytics.Components;
 using Osirion.Blazor.Components;
 using Osirion.Blazor.Extensions;
 using Osirion.Blazor.Options;
@@ -140,6 +141,35 @@ public class OsirionSiteLayoutTests : BunitContext
         cut.FindAll("form[action='/search']").ShouldBeEmpty();
         cut.FindAll("[aria-label='Cookie Consent']").ShouldBeEmpty();
         cut.FindAll("[aria-label='Announcement']").ShouldBeEmpty();
+    }
+
+    // Guard test: passes before the browser mode exists; the configured banner stays the server form by default.
+    [Fact]
+    public void OsirionSiteLayout_ShowCookieConsent_RendersTheServerFormByDefault()
+    {
+        var cut = RenderLayout(new Dictionary<string, string?>(Site) { ["Osirion:Site:ShowCookieConsent"] = "true" });
+
+        cut.Find("form[action='/api/cookie-consent'] [aria-label='Cookie Consent']").ShouldNotBeNull();
+        cut.FindAll("[data-osirion-consent-banner]").ShouldBeEmpty();
+    }
+
+    // One setting moves the banner and the trackers, so a static site cannot end up with only one of them in the browser.
+    [Fact]
+    public void OsirionSiteLayout_ConsentEvaluatedInTheBrowser_RendersTheBannerAndHoldsTheTrackers()
+    {
+        var cut = RenderLayout(new Dictionary<string, string?>(Site)
+        {
+            ["Osirion:Site:ShowCookieConsent"] = "true",
+            ["Osirion:Analytics:Consent:RequireConsent"] = "true",
+            ["Osirion:Analytics:Consent:Evaluation"] = "Browser",
+            ["Osirion:Analytics:GA4:MeasurementId"] = "G-TEST1234",
+        });
+
+        var banner = cut.Find("[data-osirion-consent-banner]");
+        banner.HasAttribute("hidden").ShouldBeTrue();
+        banner.QuerySelector("[aria-label='Cookie Consent']").ShouldNotBeNull();
+        cut.FindAll("form[action='/api/cookie-consent']").ShouldBeEmpty();
+        Render<GA4Tracker>().Find("script[src*='googletagmanager']").GetAttribute("type").ShouldBe("text/plain");
     }
 
     [Fact]
