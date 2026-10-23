@@ -133,7 +133,8 @@ public sealed class OsirionSiteOptions
         }
         else if (!SafeLink.IsSafe(callToAction.Href))
         {
-            // The layout writes the address into the button's href as it is, so a javascript: or data: URL would run.
+            // The address goes into the button's href, where a javascript: or data: URL would run. The layout skips such a
+            // button too, but failing here tells the site why it is missing.
             errors.Add($"{Section}:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.");
         }
     }

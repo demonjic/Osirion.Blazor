@@ -58,7 +58,9 @@ Options (`OsirionSiteOptions`)
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a
 menu nested more than one level, or a call to action without `Text` or `Href` or with an `Href` of another kind (such
-as `javascript:` or `//other.example`) stops startup with a message naming the configuration key.
+as `javascript:` or `//other.example`) stops startup with a message naming the configuration key. Options set another
+way, for example with `Services.Configure<OsirionSiteOptions>`, skip that check; the layout then renders no call to
+action for such a value.
 
 Parameters, when you wrap it in your own layout
 ```razor

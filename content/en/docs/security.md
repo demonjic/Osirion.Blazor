@@ -101,7 +101,7 @@ A path on the site starts with one `/` and is not protocol-relative (`//host`). 
 `SafeLink.IsSafe` in `Osirion.Blazor.Core.Utils`; it is internal up to 4.2.0 and public in the release after 4.2.0, for
 links you render yourself. `InfiniteLogoCarousel` applies the same check in the release after 4.1.0; in 4.1.0 it writes
 any `Url` into `href`, so pass it only addresses you control. The `OsirionSiteLayout` call to action, which arrives in
-the release after 4.2.0, applies it when the application starts.
+the release after 4.2.0, applies it when the application starts and again when the layout renders.
 
 `HeroSection` and `OsirionBaseSection` escape the image address before they write it into a CSS `url()`, so a front
 matter `featured_image` cannot add style rules.

@@ -287,6 +287,25 @@ public class OsirionSiteLayoutTests : BunitContext
         button.HasAttribute("target").ShouldBeFalse();
     }
 
+    // Fails before the fix: the layout wrote the options as they were, so a call to action set without the startup check
+    // (options configured in code without UseSite) reached the page as a script URL or as a link without text.
+    [Theory]
+    [InlineData("Book a call", "javascript:alert(1)")]
+    [InlineData("Book a call", "data:text/html,hello")]
+    [InlineData(" ", "/contact")]
+    public void OsirionSiteLayout_UncheckedCallToActionWithUnsafeHrefOrBlankText_RendersNoButton(string text, string href)
+    {
+        Services.Configure<OsirionSiteOptions>(site =>
+        {
+            site.Name = "Site";
+            site.CallToAction = new SiteCallToAction { Text = text, Href = href };
+        });
+
+        var cut = RenderLayout([]);
+
+        cut.Find(".osirion-menu-actions").QuerySelectorAll("a").ShouldBeEmpty();
+    }
+
     [Fact]
     public void OsirionSiteLayout_CallToAction_FollowsSearchAndThemeToggleAndPrecedesMenuActions()
     {

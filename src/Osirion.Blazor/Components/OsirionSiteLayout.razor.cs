@@ -50,6 +50,13 @@ public partial class OsirionSiteLayout
 
     private OsirionSiteOptions Site => SiteOptions.Value;
 
+    // UseSite and the Osirion:Site section reject such a call to action at startup, but options configured another way
+    // skip that check, so the layout applies the same rule before it writes the address, as the menu does for its links.
+    private SiteCallToAction? CallToAction =>
+        Site.CallToAction is { } callToAction && !string.IsNullOrWhiteSpace(callToAction.Text) && SafeLink.IsSafe(callToAction.Href)
+            ? callToAction
+            : null;
+
     private string CallToActionClass => $"{ButtonClasses.Primary(ThemingOptions.Value.Framework)} osirion-site-call-to-action";
 
     private IReadOnlyList<FooterSection>? FooterSections => NullIfEmpty(Site.FooterSections);
