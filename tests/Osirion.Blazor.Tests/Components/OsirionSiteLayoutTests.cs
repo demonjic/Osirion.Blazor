@@ -14,6 +14,9 @@ namespace Osirion.Blazor.Tests.Components;
 
 public class OsirionSiteLayoutTests : BunitContext
 {
+    private const string UnsafeCallToActionHref =
+        "Osirion:Site:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.";
+
     private static readonly Dictionary<string, string?> Site = new()
     {
         ["Osirion:Site:Name"] = "Osirion.Blazor",
@@ -83,6 +86,44 @@ public class OsirionSiteLayoutTests : BunitContext
         });
 
         site.GetErrors().ShouldContain(error => error.StartsWith("Osirion:Site:Menu:0 nests deeper than one level", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("", "/contact", "Osirion:Site:CallToAction needs a Text.")]
+    [InlineData(" ", "/contact", "Osirion:Site:CallToAction needs a Text.")]
+    [InlineData("Book a call", "", "Osirion:Site:CallToAction needs an Href.")]
+    [InlineData("Book a call", "javascript:alert(1)", UnsafeCallToActionHref)]
+    [InlineData("Book a call", "data:text/html,hello", UnsafeCallToActionHref)]
+    [InlineData("Book a call", "//cal.example/book", UnsafeCallToActionHref)]
+    [InlineData("Book a call", "contact", UnsafeCallToActionHref)]
+    public void GetErrors_IncompleteOrUnsafeCallToAction_IsRejectedNamingTheKey(string text, string href, string expected)
+    {
+        var site = new OsirionSiteOptions { Name = "Site", CallToAction = new SiteCallToAction { Text = text, Href = href } };
+
+        site.GetErrors().ShouldBe([expected]);
+    }
+
+    [Theory]
+    [InlineData("/contact")]
+    [InlineData("https://cal.example/book")]
+    [InlineData("mailto:hello@example.com")]
+    public void GetErrors_CompleteCallToAction_IsAccepted(string href)
+    {
+        var site = new OsirionSiteOptions { Name = "Site", CallToAction = new SiteCallToAction { Text = "Book a call", Href = href } };
+
+        site.GetErrors().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void AddOsirion_CallToActionWithoutHref_FailsNamingTheKey()
+    {
+        var exception = Should.Throw<OptionsValidationException>(() => BuildOptions(new()
+        {
+            ["Osirion:Site:Name"] = "Site",
+            ["Osirion:Site:CallToAction:Text"] = "Book a call",
+        }));
+
+        exception.Failures.ShouldContain("Osirion:Site:CallToAction needs an Href.");
     }
 
     [Fact]
@@ -198,6 +239,76 @@ public class OsirionSiteLayoutTests : BunitContext
         cut.FindAll("nav[aria-label='Main navigation']").ShouldBeEmpty();
         cut.FindAll(".osirion-footer-social-link").ShouldBeEmpty();
     }
+
+    [Fact]
+    public void OsirionSiteLayout_WithoutCallToAction_RendersNoLinkAmongTheMenuActions()
+    {
+        var cut = RenderLayout(Site);
+
+        cut.Find(".osirion-menu-actions").QuerySelectorAll("a").ShouldBeEmpty();
+    }
+
+    // The menu's drawer (the no-script checkbox menu below its breakpoint) holds .osirion-menu, so a button inside it
+    // opens with the drawer at phone width.
+    [Fact]
+    public void OsirionSiteLayout_CallToAction_RendersAPrimaryButtonLinkInsideTheMenuDrawer()
+    {
+        var cut = RenderLayout(WithCallToAction("/contact"));
+
+        var button = cut.Find("nav[aria-label='Main navigation'] .osirion-menu .osirion-menu-actions a.osirion-site-call-to-action");
+        button.TextContent.ShouldBe("Book a call");
+        button.GetAttribute("href").ShouldBe("/contact");
+        button.ClassName.ShouldBe("osirion-button osirion-button-primary osirion-site-call-to-action");
+    }
+
+    [Fact]
+    public void OsirionSiteLayout_CallToActionUnderBootstrap_GetsTheBootstrapPrimaryButtonClasses()
+    {
+        var cut = RenderLayout(new Dictionary<string, string?>(WithCallToAction("/contact"))
+        {
+            ["Osirion:Theming:Framework"] = "Bootstrap",
+        });
+
+        cut.Find("a.osirion-site-call-to-action").ClassName.ShouldBe("btn btn-primary osirion-site-call-to-action");
+    }
+
+    [Theory]
+    [InlineData("https://cal.example/book", "noopener")]
+    [InlineData("http://cal.example/book", "noopener")]
+    [InlineData("/contact", null)]
+    [InlineData("mailto:hello@example.com", null)]
+    public void OsirionSiteLayout_CallToAction_GetsNoopenerOnlyForAnHttpAddressAndNeverOpensANewTab(string href, string? rel)
+    {
+        var cut = RenderLayout(WithCallToAction(href));
+
+        var button = cut.Find("a.osirion-site-call-to-action");
+        button.GetAttribute("href").ShouldBe(href);
+        button.GetAttribute("rel").ShouldBe(rel);
+        button.HasAttribute("target").ShouldBeFalse();
+    }
+
+    [Fact]
+    public void OsirionSiteLayout_CallToAction_FollowsSearchAndThemeToggleAndPrecedesMenuActions()
+    {
+        var cut = RenderLayout(
+            new Dictionary<string, string?>(WithCallToAction("/contact")) { ["Osirion:Site:ShowSearch"] = "true" },
+            p => p.Add(c => c.MenuActions, "<a class=\"my-action\" href=\"/subscribe\">Subscribe</a>"));
+
+        var order = cut.Find(".osirion-menu-actions")
+            .QuerySelectorAll("form[action='/search'], .theme-switcher, a.osirion-site-call-to-action, a.my-action")
+            .Select(element => element.Matches("form") ? "search"
+                : element.ClassList.Contains("theme-switcher") ? "theme toggle"
+                : element.ClassList.Contains("my-action") ? "menu actions"
+                : "call to action")
+            .ToList();
+        order.ShouldBe(["search", "theme toggle", "call to action", "menu actions"]);
+    }
+
+    private static Dictionary<string, string?> WithCallToAction(string href) => new(Site)
+    {
+        ["Osirion:Site:CallToAction:Text"] = "Book a call",
+        ["Osirion:Site:CallToAction:Href"] = href,
+    };
 
     private static OsirionSiteOptions BuildOptions(Dictionary<string, string?> values)
     {
