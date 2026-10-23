@@ -103,6 +103,7 @@ public class OsirionSiteLayoutTests : BunitContext
         site.GetErrors().ShouldBe([expected]);
     }
 
+    // Guards the accepted addresses: a site path, https and mailto pass the check.
     [Theory]
     [InlineData("/contact")]
     [InlineData("https://cal.example/book")]
@@ -240,6 +241,7 @@ public class OsirionSiteLayoutTests : BunitContext
         cut.FindAll(".osirion-footer-social-link").ShouldBeEmpty();
     }
 
+    // Guards the default: without CallToAction the menu actions keep their markup.
     [Fact]
     public void OsirionSiteLayout_WithoutCallToAction_RendersNoLinkAmongTheMenuActions()
     {
