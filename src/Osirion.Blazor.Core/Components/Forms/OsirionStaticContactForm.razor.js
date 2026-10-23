@@ -92,7 +92,8 @@ export default class extends BlazorJSComponents.Component {
         form.hidden = false;
 
         if (turnstile) {
-            this.renderWidget(turnstile);
+            // Not awaited on purpose: the form is usable while the check loads, and renderWidget handles its own failures.
+            void this.renderWidget(turnstile);
         }
     }
 
