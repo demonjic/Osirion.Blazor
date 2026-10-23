@@ -50,6 +50,13 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
 
     /// <summary>
     /// Gets or sets the label of the name field.
+    /// <summary>
+    /// Gets or sets whether a <c>*</c> follows the label of each required field: name, email and message. The marker is
+    /// for the eye only; assistive technology announces the fields' <c>required</c> attribute instead.
+    /// </summary>
+    [Parameter]
+    public bool ShowRequiredIndicators { get; set; } = true;
+
     /// </summary>
     [Parameter]
     public string NameLabel { get; set; } = "Name";

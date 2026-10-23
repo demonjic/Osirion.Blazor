@@ -13,6 +13,8 @@ Key parameters
 - `ShowCompanyField`: adds an optional `company` field (default false)
 - `NameLabel`, `EmailLabel`, `CompanyLabel`, `MessageLabel`, `SubmitButtonText`, `SubmittingText`
 - `SuccessMessage`, `FieldsErrorMessage`, `CheckErrorMessage`, `CheckPendingMessage`, `ErrorMessage`
+- `ShowRequiredIndicators`: a `*` after the labels of name, email and message (default true); it is `aria-hidden`,
+  since the inputs carry `required`
 - `PrivacyNote`: plain text under the form, encoded
 - `NoScriptContent`: what visitors without script see, rendered inside `<noscript>`
 

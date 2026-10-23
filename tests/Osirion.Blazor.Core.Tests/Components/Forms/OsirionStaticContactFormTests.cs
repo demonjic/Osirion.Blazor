@@ -42,16 +42,16 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         var name = Field(cut, "name");
         name.GetAttribute("type").ShouldBe("text");
         name.GetAttribute("autocomplete").ShouldBe("name");
-        LabelOf(cut, name).TextContent.Trim().ShouldBe("Name");
+        AccessibleLabelOf(cut, name).ShouldBe("Name");
 
         var email = Field(cut, "email");
         email.GetAttribute("type").ShouldBe("email");
         email.GetAttribute("autocomplete").ShouldBe("email");
-        LabelOf(cut, email).TextContent.Trim().ShouldBe("Email");
+        AccessibleLabelOf(cut, email).ShouldBe("Email");
 
         var message = Field(cut, "message");
         message.TagName.ShouldBe("TEXTAREA");
-        LabelOf(cut, message).TextContent.Trim().ShouldBe("Message");
+        AccessibleLabelOf(cut, message).ShouldBe("Message");
 
         cut.FindAll("[name]").Select(field => field.GetAttribute("name")).ShouldBe(["name", "email", "message", "website"]);
     }
@@ -73,6 +73,40 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         message.HasAttribute("required").ShouldBeTrue();
         message.GetAttribute("minlength").ShouldBe("10");
         message.GetAttribute("maxlength").ShouldBe("5000");
+    }
+
+    [Fact]
+    public void StaticContactForm_Defaults_MarkEachRequiredFieldForTheEyeOnly()
+    {
+        var cut = RenderForm();
+
+        foreach (var fieldName in new[] { "name", "email", "message" })
+        {
+            var marker = LabelOf(cut, Field(cut, fieldName)).QuerySelector(".osirion-static-contact-form-required")
+                .ShouldNotBeNull($"the {fieldName} label has no required marker");
+            marker.TextContent.ShouldBe("*");
+            marker.GetAttribute("aria-hidden").ShouldBe("true");
+        }
+    }
+
+    [Fact]
+    public void StaticContactForm_ShowCompanyField_LeavesTheOptionalFieldUnmarked()
+    {
+        var cut = RenderForm(parameters => parameters.Add(p => p.ShowCompanyField, true));
+
+        LabelOf(cut, Field(cut, "company")).QuerySelector(".osirion-static-contact-form-required").ShouldBeNull();
+        cut.FindAll(".osirion-static-contact-form-required").Count.ShouldBe(3);
+    }
+
+    [Fact]
+    public void StaticContactForm_WithoutRequiredIndicators_RendersNoMarkers()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ShowCompanyField, true)
+            .Add(p => p.ShowRequiredIndicators, false));
+
+        cut.FindAll(".osirion-static-contact-form-required").ShouldBeEmpty();
+        LabelOf(cut, Field(cut, "name")).TextContent.Trim().ShouldBe("Name");
     }
 
     [Fact]
@@ -108,7 +142,7 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         company.GetAttribute("autocomplete").ShouldBe("organization");
         company.GetAttribute("maxlength").ShouldBe("200");
         company.HasAttribute("required").ShouldBeFalse();
-        LabelOf(cut, company).TextContent.Trim().ShouldBe("Organization");
+        AccessibleLabelOf(cut, company).ShouldBe("Organization");
         cut.FindAll("[name]").Select(field => field.GetAttribute("name")).ShouldBe(["name", "email", "company", "message", "website"]);
     }
 
@@ -189,7 +223,7 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
             .Add(p => p.SuccessMessage, "\"><img src=x onerror=alert(1)>")
             .Add(p => p.PrivacyNote, "<script>alert(1)</script> & more"));
 
-        LabelOf(cut, Field(cut, "name")).TextContent.Trim().ShouldBe("<b>Name</b>");
+        AccessibleLabelOf(cut, Field(cut, "name")).ShouldBe("<b>Name</b>");
         cut.Find("form").GetAttribute("data-success-message").ShouldBe("\"><img src=x onerror=alert(1)>");
         cut.Find(".osirion-static-contact-form-privacy").TextContent.ShouldBe("<script>alert(1)</script> & more");
         cut.FindAll("b, img, form script").ShouldBeEmpty();
@@ -356,4 +390,10 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         field.Id.ShouldNotBeNullOrEmpty();
         return cut.Find($"label[for='{field.Id}']");
     }
+
+    // The label as assistive technology reads it, without the aria-hidden required marker.
+    private static string AccessibleLabelOf(IRenderedComponent<OsirionStaticContactForm> cut, IElement field) =>
+        string.Concat(LabelOf(cut, field).ChildNodes
+            .Where(node => node is not IElement element || element.GetAttribute("aria-hidden") != "true")
+            .Select(node => node.TextContent)).Trim();
 }

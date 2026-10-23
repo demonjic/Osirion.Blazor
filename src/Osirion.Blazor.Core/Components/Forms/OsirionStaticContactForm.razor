@@ -20,12 +20,24 @@
               data-check-pending-message="@CheckPendingMessage"
               data-error-message="@ErrorMessage">
             <div class="osirion-static-contact-form-field">
-                <label for="@FieldId("name")" class="@GetLabelClass()">@NameLabel</label>
+                <label for="@FieldId("name")" class="@GetLabelClass()">
+                    @NameLabel
+                    @if (ShowRequiredIndicators)
+                    {
+                        <span class="osirion-static-contact-form-required" aria-hidden="true">*</span>
+                    }
+                </label>
                 <input id="@FieldId("name")" name="name" type="text" class="@GetInputClass()" autocomplete="name"
                        required maxlength="@NameMaxLength" />
             </div>
             <div class="osirion-static-contact-form-field">
-                <label for="@FieldId("email")" class="@GetLabelClass()">@EmailLabel</label>
+                <label for="@FieldId("email")" class="@GetLabelClass()">
+                    @EmailLabel
+                    @if (ShowRequiredIndicators)
+                    {
+                        <span class="osirion-static-contact-form-required" aria-hidden="true">*</span>
+                    }
+                </label>
                 <input id="@FieldId("email")" name="email" type="email" class="@GetInputClass()" autocomplete="email"
                        required maxlength="@EmailMaxLength" />
             </div>
@@ -38,7 +50,13 @@
                 </div>
             }
             <div class="osirion-static-contact-form-field">
-                <label for="@FieldId("message")" class="@GetLabelClass()">@MessageLabel</label>
+                <label for="@FieldId("message")" class="@GetLabelClass()">
+                    @MessageLabel
+                    @if (ShowRequiredIndicators)
+                    {
+                        <span class="osirion-static-contact-form-required" aria-hidden="true">*</span>
+                    }
+                </label>
                 <textarea id="@FieldId("message")" name="message" rows="6" class="@GetTextAreaClass()" required
                           minlength="@MessageMinLength" maxlength="@MessageMaxLength"></textarea>
             </div>

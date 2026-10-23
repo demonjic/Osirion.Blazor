@@ -35,6 +35,12 @@
     outline-offset: var(--osirion-focus-ring-offset, 2px);
 }
 
+/* For the eye only: the inputs carry the required attribute, which assistive technology announces. */
+.osirion-static-contact-form-required {
+    margin-inline-start: var(--osirion-spacing-1, 0.25rem);
+    color: var(--osirion-status-danger-text, inherit);
+}
+
 .osirion-static-contact-form-field textarea {
     min-height: 8rem;
     resize: vertical;

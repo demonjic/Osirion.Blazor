@@ -255,6 +255,7 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
   renders with the `hidden` attribute and its script reveals it; visitors without script see `NoScriptContent`, so give
   them another way to reach you, such as an email link.
 - **Static SSR and static files.** The script is a BlazorJSComponents module and needs no Blazor circuit. It works on a
+| `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field: name, email and message. The marker is for the eye only; assistive technology announces the fields' `required` attribute instead. |
   page served by ASP.NET Core with static SSR, and on a copy of that page served as a file, as long as the page loads
   `blazor.web.js` and keeps its `<!--Blazor-Web-Initializers:...-->` comment. A static export must include the
   files that comment names and the component's script under `_content/Osirion.Blazor.Core/Components/Forms/`; a
@@ -309,3 +310,7 @@ status uses `--osirion-status-success-text` and `--osirion-status-danger-text`, 
 - [OsirionContactForm](/components/contact-form)
 - [Forms and feedback](/components/forms-and-feedback)
 - [Security guide](/docs/security)
+- Name, email and message carry `required`, and their labels end in a `*` while `ShowRequiredIndicators` is on (the
+  default). The `*` is `aria-hidden`, because assistive technology already announces `required`; the optional
+  company field has none.
+| `osirion-static-contact-form-required` | The `*` after the label of a required field, in `--osirion-status-danger-text` |
