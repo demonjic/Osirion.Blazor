@@ -34,9 +34,11 @@ public class AnalyticsConsentOptions
     /// Gets or sets where consent is evaluated. <c>Server</c>, the default, reads the consent cookie for each request and
     /// renders a tracker only after consent. <c>Browser</c> renders every tracker for every visitor with its scripts held
     /// (<c>type="text/plain"</c>), and the consent script runs them once the visitor's consent includes
-    /// <see cref="Category"/>: use it for a site exported to static files. It takes effect only with
-    /// <see cref="RequireConsent"/> on. <c>OsirionSiteLayout</c> renders its cookie banner in the same mode, so this one
-    /// setting (<c>Osirion:Analytics:Consent:Evaluation</c>) moves the banner and the trackers together.
+    /// <see cref="Category"/>: use it for a site exported to static files. <c>OsirionSiteLayout</c> renders its cookie
+    /// banner in the same mode, so this one setting (<c>Osirion:Analytics:Consent:Evaluation</c>) moves the banner and
+    /// the trackers together. The trackers follow it only with <see cref="RequireConsent"/> on; with it off they render
+    /// live for every visitor, while the layout's banner still follows this setting and asks for a choice nothing waits
+    /// for, so turn <see cref="RequireConsent"/> on with it.
     /// </summary>
     public ConsentEvaluation Evaluation { get; set; } = ConsentEvaluation.Server;
 }

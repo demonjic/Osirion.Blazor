@@ -146,8 +146,13 @@ A site exported to static files cannot send a new nonce with every response, so 
 hash: `'sha256-...'` of each snippet's text in `script-src`, next to `'self'` and the provider hosts. The text depends
 on the tracker's settings and on the library version, so recompute the hashes when either changes; the browser console
 names the expected hash of a blocked script. With the hashes in place, the trackers that run after consent are
-allowed and an injected inline script is still blocked. See
-[Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+allowed and an injected inline script is still blocked. That holds for a policy of hosts and hashes, not for one with
+`'strict-dynamic'`: there the trust in `osirion-consent.js` passes to every script it starts, and it starts every held
+script (`type="text/plain"` with `data-osirion-consent`) anywhere on the page once the visitor's answer includes its
+category, which for `necessary` is every answer. A held script that an HTML injection puts on the page then runs,
+where the same script injected directly is blocked. The sanitizer removes script elements from content, so this needs
+an injection elsewhere, such as raw HTML from a parameter; with `'strict-dynamic'`, treat keeping such markup out of
+the page as the defense. See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
 
 The practical policy for 4.1.0 allows inline script and style from your own origin, and adds the hosts of the services
 you use:

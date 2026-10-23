@@ -294,7 +294,11 @@ What changes with `Browser`:
   `script-src`, and each inline snippet (GA4, Clarity, Matomo, Plausible, Yandex Metrica) its `'sha256-...'` hash,
   because the snippet runs with its text unchanged. A static file has no per-response nonce, so use hashes. A hash
   changes with the tracker's settings and with the library version; when one is missing, the browser console names
-  the hash it expected. See [Security](/docs/security#write-a-content-security-policy).
+  the hash it expected. Under `'strict-dynamic'` the policy's trust in `osirion-consent.js` passes to every script it
+  starts, and it starts every held script on the page whose category the answer includes (`necessary` is in every
+  answer, Decline too). A held script that reaches the page through an HTML injection then runs once the visitor
+  answers, where the same script injected directly is blocked. With hosts and hashes instead, a held script runs only
+  where the same script written directly would. See [Security](/docs/security#write-a-content-security-policy).
 - **Moving an existing site.** The endpoint's cookie is `HttpOnly`, so the script can neither read nor replace it. A
   visitor who answered before the switch sees the banner on every page, and their new answer is not kept, until that
   cookie expires (`ConsentExpiryDays`, 365 days by default) or they clear it.

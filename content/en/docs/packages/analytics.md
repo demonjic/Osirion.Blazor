@@ -176,9 +176,10 @@ or `RequireConsent(options => options.Evaluation = ConsentEvaluation.Browser)` (
 once the visitor's consent includes the category; until then nothing reaches the provider. Markup a provider writes
 that is not a script is left out, because it would load before consent. The same key puts the banner of
 [`OsirionSiteLayout`](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md) in
-browser mode, so the banner and the trackers cannot disagree. `Evaluation`
-has no effect while `RequireConsent` is off. Setup, the reopen link and the Content Security Policy are on the
-[cookie consent page](/components/cookie-consent#sites-exported-to-static-files).
+browser mode, so the banner and the trackers read consent in the same place. The trackers follow `Evaluation` only
+while `RequireConsent` is on; with it off they render live for every visitor, while the layout's banner still follows
+`Evaluation` and asks for a choice nothing waits for, so turn `RequireConsent` on with it. Setup, the reopen link and
+the Content Security Policy are on the [cookie consent page](/components/cookie-consent#sites-exported-to-static-files).
 
 ### Security
 

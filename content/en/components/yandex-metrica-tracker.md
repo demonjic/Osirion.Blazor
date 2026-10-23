@@ -178,7 +178,7 @@ Yandex Metrica has no consent API in this tracker: the gate only decides whether
 
 ## Content Security Policy
 
-The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow `https://mc.yandex.ru` for `script-src` (or the host of `AlternativeCdn`), and for `img-src` because of the `noscript` pixel. The counter then sends to Yandex addresses on its own; this code does not show them, so take them from Yandex's documentation. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
+The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow `https://mc.yandex.ru` for `script-src` (or the host of `AlternativeCdn`); `img-src` is not needed for a `noscript` pixel, because the tracker writes none. The counter then sends to Yandex addresses on its own; this code does not show them, so take them from Yandex's documentation. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
 
 ## Behavior
 
