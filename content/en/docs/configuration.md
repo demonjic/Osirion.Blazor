@@ -40,8 +40,8 @@ environment, and where secrets such as a GitHub token belong. It is for develope
 ## Before you start
 
 - Osirion.Blazor is installed and `AddOsirion` is registered, as in the [installation guide](/docs/installation).
-- This guide is written for Osirion.Blazor 4.1.0. One key, `Osirion:Seo:SiteUrl`, arrives in the release after 4.1.0 and
-  is marked where it appears.
+- This guide is written for Osirion.Blazor 4.1.0. Two keys arrive later and are marked where they appear:
+  `Osirion:Seo:SiteUrl` in the release after 4.1.0, and `Osirion:Site:CallToAction` in the release after 4.2.0.
 
 ## Know the sections
 
@@ -50,7 +50,7 @@ section exists, so a site that sets nothing for a module gets that module's defa
 
 | Section | Bound to | Read about it |
 | --- | --- | --- |
-| `Osirion:Site` | `OsirionSiteOptions`: name, menu, footer, social links, announcement | [OsirionSiteLayout](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md) |
+| `Osirion:Site` | `OsirionSiteOptions`: name, menu, call to action, footer, social links, announcement | [OsirionSiteLayout](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md) |
 | `Osirion:Theming` | `ThemingOptions`: `Framework`, `DefaultMode`, `DefaultPalette`, `AllowPaletteSelection`, `UseDefaultStyles`, `CustomVariables` | [Theming](/docs/packages/theming) |
 | `Osirion:Cms:Web:FileSystem` | `FileSystemOptions`: one local folder | [Content providers](/docs/providers) |
 | `Osirion:Cms:Web:GitHub:<Name>` | `GitHubOptions`: one provider per child key | [Content providers](/docs/providers) |
@@ -81,7 +81,8 @@ A small site that reads Markdown from a folder, uses Osirion's own colors and re
       "Menu": [
         { "Text": "Blog", "Href": "/blog", "MatchPrefix": true },
         { "Text": "About", "Href": "/about" }
-      ]
+      ],
+      "CallToAction": { "Text": "Book a call", "Href": "https://booking.example.com/intro" }
     },
     "Cms": {
       "Web": {
@@ -105,6 +106,12 @@ without a message, so check a new key by looking at its effect.
 `Osirion:Seo:SiteUrl` names the site's public address. When it is an absolute `http` or `https` address, the canonical
 URL, `og:url` and the addresses in structured data use it instead of the host that served the request. The sitemap and
 the feeds use it too when `Feeds:SiteUrl` is not set. It arrives in the release after 4.1.0.
+
+`Osirion:Site:CallToAction` adds a button at the end of the menu, after the search box and theme toggle, styled as the
+primary button of the CSS framework in `Osirion:Theming:Framework`. It needs a `Text` and an `Href`: a path on the site
+such as `/contact`, or an `http`, `https` or `mailto` address. An `http` or `https` address gets `rel="noopener"` and
+opens in the same tab. Below 1200px the button moves into the opened menu with the other links. Leave the key out for no
+button. It arrives in the release after 4.2.0.
 
 ## Configure in code
 
@@ -248,8 +255,9 @@ that your host maps to environment variables works the same way.
 
 Only some options are validated, and each fails differently:
 
-- `Osirion:Site` is validated when the application starts. A site without a `Name`, or a menu item without a `Text`, an
-  `Href` or child `Items`, stops startup with an `OptionsValidationException` whose messages name the key, for example
+- `Osirion:Site` is validated when the application starts. A site without a `Name`, a menu item without a `Text`, an
+  `Href` or child `Items`, or a `CallToAction` without a `Text` or an `Href`, or with an `Href` of another kind such as
+  `javascript:`, stops startup with an `OptionsValidationException` whose messages name the key, for example
   `Osirion:Site:Name is required.`
 - Each analytics service under `Osirion:Analytics` is validated at startup when it is enabled, for example a GA4
   `MeasurementId` that does not look like `G-XXXXXXXXXX`.

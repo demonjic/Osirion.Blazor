@@ -7,7 +7,7 @@ permalink: /components/sections
 description: Page sections from Osirion.Blazor Core, from heroes and content sections to pricing tables and numbered steps, rendering under static SSR.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-sections.jpg'
 categories:
 - Components
@@ -51,7 +51,7 @@ seo_properties:
 # Sections
 
 Section components build the blocks of a landing page or the top of an article: a hero, a titled content band,
-contact details, pricing, the steps of a process, metrics and detail cards. Each renders complete HTML under static SSR and needs no script,
+contact details, pricing, the steps of a process, metrics, detail cards and a closing call to action. Each renders complete HTML under static SSR and needs no script,
 except the responsive showcase, which is a demo tool for interactive pages, and the count-up of a metric card with `Animate`.
 
 Most of them live in the `Osirion.Blazor.Components` namespace of the Osirion.Blazor.Core package, and their data
@@ -71,6 +71,7 @@ types in `Osirion.Blazor.Core.Models`:
 | [Contact info section](/components/contact-info-section) | Address, phone numbers, email addresses and websites as links | None | 4.0 |
 | [Pricing table and feature comparison](/components/pricing-table) | Plans side by side, and a table comparing their features | None | 4.0 |
 | [Steps](/components/steps) | Numbered "how it works" steps as an ordered list | None | 4.0 |
+| [Call to action section](/components/call-to-action-section) | The closing heading, short text and up to two buttons of a page | None | 4.3 |
 | [Responsive showcase](/components/responsive-showcase-section) | A preview frame that switches between desktop, tablet and mobile widths | Interactive render mode | 4.0 |
 | [Metric grid](/components/metric-grid) | Metric cards in a responsive list | Only for animated cards | 3.0 |
 | [Context card grid](/components/context-card-grid) | A heading and labeled detail cards, each with an accent color | None | 3.0 |

@@ -446,6 +446,20 @@
       "shots": []
     },
     {
+      "file": "components/call-to-action-section.md",
+      "path": "/components/call-to-action-section",
+      "section": "Components",
+      "title": "OsirionCallToActionSection",
+      "card": {
+        "key": "og/components-call-to-action-section.jpg",
+        "url": "https://media.getosirion.com/og/components-call-to-action-section.jpg",
+        "heading": "OsirionCallToActionSection: a closing call to action for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-call-to-action-section.jpg",
+      "shots": []
+    },
+    {
       "file": "components/callout.md",
       "path": "/components/callout",
       "section": "Components",
@@ -1283,6 +1297,20 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/components-series-navigation.jpg",
+      "shots": []
+    },
+    {
+      "file": "components/static-contact-form.md",
+      "path": "/components/static-contact-form",
+      "section": "Components",
+      "title": "OsirionStaticContactForm",
+      "card": {
+        "key": "og/components-static-contact-form.jpg",
+        "url": "https://media.getosirion.com/og/components-static-contact-form.jpg",
+        "heading": "OsirionStaticContactForm: contact form for static Blazor sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-static-contact-form.jpg",
       "shots": []
     },
     {

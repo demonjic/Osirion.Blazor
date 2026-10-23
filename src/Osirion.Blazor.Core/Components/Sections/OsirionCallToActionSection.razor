@@ -1,0 +1,60 @@
+@namespace Osirion.Blazor.Components
+@inherits OsirionComponentBase
+
+@if (HasContent)
+{
+    @* Named by its heading, the section is a region landmark that screen readers list by that name. *@
+    <section class="@GetSectionClass()" style="@Style" aria-labelledby="@(HasTitle ? _headingId : null)" @attributes="Attributes">
+        @if (HasTitle)
+        {
+            @switch (TitleLevel)
+            {
+                case 1:
+                    <h1 id="@_headingId" class="osirion-call-to-action-title">@Title</h1>
+                    break;
+                case 3:
+                    <h3 id="@_headingId" class="osirion-call-to-action-title">@Title</h3>
+                    break;
+                case 4:
+                    <h4 id="@_headingId" class="osirion-call-to-action-title">@Title</h4>
+                    break;
+                case 5:
+                    <h5 id="@_headingId" class="osirion-call-to-action-title">@Title</h5>
+                    break;
+                case 6:
+                    <h6 id="@_headingId" class="osirion-call-to-action-title">@Title</h6>
+                    break;
+                default:
+                    <h2 id="@_headingId" class="osirion-call-to-action-title">@Title</h2>
+                    break;
+            }
+        }
+
+        @if (HasDescription)
+        {
+            <p class="osirion-call-to-action-description">@Description</p>
+        }
+
+        @if (ChildContent is not null)
+        {
+            <div class="osirion-call-to-action-content">@ChildContent</div>
+        }
+
+        @if (HasButtons)
+        {
+            <div class="osirion-call-to-action-buttons">
+                @if (HasPrimaryButton)
+                {
+                    <a class="osirion-call-to-action-button osirion-call-to-action-button-primary @GetPrimaryButtonClass()"
+                       href="@PrimaryButtonUrl">@PrimaryButtonText</a>
+                }
+
+                @if (HasSecondaryButton)
+                {
+                    <a class="osirion-call-to-action-button osirion-call-to-action-button-secondary @GetSecondaryButtonClass()"
+                       href="@SecondaryButtonUrl">@SecondaryButtonText</a>
+                }
+            </div>
+        }
+    </section>
+}

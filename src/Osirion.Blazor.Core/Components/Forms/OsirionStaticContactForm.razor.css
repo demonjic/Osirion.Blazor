@@ -1,0 +1,85 @@
+/* OsirionStaticContactForm: the fields in one column, then the button with its status beside it. */
+
+.osirion-static-contact-form-form {
+    position: relative;
+    display: grid;
+    gap: var(--osirion-spacing-5, 1.25rem);
+}
+
+/* The form stays hidden until its script runs; without this the grid display would show it. */
+.osirion-static-contact-form-form[hidden] {
+    display: none;
+}
+
+.osirion-static-contact-form-field {
+    display: grid;
+    gap: var(--osirion-spacing-2, 0.5rem);
+}
+
+/* Only the framework-neutral classes are styled here: under Bootstrap the fields carry form-control, and the other
+   adapters style these classes with stronger selectors. :where keeps this rule as weak as one class. */
+:where(.osirion-input, .osirion-textarea) {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--osirion-spacing-2, 0.5rem) var(--osirion-spacing-3, 0.75rem);
+    font: inherit;
+    color: var(--osirion-input-text, var(--osirion-text-primary, inherit));
+    background-color: var(--osirion-input-background, var(--osirion-background-primary, #ffffff));
+    border: 1px solid var(--osirion-input-border, var(--osirion-border-color, #d1d5db));
+    border-radius: var(--osirion-input-radius, var(--osirion-radius-md, 0.375rem));
+}
+
+:where(.osirion-input, .osirion-textarea):focus-visible {
+    border-color: var(--osirion-input-focus-border, var(--osirion-action-primary, #2563eb));
+    outline: var(--osirion-focus-ring-width, 3px) solid var(--osirion-focus-ring-color, rgba(59, 130, 246, 0.5));
+    outline-offset: var(--osirion-focus-ring-offset, 2px);
+}
+
+/* For the eye only: the inputs carry the required attribute, which assistive technology announces. */
+.osirion-static-contact-form-required {
+    margin-inline-start: var(--osirion-spacing-1, 0.25rem);
+    color: var(--osirion-status-danger-text, inherit);
+}
+
+.osirion-static-contact-form-field textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+/* A field people never see: out of the layout and clipped, but still in the form, where a bot finds it. */
+.osirion-static-contact-form-trap {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* The widget's own height, held before it loads so the button does not move. */
+.osirion-static-contact-form-turnstile {
+    min-height: 65px;
+}
+
+.osirion-static-contact-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--osirion-spacing-3, 0.75rem) var(--osirion-spacing-5, 1.25rem);
+}
+
+.osirion-static-contact-form-status,
+.osirion-static-contact-form-privacy {
+    margin: 0;
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    color: var(--osirion-text-secondary, inherit);
+}
+
+.osirion-static-contact-form-status[data-state="success"] {
+    font-weight: var(--osirion-font-weight-semibold, 600);
+    color: var(--osirion-status-success-text, inherit);
+}
+
+.osirion-static-contact-form-status:is([data-state="fields"], [data-state="check"], [data-state="failed"]) {
+    color: var(--osirion-status-danger-text, inherit);
+}
