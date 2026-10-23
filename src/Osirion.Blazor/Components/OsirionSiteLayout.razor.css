@@ -1,5 +1,12 @@
 /* OsirionSiteLayout - Osirion.Blazor */
 
+/* Below its breakpoint the menu opens a drawer that lays the actions out in a two-column grid; there the call to action
+   takes a row of its own across both columns. The bar's flex row ignores grid-column. */
+.osirion-site-call-to-action {
+    grid-column: 1 / -1;
+    text-decoration: none;
+}
+
 .osirion-site-footer-brand {
     display: inline-flex;
     align-items: center;

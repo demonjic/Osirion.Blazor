@@ -56,6 +56,10 @@
                     {
                         <ThemeToggle />
                     }
+                    @if (CallToAction is { } callToAction)
+                    {
+                        <a class="@CallToActionClass" href="@callToAction.Href" rel="@GetCallToActionRel(callToAction.Href)">@callToAction.Text</a>
+                    }
                     @MenuActions
                 </Actions>
             </Menu>

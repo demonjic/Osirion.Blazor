@@ -1,4 +1,5 @@
 using Osirion.Blazor.Components;
+using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Options;
 
@@ -41,6 +42,12 @@ public sealed class OsirionSiteOptions
 
     /// <summary>Gets or sets whether the menu has the light and dark theme toggle. Defaults to <see langword="true"/>.</summary>
     public bool ShowThemeToggle { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a button at the end of the menu, after the search box and theme toggle, for example
+    /// <c>Book a call</c> linking to a scheduling page; <see langword="null"/>, the default, shows none.
+    /// </summary>
+    public SiteCallToAction? CallToAction { get; set; }
 
     /// <summary>Gets or sets a dismissible announcement above the menu, or <see langword="null"/> for none.</summary>
     public SiteAnnouncement? Announcement { get; set; }
@@ -91,6 +98,7 @@ public sealed class OsirionSiteOptions
         }
 
         AddMenuErrors(Menu, "Menu", errors);
+        AddCallToActionErrors(CallToAction, errors);
         if (Announcement is { } announcement && (string.IsNullOrWhiteSpace(announcement.Id) || string.IsNullOrWhiteSpace(announcement.Text)))
         {
             errors.Add($"{Section}:Announcement needs an Id and a Text.");
@@ -105,6 +113,30 @@ public sealed class OsirionSiteOptions
         }
 
         return errors;
+    }
+
+    private static void AddCallToActionErrors(SiteCallToAction? callToAction, List<string> errors)
+    {
+        if (callToAction is null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(callToAction.Text))
+        {
+            errors.Add($"{Section}:CallToAction needs a Text.");
+        }
+
+        if (string.IsNullOrWhiteSpace(callToAction.Href))
+        {
+            errors.Add($"{Section}:CallToAction needs an Href.");
+        }
+        else if (!SafeLink.IsSafe(callToAction.Href))
+        {
+            // The address goes into the button's href, where a javascript: or data: URL would run. The layout skips such a
+            // button too, but failing here tells the site why it is missing.
+            errors.Add($"{Section}:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.");
+        }
     }
 
     private static void AddMenuErrors(List<SiteMenuItem> items, string path, List<string> errors)
@@ -171,6 +203,20 @@ public sealed class SiteSocialLink
     /// Gets or sets the accessible name, for example <c>Osirion.Blazor on GitHub</c>. Defaults to the network's name.
     /// </summary>
     public string? Label { get; set; }
+}
+
+/// <summary>A link at the end of the menu, styled as the primary button of the site's CSS framework.</summary>
+public sealed class SiteCallToAction
+{
+    /// <summary>Gets or sets the text of the button, for example <c>Book a call</c>. Required.</summary>
+    public string Text { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the address the button links to: a path on the site (starting with <c>/</c>) or an <c>http</c>,
+    /// <c>https</c> or <c>mailto</c> address. Required. An <c>http</c> or <c>https</c> address gets
+    /// <c>rel="noopener"</c> and opens in the same tab.
+    /// </summary>
+    public string Href { get; set; } = string.Empty;
 }
 
 /// <summary>A dismissible announcement above the menu.</summary>
