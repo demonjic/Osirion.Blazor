@@ -86,6 +86,21 @@ public partial class ComponentStylesheetTests
         css.ShouldContain("@media(prefers-reduced-motion:reduce){.osirion-spinner{animation:none;}}");
     }
 
+    // A plan name rendered as a heading (PlanHeadingLevel) must look like the default paragraph: CSS frameworks give
+    // headings their own margin, font family and line height, which the paragraph inherits from the card instead.
+    [Fact]
+    public void PricingTable_NameHeading_TakesTheLookOfTheNameParagraph()
+    {
+        // Act
+        var css = Squash(ComponentCss("Sections", "OsirionPricingTable.razor.css"));
+        var heading = Regex.Match(css, @"(?:^|\}):is\(h1,h2,h3,h4,h5,h6\)\.osirion-pricing-name\{[^}]*\}").Value;
+
+        // Assert
+        heading.ShouldContain("margin:0;");
+        heading.ShouldContain("font-family:inherit;");
+        heading.ShouldContain("line-height:inherit;");
+    }
+
     // Fails before the fix: the stage clipped the moving track with clip-path alone, which hides it but still counts it
     // as scrollable overflow, so every page with the carousel scrolled sideways (2,216 pixels on a 375 pixel screen).
     [Fact]

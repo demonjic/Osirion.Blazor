@@ -8,20 +8,53 @@
         @foreach (var plan in Plans)
         {
             <li @key="plan.Name" class="@GetPlanClass(plan)">
-                @if (!string.IsNullOrWhiteSpace(plan.Badge))
+                @* The badge is drawn on the top border wherever it sits. A heading comes before it, so heading navigation,
+                   which reads forward from the heading, announces the badge with its plan. *@
+                @if (NameHeadingLevel is null && !string.IsNullOrWhiteSpace(plan.Badge))
                 {
                     <p class="osirion-pricing-badge">@plan.Badge</p>
                 }
 
-                <p class="osirion-pricing-name">@plan.Name</p>
+                @switch (NameHeadingLevel)
+                {
+                    case null:
+                        <p class="osirion-pricing-name">@plan.Name</p>
+                        break;
+                    case 2:
+                        <h2 class="osirion-pricing-name">@plan.Name</h2>
+                        break;
+                    case 3:
+                        <h3 class="osirion-pricing-name">@plan.Name</h3>
+                        break;
+                    case 4:
+                        <h4 class="osirion-pricing-name">@plan.Name</h4>
+                        break;
+                    case 5:
+                        <h5 class="osirion-pricing-name">@plan.Name</h5>
+                        break;
+                    case 6:
+                        <h6 class="osirion-pricing-name">@plan.Name</h6>
+                        break;
+                    default:
+                        <h1 class="osirion-pricing-name">@plan.Name</h1>
+                        break;
+                }
 
-                <p class="osirion-pricing-price">
-                    <span class="osirion-pricing-amount">@plan.Price</span>
-                    @if (!string.IsNullOrWhiteSpace(plan.Period))
-                    {
-                        <span class="osirion-pricing-period">@plan.Period</span>
-                    }
-                </p>
+                @if (NameHeadingLevel is not null && !string.IsNullOrWhiteSpace(plan.Badge))
+                {
+                    <p class="osirion-pricing-badge">@plan.Badge</p>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(plan.Price))
+                {
+                    <p class="osirion-pricing-price">
+                        <span class="osirion-pricing-amount">@plan.Price</span>
+                        @if (!string.IsNullOrWhiteSpace(plan.Period))
+                        {
+                            <span class="osirion-pricing-period">@plan.Period</span>
+                        }
+                    </p>
+                }
 
                 @if (!string.IsNullOrWhiteSpace(plan.Description))
                 {
