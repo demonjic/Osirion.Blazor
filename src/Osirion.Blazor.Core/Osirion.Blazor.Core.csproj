@@ -31,9 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- OsirionSiteLayout checks its call to action with SafeLink and styles it with ButtonClasses, so the
-		     site options and the components keep one link rule and one set of button classes -->
-		<InternalsVisibleTo Include="Osirion.Blazor" />
 	</ItemGroup>
 
 </Project>

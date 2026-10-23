@@ -7,7 +7,7 @@ permalink: /docs/security
 description: "How Osirion.Blazor sanitizes content and URLs, which components take raw HTML, what a Content Security Policy must allow, the cookies it sets and how to keep secrets out of source."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-security.jpg'
 categories:
 - Documentation
@@ -97,9 +97,11 @@ Links and image addresses can come from content or configuration, so components 
 | `Menu`, `MenuItem`, `MenuGroup` footer, `MenuPanelLink`, `MenuImageCard`, `MenuCallToAction` and the brand link | Relative URLs, `http`, `https`, `mailto`, `tel`; any other scheme renders no `href` |
 | `OsirionAuthorCard` (avatar, profile and link addresses) and `OsirionPricingTable` (button address) | A path on the site, or an absolute `http`, `https` or `mailto` address |
 
-A path on the site starts with one `/` and is not protocol-relative (`//host`). The internal check behind the last row
-is called `SafeLink`. `InfiniteLogoCarousel` applies the same check in the release after 4.1.0; in 4.1.0 it writes any
-`Url` into `href`, so pass it only addresses you control.
+A path on the site starts with one `/` and is not protocol-relative (`//host`). The check behind the last row is
+`SafeLink.IsSafe` in `Osirion.Blazor.Core.Utils`; it is internal up to 4.2.0 and public in the release after 4.2.0, for
+links you render yourself. `InfiniteLogoCarousel` applies the same check in the release after 4.1.0; in 4.1.0 it writes
+any `Url` into `href`, so pass it only addresses you control. The `OsirionSiteLayout` call to action, which arrives in
+the release after 4.2.0, applies it when the application starts.
 
 `HeroSection` and `OsirionBaseSection` escape the image address before they write it into a CSS `url()`, so a front
 matter `featured_image` cannot add style rules.

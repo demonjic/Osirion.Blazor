@@ -3,10 +3,10 @@ using Osirion.Blazor.Components;
 namespace Osirion.Blazor.Core.Utils;
 
 /// <summary>
-/// The button classes of each CSS framework, shared by <see cref="OsirionComponentBase"/> and markup rendered outside
-/// it.
+/// The button classes of each CSS framework that <see cref="OsirionComponentBase"/> renders, for markup outside it,
+/// such as a layout that inherits <see cref="Microsoft.AspNetCore.Components.LayoutComponentBase"/>.
 /// </summary>
-internal static class ButtonClasses
+public static class ButtonClasses
 {
     /// <summary>
     /// Gets the classes of a primary button under <paramref name="framework"/>; an unknown framework gets the neutral
