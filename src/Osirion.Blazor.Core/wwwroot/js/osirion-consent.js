@@ -12,7 +12,8 @@
  *   and the categories in event.detail;
  * - runs the held scripts whose category the consent includes, on page load when the cookie already says so and right
  *   after a choice, once per page and in document order;
- * - reopens the banner when an element with data-osirion-consent-open is clicked, so a footer link lets visitors change
+ * - reopens the banner when an element with data-osirion-consent-open is clicked, or when a page opens with the
+ *   customize-cookies query key that the server rendered banner also opens for, so a footer link lets visitors change
  *   or withdraw consent. A running tracker cannot be stopped, so a choice that withdraws a category whose scripts already
  *   ran reloads the page, which then leaves them held.
  *
@@ -45,6 +46,8 @@
     const PANEL = '.osirion-cookie-consent-customize';
     const CUSTOMIZING = 'osirion-cookie-consent-customizing';
     const CONSENT_ATTRIBUTES = ['type', 'data-osirion-consent', 'data-osirion-type', 'nonce'];
+    // The query key of a "Cookie settings" link, such as one in the footer's legal links.
+    const CUSTOMIZE_QUERY = 'customize-cookies';
 
     // Held scripts that already ran in this document, by content: enhanced navigation patches the page in place and can
     // leave a script that ran looking held again, and it must not run twice.
@@ -281,11 +284,35 @@
         }
     }
 
+    // Reports whether the address carries the customize-cookies key, matched ignoring case as the server matches it, and
+    // removes it, as the consent endpoint does after a choice, so a reload or a copied address does not reopen the banner.
+    // The other parameters are kept as they are written.
+    function takeCustomizeFlag() {
+        const parameters = window.location.search.slice(1).split('&').filter(Boolean);
+        const kept = parameters.filter(function (parameter) {
+            const key = new URLSearchParams(parameter).keys().next().value || '';
+            return key.toLowerCase() !== CUSTOMIZE_QUERY;
+        });
+        if (kept.length === parameters.length) {
+            return false;
+        }
+
+        window.history.replaceState(window.history.state, '',
+            window.location.pathname + (kept.length > 0 ? '?' + kept.join('&') : '') + window.location.hash);
+        return true;
+    }
+
     // On load and after every enhanced navigation, which renders the banner hidden again.
     function sync() {
         const consent = readConsent();
         const banner = document.querySelector(BANNER);
-        if (banner && !consent) {
+        if (banner && takeCustomizeFlag()) {
+            // As in the server rendered banner, the link opens the category panel, here with the saved choices.
+            openBanner(null);
+            if (banner.querySelector(PANEL)) {
+                setPanel(banner, true);
+            }
+        } else if (banner && !consent) {
             showBanner(banner, null);
         }
         if (consent) {

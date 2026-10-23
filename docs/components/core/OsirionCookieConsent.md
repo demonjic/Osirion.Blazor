@@ -25,7 +25,8 @@ Behavior (Evaluation = Browser, for sites exported to static files)
 - Renders the category panel hidden; Customize (an aria-expanded disclosure button) opens it, and is offered only with ShowCustomizationPanel on
 - Writes data-osirion-consent-banner and data-osirion-consent-days (ConsentExpiryDays bounded as the endpoint bounds it) on the root, and loads wwwroot/js/osirion-consent.js through BlazorJSComponents (AddOsirion registers it; otherwise AddJSComponents(), or the banner throws)
 - The script shows the banner when there is no valid consent cookie; writes Accept, Decline and Save Preferences to "osirion_cookie_consent" in the endpoint's JSON and escaping, path=/, SameSite=Lax, Secure on https, not HttpOnly; hides the banner; dispatches "osirion-consent-change" on window (detail.consentType, detail.categories); runs the scripts held for consented categories (see ConsentScripts.HoldUntilConsent)
-- Any element with data-osirion-consent-open reopens the banner with the saved choices and focuses it. A choice that withdraws a category whose scripts already ran reloads the page, because a running tracker cannot be stopped
+- A page opened with the customize-cookies query key (any case, as in Server mode) shows the banner with the category panel open and the saved choices, focuses it, and removes the key from the address with history.replaceState, keeping the other parameters as written. So a plain "?customize-cookies=true" link, such as an OsirionSiteLayout legal link, reopens the banner in both modes
+- Any element with data-osirion-consent-open reopens the banner with the saved choices and focuses it, without loading a page. A choice that withdraws a category whose scripts already ran reloads the page, because a running tracker cannot be stopped
 - The script cannot read or replace the endpoint's HttpOnly cookie, so a visitor who answered under Server evaluation sees the banner again until that cookie expires
 
 Rendering modes

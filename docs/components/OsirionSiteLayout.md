@@ -53,7 +53,9 @@ Options (`OsirionSiteOptions`)
 - `ShowCookieConsent` (false; needs `app.MapOsirionCookieConsent()`), `ShowScrollToTop` (true). The banner is rendered
   with `Evaluation` from `Osirion:Analytics:Consent:Evaluation`, the setting the trackers read: set it to `Browser`
   for a site exported to static files, and the banner records consent in the browser and needs no endpoint
-  (see docs/components/core/CookieConsent.md, static hosting)
+  (see docs/components/core/CookieConsent.md, static hosting). In either mode a legal link to a page with
+  `?customize-cookies=true`, such as `{ "Text": "Cookie settings", "Href": "/privacy-policy?customize-cookies=true" }`,
+  reopens the banner, so visitors can change or withdraw consent from the footer
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, or
 a menu nested more than one level stops startup with a message naming the configuration key.

@@ -264,18 +264,25 @@ What changes with `Browser`:
   one, with the same text and attributes (`src`, `async`, `defer`, `nonce` and the rest), in the order of the page.
   After Decline, or without an answer, they stay held. Markup a tracker writes that is not a script is left out, since
   it would load before consent.
-- **Changing the answer.** Any element with `data-osirion-consent-open` reopens the banner, with the saved choices in
-  the panel, and moves focus to it; focus returns to the element after the choice. Use a link or a button, so it works
-  from the keyboard:
+- **Changing the answer.** A link to any page with `?customize-cookies=true` reopens the banner as it does in the
+  default mode: the page opens with the banner, the category panel (when `ShowCustomizationPanel` is on) and the saved
+  choices, focus moves to the banner, and the script removes the flag from the address, keeping the other parameters.
+  A site built on `OsirionSiteLayout` gets its "Cookie settings" link from a legal link, with no markup of its own:
+
+  ```json
+  "LegalLinks": [ { "Text": "Cookie settings", "Href": "/privacy-policy?customize-cookies=true" } ]
+  ```
+
+  Any element with `data-osirion-consent-open` also reopens the banner, without loading a page, and focus returns to
+  the element after the choice. Use a link or a button, so it works from the keyboard:
 
   ```razor
   <a href="?customize-cookies=true" data-osirion-consent-open>Cookie settings</a>
   ```
 
-  The same link works in both modes: in `Browser` the script opens the banner and the link is not followed, in
-  `Server` the query string opens the panel. A running tracker cannot be stopped, so a choice that withdraws a category
-  whose scripts already ran on the page reloads it, and the new page keeps them held. Cookies a tracker already set
-  stay until they expire or the visitor clears them; to remove them at once, listen for `osirion-consent-change`.
+  Both links work in both modes. A running tracker cannot be stopped, so a choice that withdraws a category whose
+  scripts already ran on the page reloads it, and the new page keeps them held. Cookies a tracker already set stay
+  until they expire or the visitor clears them; to remove them at once, listen for `osirion-consent-change`.
 - **What the page needs.** The banner loads `osirion-consent.js` through BlazorJSComponents, which `AddOsirion`
   registers (otherwise call `builder.Services.AddJSComponents()`; without it the banner throws). Every tracker also
   references the script with a `<script type="module">` in the head, so a page with trackers and no banner still
