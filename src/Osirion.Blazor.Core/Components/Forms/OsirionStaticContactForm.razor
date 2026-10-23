@@ -1,0 +1,70 @@
+@namespace Osirion.Blazor.Components
+@inherits OsirionComponentBase
+@using BlazorJSComponents
+@inject JSElementReferenceScope Refs
+
+@if (HasSafeEndpoint)
+{
+    <div class="@GetContainerClass()" style="@Style" @attributes="Attributes">
+        @* Hidden until its script runs: the endpoint takes JSON, so without script the form could send nothing. *@
+        <form class="osirion-static-contact-form-form"
+              action="@Endpoint"
+              method="post"
+              hidden
+              data-ref="@Refs["form"]"
+              data-submit-text="@SubmitButtonText"
+              data-submitting-text="@SubmittingText"
+              data-success-message="@SuccessMessage"
+              data-fields-error-message="@FieldsErrorMessage"
+              data-check-error-message="@CheckErrorMessage"
+              data-check-pending-message="@CheckPendingMessage"
+              data-error-message="@ErrorMessage">
+            <div class="osirion-static-contact-form-field">
+                <label for="@FieldId("name")" class="@GetLabelClass()">@NameLabel</label>
+                <input id="@FieldId("name")" name="name" type="text" class="@GetInputClass()" autocomplete="name"
+                       required maxlength="@NameMaxLength" />
+            </div>
+            <div class="osirion-static-contact-form-field">
+                <label for="@FieldId("email")" class="@GetLabelClass()">@EmailLabel</label>
+                <input id="@FieldId("email")" name="email" type="email" class="@GetInputClass()" autocomplete="email"
+                       required maxlength="@EmailMaxLength" />
+            </div>
+            @if (ShowCompanyField)
+            {
+                <div class="osirion-static-contact-form-field">
+                    <label for="@FieldId("company")" class="@GetLabelClass()">@CompanyLabel</label>
+                    <input id="@FieldId("company")" name="company" type="text" class="@GetInputClass()"
+                           autocomplete="organization" maxlength="@CompanyMaxLength" />
+                </div>
+            }
+            <div class="osirion-static-contact-form-field">
+                <label for="@FieldId("message")" class="@GetLabelClass()">@MessageLabel</label>
+                <textarea id="@FieldId("message")" name="message" rows="6" class="@GetTextAreaClass()" required
+                          minlength="@MessageMinLength" maxlength="@MessageMaxLength"></textarea>
+            </div>
+            @* A field people never see. A bot that fills it gives itself away; the endpoint decides what to answer. *@
+            <div class="osirion-static-contact-form-trap" aria-hidden="true">
+                <label for="@FieldId("website")">Website</label>
+                <input id="@FieldId("website")" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            @if (SiteKey is not null)
+            {
+                <div class="osirion-static-contact-form-turnstile" data-ref="@Refs["turnstile"]" data-sitekey="@SiteKey"></div>
+            }
+            <div class="osirion-static-contact-form-actions">
+                <button type="submit" class="@GetPrimaryButtonClass()" data-ref="@Refs["submit"]">@SubmitButtonText</button>
+                <p class="osirion-static-contact-form-status" role="status" data-ref="@Refs["status"]"></p>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(PrivacyNote))
+            {
+                <p class="osirion-static-contact-form-privacy">@PrivacyNote</p>
+            }
+        </form>
+        @if (NoScriptContent is not null)
+        {
+            <noscript>@NoScriptContent</noscript>
+        }
+    </div>
+
+    <JS Src="./_content/Osirion.Blazor.Core/Components/Forms/OsirionStaticContactForm.razor.js" Args="[Refs]" />
+}
