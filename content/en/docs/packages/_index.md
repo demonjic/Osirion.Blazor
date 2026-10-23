@@ -83,7 +83,7 @@ Package `Osirion.Blazor.Core`, namespace `Osirion.Blazor.Components`. Building b
 - [Carousels](/components/sections): `InfiniteLogoCarousel`, `OsirionTestimonialCarousel`.
 - [Content](/components/content): `OsirionArticleMetdata`. From 4.0: `OsirionCallout`, `OsirionTabs`,
   `OsirionAccordion`, `OsirionFaq`, `OsirionResponsiveImage`, `OsirionVideoEmbed`, `OsirionReadingProgress`.
-- [Forms](/components/forms-and-feedback): `OsirionContactForm`.
+- [Forms](/components/forms-and-feedback): `OsirionContactForm`, `OsirionStaticContactForm`.
 - [Navigation](/components/navigation): `OsirionBreadcrumbs`, `OsirionReadMoreLink`.
 - [Popups](/components/forms-and-feedback): `OsirionCookieConsent`. From 4.0: `OsirionAnnouncementBar`.
 - [Rendering](/components/content): `OsirionHtmlRenderer`, `OsirionReveal`.

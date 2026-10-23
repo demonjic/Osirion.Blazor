@@ -1300,6 +1300,20 @@
       "shots": []
     },
     {
+      "file": "components/static-contact-form.md",
+      "path": "/components/static-contact-form",
+      "section": "Components",
+      "title": "OsirionStaticContactForm",
+      "card": {
+        "key": "og/components-static-contact-form.jpg",
+        "url": "https://media.getosirion.com/og/components-static-contact-form.jpg",
+        "heading": "OsirionStaticContactForm: contact form for static Blazor sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-static-contact-form.jpg",
+      "shots": []
+    },
+    {
       "file": "components/steps.md",
       "path": "/components/steps",
       "section": "Components",

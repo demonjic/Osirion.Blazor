@@ -50,8 +50,8 @@ seo_properties:
 # Osirion.Blazor.Core
 Osirion.Blazor.Core is the package with the page building blocks: layout, content, cards, sections, navigation, forms
 and states. Every component renders complete HTML under static SSR; where a component uses script, the script adds
-to markup that already works (the one exception is `OsirionReveal`, see Rendering below). Version 4.0.0 targets
-.NET 9 and .NET 10.
+to markup that already works (the exceptions are `OsirionReveal` and `OsirionStaticContactForm`, see Rendering and
+Forms below). Version 4.0.0 targets .NET 9 and .NET 10.
 
 ## Setup
 
@@ -93,7 +93,7 @@ adapter for your CSS framework; see [OsirionStyles](/components/osirion-styles).
 | [Sections](/components/sections) | `HeroSection`, `OsirionBaseSection`, `OsirionContactInfoSection`, `OsirionResponsiveShowcaseSection`, `OsirionMetricGrid`, `OsirionContextCardGrid`. From 4.0: `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`. |
 | [Navigation](/components/navigation) | `OsirionBreadcrumbs` and `OsirionReadMoreLink`. Menus and scroll helpers are in the [Navigation package](/docs/packages/navigation). |
 | [Carousels](/components/sections) | `InfiniteLogoCarousel` and `OsirionTestimonialCarousel`. |
-| [Forms](/components/forms-and-feedback) | `OsirionContactForm`, which posts under static SSR. The newsletter form is a card: `OsirionSubscriptionCard`. |
+| [Forms](/components/forms-and-feedback) | `OsirionContactForm`, which posts under static SSR, and [`OsirionStaticContactForm`](/components/static-contact-form) for sites published as static files, which sends JSON to your endpoint with a script: it renders hidden and only its script shows it. The newsletter form is a card: `OsirionSubscriptionCard`. |
 | [Popups](/components/forms-and-feedback) | [`OsirionCookieConsent`](/components/cookie-consent), and from 4.0 [`OsirionAnnouncementBar`](/components/announcement-bar), a site-wide notice that closes without script. |
 | [Rendering](/components/content) | `OsirionHtmlRenderer`, which sanitizes HTML and highlights code, and `OsirionReveal`, which fades content in as it scrolls into view. With `Animate` on (the default) the content starts hidden and only its script shows it, so do not wrap content that must be visible without script. |
 | [States](/components/forms-and-feedback) | `OsirionContentNotFound` for missing content. |
