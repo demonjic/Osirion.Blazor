@@ -25,8 +25,8 @@ Usage
 ```
 
 Notes
-- A button URL must pass `SafeLink.IsSafe`: a site path, or an http, https or mailto address. A `javascript:` or
-  protocol-relative URL leaves that button out.
+- A button URL must be a path starting with a single `/` (not `//` or `/\`), or an absolute http, https or mailto
+  address. Any other URL, such as `javascript:` or a protocol-relative `//host`, leaves that button out.
 - The buttons get `GetPrimaryButtonClass()` and `GetSecondaryButtonClass()` (`btn btn-primary` and
   `btn btn-secondary` under Bootstrap) plus `osirion-call-to-action-button` and a `-primary` or `-secondary` hook.
 - With no title, description, child content or renderable button, nothing is rendered.

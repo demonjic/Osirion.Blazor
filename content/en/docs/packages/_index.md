@@ -7,7 +7,7 @@ permalink: /docs/packages
 description: Every Osirion.Blazor component by module and package (Core, CMS web, CMS admin, Navigation, Analytics, Theming) and what they share.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-18
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-packages.jpg'
 categories:
 - Components
@@ -77,7 +77,7 @@ Package `Osirion.Blazor.Core`, namespace `Osirion.Blazor.Components`. Building b
   `OsirionBackgroundPattern`.
 - [Sections](/components/sections): `HeroSection`, `OsirionBaseSection`, `OsirionContactInfoSection`,
   `OsirionResponsiveShowcaseSection`, `OsirionContextCardGrid`, `OsirionMetricGrid`. From 4.0:
-  `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`.
+  `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`.
 - [Cards](/components/cards): `OsirionFeatureCard`, `OsirionTestimonialCard`, `OsirionSubscriptionCard`,
   `OsirionMetricCard`. From 4.0: `OsirionAuthorCard`.
 - [Carousels](/components/sections): `InfiniteLogoCarousel`, `OsirionTestimonialCarousel`.
