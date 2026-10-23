@@ -27,5 +27,5 @@ Notes
 - `ScriptUrl` defaults to Umami Cloud (`https://cloud.umami.is/script.js`); point it at a self-hosted instance.
 - The website ID must be a GUID; other values fail validation at startup and the tracker renders nothing.
 - Page views after Blazor enhanced navigation are reported by the script itself (History API).
-- With `RequireConsent()` the tracker renders only after the visitor accepted analytics.
+- With `RequireConsent()` the tracker renders only after the visitor accepted analytics; with `Evaluation` set to `Browser` it renders held (`type="text/plain"`) and runs only after consent.
 - Configuration section: `Osirion:Analytics:Umami`.

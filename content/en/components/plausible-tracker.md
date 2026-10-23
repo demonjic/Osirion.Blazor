@@ -7,7 +7,7 @@ permalink: /components/plausible-tracker
 description: PlausibleTracker writes the Plausible Analytics script and its init call into the page head from configuration.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-plausible-tracker.jpg'
 categories:
 - Components
@@ -151,11 +151,16 @@ The consent gate of the package is off by default. Turn it on with `RequireConse
 closed: with the gate on and no `HttpContext`, for example inside a component that already runs interactively, the
 tracker renders nothing. That is why trackers belong in `App.razor`.
 
+On a site exported to static files, set `Evaluation` to `Browser` (`Osirion:Analytics:Consent:Evaluation`).
+The tracker then renders for every visitor the script it would write after consent, held as `type="text/plain"`,
+and `osirion-consent.js` runs it once the visitor accepted the category; until then no request reaches Plausible.
+See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+
 Plausible sets no cookies. Whether you still ask for consent is your decision; the gate covers this tracker like the others and, when on, holds the script back until the visitor consented.
 
 ## Content Security Policy
 
-The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow the host of `ScriptUrl` for `script-src`, and, if you set `Endpoint`, its host as well. The code only passes `Endpoint` to the script, and the script decides where it sends events, so take the addresses it contacts from Plausible's documentation.
+The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow the host of `ScriptUrl` for `script-src`, and, if you set `Endpoint`, its host as well. The code only passes `Endpoint` to the script, and the script decides where it sends events, so take the addresses it contacts from Plausible's documentation. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
 
 ## Behavior
 

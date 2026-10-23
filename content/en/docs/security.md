@@ -7,7 +7,7 @@ permalink: /docs/security
 description: "How Osirion.Blazor sanitizes content and URLs, which components take raw HTML, what a Content Security Policy must allow, the cookies it sets and how to keep secrets out of source."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-security.jpg'
 categories:
 - Documentation
@@ -140,6 +140,14 @@ site that uses them still needs `'unsafe-inline'` or must leave them out. The ta
 | Analytics: GA4, Clarity, Matomo, Plausible, Yandex Metrica | An inline script, and the provider's own script host |
 | Analytics: Umami | An external script tag only |
 | Matomo and Yandex Metrica with `AutoTrackPageViews` | An external script from your own site, `/_content/Osirion.Blazor.Analytics/js/osirion-analytics.js` |
+| `OsirionCookieConsent` and the trackers with consent evaluated in the browser (`Evaluation` `Browser`) | Nothing inline for the consent itself: `osirion-consent.js` is a file from your own origin and uses no event handler attribute or `eval`. The trackers keep their needs above: the held inline snippet runs with its text unchanged, so its hash allows it |
+
+A site exported to static files cannot send a new nonce with every response, so allow the inline tracker snippets by
+hash: `'sha256-...'` of each snippet's text in `script-src`, next to `'self'` and the provider hosts. The text depends
+on the tracker's settings and on the library version, so recompute the hashes when either changes; the browser console
+names the expected hash of a blocked script. With the hashes in place, the trackers that run after consent are
+allowed and an injected inline script is still blocked. See
+[Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
 
 The practical policy for 4.1.0 allows inline script and style from your own origin, and adds the hosts of the services
 you use:
@@ -190,7 +198,7 @@ attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-in
 | --- | --- | --- |
 | `osirion-preferred-theme` | `ThemeService` on the server; `ThemeToggle` in the browser | Path `/`, one year, `SameSite=Lax`, not `HttpOnly` (the page script reads and replaces it). `Secure` from the server; the toggle's script adds `Secure` on HTTPS pages |
 | `osirion-preferred-palette` | `ThemeService` on the server; `ThemePicker` in the browser | Path `/`, one year, `SameSite=Lax`, not `HttpOnly`. `Secure` from the server; the picker's script adds `Secure` on HTTPS pages |
-| `osirion_cookie_consent` | The cookie consent endpoint (`MapOsirionCookieConsent`) | Path `/`, `HttpOnly`, `Secure`, `SameSite=Lax`. Lifetime comes from `ConsentExpiryDays` (default 365) |
+| `osirion_cookie_consent` | The cookie consent endpoint (`MapOsirionCookieConsent`); with consent evaluated in the browser, `osirion-consent.js` | Path `/`, `HttpOnly`, `Secure`, `SameSite=Lax` from the endpoint. From the script: path `/`, `SameSite=Lax`, `Secure` on HTTPS pages, not `HttpOnly` (script writes and reads it), same value format. Lifetime comes from `ConsentExpiryDays` (default 365) |
 | `osirion_announcement_<id>` | The announcement endpoint (`MapOsirionAnnouncements`) | Path `/`, `HttpOnly`, `Secure`, `SameSite=Lax`, essential. 30 days unless the form posts 1 to 365 |
 
 The theme and palette cookies hold a short name such as `dark`, no personal data. Every cookie the server sets is
@@ -272,7 +280,10 @@ configure forwarded headers, and then every visitor shares one limit.
 
 - A post that contains `<script>alert(1)</script>` in its Markdown shows the text or nothing, and no script runs.
 - `curl -s -D - -o /dev/null https://your-site/` shows your `Content-Security-Policy` header. A `HEAD` request (`curl -I`) answers 405 on a page, so read the headers of a `GET`.
-- In the browser's cookie view, `osirion_cookie_consent` shows `HttpOnly`, `Secure` and `Lax` after you accept the banner.
+- In the browser's cookie view, `osirion_cookie_consent` shows `HttpOnly`, `Secure` and `Lax` after you accept the banner
+  (with consent evaluated in the browser: `Lax`, `Secure` on HTTPS, and not `HttpOnly`).
+- With consent evaluated in the browser, the browser's network panel shows no request to a tracker host before you
+  answer the banner, and none after Decline.
 - `git grep -n -e ghp_ -e github_pat_` finds no GitHub token in your repository.
 - The sixth rapid post of the contact form from one address gets status 429.
 

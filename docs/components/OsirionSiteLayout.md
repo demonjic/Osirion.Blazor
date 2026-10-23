@@ -50,7 +50,10 @@ Options (`OsirionSiteOptions`)
   `linkedin`, `nuget` or `rss` for an icon; other networks show their `Label` as text) under `SocialTitle`
   (`Follow Us`), `LegalLinks`, and `Owner` and `OwnerUrl` for the copyright line (default `Name` and `HomeUrl`);
   `Copyright` replaces that line with your own markup
-- `ShowCookieConsent` (false; needs `app.MapOsirionCookieConsent()`), `ShowScrollToTop` (true)
+- `ShowCookieConsent` (false; needs `app.MapOsirionCookieConsent()`), `ShowScrollToTop` (true). The banner is rendered
+  with `Evaluation` from `Osirion:Analytics:Consent:Evaluation`, the setting the trackers read: set it to `Browser`
+  for a site exported to static files, and the banner records consent in the browser and needs no endpoint
+  (see docs/components/core/CookieConsent.md, static hosting)
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, or
 a menu nested more than one level stops startup with a message naming the configuration key.

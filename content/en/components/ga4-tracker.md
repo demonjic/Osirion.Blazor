@@ -7,7 +7,7 @@ permalink: /components/ga4-tracker
 description: GA4Tracker writes the Google Analytics 4 gtag.js snippet into the page head from configuration, with Consent Mode when the consent gate is on.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-ga4-tracker.jpg'
 categories:
 - Components
@@ -174,11 +174,16 @@ The consent gate of the package is off by default. Turn it on with `RequireConse
 closed: with the gate on and no `HttpContext`, for example inside a component that already runs interactively, the
 tracker renders nothing. That is why trackers belong in `App.razor`.
 
+On a site exported to static files, set `Evaluation` to `Browser` (`Osirion:Analytics:Consent:Evaluation`).
+The tracker then renders for every visitor the script it would write after consent, held as `type="text/plain"`,
+and `osirion-consent.js` runs it once the visitor accepted the category; until then no request reaches Google.
+See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+
 With the gate on, the script first sets Google Consent Mode defaults to denied for `ad_storage`, `ad_user_data`, `ad_personalization` and `analytics_storage`, then grants `analytics_storage` only, before `gtag('js')` and the config call. Advertising signals stay denied, because this gate says nothing about marketing consent. With the gate off, no Consent Mode call is written.
 
 ## Content Security Policy
 
-The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow `https://www.googletagmanager.com` for the script, which is the only address this code writes. The tag then loads and sends to further Google addresses on its own; this code does not show them, so take them from Google's documentation for the tag.
+The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow `https://www.googletagmanager.com` for the script, which is the only address this code writes. The tag then loads and sends to further Google addresses on its own; this code does not show them, so take them from Google's documentation for the tag. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
 
 ## Behavior
 

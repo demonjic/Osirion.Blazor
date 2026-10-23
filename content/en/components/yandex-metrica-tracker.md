@@ -7,7 +7,7 @@ permalink: /components/yandex-metrica-tracker
 description: YandexMetricaTracker writes the Yandex Metrica counter script into the page head from configuration and reports page views after enhanced navigation.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-yandex-metrica-tracker.jpg'
 categories:
 - Components
@@ -169,11 +169,16 @@ The consent gate of the package is off by default. Turn it on with `RequireConse
 closed: with the gate on and no `HttpContext`, for example inside a component that already runs interactively, the
 tracker renders nothing. That is why trackers belong in `App.razor`.
 
+On a site exported to static files, set `Evaluation` to `Browser` (`Osirion:Analytics:Consent:Evaluation`).
+The tracker then renders for every visitor the script it would write after consent, held as `type="text/plain"`,
+and `osirion-consent.js` runs it once the visitor accepted the category; until then no request reaches Yandex.
+See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+
 Yandex Metrica has no consent API in this tracker: the gate only decides whether the script is written. The `noscript` pixel from the Yandex snippet is not written: it is valid only in the body, and the tracker belongs in the head, so visitors without JavaScript are not counted.
 
 ## Content Security Policy
 
-The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow `https://mc.yandex.ru` for `script-src` (or the host of `AlternativeCdn`), and for `img-src` because of the `noscript` pixel. The counter then sends to Yandex addresses on its own; this code does not show them, so take them from Yandex's documentation.
+The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow `https://mc.yandex.ru` for `script-src` (or the host of `AlternativeCdn`), and for `img-src` because of the `noscript` pixel. The counter then sends to Yandex addresses on its own; this code does not show them, so take them from Yandex's documentation. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
 
 ## Behavior
 

@@ -7,7 +7,7 @@ permalink: /components/analytics
 description: The six analytics tracker components in Osirion.Blazor.Analytics (Clarity, GA4, Matomo, Plausible, Umami and Yandex Metrica) and what they share.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-analytics.jpg'
 categories:
 - Components
@@ -83,7 +83,9 @@ documentation page itself. Each page shows the markup its tracker renders instea
   required value is missing or invalid, renders nothing.
 - **Consent.** The package has one consent gate, off by default. With it on, no tracker writes its script until the
   visitor accepted the `analytics` category in [`OsirionCookieConsent`](/components/cookie-consent). Setup is on the
-  [package page](/docs/packages/analytics).
+  [package page](/docs/packages/analytics). On a site exported to static files, set the gate's `Evaluation` to
+  `Browser`: the trackers then render held and run in the browser after consent, see
+  [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
 - **Content Security Policy.** Clarity, GA4, Matomo, Plausible and Yandex Metrica write inline scripts and add no
   nonce; Umami writes only an external script tag. Each page lists the addresses its markup names.
 

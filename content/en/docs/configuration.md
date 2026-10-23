@@ -7,7 +7,7 @@ permalink: /docs/configuration
 description: "Configure Osirion.Blazor from the Osirion section of appsettings.json or in code, per environment, with secrets kept out of source control."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-configuration.jpg'
 categories:
 - Documentation
@@ -57,7 +57,7 @@ section exists, so a site that sets nothing for a module gets that module's defa
 | `Osirion:Seo` | `SeoMetadataOptions`: `SiteName`, `SiteDescription`, `SiteLogoUrl`, `AllowSearchIndexing` and more | [SeoMetadataRenderer](/components/seo-metadata-renderer) |
 | `Osirion:Email` | `EmailOptions`: `Provider`, `ToEmail`, and a subsection each for `Smtp`, `SendGrid` and `Infobip` | [Contact form](/components/contact-form) |
 | `Osirion:Analytics:<Service>` | One options class per service: `Clarity`, `Matomo`, `GA4`, `YandexMetrica`, `Plausible`, `Umami` | [Analytics](/docs/packages/analytics) |
-| `Osirion:Analytics:Consent` | `AnalyticsConsentOptions`: `RequireConsent`, `Category` | [Analytics](/docs/packages/analytics) |
+| `Osirion:Analytics:Consent` | `AnalyticsConsentOptions`: `RequireConsent`, `Category`, `Evaluation` (`Server` or `Browser`, which also sets the mode of `OsirionSiteLayout`'s banner) | [Analytics](/docs/packages/analytics) |
 | `Osirion:Navigation:Enhanced` | `EnhancedNavigationOptions` | [Navigation](/docs/packages/navigation) |
 | `Osirion:Navigation:ScrollToTop` | `ScrollToTopOptions` | [Navigation](/docs/packages/navigation) |
 
