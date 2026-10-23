@@ -132,6 +132,28 @@ public class OsirionSiteLayoutTests : BunitContext
         cut.Find("a.osirion-footer-social-link[href='https://example.social/@osirion']").TextContent.Trim().ShouldBe("mastodon");
     }
 
+    [Theory]
+    [InlineData("facebook", "Facebook")]
+    [InlineData("FaceBook", "Facebook")]
+    [InlineData("instagram", "Instagram")]
+    [InlineData("INSTAGRAM", "Instagram")]
+    public void OsirionSiteLayout_FacebookOrInstagram_GetsAnIconNamedAfterTheNetwork(string network, string name)
+    {
+        var cut = RenderLayout(new Dictionary<string, string?>
+        {
+            ["Osirion:Site:Name"] = "Site",
+            ["Osirion:Site:SocialLinks:0:Network"] = network,
+            ["Osirion:Site:SocialLinks:0:Href"] = "https://example.com/profile",
+        });
+
+        var link = cut.Find("a.osirion-footer-social-link[href='https://example.com/profile']");
+        link.GetAttribute("aria-label").ShouldBe(name);
+        link.TextContent.Trim().ShouldBeEmpty();
+        var icon = link.QuerySelector("svg.osirion-site-social-icon").ShouldNotBeNull();
+        icon.GetAttribute("aria-hidden").ShouldBe("true");
+        icon.QuerySelector("path")!.GetAttribute("d").ShouldNotBeNullOrWhiteSpace();
+    }
+
     [Fact]
     public void OsirionSiteLayout_Defaults_HaveNoSearchCookieBannerOrAnnouncement()
     {

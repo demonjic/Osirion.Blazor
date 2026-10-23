@@ -158,8 +158,9 @@ public sealed class SiteMenuItem
 public sealed class SiteSocialLink
 {
     /// <summary>
-    /// Gets or sets the network, which picks the icon: <c>github</c>, <c>x</c>, <c>linkedin</c>, <c>nuget</c> or
-    /// <c>rss</c>. Other values show <see cref="Label"/> as text.
+    /// Gets or sets the network, which picks the icon: <c>github</c>, <c>x</c>, <c>linkedin</c>, <c>nuget</c>,
+    /// <c>rss</c>, <c>facebook</c> or <c>instagram</c>, in any letter case. Other values show <see cref="Label"/> as
+    /// text.
     /// </summary>
     public string Network { get; set; } = string.Empty;
 
