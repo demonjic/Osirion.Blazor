@@ -42,8 +42,8 @@ public abstract partial class OsirionComponentBase
     [Inject]
     private IServiceProvider ComponentServices { get; set; } = default!;
 
-    private bool _unknownParameterLoggerResolved;
-    private ILogger? _unknownParameterLogger;
+    private bool _developmentLoggerResolved;
+    private ILogger? _developmentLogger;
 
     /// <summary>
     /// Warns in Development when a captured attribute looks like a misspelled parameter, because Blazor passes it through
@@ -51,7 +51,7 @@ public abstract partial class OsirionComponentBase
     /// </summary>
     private void WarnAboutAttributesThatResembleParameters()
     {
-        if (Attributes is not { Count: > 0 } attributes || GetUnknownParameterLogger() is not { } logger)
+        if (Attributes is not { Count: > 0 } attributes || GetDevelopmentLogger() is not { } logger)
         {
             return;
         }
@@ -73,20 +73,26 @@ public abstract partial class OsirionComponentBase
         }
     }
 
-    // Resolved once per instance and only through optional lookups, so the check costs nothing outside Development
-    // and works in hosts that register no IHostEnvironment (WebAssembly, tests).
-    private ILogger? GetUnknownParameterLogger()
+    /// <summary>
+    /// Gets a logger named after the component when the app runs in Development, otherwise <see langword="null"/>, for
+    /// warnings about misuse that only the developer can fix.
+    /// </summary>
+    /// <remarks>
+    /// Resolved once per instance and only through optional lookups, so it costs nothing outside Development and works
+    /// in hosts that register no <see cref="IHostEnvironment"/> (WebAssembly, tests).
+    /// </remarks>
+    private protected ILogger? GetDevelopmentLogger()
     {
-        if (!_unknownParameterLoggerResolved)
+        if (!_developmentLoggerResolved)
         {
-            _unknownParameterLoggerResolved = true;
+            _developmentLoggerResolved = true;
             if (ComponentServices?.GetService<IHostEnvironment>() is { } environment && environment.IsDevelopment())
             {
-                _unknownParameterLogger = ComponentServices.GetService<ILoggerFactory>()?.CreateLogger(GetType());
+                _developmentLogger = ComponentServices.GetService<ILoggerFactory>()?.CreateLogger(GetType());
             }
         }
 
-        return _unknownParameterLogger;
+        return _developmentLogger;
     }
 
     private static bool CouldBeParameterName(string attributeName) =>

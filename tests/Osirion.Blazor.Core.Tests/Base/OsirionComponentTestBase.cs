@@ -1,7 +1,9 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using NSubstitute;
 using Osirion.Blazor.Components;
 
 namespace Osirion.Blazor.Core.Tests.Base;
@@ -27,5 +29,16 @@ public abstract class OsirionComponentTestBase : BunitContext
     {
         SetRendererInfo(new RendererInfo("Static", false));
         return Render(parameterBuilder);
+    }
+
+    /// <summary>
+    /// Registers a host environment with the given name, such as <see cref="Environments.Development"/>, for components
+    /// that report misuse only in Development. Call it before the first render.
+    /// </summary>
+    protected void UseEnvironment(string environmentName)
+    {
+        var environment = Substitute.For<IHostEnvironment>();
+        environment.EnvironmentName.Returns(environmentName);
+        Services.AddSingleton(environment);
     }
 }
