@@ -7,7 +7,7 @@ permalink: /components/matomo-tracker
 description: MatomoTracker writes the Matomo tracking script into the page head from configuration and reports page views after enhanced navigation.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-matomo-tracker.jpg'
 categories:
 - Components
@@ -163,11 +163,16 @@ The consent gate of the package is off by default. Turn it on with `RequireConse
 closed: with the gate on and no `HttpContext`, for example inside a component that already runs interactively, the
 tracker renders nothing. That is why trackers belong in `App.razor`.
 
+On a site exported to static files, set `Evaluation` to `Browser` (`Osirion:Analytics:Consent:Evaluation`).
+The tracker then renders for every visitor the script it would write after consent, held as `type="text/plain"`,
+and `osirion-consent.js` runs it once the visitor accepted the category; until then no request reaches Matomo.
+See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+
 With the osirion consent gate on, the script only exists after the visitor consented, so Matomo's own `requireConsent` is not written even when `RequireConsent` is `true`. With the gate off, `RequireConsent` keeps Matomo silent until your page grants consent in `_paq`.
 
 ## Content Security Policy
 
-The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow the host of `TrackerUrl` for `script-src` (`matomo.js`) and for the requests to `matomo.php`. The page view module is an external script from your own site, so it needs no inline allowance.
+The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow the host of `TrackerUrl` for `script-src` (`matomo.js`) and for the requests to `matomo.php`. The page view module is an external script from your own site, so it needs no inline allowance. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
 
 ## Behavior
 

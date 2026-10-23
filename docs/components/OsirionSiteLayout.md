@@ -55,7 +55,12 @@ Options (`OsirionSiteOptions`)
   `Label` as text) under `SocialTitle`
   (`Follow Us`), `LegalLinks`, and `Owner` and `OwnerUrl` for the copyright line (default `Name` and `HomeUrl`);
   `Copyright` replaces that line with your own markup
-- `ShowCookieConsent` (false; needs `app.MapOsirionCookieConsent()`), `ShowScrollToTop` (true)
+- `ShowCookieConsent` (false; needs `app.MapOsirionCookieConsent()`), `ShowScrollToTop` (true). The banner is rendered
+  with `Evaluation` from `Osirion:Analytics:Consent:Evaluation`, the setting the trackers read: set it to `Browser`
+  for a site exported to static files, and the banner records consent in the browser and needs no endpoint
+  (see docs/components/core/CookieConsent.md, static hosting). In either mode a legal link to a page with
+  `?customize-cookies=true`, such as `{ "Text": "Cookie settings", "Href": "/privacy-policy?customize-cookies=true" }`,
+  reopens the banner, so visitors can change or withdraw consent from the footer
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a
 menu nested more than one level, or a call to action without `Text` or `Href` or with an `Href` of another kind (such

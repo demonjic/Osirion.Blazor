@@ -12,11 +12,12 @@ public static class AnalyticsBuilderExtensions
 {
     /// <summary>
     /// Makes every tracker wait for the visitor's analytics consent, as recorded by
-    /// <c>OsirionCookieConsent</c>. Without consent no tracker script is rendered at all.
+    /// <c>OsirionCookieConsent</c>. Without consent no tracker script is rendered at all, or, with
+    /// <see cref="AnalyticsConsentOptions.Evaluation"/> set to <c>Browser</c>, none runs.
     /// Recommended for sites with visitors in the EU.
     /// </summary>
     /// <param name="builder">The analytics builder.</param>
-    /// <param name="configure">Optional action to change the consent category.</param>
+    /// <param name="configure">Optional action to change the consent category or where consent is evaluated.</param>
     /// <returns>The builder for chaining.</returns>
     public static IAnalyticsBuilder RequireConsent(
         this IAnalyticsBuilder builder,

@@ -112,9 +112,14 @@ public static class CookieConsentHandler
     /// </summary>
     private static int GetExpiryDays(string? posted) =>
         int.TryParse(posted, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var days)
-        && days is >= 1 and <= MaxExpiryDays
-            ? days
+            ? GetExpiryDays(days)
             : DefaultExpiryDays;
+
+    /// <summary>
+    /// Gets the lifetime of the consent cookie for a requested <paramref name="days"/>: 1 to 3650 days are kept, anything
+    /// else becomes 365. The banner applies it too when consent is recorded in the browser.
+    /// </summary>
+    internal static int GetExpiryDays(int days) => days is >= 1 and <= MaxExpiryDays ? days : DefaultExpiryDays;
 
     private static string GetReturnPath(string? returnUrl) =>
         RemoveCustomizeFlag(FormPostSecurity.GetReturnPath(returnUrl));

@@ -118,6 +118,26 @@ public class CookieConsentHandlerTests
         context.Response.Headers.SetCookie.ToString().ShouldContain(ConsentCookieName);
     }
 
+    // The value osirion-consent.js wrote in Microsoft Edge for Accept All. Only the time differs from what the endpoint
+    // writes, so consent recorded in the browser reads the same as consent recorded on the server.
+    [Fact]
+    public async Task HandleConsentAsync_Accepted_WritesTheValueTheConsentScriptWrites()
+    {
+        const string written = "%7B%22Version%22%3A%221.0%22%2C%22ConsentDate%22%3A%222026-10-23T17%3A37%3A25.558Z%22%2C"
+            + "%22ConsentType%22%3A%22accepted%22%2C%22Categories%22%3A%7B%22necessary%22%3Atrue%2C%22analytics%22%3Atrue%2C"
+            + "%22marketing%22%3Atrue%2C%22preferences%22%3Atrue%7D%7D";
+        var context = CreateContext(Form("accepted", "/p"));
+
+        await CookieConsentHandler.HandleConsentAsync(context);
+
+        var setCookie = context.Response.Headers.SetCookie.ToString();
+        setCookie.ShouldStartWith(ConsentCookieName + "=");
+        var value = setCookie[(ConsentCookieName.Length + 1)..setCookie.IndexOf(';', StringComparison.Ordinal)];
+        var sameTime = System.Text.RegularExpressions.Regex.Replace(
+            value, "(%22ConsentDate%22%3A%22).+?(%22%2C)", "${1}2026-10-23T17%3A37%3A25.558Z${2}");
+        sameTime.ShouldBe(written);
+    }
+
     [Fact]
     public async Task HandleConsentAsync_UnknownConsentValue_ReturnsBadRequest()
     {

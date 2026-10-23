@@ -27,5 +27,5 @@ Notes
   `FileDownloads`, `FormSubmissions`, `CaptureOnLocalhost`, and `autoCapturePageviews: false` when
   `AutoTrackPageViews` is false). Values are JSON encoded.
 - Page views after Blazor enhanced navigation are reported by the script itself (History API).
-- With `RequireConsent()` the tracker renders only after the visitor accepted analytics.
+- With `RequireConsent()` the tracker renders only after the visitor accepted analytics; with `Evaluation` set to `Browser` it renders held (`type="text/plain"`) and runs only after consent.
 - Configuration section: `Osirion:Analytics:Plausible`.

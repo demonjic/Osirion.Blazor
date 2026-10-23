@@ -81,7 +81,8 @@ public sealed class OsirionSiteOptions
 
     /// <summary>
     /// Gets or sets whether the cookie consent banner is shown. Defaults to <see langword="false"/>; the banner needs
-    /// <c>app.MapOsirionCookieConsent()</c>.
+    /// <c>app.MapOsirionCookieConsent()</c>, unless <c>Osirion:Analytics:Consent:Evaluation</c> is <c>Browser</c>, which
+    /// records the choice in the browser for a site exported to static files.
     /// </summary>
     public bool ShowCookieConsent { get; set; }
 

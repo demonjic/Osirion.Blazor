@@ -7,7 +7,7 @@ permalink: /components/clarity-tracker
 description: ClarityTracker writes the Microsoft Clarity tracking script into the page head from configuration, with an optional consent gate.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-clarity-tracker.jpg'
 categories:
 - Components
@@ -149,11 +149,16 @@ The consent gate of the package is off by default. Turn it on with `RequireConse
 closed: with the gate on and no `HttpContext`, for example inside a component that already runs interactively, the
 tracker renders nothing. That is why trackers belong in `App.razor`.
 
+On a site exported to static files, set `Evaluation` to `Browser` (`Osirion:Analytics:Consent:Evaluation`).
+The tracker then renders for every visitor the script it would write after consent, held as `type="text/plain"`,
+and `osirion-consent.js` runs it once the visitor accepted the category; until then no request reaches Microsoft Clarity.
+See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+
 Clarity has no consent API in this tracker: the gate only decides whether the script is written.
 
 ## Content Security Policy
 
-The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow the host of `TrackerUrl` as well: `https://www.clarity.ms` by default. The script then makes its own requests to hosts it chooses; this code does not show them, so take them from Microsoft's Clarity documentation.
+The tracker writes an inline script and adds no nonce, so `script-src` must allow inline scripts, or allow this script by its hash. Allow the host of `TrackerUrl` as well: `https://www.clarity.ms` by default. The script then makes its own requests to hosts it chooses; this code does not show them, so take them from Microsoft's Clarity documentation. With consent evaluated in the browser, the held script runs with its text unchanged, so the same hash allows it; a static site has no per-response nonce, so use the hash there.
 
 ## Behavior
 
