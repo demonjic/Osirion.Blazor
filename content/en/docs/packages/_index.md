@@ -7,7 +7,7 @@ permalink: /docs/packages
 description: Every Osirion.Blazor component by module and package (Core, CMS web, CMS admin, Navigation, Analytics, Theming) and what they share.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-18
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-packages.jpg'
 categories:
 - Components
@@ -83,7 +83,7 @@ Package `Osirion.Blazor.Core`, namespace `Osirion.Blazor.Components`. Building b
 - [Carousels](/components/sections): `InfiniteLogoCarousel`, `OsirionTestimonialCarousel`.
 - [Content](/components/content): `OsirionArticleMetdata`. From 4.0: `OsirionCallout`, `OsirionTabs`,
   `OsirionAccordion`, `OsirionFaq`, `OsirionResponsiveImage`, `OsirionVideoEmbed`, `OsirionReadingProgress`.
-- [Forms](/components/forms-and-feedback): `OsirionContactForm`.
+- [Forms](/components/forms-and-feedback): `OsirionContactForm`, `OsirionStaticContactForm`.
 - [Navigation](/components/navigation): `OsirionBreadcrumbs`, `OsirionReadMoreLink`.
 - [Popups](/components/forms-and-feedback): `OsirionCookieConsent`. From 4.0: `OsirionAnnouncementBar`.
 - [Rendering](/components/content): `OsirionHtmlRenderer`, `OsirionReveal`.

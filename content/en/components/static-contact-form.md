@@ -80,9 +80,14 @@ Then point the form at your endpoint and give it your Turnstile site key:
 </OsirionStaticContactForm>
 ```
 
-The site key is public: it is written into the page. The secret key belongs to the endpoint only. For local runs,
-Cloudflare's test site key `1x00000000000000000000AA` always passes and yields the token `XXXX.DUMMY.TOKEN.XXXX`, which
-the test secret key `1x0000000000000000000000000000000AA` accepts.
+The site key is public: it is written into the page. The secret key belongs to the endpoint only. Leave
+`TurnstileSiteKey` out only when your endpoint does not check Turnstile: one that does, like the outline below, answers
+`fields` to the empty token, and the visitor would be told to fix fields that are fine.
+
+For local runs, Cloudflare's test site key `1x00000000000000000000AA` always passes and yields the token
+`XXXX.DUMMY.TOKEN.XXXX`, which the test secret key `1x0000000000000000000000000000000AA` accepts. Siteverify then
+answers with the hostname `example.com` and no action, so an endpoint that checks both answers `check` on every send.
+The outline below has a switch for local runs only; see [Local runs with the test keys](#local-runs-with-the-test-keys).
 
 `ShowCompanyField="true"` adds an optional company field. Every label, button text and message is a parameter, so the
 form can speak another language.
@@ -94,7 +99,8 @@ The script sends one request per attempt:
 - `POST` to `Endpoint`, with `Content-Type: application/json`.
 - The body is `{"name": "...", "email": "...", "message": "...", "website": "", "token": "..."}`, plus `"company"`
   after `"email"` when `ShowCompanyField` is on. `website` is the honeypot: people never see it, so it is empty unless a
-  bot filled it. `token` is the Turnstile response, or empty when no site key is set.
+  bot filled it. `token` is the Turnstile response, or empty when no site key is set, which an endpoint that checks
+  Turnstile refuses as `fields`.
 - The browser sends it from the page, so it carries the page's `Origin`. A same-origin endpoint, such as `/api/contact`
   on the same site, needs no CORS. An `https` endpoint on another origin must answer the CORS preflight that a JSON
   post triggers and allow your site's origin.
@@ -141,6 +147,8 @@ export default {
       return reply(415, { ok: false, error: 'failed' });
     }
 
+    // A declared size over the limit is refused before the body is read into memory.
+    if (Number(request.headers.get('Content-Length')) > 16384) return reply(413, { ok: false, error: 'fields' });
     const body = await request.text();
     if (body.length > 16384) return reply(413, { ok: false, error: 'fields' });
     let input;
@@ -169,8 +177,11 @@ export default {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ secret: env.TURNSTILE_SECRET, response: token, remoteip: request.headers.get('CF-Connecting-IP') })
     }).then((response) => response.json()).catch(() => ({}));
-    // The widget reports the action "contact"; a token from another site or another form fails here.
-    if (verdict.success !== true || verdict.hostname !== url.hostname || verdict.action !== 'contact') {
+    // The widget reports the action "contact"; a token from another site or another form fails here. The test secret
+    // answers another hostname and no action, so a local run skips those two checks for a test answer only.
+    const localTest = env.TURNSTILE_TEST === '1' && verdict.metadata?.result_with_testing_key === true;
+    if (verdict.success !== true
+      || (!localTest && (verdict.hostname !== url.hostname || verdict.action !== 'contact'))) {
       return reply(403, { ok: false, error: 'check' });
     }
 
@@ -196,6 +207,22 @@ a file. Keep the secret key out of the repository with `wrangler secret put TURN
   }
 }
 ```
+
+### Local runs with the test keys
+
+Siteverify answers the test secret with the hostname `example.com`, no action and
+`"metadata": {"result_with_testing_key": true}`, so the outline's hostname and action checks fail for it. Those two
+checks are what tie a token to your site and to this form, so do not remove them. For a local run, set the test secret
+and the switch in `.dev.vars`, the file Wrangler reads secrets from in local development, and keep that file out of
+git:
+
+```text
+TURNSTILE_SECRET="1x0000000000000000000000000000000AA"
+TURNSTILE_TEST="1"
+```
+
+Never set `TURNSTILE_TEST` on the deployed Worker. Even if it were set there, a real secret key never yields a test
+answer, so the two checks would still apply.
 
 ## Content Security Policy
 
@@ -226,8 +253,9 @@ The [security guide](/docs/security#write-a-content-security-policy) covers the 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Endpoint` | `string` | `""` | The address the message is posted to as JSON: a path on the site, such as `/api/contact`, or an `https` URL. Any other value (empty, `http:`, `javascript:`, `data:`, `mailto:` or a protocol-relative `//host`) renders nothing and, in Development, logs a warning. Required. |
-| `TurnstileSiteKey` | `string?` | `null` | The site key of the Cloudflare Turnstile widget. When it is set, the script loads Turnstile from `challenges.cloudflare.com`, renders the widget in the form with the action `contact` and sends its token; without it the token is sent empty and nothing is loaded from Cloudflare. |
+| `TurnstileSiteKey` | `string?` | `null` | The site key of the Cloudflare Turnstile widget. When it is set, the script loads Turnstile from `challenges.cloudflare.com`, renders the widget in the form with the action `contact` and sends its token. Without it nothing is loaded from Cloudflare and the token is sent empty, so leave it out only when the endpoint does not check Turnstile: one that does, such as the outline on the component's documentation page, answers `fields` to an empty token. |
 | `ShowCompanyField` | `bool` | `false` | Whether an optional company field is shown. Its value is sent as `company`. |
+| `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field: name, email and message. The marker is for the eye only; assistive technology announces the fields' `required` attribute instead. |
 | `NameLabel` | `string` | `"Name"` | The label of the name field. |
 | `EmailLabel` | `string` | `"Email"` | The label of the email field. |
 | `CompanyLabel` | `string` | `"Company"` | The label of the company field, shown with `ShowCompanyField`. |
@@ -255,22 +283,26 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
   renders with the `hidden` attribute and its script reveals it; visitors without script see `NoScriptContent`, so give
   them another way to reach you, such as an email link.
 - **Static SSR and static files.** The script is a BlazorJSComponents module and needs no Blazor circuit. It works on a
-| `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field: name, email and message. The marker is for the eye only; assistive technology announces the fields' `required` attribute instead. |
   page served by ASP.NET Core with static SSR, and on a copy of that page served as a file, as long as the page loads
   `blazor.web.js` and keeps its `<!--Blazor-Web-Initializers:...-->` comment. A static export must include the
-  files that comment names and the component's script under `_content/Osirion.Blazor.Core/Components/Forms/`; a
-  crawler that follows only attributes misses them.
+  files that comment names, the modules they import (such as `_content/BlazorJSComponents/component.mjs`) and the
+  component's script under `_content/Osirion.Blazor.Core/Components/Forms/`; a crawler that follows only attributes
+  misses them.
 - **Turnstile.** With `TurnstileSiteKey`, the script loads
   `https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit` once per page, however many forms the page
   has, and renders the widget into the form with the action `contact`. The widget follows the color mode the
   component's `Theme` or the page sets (`data-theme`, `data-bs-theme` or `data-osirion-theme`), otherwise the visitor's
-  system setting. Without a site key nothing is loaded from Cloudflare and the token is sent empty.
+  system setting. Without a site key nothing is loaded from Cloudflare and the token is sent empty. The script tells
+  Turnstile's API by its `render` method, so an element whose id is `turnstile`, such as the generated id of a
+  "Turnstile" heading, does not stand in for it.
 - **Sending.** On submit the browser checks the fields first. A send before the Turnstile check has finished shows
   `CheckPendingMessage` and sends nothing. While a message is on its way the button is disabled and shows
   `SubmittingText`. After every attempt the widget is reset, because a token passes one check only, and the button is
-  enabled again. A success clears the fields; a failure keeps them, so the visitor can try again.
-- **Errors from Turnstile.** When the widget reports an error, or its script cannot load, the status shows
-  `CheckErrorMessage`.
+  enabled again. Focus that was on the button returns to it, unless the visitor moved it meanwhile. A success clears
+  the fields; a failure keeps them, so the visitor can try again.
+- **Errors from Turnstile.** When the widget reports an error, the status shows `CheckErrorMessage`. When its script
+  cannot load or the widget cannot render, no token can arrive: the status shows `CheckErrorMessage`, and so does
+  every send, which posts nothing.
 - **Messages are text.** The status is written with `textContent` and every label, message and `PrivacyNote` is
   encoded, so none of them can carry markup.
 - **Endpoint check.** `Endpoint` must be a path on the site, such as `/api/contact`, or an `https` URL. An empty value,
@@ -281,6 +313,9 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
 
 - Every field has a `label` bound with `for`, and name, email and company carry `autocomplete` (`name`, `email`,
   `organization`), so browsers and password managers can fill them.
+- Name, email and message carry `required`, and their labels end in a `*` while `ShowRequiredIndicators` is on (the
+  default). The `*` is `aria-hidden`, because assistive technology already announces `required`; the optional
+  company field has none.
 - The honeypot sits in an `aria-hidden` wrapper, out of the tab order (`tabindex="-1"`) and with `autocomplete="off"`,
   so neither people nor assistive technology reach it.
 - The status is a `role="status"` live region. It is emptied before each attempt, so the same answer twice in a row is
@@ -294,6 +329,7 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
 | `osirion-static-contact-form` | The outer `<div>`, which takes `Class` and `Style` |
 | `osirion-static-contact-form-form` | The `<form>`, a single column grid |
 | `osirion-static-contact-form-field` | A label and its input |
+| `osirion-static-contact-form-required` | The `*` after the label of a required field, in `--osirion-status-danger-text` |
 | `osirion-static-contact-form-trap` | The honeypot's wrapper, clipped out of sight |
 | `osirion-static-contact-form-turnstile` | The widget container, 65px high before the widget loads so the button does not move |
 | `osirion-static-contact-form-actions` | The button and the status, side by side |
@@ -310,7 +346,3 @@ status uses `--osirion-status-success-text` and `--osirion-status-danger-text`, 
 - [OsirionContactForm](/components/contact-form)
 - [Forms and feedback](/components/forms-and-feedback)
 - [Security guide](/docs/security)
-- Name, email and message carry `required`, and their labels end in a `*` while `ShowRequiredIndicators` is on (the
-  default). The `*` is `aria-hidden`, because assistive technology already announces `required`; the optional
-  company field has none.
-| `osirion-static-contact-form-required` | The `*` after the label of a required field, in `--osirion-status-danger-text` |

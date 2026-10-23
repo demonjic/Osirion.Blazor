@@ -37,7 +37,9 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     /// <summary>
     /// Gets or sets the site key of the Cloudflare Turnstile widget. When it is set, the script loads Turnstile from
     /// <c>challenges.cloudflare.com</c>, renders the widget in the form with the action <c>contact</c> and sends its
-    /// token; without it the token is sent empty and nothing is loaded from Cloudflare.
+    /// token. Without it nothing is loaded from Cloudflare and the token is sent empty, so leave it out only when the
+    /// endpoint does not check Turnstile: one that does, such as the outline on the component's documentation page,
+    /// answers <c>fields</c> to an empty token.
     /// </summary>
     [Parameter]
     public string? TurnstileSiteKey { get; set; }
@@ -49,14 +51,14 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     public bool ShowCompanyField { get; set; }
 
     /// <summary>
-    /// Gets or sets the label of the name field.
-    /// <summary>
     /// Gets or sets whether a <c>*</c> follows the label of each required field: name, email and message. The marker is
     /// for the eye only; assistive technology announces the fields' <c>required</c> attribute instead.
     /// </summary>
     [Parameter]
     public bool ShowRequiredIndicators { get; set; } = true;
 
+    /// <summary>
+    /// Gets or sets the label of the name field.
     /// </summary>
     [Parameter]
     public string NameLabel { get; set; } = "Name";

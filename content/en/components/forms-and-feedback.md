@@ -4,7 +4,7 @@ order: 1
 layout: docs
 title: Forms and feedback
 permalink: /components/forms-and-feedback
-description: The contact form, the cookie and announcement banners, and the not-found state from Osirion.Blazor.Core. All of them post or render on the server under static SSR.
+description: The contact forms, the cookie and announcement banners, and the not-found state from Osirion.Blazor.Core. All but OsirionStaticContactForm post or render on the server under static SSR.
 author: Dejan Demonjić
 date: 2025-09-03
 last_modified: 2026-10-23
