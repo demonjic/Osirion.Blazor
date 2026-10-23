@@ -2,10 +2,10 @@
 
 Purpose
 The whole site shell in one line, from the `Osirion.Blazor` package: a skip link, an optional announcement, the main
-menu with the brand, search and theme toggle, the page, and the footer with link columns, social profiles, legal
-links and the copyright. It also renders the theme styles, the scroll-to-top button and, when turned on, the cookie
-consent banner. Everything comes from the `Osirion:Site` configuration section. It renders without script; the menu
-and theme toggle add behaviour where script runs.
+menu with the brand, search, theme toggle and an optional call to action button, the page, and the footer with link
+columns, social profiles, legal links and the copyright. It also renders the theme styles, the scroll-to-top button
+and, when turned on, the cookie consent banner. Everything comes from the `Osirion:Site` configuration section. It
+renders without script; the menu and theme toggle add behavior where script runs.
 
 Usage
 ```csharp
@@ -29,6 +29,7 @@ builder.Services.AddOsirion(builder.Configuration);
         { "Text": "Guides", "Items": [ { "Text": "Getting started", "Href": "/guides/start" } ] },
         { "Text": "About", "Href": "/about" }
       ],
+      "CallToAction": { "Text": "Book a call", "Href": "https://booking.example.com/intro" },
       "FooterSections": [ { "Title": "Learn", "Links": [ { "Text": "Docs", "Href": "/docs" } ] } ],
       "SocialLinks": [ { "Network": "github", "Href": "https://github.com/me/blog" } ],
       "LegalLinks": [ { "Text": "Privacy", "Href": "/privacy-policy" } ]
@@ -45,6 +46,9 @@ Options (`OsirionSiteOptions`)
   `/blog/a-post`; never for `/`), and one level of `Items` shown as a dropdown
 - `ShowSearch` (false) with `SearchUrl` (`/search`) and `SearchPlaceholder`; turn it on when the site has a search page
 - `ShowThemeToggle` (true)
+- `CallToAction`: a link styled as the CSS framework's primary button, after the search box and theme toggle, with
+  `Text` and `Href` (both required). `Href` is a path on the site (`/contact`) or an `http`, `https` or `mailto`
+  address; an `http` or `https` address gets `rel="noopener"` and opens in the same tab. Without it there is no button
 - `Announcement`: `Id`, `Text`, optional `LinkText` and `LinkUrl`; dismissing it needs `app.MapOsirionAnnouncements()`
 - Footer: `FooterDescription`, `FooterSections` (title and links), `SocialLinks` (`Network` is `github`, `x`,
   `linkedin`, `nuget` or `rss` for an icon; other networks show their `Label` as text) under `SocialTitle`
@@ -52,8 +56,9 @@ Options (`OsirionSiteOptions`)
   `Copyright` replaces that line with your own markup
 - `ShowCookieConsent` (false; needs `app.MapOsirionCookieConsent()`), `ShowScrollToTop` (true)
 
-The options are checked when the application starts: a missing `Name`, a menu entry without text or address, or
-a menu nested more than one level stops startup with a message naming the configuration key.
+The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a
+menu nested more than one level, or a call to action without `Text` or `Href` or with an `Href` of another kind (such
+as `javascript:` or `//other.example`) stops startup with a message naming the configuration key.
 
 Parameters, when you wrap it in your own layout
 ```razor
@@ -64,11 +69,13 @@ Parameters, when you wrap it in your own layout
 </OsirionSiteLayout>
 ```
 - `ChildContent`: the page (as the router's layout, the page comes from `Body`)
-- `Header`: replaces the menu built from the options; the announcement stays
+- `Header`: replaces the menu built from the options, its call to action included; the announcement stays
 - `Footer`: replaces the footer built from the options
-- `MenuActions`: more actions after the search box and theme toggle
+- `MenuActions`: more actions after the search box, theme toggle and call to action
 - `MenuLabel`: the accessible name of the menu (`Main navigation`)
 
 Notes
+- The menu collapses behind its toggle below 1200px. The call to action then shows in the opened menu, on a row of
+  its own below the search box and theme toggle, and follows them in keyboard order.
 - `AddOsirion` registers the JS component services the page layout needs, so `AddJSComponents()` is no longer
   required in `Program.cs`; calling it as well does no harm.
