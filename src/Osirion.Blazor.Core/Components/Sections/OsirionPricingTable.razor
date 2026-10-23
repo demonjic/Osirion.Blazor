@@ -8,7 +8,9 @@
         @foreach (var plan in Plans)
         {
             <li @key="plan.Name" class="@GetPlanClass(plan)">
-                @if (!string.IsNullOrWhiteSpace(plan.Badge))
+                @* The badge is drawn on the top border wherever it sits. A heading comes before it, so heading navigation,
+                   which reads forward from the heading, announces the badge with its plan. *@
+                @if (NameHeadingLevel is null && !string.IsNullOrWhiteSpace(plan.Badge))
                 {
                     <p class="osirion-pricing-badge">@plan.Badge</p>
                 }
@@ -36,6 +38,11 @@
                     default:
                         <h1 class="osirion-pricing-name">@plan.Name</h1>
                         break;
+                }
+
+                @if (NameHeadingLevel is not null && !string.IsNullOrWhiteSpace(plan.Badge))
+                {
+                    <p class="osirion-pricing-badge">@plan.Badge</p>
                 }
 
                 @if (!string.IsNullOrWhiteSpace(plan.Price))

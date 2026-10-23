@@ -213,7 +213,8 @@ Both components write unmatched attributes to their root element.
 - The pricing table is a `<ul>` with `role="list"`, so screen readers still announce it as a list of plans after
   its bullets are removed.
 - Each plan's name is a paragraph unless `PlanHeadingLevel` is set; then it is an `h1` to `h6` with the same look,
-  and a level outside 1 to 6 moves to the nearest one.
+  and a level outside 1 to 6 moves to the nearest one. The plan's badge then follows the heading in the markup, so
+  a screen reader that jumps to the heading reads the badge with its plan; it is still drawn on the top border.
 - A plan whose `Price` is empty or white space has no price line: neither the amount nor the period is rendered.
 - A plan's button is rendered only when it has `CallToActionText` and a safe `CallToActionUrl`: a path starting
   with `/` (not `//` or `/\`), or an `http`, `https` or `mailto` address. Anything else, such as a `javascript:` URL or a relative path

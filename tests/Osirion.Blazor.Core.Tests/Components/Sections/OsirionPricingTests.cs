@@ -165,6 +165,19 @@ public class OsirionPricingTests : OsirionComponentTestBase
         cut.FindAll($"{tag}.osirion-pricing-name").Count.ShouldBe(2);
     }
 
+    // Heading navigation reads forward from the heading, so the badge must follow its plan's name to be heard with it.
+    [Fact]
+    public void OsirionPricingTable_PlanHeadingLevelWithABadge_PutsTheBadgeRightAfterTheHeading()
+    {
+        var cut = Render<OsirionPricingTable>(p => p
+            .Add(t => t.Plans, Plans)
+            .Add(t => t.PlanHeadingLevel, 3));
+
+        var team = cut.FindAll("li.osirion-pricing-plan")[1];
+        team.QuerySelector("h3.osirion-pricing-name + p.osirion-pricing-badge")!.TextContent.ShouldBe("Most popular");
+        team.QuerySelector("p.osirion-pricing-badge ~ h3.osirion-pricing-name").ShouldBeNull();
+    }
+
     [Fact]
     public void OsirionFeatureComparison_Rows_RenderMarksTextAndHeaders()
     {

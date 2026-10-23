@@ -42,7 +42,8 @@ Notes
 - Plans are a list (`ul`), so screen readers announce how many there are. Each button's accessible name includes
   the plan ("Start trial: Team").
 - Set `PlanHeadingLevel` to the level under the section's own heading (`3` under an `h2`) so screen reader users
-  can move from plan to plan by heading.
+  can move from plan to plan by heading. The badge then follows the heading in the markup, so it is read with its
+  plan, and it is still drawn on the top border.
 - Only http(s), `mailto:` and site-relative call-to-action URLs are rendered; a plan with another URL shows no button.
 - Check marks and crosses are drawn in CSS and read as `IncludedText` and `NotIncludedText`. Rows shorter than the
   number of plans leave the remaining cells empty.
