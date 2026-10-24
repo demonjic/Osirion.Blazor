@@ -122,7 +122,7 @@ An article header with the image behind the text and the author, date and readin
 | `SecondaryButtonUrl` | `string?` | `null` | The secondary button's address, written as given, so pass an address your application controls. |
 | `BackgroundColor` | `string?` | `null` | A CSS color for the section's background, written to the inline style as given. |
 | `TextColor` | `string?` | `null` | A CSS color for the section's text, written to the inline style as given. |
-| `MinHeight` | `string` | `"60vh"` | The section's minimum height as a CSS length, written to the inline style as given. |
+| `MinHeight` | `string` | `"60vh"` | The section's minimum height as a CSS length. The default, `60vh`, comes from the stylesheet; another value is written to the inline style as given. |
 | `Author` | `string?` | `null` | The author name shown in the metadata line when `ShowMetadata` is on. |
 | `PublishDate` | `DateTime?` | `null` | The publication date shown in the metadata line when `ShowMetadata` is on. |
 | `Culture` | `CultureInfo?` | `null` | The culture `PublishDate` is written in, normally the language of the page. When `null`, the current culture is used. |

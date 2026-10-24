@@ -147,6 +147,22 @@ public class OsirionContentNotFoundTests : OsirionComponentTestBase
         cut.FindAll(".osirion-content-not-found-actions a").ShouldBeEmpty();
     }
 
+    // Fails before the fix: each button link carried style="text-decoration: none;", which a Content Security Policy
+    // without 'unsafe-inline' in style-src blocks. A class in the component's stylesheet removes the underline now.
+    [Fact]
+    public void ContentNotFound_ButtonLinks_DropTheUnderlineWithAClassInsteadOfAStyleAttribute()
+    {
+        var cut = RenderStatic<OsirionContentNotFound>(parameters => parameters
+            .Add(p => p.PrimaryButtonText, "Home")
+            .Add(p => p.PrimaryButtonUrl, "/")
+            .Add(p => p.SecondaryButtonText, "Docs")
+            .Add(p => p.SecondaryButtonUrl, "/docs"));
+
+        var buttons = cut.FindAll(".osirion-content-not-found-actions a");
+        buttons.Count.ShouldBe(2);
+        buttons.ShouldAllBe(button => !button.HasAttribute("style") && button.ClassList.Contains("osirion-content-not-found-button"));
+    }
+
     // Fails before the fix: a javascript: button or suggestion URL was written to href unchecked.
     [Fact]
     public void ContentNotFound_UnsafeAddresses_RenderWithoutALink()

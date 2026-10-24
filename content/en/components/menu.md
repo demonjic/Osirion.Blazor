@@ -118,7 +118,9 @@ Every part of the menu also takes `Class`, `Style` and `Theme` from the Osirion 
 attributes to its root element. `Style` is written on the root element of every part. `Class` goes on the container of
 `Menu`, on the link (or toggle label) of `MenuItem`, and on the root element of the other parts, so on a `MenuItem` the
 two reach different elements: `Style` lands on its wrapper, where a CSS variable such as `--osirion-menu-accent` is
-inherited by the link and the submenu. In a `Menu`, `Style` comes before the sticky `z-index`, which still wins.
+inherited by the link and the submenu. A sticky `Menu` takes its default `z-index` of 1000 from its stylesheet and writes
+no `style` attribute, so a strict Content Security Policy needs nothing for it; a `StickyZIndex` other than 1000, or a
+`Style`, is written inline, with `Style` before the sticky `z-index`, which still wins.
 
 ### Menu
 
@@ -133,7 +135,7 @@ inherited by the link and the submenu. In a `Menu`, `Style` comes before the sti
 | `BrandingTemplate` | `RenderFragment?` | `null` | Your own brand markup. It replaces the brand link, `BrandLogo` and `BrandText` and is not wrapped in a link. |
 | `Actions` | `RenderFragment?` | `null` | Content shown at the end of the bar, after the menu items: a search box, a theme toggle or a call to action button. A horizontal menu aligns it to the trailing edge; a collapsed menu shows it at the bottom of its drawer. |
 | `Sticky` | `bool` | `true` | Whether a horizontal menu stays at the top of the page while it scrolls. It has no effect on a vertical menu. Turn it off for a menu inside a page. |
-| `StickyZIndex` | `int` | `1000` | The `z-index` written to the container's inline style while the menu is sticky. |
+| `StickyZIndex` | `int` | `1000` | The container's `z-index` while the menu is sticky. The default, 1000, comes from the stylesheet; another value, or any `OsirionComponentBase.Style`, is written to the container's inline style, after `Style`, so it wins over a `z-index` there. |
 | `Orientation` | `MenuOrientation` | `MenuOrientation.Horizontal` | The layout: `Horizontal`, a bar with dropdown submenus, or `Vertical`, a stack whose submenus open in place. |
 | `Alignment` | `MenuAlignment` | `MenuAlignment.Center` | Where a horizontal bar places its items: `Left`, `Center` or `Right`. A vertical menu ignores it. |
 | `CollapseOnMobile` | `bool` | `true` | Whether the items collapse behind a hamburger toggle and a drawer below the breakpoint in `CollapseBreakpoint`. |

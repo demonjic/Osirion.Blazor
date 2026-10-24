@@ -35,3 +35,4 @@ Notes
 - Alignment controls text alignment. ImagePosition applies when not using background images.
 - As a background image, ImageUrl is written into `url('...')` with quotes, backslashes, parentheses and control characters CSS-escaped, so a URL taken from content front matter cannot add style declarations. Other URLs are written unchanged.
 - Optional metadata: Author, PublishDate, ReadTime, ShowMetadata.
+- The default MinHeight (60vh) comes from `.osirion-hero-section` in the stylesheet, so a hero with default settings writes no `style` attribute and needs nothing in a Content Security Policy. Another MinHeight, a BackgroundColor, TextColor, background ImageUrl or Style is written inline as before.

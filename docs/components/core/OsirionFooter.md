@@ -17,3 +17,6 @@ Models
 - FooterSection { Title, Links[] }
 - FooterLink { Text, Href, OpenInNewTab }
 - FooterSocialLink : FooterLink { Icon, AriaLabel }
+
+Content Security Policy
+- Writes no `style` element and no `style` attribute of its own (the bottom links' spacing and the brand rule are in its stylesheet); only a `Style` you pass is written inline.

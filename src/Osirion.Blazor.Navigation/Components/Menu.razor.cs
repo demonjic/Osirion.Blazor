@@ -62,10 +62,15 @@ public partial class Menu
     public bool Sticky { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the <c>z-index</c> written to the container's inline style while the menu is sticky.
+    /// Gets or sets the container's <c>z-index</c> while the menu is sticky. The default, 1000, comes from the
+    /// stylesheet; another value, or any <see cref="OsirionComponentBase.Style"/>, is written to the container's inline
+    /// style, after <c>Style</c>, so it wins over a <c>z-index</c> there.
     /// </summary>
     [Parameter]
-    public int StickyZIndex { get; set; } = 1000;
+    public int StickyZIndex { get; set; } = DefaultStickyZIndex;
+
+    /// <summary>The sticky z-index the stylesheet sets on <c>.osirion-menu-sticky</c>.</summary>
+    private const int DefaultStickyZIndex = 1000;
 
     /// <summary>
     /// Gets or sets the layout: <c>Horizontal</c>, a bar with dropdown submenus, or <c>Vertical</c>, a stack whose
@@ -225,7 +230,9 @@ public partial class Menu
         if (!string.IsNullOrWhiteSpace(Style))
             styles.Add(WithTrailingSemicolon(Style));
 
-        if (Sticky && Orientation == MenuOrientation.Horizontal)
+        // The default z-index is in the stylesheet, so a sticky menu needs no inline style (which a Content Security
+        // Policy without 'unsafe-inline' blocks); it is written only to win over a Style or to change the value.
+        if (Sticky && Orientation == MenuOrientation.Horizontal && (styles.Count > 0 || StickyZIndex != DefaultStickyZIndex))
             styles.Add($"z-index: {StickyZIndex};");
 
         if (styles.Count > 0)

@@ -80,7 +80,7 @@ public class OsirionHtmlRendererOptionsTests : OsirionComponentTestBase
             .Add(p => p.Class, "post-body"));
 
         cut.Find("article").ClassName.ShouldBe("osirion-html-renderer osirion-content osirion-wcag-theme post-body");
-        cut.Find("style").TextContent.ShouldMatch(@"pre\[class\*=""language-""\]\s*\{[^}]*background:\s*#1e1e1e;");
+        cut.FindAll("link[href$='css/osirion-prism-accessible.min.css']").Count.ShouldBe(1);
         cut.FindAll("link[href*='prism-okaidia']").ShouldBeEmpty();
     }
 

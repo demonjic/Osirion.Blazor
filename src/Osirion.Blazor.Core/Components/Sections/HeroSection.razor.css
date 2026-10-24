@@ -1,5 +1,7 @@
 /* Root container */
 .osirion-hero-section {
+    /* HeroSection.MinHeight's default; another value is written inline and wins */
+    min-height: 60vh;
     position: relative;
     display: flex;
     align-items: center;

@@ -148,6 +148,12 @@
 }
 
 /* Action buttons */
+/* Button links never show an underline, as the inline style they carried before ensured; !important keeps that
+   precedence over a site's or framework's a:hover rules. */
+.osirion-content-not-found-button {
+    text-decoration: none !important;
+}
+
 .osirion-content-not-found-actions {
     display: flex;
     gap: var(--osirion-spacing-3, 0.75rem);

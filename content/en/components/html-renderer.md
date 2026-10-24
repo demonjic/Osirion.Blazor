@@ -191,9 +191,11 @@ marker that holds a demo's place is added after sanitizing, so content cannot fo
 
 ### Content Security Policy
 
-The accessible theme is an inline `<style>` element and the Copy button uses an inline `onclick` attribute. Under a
-policy without `'unsafe-inline'`, set `UseAccessibleTheme="false"` (and provide your theme as a file) and leave
-`EnableCopyButton` off.
+The accessible theme is the file `_content/Osirion.Blazor.Core/css/osirion-prism-accessible.min.css`, from your own
+origin, so `style-src 'self'` allows it (up to 4.2.0 it was an inline `<style>` element). The Copy button uses an inline
+`onclick` attribute, so under a policy without `'unsafe-inline'` in `script-src`, leave `EnableCopyButton` off. The
+script loader that BlazorJSComponents renders writes `style="display: none; !important"` on its `bl-script` elements;
+the [security guide](/docs/security#inline-style-attributes) gives the hash that allows it.
 
 Prism's addresses appear in the page only inside the arguments of the script loader (a
 `<script type="application/json">` element, which is data and not run, so the policy does not apply to it), so write

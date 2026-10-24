@@ -162,6 +162,24 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
         theme.GetAttribute("crossorigin").ShouldBe("anonymous");
     }
 
+    // Fails before the fix: the accessible code theme was an inline <style> element, which a Content Security Policy
+    // without 'unsafe-inline' in style-src blocks, leaving code blocks unstyled.
+    [Fact]
+    public void OsirionHtmlRenderer_AccessibleTheme_LinksAStylesheetInsteadOfAnInlineStyleElement()
+    {
+        Services.AddJSComponents();
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-js\">x</code></pre>"));
+
+        // Only BlazorJSComponents' own bl-script elements carry a style attribute (see the security guide)
+        cut.FindAll("style").ShouldBeEmpty();
+        cut.FindAll("[style]").ShouldAllBe(element => element.LocalName == "bl-script");
+        cut.Find("link[href$='osirion-prism-accessible.min.css']").GetAttribute("href")
+            .ShouldBe("_content/Osirion.Blazor.Core/css/osirion-prism-accessible.min.css");
+        cut.FindAll("link[href*='prism-okaidia']").ShouldBeEmpty();
+    }
+
     [Fact]
     public void OsirionHtmlRenderer_CustomPrismBaseUrl_LoadsFromTheHostWithoutIntegrity()
     {

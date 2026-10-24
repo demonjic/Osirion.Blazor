@@ -34,9 +34,13 @@ public class HeroSectionTests : OsirionComponentTestBase
     [Fact]
     public void HeroSection_BackgroundImageUrlEndingInBackslash_KeepsFollowingDeclarations()
     {
-        var declarations = RenderBackgroundStyle("x\\");
+        var cut = RenderStatic<HeroSection>(parameters => parameters
+            .Add(p => p.UseBackgroundImage, true)
+            .Add(p => p.ImageUrl, "x\\")
+            .Add(p => p.MinHeight, "40vh"));
+        var declarations = new CssParser().ParseDeclaration(cut.Find("section").GetAttribute("style")!)!;
 
-        declarations.GetPropertyValue("min-height").ShouldBe("60vh");
+        declarations.GetPropertyValue("min-height").ShouldBe("40vh");
     }
 
     [Theory]

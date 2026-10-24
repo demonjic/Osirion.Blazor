@@ -23,9 +23,8 @@
         }
         else
         {
-            <style>
-                @((MarkupString)GetAccessibleThemeCss())
-            </style>
+            @* A file, not an inline style element, so a Content Security Policy needs no 'unsafe-inline' for it. *@
+            <link rel="stylesheet" href="@Assets["_content/Osirion.Blazor.Core/css/osirion-prism-accessible.min.css"]" />
         }
 
         @if (ShowLineNumbers)

@@ -257,4 +257,18 @@ public class OsirionTestimonialCardTests : OsirionComponentTestBase
         link.GetAttribute("target").ShouldBe("_blank");
         link.TextContent.ShouldContain("Full story");
     }
+
+    // Fails before the fix: the link carried a fixed style attribute with the action colors, which a Content Security
+    // Policy without 'unsafe-inline' in style-src blocks. A class in the card's stylesheet sets them now.
+    [Fact]
+    public void TestimonialCard_ReadMoreLink_TakesItsColorsFromAClassInsteadOfAStyleAttribute()
+    {
+        var cut = RenderStatic<OsirionTestimonialCard>(parameters => parameters
+            .Add(p => p.Name, "Ann")
+            .Add(p => p.ReadMoreHref, "/stories/ann"));
+
+        var link = cut.Find("footer.osirion-testimonial-actions a");
+        link.HasAttribute("style").ShouldBeFalse();
+        link.ClassList.ShouldContain("osirion-testimonial-read-more");
+    }
 }

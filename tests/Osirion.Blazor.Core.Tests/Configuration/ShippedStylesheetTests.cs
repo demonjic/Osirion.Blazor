@@ -171,6 +171,21 @@ public class ShippedStylesheetTests
         css.EndsWith(linkPrint, StringComparison.Ordinal).ShouldBeTrue();
     }
 
+    // The accessible code theme ships as a file the renderer links, in place of the inline style element it wrote.
+    [Theory]
+    [InlineData("osirion-prism-accessible.css")]
+    [InlineData("osirion-prism-accessible.min.css")]
+    public void HtmlRenderer_AccessibleCodeTheme_ShipsAsAStylesheet(string file)
+    {
+        // Act
+        var css = Squash(File.ReadAllText(CoreCss(file)));
+
+        // Assert
+        css.ShouldContain("pre[class*=");
+        css.ShouldContain(".token.keyword{color:#8be9fd");
+        css.ShouldContain(".token.comment,.token.prolog,.token.doctype,.token.cdata{color:#8b949e");
+    }
+
     /// <summary>A content link selector: the link part inside :where(), with its :is() and :not() arguments.</summary>
     private const string LinkSelectorPattern = @"\.osirion-html-renderer :where\(a(?:::?[\w-]+(?:\((?:[^()]|\([^()]*\))*\))?)+\)";
 

@@ -48,3 +48,4 @@ Notes
 
 - Variant: default|minimal|centered. GridLayout: auto|4-column|3-column|2-column.
 - Docked with DockingMode: fixed|sticky.
+- Writes no inline `style` element or attribute of its own, so a strict Content Security Policy needs nothing for it.

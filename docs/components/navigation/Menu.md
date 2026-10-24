@@ -102,3 +102,7 @@ it, on the menu or on any ancestor:
 | `--osirion-menu-dropdown-background` | the menu background |
 | `--osirion-menu-radius`, `--osirion-menu-panel-radius`, `--osirion-menu-mega-radius` | `0.5rem`, `0.75rem`, `1rem` |
 | `--osirion-menu-shadow` | soft two-layer shadow for panels and the drawer |
+
+Content Security Policy: a sticky horizontal menu takes its default `z-index` (1000) from `.osirion-menu-sticky` in its
+stylesheet and writes no `style` attribute. A `StickyZIndex` other than 1000, or any `Style`, is written inline, with the
+sticky `z-index` after `Style` so it still wins.

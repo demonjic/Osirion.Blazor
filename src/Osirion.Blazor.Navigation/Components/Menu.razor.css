@@ -71,6 +71,8 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     position: sticky !important;
     top: 0;
     width: 100%;
+    /* Menu.StickyZIndex's default; another value is written inline and wins */
+    z-index: 1000;
 }
 
 /* Navigation row: brand, items and actions, centred within --osirion-menu-max-width */
