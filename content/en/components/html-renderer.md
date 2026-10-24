@@ -191,6 +191,12 @@ inside the article from the theme tokens (`--osirion-text-primary`, `--osirion-f
 override its rules or set the tokens in your app's stylesheet. The component's scoped styles only set the article's base
 font, size and color, because the rendered HTML does not carry their scope attribute.
 
+The text link rules weigh one class, `.osirion-html-renderer`, because the link part of each selector sits in
+`:where()`. They win over element rules such as a CSS framework's `a` and `a:hover`, and a rule of your theme with a
+class and an element, such as `.prose a` or `.osirion-html-renderer a`, restyles content links without `!important`.
+In print, a link is underlined text in the color of the text around it, without a box or a background, and a link that
+leaves the site prints its address after it, for example "Prism (https://prismjs.com/)".
+
 Two custom properties are yours to set:
 
 - `--osirion-syntax-background-color`: background of the copy button wrapper, its header and the code block inside

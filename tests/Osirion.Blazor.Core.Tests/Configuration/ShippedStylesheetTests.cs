@@ -42,7 +42,7 @@ public class ShippedStylesheetTests
         var css = File.ReadAllText(CoreCss("osirion-html-renderer.min.css"));
         var iconRules = System.Text.RegularExpressions.Regex.Matches(css, @"([^{}]*)::after\{content:")
             .Select(match => match.Groups[1].Value)
-            .Where(selector => selector.Contains(".osirion-html-renderer a", StringComparison.Ordinal))
+            .Where(selector => selector.Contains(".osirion-html-renderer :where(a", StringComparison.Ordinal))
             .ToList();
 
         // Assert
@@ -125,7 +125,7 @@ public class ShippedStylesheetTests
         var css = System.Text.RegularExpressions.Regex.Replace(File.ReadAllText(CoreCss(file)), @"\s+", " ");
         var linkSelectors = System.Text.RegularExpressions.Regex.Matches(
                 css,
-                @"\.osirion-html-renderer a(?:::?[\w-]+(?:\((?:[^()]|\([^()]*\))*\))?)+")
+                LinkSelectorPattern)
             .Select(match => match.Value)
             .ToList();
 
@@ -133,6 +133,46 @@ public class ShippedStylesheetTests
         linkSelectors.Count.ShouldBe(15);
         linkSelectors.ShouldAllBe(selector => selector.Contains(":not(.osirion-content-demo-preview a)", StringComparison.Ordinal));
     }
+
+    // Fails before the fix: the text link selector weighed two classes and seven elements, so a site theme rule such as
+    // ".prose a" lost to it and could restyle content links only with !important.
+    [Theory]
+    [InlineData("osirion-html-renderer.css")]
+    [InlineData("osirion-html-renderer.min.css")]
+    public void HtmlRenderer_TextLinkRules_WeighOneClassSoSiteThemesCanRestyleThem(string file)
+    {
+        // Act
+        var css = System.Text.RegularExpressions.Regex.Replace(File.ReadAllText(CoreCss(file)), @"\s+", " ");
+
+        // Assert: the link part sits in :where(), so only the renderer class counts
+        System.Text.RegularExpressions.Regex.IsMatch(css, @"\.osirion-html-renderer a[:\s{]").ShouldBeFalse();
+        System.Text.RegularExpressions.Regex.Matches(css, LinkSelectorPattern).Count.ShouldBeGreaterThan(0);
+    }
+
+    // Fails before the fix: printing drew a black box around every link with five !important declarations, which also
+    // overrode any print rule of the site, and hid where an external link led.
+    [Theory]
+    [InlineData("osirion-html-renderer.css")]
+    [InlineData("osirion-html-renderer.min.css")]
+    public void HtmlRenderer_PrintRules_UseNoImportantAndPrintExternalAddresses(string file)
+    {
+        // Act
+        var css = Squash(File.ReadAllText(CoreCss(file)));
+        var printBlocks = System.Text.RegularExpressions.Regex.Matches(css, @"@mediaprint\{(?:[^{}]|\{[^{}]*\})*\}")
+            .Select(match => match.Value)
+            .ToList();
+        var linkPrint = printBlocks.Single(block => block.Contains(":where(a", StringComparison.Ordinal));
+
+        // Assert: no !important and no box; the external address follows the link, after the screen rules
+        printBlocks.ShouldAllBe(block => !block.Contains("!important", StringComparison.Ordinal));
+        linkPrint.ShouldNotContain("border");
+        linkPrint.ShouldContain("content:\"(\"attr(href)\")\"");
+        css.IndexOf(linkPrint, StringComparison.Ordinal).ShouldBeGreaterThan(css.LastIndexOf("::after{content:\"\"", StringComparison.Ordinal));
+        css.EndsWith(linkPrint, StringComparison.Ordinal).ShouldBeTrue();
+    }
+
+    /// <summary>A content link selector: the link part inside :where(), with its :is() and :not() arguments.</summary>
+    private const string LinkSelectorPattern = @"\.osirion-html-renderer :where\(a(?:::?[\w-]+(?:\((?:[^()]|\([^()]*\))*\))?)+\)";
 
     // Fails before the fix: two seconds after a copy the script set the label to "Copy code to clipboard", so a screen
     // reader lost the language the markup gave it ("Copy C# code to clipboard").
