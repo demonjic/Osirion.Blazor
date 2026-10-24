@@ -40,6 +40,8 @@
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="..\..\icon.png" Pack="true" PackagePath="\" />
+		<!-- OsirionCmsAdminStyles=false leaves the admin's scoped styles out of a site's {App}.styles.css -->
+		<None Include="buildTransitive\Osirion.Blazor.Cms.Admin.targets" Pack="true" PackagePath="buildTransitive\" />
 	</ItemGroup>
 
 	<ItemGroup>

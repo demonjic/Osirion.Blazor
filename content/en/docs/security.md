@@ -136,7 +136,7 @@ site that uses them still needs `'unsafe-inline'` or must leave them out. The ta
 | `ThemeToggle` | Nothing inline: a click listener in `theme-toggle.js` does the work, and the page needs `OsirionStyles` as well |
 | `ThemePicker` | Nothing inline: no inline script and no event handler attribute |
 | `ScrollToTop`, `EnhancedNavigation` | One inline script each |
-| `OsirionHtmlRenderer` | An inline `onclick` on the Copy button (`EnableCopyButton`). The accessible code theme (`UseAccessibleTheme`) is the file `css/osirion-prism-accessible.min.css` from your own origin in the release after 4.2.0, and an inline `style` element up to 4.2.0; Prism from `cdnjs.cloudflare.com`, or from your own site with `AddOsirionPrism` (see [Content Security Policy](/components/html-renderer#content-security-policy)) |
+| `OsirionHtmlRenderer` | An inline `onclick` on the Copy button (`EnableCopyButton`). The accessible code theme (`UseAccessibleTheme`) is part of `css/osirion-html-renderer.min.css`, a file from your own origin, in the release after 4.2.0, and an inline `style` element up to 4.2.0; Prism from `cdnjs.cloudflare.com`, or from your own site with `AddOsirionPrism` (see [Content Security Policy](/components/html-renderer#content-security-policy)) |
 | `OsirionFooter` | Nothing inline in the release after 4.2.0; up to 4.2.0, an inline `style` element and a `style` attribute on the brand |
 | Components with a `Style` parameter | `style-src` that allows inline style attributes |
 | Analytics: GA4, Clarity, Matomo, Plausible, Yandex Metrica | An inline script, and the provider's own script host |

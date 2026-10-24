@@ -17,14 +17,11 @@
     @if (HasCodeBlocks && EnableSyntaxHighlighting)
     {
 
+        @* The accessible theme is part of osirion-html-renderer.min.css, under the osirion-wcag-theme class of the
+           article, so it needs no inline style element (which a Content Security Policy blocks) and no request. *@
         @if (!UseAccessibleTheme)
         {
             <link rel="stylesheet" href="@PrismUrl("themes/prism-okaidia.min.css")" integrity="@PrismIntegrity("themes/prism-okaidia.min.css")" crossorigin="@PrismCrossOrigin("themes/prism-okaidia.min.css")" />
-        }
-        else
-        {
-            @* A file, not an inline style element, so a Content Security Policy needs no 'unsafe-inline' for it. *@
-            <link rel="stylesheet" href="@Assets["_content/Osirion.Blazor.Core/css/osirion-prism-accessible.min.css"]" />
         }
 
         @if (ShowLineNumbers)

@@ -171,19 +171,20 @@ public class ShippedStylesheetTests
         css.EndsWith(linkPrint, StringComparison.Ordinal).ShouldBeTrue();
     }
 
-    // The accessible code theme ships as a file the renderer links, in place of the inline style element it wrote.
+    // The accessible code theme is part of the renderer's stylesheet, in place of the inline style element it wrote.
+    // :where() keeps each rule at the specificity it had there, so the palettes' code rules still outrank it.
     [Theory]
-    [InlineData("osirion-prism-accessible.css")]
-    [InlineData("osirion-prism-accessible.min.css")]
-    public void HtmlRenderer_AccessibleCodeTheme_ShipsAsAStylesheet(string file)
+    [InlineData("osirion-html-renderer.css")]
+    [InlineData("osirion-html-renderer.min.css")]
+    public void HtmlRenderer_AccessibleCodeTheme_IsInTheStylesheetUnderTheThemeClass(string file)
     {
         // Act
         var css = Squash(File.ReadAllText(CoreCss(file)));
 
         // Assert
-        css.ShouldContain("pre[class*=");
-        css.ShouldContain(".token.keyword{color:#8be9fd");
-        css.ShouldContain(".token.comment,.token.prolog,.token.doctype,.token.cdata{color:#8b949e");
+        css.ShouldContain(":where(.osirion-wcag-theme)pre[class*=");
+        css.ShouldContain(":where(.osirion-wcag-theme).token.keyword{color:#8be9fd");
+        css.ShouldContain(":where(.osirion-wcag-theme).token.comment,:where(.osirion-wcag-theme).token.prolog,:where(.osirion-wcag-theme).token.doctype,:where(.osirion-wcag-theme).token.cdata{color:#8b949e");
     }
 
     /// <summary>A content link selector: the link part inside :where(), with its :is() and :not() arguments.</summary>

@@ -163,9 +163,9 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
     }
 
     // Fails before the fix: the accessible code theme was an inline <style> element, which a Content Security Policy
-    // without 'unsafe-inline' in style-src blocks, leaving code blocks unstyled.
+    // without 'unsafe-inline' in style-src blocks, leaving code blocks unstyled. It is now in the renderer's stylesheet.
     [Fact]
-    public void OsirionHtmlRenderer_AccessibleTheme_LinksAStylesheetInsteadOfAnInlineStyleElement()
+    public void OsirionHtmlRenderer_AccessibleTheme_WritesNoInlineStyleAndNeedsNoOtherStylesheet()
     {
         Services.AddJSComponents();
 
@@ -175,9 +175,9 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
         // Only BlazorJSComponents' own bl-script elements carry a style attribute (see the security guide)
         cut.FindAll("style").ShouldBeEmpty();
         cut.FindAll("[style]").ShouldAllBe(element => element.LocalName == "bl-script");
-        cut.Find("link[href$='osirion-prism-accessible.min.css']").GetAttribute("href")
-            .ShouldBe("_content/Osirion.Blazor.Core/css/osirion-prism-accessible.min.css");
-        cut.FindAll("link[href*='prism-okaidia']").ShouldBeEmpty();
+        cut.Find("article").ClassList.ShouldContain("osirion-wcag-theme");
+        cut.FindAll("link[rel=stylesheet]").Select(link => link.GetAttribute("href"))
+            .ShouldBe(["_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css"]);
     }
 
     [Fact]
