@@ -118,7 +118,7 @@ Phone, email and website take several values separated by commas. Labels can be 
 
 Unmatched attributes are written to the root `<div>`.
 
-`ContactInformation` has five `string` properties, all empty by default:
+`ContactInformation` has five `string` properties, all empty by default, and a list of extra rows:
 
 | Property | Shown as |
 | --- | --- |
@@ -127,6 +127,36 @@ Unmatched attributes are written to the root `<div>`.
 | `Email` | One `mailto:` link per comma-separated address |
 | `Website` | One link per comma-separated address, showing its host (and port, if it has one) |
 | `Message` | A paragraph under the title, sanitized HTML allowed |
+| `AdditionalItems` | One row per `ContactInfoItem`, after the website row; empty by default, which adds nothing |
+
+### Extra rows
+
+A `ContactInfoItem` (`Osirion.Blazor.Core.Models`) is a row for a detail the fixed rows do not cover, such as a booking
+link, a social profile, working hours or a reply time. It has a `Label` (the bold text), a `Text`, an optional `Href`
+and an optional `Icon`:
+
+```razor
+<OsirionContactInfoSection ContactInfo="@contact" />
+
+@code {
+    private readonly ContactInformation contact = new()
+    {
+        Address = "Belgrade, Serbia",
+        AdditionalItems =
+        [
+            new ContactInfoItem("Book a call:", "15 minutes", "https://example.com/book", ContactInfoIcon.Calendar),
+            new ContactInfoItem("Reply time:", "Within one business day", Icon: ContactInfoIcon.Clock)
+        ]
+    };
+}
+```
+
+- `Label` and `Text` are plain text and are encoded. A row without `Text` is left out.
+- `Href` becomes a link only when it is a path on the site or an absolute `http`, `https` or `mailto` address
+  (`SafeLink.IsSafe`); anything else, such as `javascript:`, leaves `Text` as plain text. An absolute `http` or
+  `https` address opens in a new tab with `rel="noopener noreferrer"`.
+- `Icon` is one of `None`, `Address`, `Phone`, `Email`, `Website`, `Calendar`, `Clock` and `Link`. `None`, the
+  default, draws no icon but keeps its space, so the text lines up with the other rows.
 
 ## Behavior
 

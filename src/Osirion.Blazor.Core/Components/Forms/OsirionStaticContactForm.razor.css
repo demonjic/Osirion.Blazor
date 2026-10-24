@@ -1,4 +1,49 @@
-/* OsirionStaticContactForm: the fields in one column, then the button with its status beside it. */
+/* OsirionStaticContactForm: the fields in one column, then the button with its status beside it. With contact
+   information, the form and the information sit in two columns, and in one below 768px. */
+
+.osirion-static-contact-form-title {
+    margin: 0 0 var(--osirion-spacing-2, 0.5rem);
+    font-size: var(--osirion-font-size-2xl, 1.5rem);
+    font-weight: var(--osirion-font-weight-bold, 700);
+    line-height: 1.2;
+}
+
+.osirion-static-contact-form-description {
+    margin: 0 0 var(--osirion-spacing-6, 1.5rem);
+    color: var(--osirion-text-secondary, inherit);
+    line-height: 1.5;
+}
+
+.osirion-static-contact-form-side-by-side,
+.osirion-static-contact-form-stacked {
+    display: grid;
+    gap: var(--osirion-spacing-8, 2rem);
+    align-items: start;
+}
+
+/* minmax(0, ...) lets the form column shrink below the width of its widest field. */
+.osirion-static-contact-form-side-by-side {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+}
+
+.osirion-static-contact-form-stacked {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* ::deep, because the panel is another component: its root does not carry this component's scope attribute. */
+.osirion-static-contact-form ::deep .osirion-static-contact-form-panel {
+    --osirion-contact-text: var(--osirion-text-primary, inherit);
+    --osirion-contact-text-muted: var(--osirion-text-secondary, inherit);
+    padding: var(--osirion-spacing-6, 1.5rem);
+    background-color: var(--osirion-background-secondary, transparent);
+    border-radius: var(--osirion-radius-lg, 0.5rem);
+}
+
+@media (max-width: 768px) {
+    .osirion-static-contact-form-side-by-side {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
 
 .osirion-static-contact-form-form {
     position: relative;

@@ -29,4 +29,10 @@ public class ContactInformation
     /// Gets or sets additional message or description.
     /// </summary>
     public string Message { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets extra rows drawn after the address, phone, email and website rows, for details such as a booking
+    /// link, a social profile, working hours or a reply time. Empty by default, which adds nothing.
+    /// </summary>
+    public IList<ContactInfoItem> AdditionalItems { get; set; } = [];
 }

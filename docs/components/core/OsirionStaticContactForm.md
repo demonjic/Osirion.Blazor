@@ -13,6 +13,15 @@ Key parameters
   from Cloudflare and the token is empty, which an endpoint that checks Turnstile (such as the docs' Worker outline)
   refuses as `fields`
 - `ShowCompanyField`: adds an optional `company` field (default false)
+- `ShowSubjectField`: adds an optional `subject` field (default false), up to 200 characters, after the company field;
+  `SubjectLabel` renames it
+- `FormTitle`, `FormDescription`: a heading (`h2`) and a plain-text paragraph above the form; both empty by default
+- `NamePlaceholder`, `EmailPlaceholder`, `SubjectPlaceholder`, `MessagePlaceholder`: placeholders; none by default
+- `ContactInfo` (a `ContactInformation`), `ShowContactInformation` (default true), `ContactInfoTitle` (default
+  "Contact information"): an `OsirionContactInfoSection` beside the form (below 768px, below it); `ContactInfo` is
+  null by default and then no section is rendered. `ContactInformation.AdditionalItems` adds rows of your own
+  (label, text, an optional safe link, an optional icon), such as a booking link or working hours
+- `SideBySideLayout` (default true): the section sits beside the form; false puts it below
 - `ShowRequiredIndicators`: a `*` after the labels of name, email and message (default true); it is `aria-hidden`,
   since the inputs carry `required`
 - `NameLabel`, `EmailLabel`, `CompanyLabel`, `MessageLabel`, `SubmitButtonText`, `SubmittingText`
@@ -34,14 +43,15 @@ Usage
 
 Wire contract
 - Request: `POST` to `Endpoint`, `Content-Type: application/json`, body
-  `{"name", "email", "company" (only with ShowCompanyField), "message", "website", "token"}`. `website` is the
+  `{"name", "email", "company" (only with ShowCompanyField), "subject" (only with ShowSubjectField), "message",
+  "website", "token"}`. `website` is the
   honeypot (empty for people), `token` the Turnstile response (empty without a site key).
 - Answer: `{"ok": true}`, or `{"ok": false, "error": "fields" | "check" | "failed"}`. `fields` shows
   `FieldsErrorMessage`, `check` shows `CheckErrorMessage`; any other answer, a body that is not JSON or no answer
   shows `ErrorMessage`.
 - The browser sends the request from the page's origin with an `Origin` header; the endpoint should accept only its own
   origin. A cross-origin endpoint has to answer the CORS preflight a JSON post needs.
-- Browser limits mirror the reference endpoint: name 100, email 254, message 10 to 5000 characters, company 200.
+- Browser limits mirror the reference endpoint: name 100, email 254, message 10 to 5000 characters, company 200, subject 200.
 
 Notes
 - The form renders with `hidden` and its script reveals it, so it never shows a form that cannot send.

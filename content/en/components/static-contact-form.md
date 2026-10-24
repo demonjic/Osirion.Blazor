@@ -7,7 +7,7 @@ permalink: /components/static-contact-form
 description: "A contact form for sites published as static files: it posts JSON to an endpoint you provide, such as a Cloudflare Worker, with a Turnstile check and a honeypot."
 author: Dejan Demonjić
 date: 2026-10-23
-last_modified: 2026-10-23
+last_modified: 2026-10-24
 featured_image: 'https://media.getosirion.com/og/components-static-contact-form.jpg'
 categories:
 - Components
@@ -89,8 +89,38 @@ For local runs, Cloudflare's test site key `1x00000000000000000000AA` always pas
 answers with the hostname `example.com` and no action, so an endpoint that checks both answers `check` on every send.
 The outline below has a switch for local runs only; see [Local runs with the test keys](#local-runs-with-the-test-keys).
 
-`ShowCompanyField="true"` adds an optional company field. Every label, button text and message is a parameter, so the
-form can speak another language.
+`ShowCompanyField="true"` adds an optional company field, and `ShowSubjectField="true"` an optional subject field of up
+to 200 characters. Every label, button text and message is a parameter, so the form can speak another language.
+`NamePlaceholder`, `EmailPlaceholder`, `SubjectPlaceholder` and `MessagePlaceholder` write placeholders; without them
+the fields have none.
+
+## Contact information beside the form
+
+`FormTitle` and `FormDescription` put a heading and a sentence above the form. `ContactInfo` adds an
+[OsirionContactInfoSection](/components/contact-info-section) beside the form, in a shaded panel: two columns on a wide
+screen, and the panel below the form under 768px. `SideBySideLayout="false"` keeps it below the form at every width, and
+`ShowContactInformation="false"` hides it. Without `ContactInfo` the component renders as it always did.
+
+```razor
+<OsirionStaticContactForm Endpoint="/api/contact"
+                          TurnstileSiteKey="0x4AAAAAAA..."
+                          FormTitle="Get in touch"
+                          FormDescription="Tell me what you need and I will reply within one business day."
+                          ShowSubjectField="true"
+                          ContactInfo="@contactInfo" />
+
+@code {
+    private readonly ContactInformation contactInfo = new()
+    {
+        Address = "Belgrade, Serbia",
+        AdditionalItems =
+        [
+            new ContactInfoItem("Book a call:", "15 minutes", "https://example.com/book", ContactInfoIcon.Calendar),
+            new ContactInfoItem("Working hours:", "9 a.m. to noon, Eastern overlap", Icon: ContactInfoIcon.Clock)
+        ]
+    };
+}
+```
 
 ## Wire contract
 
@@ -98,7 +128,7 @@ The script sends one request per attempt:
 
 - `POST` to `Endpoint`, with `Content-Type: application/json`.
 - The body is `{"name": "...", "email": "...", "message": "...", "website": "", "token": "..."}`, plus `"company"`
-  after `"email"` when `ShowCompanyField` is on. `website` is the honeypot: people never see it, so it is empty unless a
+  after `"email"` when `ShowCompanyField` is on, and `"subject"` after that when `ShowSubjectField` is on. `website` is the honeypot: people never see it, so it is empty unless a
   bot filled it. `token` is the Turnstile response, or empty when no site key is set, which an endpoint that checks
   Turnstile refuses as `fields`.
 - The browser sends it from the page, so it carries the page's `Origin`. A same-origin endpoint, such as `/api/contact`
@@ -116,7 +146,7 @@ The endpoint answers JSON, and the status next to the button shows:
 
 The browser checks the fields before anything is sent: name and email are required, the email must look like one, and
 the lengths match the endpoint below: name up to 100 characters, email up to 254, message from 10 to 5,000, company up
-to 200. The endpoint must still check everything itself, because anyone can post to it without the page.
+to 200, subject up to 200. The endpoint must still check everything itself, because anyone can post to it without the page.
 
 ## The endpoint
 
@@ -160,9 +190,11 @@ export default {
 
     const name = text(input?.name);
     const email = text(input?.email);
+    const subject = text(input?.subject); // Optional: only sent with ShowSubjectField.
     const message = text(input?.message);
     const token = text(input?.token);
-    const valid = !CONTROL.test(name + email + token)
+    const valid = !CONTROL.test(name + email + subject + token)
+      && subject.length <= 200
       && name.length > 0 && name.length <= 100
       && email.length <= 254 && EMAIL.test(email)
       && message.length >= 10 && message.length <= 5000
@@ -255,10 +287,22 @@ The [security guide](/docs/security#write-a-content-security-policy) covers the 
 | `Endpoint` | `string` | `""` | The address the message is posted to as JSON: a path on the site, such as `/api/contact`, or an `https` URL. Any other value (empty, `http:`, `javascript:`, `data:`, `mailto:` or a protocol-relative `//host`) renders nothing and, in Development, logs a warning. Required. |
 | `TurnstileSiteKey` | `string?` | `null` | The site key of the Cloudflare Turnstile widget. When it is set, the script loads Turnstile from `challenges.cloudflare.com`, renders the widget in the form with the action `contact` and sends its token. Without it nothing is loaded from Cloudflare and the token is sent empty, so leave it out only when the endpoint does not check Turnstile: one that does, such as the outline on the component's documentation page, answers `fields` to an empty token. |
 | `ShowCompanyField` | `bool` | `false` | Whether an optional company field is shown. Its value is sent as `company`. |
+| `ShowSubjectField` | `bool` | `false` | Whether an optional subject field is shown, between the email (or company) and the message. Its value is sent as `subject`, at most 200 characters; the field is not sent when it is hidden, so an endpoint that does not read a subject gets the same message as before. |
+| `FormTitle` | `string` | `""` | The heading (`h2`) above the form. Empty by default, which renders nothing. |
+| `FormDescription` | `string` | `""` | The text under the heading. Plain text; it is encoded. Empty by default, which renders nothing. |
+| `NamePlaceholder` | `string?` | `null` | The placeholder of the name field. Null by default, which writes no placeholder. |
+| `EmailPlaceholder` | `string?` | `null` | The placeholder of the email field. Null by default, which writes no placeholder. |
+| `SubjectPlaceholder` | `string?` | `null` | The placeholder of the subject field. Null by default, which writes no placeholder. |
+| `MessagePlaceholder` | `string?` | `null` | The placeholder of the message field. Null by default, which writes no placeholder. |
+| `SideBySideLayout` | `bool` | `true` | Whether the contact information sits beside the form (`true`, the default) or below it. It only matters when the contact information is shown. Below 768px it is below the form either way. |
+| `ShowContactInformation` | `bool` | `true` | Whether the contact information section is shown when `ContactInfo` is set. |
+| `ContactInfoTitle` | `string` | `"Contact information"` | The title of the contact information section, as on `OsirionContactForm`. |
+| `ContactInfo` | `ContactInformation?` | `null` | The details shown in an `OsirionContactInfoSection` beside or below the form: address, phone, email, website, a message and extra rows (`ContactInformation.AdditionalItems`). When it is `null`, which is the default, no section is rendered. |
 | `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field: name, email and message. The marker is for the eye only; assistive technology announces the fields' `required` attribute instead. |
 | `NameLabel` | `string` | `"Name"` | The label of the name field. |
 | `EmailLabel` | `string` | `"Email"` | The label of the email field. |
 | `CompanyLabel` | `string` | `"Company"` | The label of the company field, shown with `ShowCompanyField`. |
+| `SubjectLabel` | `string` | `"Subject"` | The label of the subject field, shown with `ShowSubjectField`. |
 | `MessageLabel` | `string` | `"Message"` | The label of the message field. |
 | `SubmitButtonText` | `string` | `"Send message"` | The text of the submit button. |
 | `SubmittingText` | `string` | `"Sending..."` | The text of the submit button while the message is sent; the button is disabled meanwhile. |

@@ -154,6 +154,7 @@ export default class extends BlazorJSComponents.Component {
             name: data.get('name'),
             email: data.get('email'),
             ...(data.has('company') ? { company: data.get('company') } : {}),
+            ...(data.has('subject') ? { subject: data.get('subject') } : {}),
             message: data.get('message'),
             website: data.get('website'),
             token: this.token

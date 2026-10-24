@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Logging;
+using Osirion.Blazor.Core.Models;
 using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Components;
@@ -21,6 +22,7 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     internal const int NameMaxLength = 100;
     internal const int EmailMaxLength = 254;
     internal const int CompanyMaxLength = 200;
+    internal const int SubjectMaxLength = 200;
     internal const int MessageMinLength = 10;
     internal const int MessageMaxLength = 5000;
 
@@ -52,6 +54,77 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     public bool ShowCompanyField { get; set; }
 
     /// <summary>
+    /// Gets or sets whether an optional subject field is shown, between the email (or company) and the message. Its
+    /// value is sent as <c>subject</c>, at most 200 characters; the field is not sent when it is hidden, so an endpoint
+    /// that does not read a subject gets the same message as before.
+    /// </summary>
+    [Parameter]
+    public bool ShowSubjectField { get; set; }
+
+    /// <summary>
+    /// Gets or sets the heading (<c>h2</c>) above the form. Empty by default, which renders nothing.
+    /// </summary>
+    [Parameter]
+    public string FormTitle { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the text under the heading. Plain text; it is encoded. Empty by default, which renders nothing.
+    /// </summary>
+    [Parameter]
+    public string FormDescription { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the placeholder of the name field. Null by default, which writes no placeholder.
+    /// </summary>
+    [Parameter]
+    public string? NamePlaceholder { get; set; }
+
+    /// <summary>
+    /// Gets or sets the placeholder of the email field. Null by default, which writes no placeholder.
+    /// </summary>
+    [Parameter]
+    public string? EmailPlaceholder { get; set; }
+
+    /// <summary>
+    /// Gets or sets the placeholder of the subject field. Null by default, which writes no placeholder.
+    /// </summary>
+    [Parameter]
+    public string? SubjectPlaceholder { get; set; }
+
+    /// <summary>
+    /// Gets or sets the placeholder of the message field. Null by default, which writes no placeholder.
+    /// </summary>
+    [Parameter]
+    public string? MessagePlaceholder { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the contact information sits beside the form (<see langword="true"/>, the default) or below
+    /// it. It only matters when the contact information is shown. Below 768px it is below the form either way.
+    /// </summary>
+    [Parameter]
+    public bool SideBySideLayout { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether the contact information section is shown when <see cref="ContactInfo"/> is set.
+    /// </summary>
+    [Parameter]
+    public bool ShowContactInformation { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the title of the contact information section, as on <c>OsirionContactForm</c>.
+    /// </summary>
+    [Parameter]
+    public string ContactInfoTitle { get; set; } = "Contact information";
+
+    /// <summary>
+    /// Gets or sets the details shown in an <c>OsirionContactInfoSection</c> beside or below the form: address, phone,
+    /// email, website, a message and extra rows (<see cref="ContactInformation.AdditionalItems"/>). When it is
+    /// <see langword="null"/>, which is the default, no section is rendered.
+    /// </summary>
+    [Parameter]
+    public ContactInformation? ContactInfo { get; set; }
+
+    /// <summary>
     /// Gets or sets whether a <c>*</c> follows the label of each required field: name, email and message. The marker is
     /// for the eye only; assistive technology announces the fields' <c>required</c> attribute instead.
     /// </summary>
@@ -75,6 +148,12 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     /// </summary>
     [Parameter]
     public string CompanyLabel { get; set; } = "Company";
+
+    /// <summary>
+    /// Gets or sets the label of the subject field, shown with <see cref="ShowSubjectField"/>.
+    /// </summary>
+    [Parameter]
+    public string SubjectLabel { get; set; } = "Subject";
 
     /// <summary>
     /// Gets or sets the label of the message field.
@@ -144,6 +223,8 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
 
     private bool HasSafeEndpoint { get; set; }
 
+    private bool HasContactInformationPanel => ShowContactInformation && ContactInfo is not null;
+
     private string? SiteKey => string.IsNullOrWhiteSpace(TurnstileSiteKey) ? null : TurnstileSiteKey.Trim();
 
     /// <inheritdoc/>
@@ -167,7 +248,10 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
 
     private string FieldId(string fieldName) => $"{_idPrefix}-{fieldName}";
 
-    private string GetContainerClass() => CombineCssClasses("osirion-static-contact-form");
+    private string GetContainerClass() => CombineCssClasses(
+        HasContactInformationPanel
+            ? $"osirion-static-contact-form {(SideBySideLayout ? "osirion-static-contact-form-side-by-side" : "osirion-static-contact-form-stacked")}"
+            : "osirion-static-contact-form");
 
     // Built here rather than in the markup, where the compiler would give the noscript the CSS isolation attribute: no
     // scoped rule styles it, and the attribute would only show up in every exported page.
