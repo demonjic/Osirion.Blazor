@@ -3,10 +3,12 @@
 `Menu` renders site navigation without JavaScript, so it works the same under static SSR, interactive server
 rendering and WebAssembly. Open and closed states are kept in visually hidden checkboxes; CSS does the rest.
 
-- A **horizontal** menu is a bar: the brand, the items, then the `Actions` slot (a search box, a theme toggle or a
-  call to action). Submenus open as dropdown panels; a mega submenu opens a wide panel centred under the bar.
-- Below its **collapse breakpoint** the bar keeps the brand and a hamburger button. The items open in a drawer under
-  the bar, submenus open in place as indented lists, and a tap on the dimmed page closes the drawer.
+- A **horizontal** menu is a bar: the brand, the items, the `Actions` slot (a search box or a theme toggle), then the
+  `PinnedActions` slot (the site's main call to action). Submenus open as dropdown panels; a mega submenu opens a wide
+  panel centred under the bar.
+- Below its **collapse breakpoint** the bar keeps the brand, the pinned actions and a hamburger button. The items and
+  `Actions` open in a drawer under the bar, submenus open in place as indented lists, and a tap on the dimmed page
+  closes the drawer.
 - A **vertical** menu stacks its items and opens submenus in place.
 
 ```razor
@@ -46,6 +48,9 @@ rendering and WebAssembly. Open and closed states are kept in visually hidden ch
         <SearchBox />
         <ThemeToggle />
     </Actions>
+    <PinnedActions>
+        <a class="osirion-button osirion-button-primary" href="/contact">Book a demo</a>
+    </PinnedActions>
 </Menu>
 ```
 
@@ -55,6 +60,7 @@ rendering and WebAssembly. Open and closed states are kept in visually hidden ch
 | --- | --- | --- | --- |
 | `ChildContent` | `RenderFragment?` | | `MenuItem`, `MenuDivider` and other items. |
 | `Actions` | `RenderFragment?` | | Content after the items: aligned to the end of the bar, and at the bottom of the drawer. |
+| `PinnedActions` | `RenderFragment?` | | Content that stays in the bar at every width: after `Actions` in a horizontal bar, and beside the toggle when the menu collapses. Rendered once; keep it short, a phone bar also holds the brand and the toggle. |
 | `Href` | `string?` | `"/"` | Destination of the brand link. |
 | `BrandLogo`, `BrandText` | `string?` | | Brand image and text. |
 | `BrandingTemplate` | `RenderFragment?` | | Replaces the brand link. |
@@ -73,6 +79,9 @@ rendering and WebAssembly. Open and closed states are kept in visually hidden ch
 - **Hover and keyboard.** In the bar a panel opens on hover. From the keyboard, Tab reaches the submenu toggle and
   Space opens the panel; Tab then moves through its links, and the panel closes when focus leaves it. A closed
   panel is skipped by Tab.
+- **Keyboard order when collapsed.** Tab reaches the brand, then the hamburger toggle (Space opens the drawer and the
+  next Tab lands on its first item), then the pinned actions. Above the collapse breakpoint the toggle's checkbox is
+  not rendered visible and is not a tab stop.
 - **Parents without a page.** A `MenuItem` with `HasSubmenu` and no `Href` (or `Href="#"`) renders as the toggle
   itself, so a tap anywhere on it opens the submenu instead of following a dead link.
 - **Nested submenus.** Inside a dropdown, a nested submenu flies out beside its row. In the drawer and in vertical
@@ -102,3 +111,6 @@ it, on the menu or on any ancestor:
 | `--osirion-menu-dropdown-background` | the menu background |
 | `--osirion-menu-radius`, `--osirion-menu-panel-radius`, `--osirion-menu-mega-radius` | `0.5rem`, `0.75rem`, `1rem` |
 | `--osirion-menu-shadow` | soft two-layer shadow for panels and the drawer |
+
+The drawer sets `--osirion-theme-toggle-padding` to `0` on its actions, so a `ThemeToggle` there lines up with the
+menu items instead of keeping its own 10px padding.
