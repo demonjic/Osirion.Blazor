@@ -136,7 +136,7 @@ site that uses them still needs `'unsafe-inline'` or must leave them out. The ta
 | `ThemeToggle` | Nothing inline: a click listener in `theme-toggle.js` does the work, and the page needs `OsirionStyles` as well |
 | `ThemePicker` | Nothing inline: no inline script and no event handler attribute |
 | `ScrollToTop`, `EnhancedNavigation` | One inline script each |
-| `OsirionHtmlRenderer` | An inline `style` element for the accessible code theme (`UseAccessibleTheme`) and an inline `onclick` on the Copy button; Prism from `cdnjs.cloudflare.com`, or from `PrismBaseUrl` when you serve it yourself |
+| `OsirionHtmlRenderer` | An inline `style` element for the accessible code theme (`UseAccessibleTheme`) and an inline `onclick` on the Copy button; Prism from `cdnjs.cloudflare.com`, or from your own site with `AddOsirionPrism` (see [Content Security Policy](/components/html-renderer#content-security-policy)) |
 | `OsirionFooter` | An inline `style` element |
 | Components with a `Style` parameter | `style-src` that allows inline style attributes |
 | Analytics: GA4, Clarity, Matomo, Plausible, Yandex Metrica | An inline script, and the provider's own script host |

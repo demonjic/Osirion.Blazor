@@ -5,6 +5,8 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Osirion.Blazor.Core.Configuration;
 using Osirion.Blazor.Core.Extensions;
 using Osirion.Blazor.Core.Services;
 
@@ -86,7 +88,8 @@ public partial class OsirionHtmlRenderer
 
     /// <summary>
     /// Gets or sets the base address Prism is loaded from, for hosts that serve it themselves (for example
-    /// <c>/lib/prism/1.29.0/</c>). When empty, the pinned cdnjs release is used and every file is verified with its
+    /// <c>/lib/prism/1.29.0/</c>). When empty, <see cref="PrismOptions.BaseUrl"/> applies (set with
+    /// <c>AddOsirionPrism</c>), and without that the pinned cdnjs release is used and every file is verified with its
     /// Subresource Integrity hash. Files from a custom address load without an integrity check.
     /// </summary>
     /// <remarks>
@@ -139,10 +142,19 @@ public partial class OsirionHtmlRenderer
     // sanitization, so content cannot forge a marker.
     private readonly string _demoMarker = "<!--osirion-demo-" + Guid.NewGuid().ToString("N") + "-";
 
+    /// <summary>
+    /// The base address Prism loads from: the <see cref="PrismBaseUrl"/> parameter, else the site's
+    /// <see cref="PrismOptions.BaseUrl"/>; empty for the pinned cdnjs release.
+    /// </summary>
+    private string? _prismBaseUrl;
+
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        _prismBaseUrl = string.IsNullOrWhiteSpace(PrismBaseUrl)
+            ? ServiceProvider.GetService<IOptions<PrismOptions>>()?.Value.BaseUrl
+            : PrismBaseUrl;
         ProcessHtmlContent();
     }
 
@@ -478,18 +490,18 @@ public partial class OsirionHtmlRenderer
     }
 
     /// <summary>
-    /// Gets the address of a Prism file: the pinned cdnjs release, or <see cref="PrismBaseUrl"/> when it is set.
+    /// Gets the address of a Prism file: the pinned cdnjs release, or the custom base address when one is set.
     /// </summary>
-    private string PrismUrl(string relativePath) => string.IsNullOrWhiteSpace(PrismBaseUrl)
+    private string PrismUrl(string relativePath) => string.IsNullOrWhiteSpace(_prismBaseUrl)
         ? PrismCdnAssets.BaseUrl + relativePath
-        : PrismBaseUrl.TrimEnd('/') + "/" + relativePath;
+        : _prismBaseUrl.TrimEnd('/') + "/" + relativePath;
 
     /// <summary>
     /// Gets the Subresource Integrity hash of a pinned Prism file, or <see langword="null"/> when the file comes
-    /// from a custom <see cref="PrismBaseUrl"/> (the host owns that source) or is not part of the pinned release.
+    /// from a custom base address (the host owns that source) or is not part of the pinned release.
     /// </summary>
     private string? PrismIntegrity(string relativePath) =>
-        string.IsNullOrWhiteSpace(PrismBaseUrl) && PrismCdnAssets.TryGetIntegrity(relativePath, out var integrity)
+        string.IsNullOrWhiteSpace(_prismBaseUrl) && PrismCdnAssets.TryGetIntegrity(relativePath, out var integrity)
             ? integrity
             : null;
 
@@ -501,7 +513,7 @@ public partial class OsirionHtmlRenderer
     /// </summary>
     private List<Dictionary<string, object?>> GetPrismScripts()
     {
-        var usesPinnedRelease = string.IsNullOrWhiteSpace(PrismBaseUrl);
+        var usesPinnedRelease = string.IsNullOrWhiteSpace(_prismBaseUrl);
         var relativePaths = new List<string> { "prism.min.js" };
 
         // Without a custom source, a language that is not part of the pinned release is skipped instead of

@@ -177,6 +177,58 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
         theme.HasAttribute("integrity").ShouldBeFalse();
     }
 
+    // Fails before the fix: only the PrismBaseUrl parameter chose the source, so a renderer inside ContentView or
+    // ArticlePage, which do not expose it, always loaded Prism from cdnjs.
+    [Fact]
+    public void OsirionHtmlRenderer_ConfiguredPrismBaseUrl_LoadsEveryPrismFileFromTheSite()
+    {
+        Services.AddJSComponents();
+        Services.AddOsirionPrism(options => options.BaseUrl = "/lib/prism/1.29.0/");
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-python\">x</code></pre>")
+            .Add(p => p.UseAccessibleTheme, false)
+            .Add(p => p.ShowLineNumbers, true));
+
+        cut.Find("link[href*='prism-okaidia']").GetAttribute("href").ShouldBe("/lib/prism/1.29.0/themes/prism-okaidia.min.css");
+        cut.Find("link[href*='prism-line-numbers']").GetAttribute("href").ShouldBe("/lib/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css");
+        cut.Markup.ShouldContain("/lib/prism/1.29.0/prism.min.js");
+        cut.Markup.ShouldContain("/lib/prism/1.29.0/components/prism-python.min.js");
+        cut.Markup.ShouldContain("/lib/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js");
+        cut.Markup.ShouldNotContain("cdnjs.cloudflare.com");
+        cut.Markup.ShouldNotContain("sha512-");
+    }
+
+    [Fact]
+    public void OsirionHtmlRenderer_PrismBaseUrlParameter_WinsOverTheConfiguredOne()
+    {
+        Services.AddJSComponents();
+        Services.AddOsirionPrism(options => options.BaseUrl = "/lib/prism/1.29.0/");
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-js\">x</code></pre>")
+            .Add(p => p.UseAccessibleTheme, false)
+            .Add(p => p.PrismBaseUrl, "/vendor/prism/"));
+
+        cut.Find("link[href*='prism-okaidia']").GetAttribute("href").ShouldBe("/vendor/prism/themes/prism-okaidia.min.css");
+        cut.Markup.ShouldNotContain("/lib/prism/1.29.0/");
+    }
+
+    [Fact]
+    public void OsirionHtmlRenderer_PrismOptionsWithoutBaseUrl_LoadThePinnedCdnReleaseWithIntegrity()
+    {
+        Services.AddJSComponents();
+        Services.AddOsirionPrism(_ => { });
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-js\">x</code></pre>")
+            .Add(p => p.UseAccessibleTheme, false));
+
+        var theme = cut.Find("link[href*='prism-okaidia']");
+        theme.GetAttribute("href").ShouldBe("https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css");
+        theme.GetAttribute("integrity").ShouldStartWith("sha512-");
+    }
+
     [Fact]
     public void OsirionHtmlRenderer_PrismScripts_AreNotLoadedFromCdnWithoutIntegrity()
     {
