@@ -45,7 +45,8 @@ public sealed class OsirionSiteOptions
 
     /// <summary>
     /// Gets or sets a button at the end of the menu, after the search box and theme toggle, for example
-    /// <c>Book a call</c> linking to a scheduling page; <see langword="null"/>, the default, shows none.
+    /// <c>Book a call</c> linking to a scheduling page; <see langword="null"/>, the default, shows none. It stays in the
+    /// bar when the menu collapses, and <see cref="SiteCallToAction.FooterSection"/> lists it in a footer column too.
     /// </summary>
     public SiteCallToAction? CallToAction { get; set; }
 
@@ -100,6 +101,7 @@ public sealed class OsirionSiteOptions
 
         AddMenuErrors(Menu, "Menu", errors);
         AddCallToActionErrors(CallToAction, errors);
+        AddCallToActionFooterSectionErrors(errors);
         if (Announcement is { } announcement && (string.IsNullOrWhiteSpace(announcement.Id) || string.IsNullOrWhiteSpace(announcement.Text)))
         {
             errors.Add($"{Section}:Announcement needs an Id and a Text.");
@@ -138,6 +140,18 @@ public sealed class OsirionSiteOptions
             // button too, but failing here tells the site why it is missing.
             errors.Add($"{Section}:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.");
         }
+    }
+
+    private void AddCallToActionFooterSectionErrors(List<string> errors)
+    {
+        var title = CallToAction?.FooterSection;
+        if (string.IsNullOrWhiteSpace(title) || FooterSections.Exists(section => string.Equals(section.Title, title, StringComparison.Ordinal)))
+        {
+            return;
+        }
+
+        // The layout would find no column to add the link to; failing here tells the site why the link is missing.
+        errors.Add($"{Section}:CallToAction:FooterSection is \"{title}\", which is not the Title of any of {Section}:FooterSections.");
     }
 
     private static void AddMenuErrors(List<SiteMenuItem> items, string path, List<string> errors)
@@ -206,7 +220,10 @@ public sealed class SiteSocialLink
     public string? Label { get; set; }
 }
 
-/// <summary>A link at the end of the menu, styled as the primary button of the site's CSS framework.</summary>
+/// <summary>
+/// A link at the end of the menu, styled as the primary button of the site's CSS framework, and optionally the last
+/// link of a footer column.
+/// </summary>
 public sealed class SiteCallToAction
 {
     /// <summary>Gets or sets the text of the button, for example <c>Book a call</c>. Required.</summary>
@@ -218,6 +235,14 @@ public sealed class SiteCallToAction
     /// <c>rel="noopener"</c> and opens in the same tab.
     /// </summary>
     public string Href { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the <c>Title</c> of the footer section (an entry of <see cref="OsirionSiteOptions.FooterSections"/>)
+    /// whose links end with the call to action, so a footer column offers it without repeating its address, for example
+    /// <c>Contact</c>. The title must match exactly, letter case included, or the options fail validation;
+    /// <see langword="null"/> or blank, the default, keeps the call to action out of the footer.
+    /// </summary>
+    public string? FooterSection { get; set; }
 }
 
 /// <summary>A dismissible announcement above the menu.</summary>

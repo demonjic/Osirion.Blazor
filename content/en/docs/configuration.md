@@ -110,8 +110,10 @@ the feeds use it too when `Feeds:SiteUrl` is not set. It arrives in the release 
 `Osirion:Site:CallToAction` adds a button at the end of the menu, after the search box and theme toggle, styled as the
 primary button of the CSS framework in `Osirion:Theming:Framework`. It needs a `Text` and an `Href`: a path on the site
 such as `/contact`, or an `http`, `https` or `mailto` address. An `http` or `https` address gets `rel="noopener"` and
-opens in the same tab. Below 1200px the button moves into the opened menu with the other links. Leave the key out for no
-button. It arrives in the release after 4.2.0.
+opens in the same tab. Below 1200px the button stays in the bar beside the menu toggle, so it is visible on a phone.
+`FooterSection`, set to the `Title` of one of `Osirion:Site:FooterSections`, adds the button's link to the end of that
+footer column as well, so the footer does not repeat the address. Leave the key out for no button. It arrives in the
+release after 4.2.0.
 
 ## Configure in code
 
@@ -256,9 +258,9 @@ that your host maps to environment variables works the same way.
 Only some options are validated, and each fails differently:
 
 - `Osirion:Site` is validated when the application starts. A site without a `Name`, a menu item without a `Text`, an
-  `Href` or child `Items`, or a `CallToAction` without a `Text` or an `Href`, or with an `Href` of another kind such as
-  `javascript:`, stops startup with an `OptionsValidationException` whose messages name the key, for example
-  `Osirion:Site:Name is required.`
+  `Href` or child `Items`, a `CallToAction` without a `Text` or an `Href`, or with an `Href` of another kind such as
+  `javascript:`, or a `CallToAction:FooterSection` that names no footer section, stops startup with an
+  `OptionsValidationException` whose messages name the key, for example `Osirion:Site:Name is required.`
 - Each analytics service under `Osirion:Analytics` is validated at startup when it is enabled, for example a GA4
   `MeasurementId` that does not look like `G-XXXXXXXXXX`.
 - The feed options are checked when `MapOsirionFeeds` runs: a `SiteUrl` that is not an absolute `http` or `https`

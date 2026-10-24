@@ -29,8 +29,11 @@ builder.Services.AddOsirion(builder.Configuration);
         { "Text": "Guides", "Items": [ { "Text": "Getting started", "Href": "/guides/start" } ] },
         { "Text": "About", "Href": "/about" }
       ],
-      "CallToAction": { "Text": "Book a call", "Href": "https://booking.example.com/intro" },
-      "FooterSections": [ { "Title": "Learn", "Links": [ { "Text": "Docs", "Href": "/docs" } ] } ],
+      "CallToAction": { "Text": "Book a call", "Href": "https://booking.example.com/intro", "FooterSection": "Contact" },
+      "FooterSections": [
+        { "Title": "Learn", "Links": [ { "Text": "Docs", "Href": "/docs" } ] },
+        { "Title": "Contact", "Links": [ { "Text": "Write to us", "Href": "mailto:hello@example.com" } ] }
+      ],
       "SocialLinks": [ { "Network": "github", "Href": "https://github.com/me/blog" } ],
       "LegalLinks": [ { "Text": "Privacy", "Href": "/privacy-policy" } ]
     }
@@ -46,9 +49,12 @@ Options (`OsirionSiteOptions`)
   `/blog/a-post`; never for `/`), and one level of `Items` shown as a dropdown
 - `ShowSearch` (false) with `SearchUrl` (`/search`) and `SearchPlaceholder`; turn it on when the site has a search page
 - `ShowThemeToggle` (true)
-- `CallToAction`: a link styled as the CSS framework's primary button, after the search box and theme toggle, with
-  `Text` and `Href` (both required). `Href` is a path on the site (`/contact`) or an `http`, `https` or `mailto`
-  address; an `http` or `https` address gets `rel="noopener"` and opens in the same tab. Without it there is no button
+- `CallToAction`: a link styled as the CSS framework's primary button, at the end of the bar after the search box,
+  theme toggle and `MenuActions`, with `Text` and `Href` (both required). `Href` is a path on the site (`/contact`) or
+  an `http`, `https` or `mailto` address; an `http` or `https` address gets `rel="noopener"` and opens in the same tab.
+  `FooterSection` (optional) names the `Title` of one of `FooterSections`, and the call to action becomes the last
+  link of that column too, so the footer does not repeat its address; the title must match exactly, letter case
+  included. Without `CallToAction` there is no button
 - `Announcement`: `Id`, `Text`, optional `LinkText` and `LinkUrl`; dismissing it needs `app.MapOsirionAnnouncements()`
 - Footer: `FooterDescription`, `FooterSections` (title and links), `SocialLinks` (`Network` is `github`, `x`,
   `linkedin`, `nuget`, `rss`, `facebook` or `instagram`, in any letter case, for an icon; other networks show their
@@ -63,8 +69,9 @@ Options (`OsirionSiteOptions`)
   reopens the banner, so visitors can change or withdraw consent from the footer
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a
-menu nested more than one level, or a call to action without `Text` or `Href` or with an `Href` of another kind (such
-as `javascript:` or `//other.example`) stops startup with a message naming the configuration key. Options set another
+menu nested more than one level, a call to action without `Text` or `Href` or with an `Href` of another kind (such
+as `javascript:` or `//other.example`), or a `CallToAction:FooterSection` that is not the `Title` of any footer section
+stops startup with a message naming the configuration key. Options set another
 way, for example with `Services.Configure<OsirionSiteOptions>`, skip that check; the layout then renders no call to
 action for such a value.
 
@@ -79,11 +86,14 @@ Parameters, when you wrap it in your own layout
 - `ChildContent`: the page (as the router's layout, the page comes from `Body`)
 - `Header`: replaces the menu built from the options, its call to action included; the announcement stays
 - `Footer`: replaces the footer built from the options
-- `MenuActions`: more actions after the search box, theme toggle and call to action
+- `MenuActions`: more actions after the search box and theme toggle; like them they move into the menu's drawer below
+  its breakpoint, while the call to action stays in the bar after them
 - `MenuLabel`: the accessible name of the menu (`Main navigation`)
 
 Notes
-- The menu collapses behind its toggle below 1200px. The call to action then shows in the opened menu, on a row of
-  its own below the search box and theme toggle, and follows them in keyboard order.
+- The menu collapses behind its toggle below 1200px. The call to action stays in the bar beside the toggle (it is the
+  menu's `PinnedActions`), rendered once, while the items, search box, theme toggle and `MenuActions` move into the
+  drawer. Keyboard order is the brand, the toggle, the drawer's items when it is open, then the call to action. On a
+  phone the brand shares the bar with the button, so a long site name is shortened with an ellipsis.
 - `AddOsirion` registers the JS component services the page layout needs, so `AddJSComponents()` is no longer
   required in `Program.cs`; calling it as well does no harm.
