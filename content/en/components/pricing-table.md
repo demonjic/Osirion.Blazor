@@ -153,6 +153,9 @@ plan by heading; pick the level under the section's own heading:
 }
 ```
 
+Neither plan is `Highlighted` here, so the cards are equal and both buttons are primary buttons. Mark one plan
+`Highlighted` and it keeps the primary button while the others get the secondary one.
+
 ## Parameters
 
 ### OsirionPricingTable
@@ -180,7 +183,7 @@ plan by heading; pick the level under the section's own heading:
 | `Features` | `IReadOnlyList<string>` | Features listed under the price. Empty by default. |
 | `CallToActionText` | `string?` | Label of the plan's button. |
 | `CallToActionUrl` | `string?` | Where the button goes. |
-| `Highlighted` | `bool` | Marks the recommended plan: a colored border and the primary button. |
+| `Highlighted` | `bool` | Marks the recommended plan: a colored border and the primary button, while the other plans get the secondary button. When no plan is highlighted, every plan gets the primary button. |
 | `Badge` | `string?` | A short label on the plan's top border, such as `Most popular`. |
 
 ### OsirionFeatureComparison
@@ -221,7 +224,8 @@ Both components write unmatched attributes to their root element.
   without the leading slash, leaves the button out.
 - Each button's accessible name includes the plan, for example "Start a trial: Team", so a list of buttons with the
   same text stays distinguishable. The highlighted plan gets the CSS framework's primary button class, the others
-  the secondary one.
+  the secondary one. With no highlighted plan, every plan is equal and gets the primary class, so a table of plans
+  quoted on request still offers a primary action.
 - The comparison is a real `<table>` with a caption, column headers for the plans and row headers for the features.
   Check marks and dashes are drawn in CSS and hidden from screen readers, which read `IncludedText` or
   `NotIncludedText` instead.
