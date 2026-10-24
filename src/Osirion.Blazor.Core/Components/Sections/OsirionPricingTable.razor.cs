@@ -5,7 +5,9 @@ namespace Osirion.Blazor.Components;
 
 /// <summary>
 /// Pricing plans side by side: name, price, description, features and a call to action, with the recommended plan
-/// set apart. The buttons take the classes of the configured CSS framework. It renders without script.
+/// set apart. The buttons take the classes of the configured CSS framework: the recommended plan gets the primary
+/// button and the others the secondary one, and when no plan is recommended every plan gets the primary button. It
+/// renders without script.
 /// </summary>
 public partial class OsirionPricingTable
 {
@@ -31,4 +33,9 @@ public partial class OsirionPricingTable
 
     private static string GetPlanClass(PricingPlan plan) =>
         plan.Highlighted ? "osirion-pricing-plan osirion-pricing-plan-highlighted" : "osirion-pricing-plan";
+
+    // The secondary button sets the other plans back from a recommended one. With none recommended, every plan is
+    // equal, and a table of secondary buttons alone would offer no primary action, so each gets the primary button.
+    private string GetActionClass(PricingPlan plan) =>
+        plan.Highlighted || !Plans.Any(other => other.Highlighted) ? GetPrimaryButtonClass() : GetSecondaryButtonClass();
 }

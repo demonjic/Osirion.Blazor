@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Osirion.Blazor.Components;
 using Osirion.Blazor.Core.Tests.Base;
+using Osirion.Blazor.Core.Utils;
 using Shouldly;
 
 namespace Osirion.Blazor.Core.Tests.Components.Sections;
@@ -76,6 +77,29 @@ public class OsirionCallToActionSectionTests : OsirionComponentTestBase
         buttons[0].ClassList.ShouldContain("btn-primary");
         buttons[1].ClassList.ShouldContain("btn");
         buttons[1].ClassList.ShouldContain("btn-secondary");
+    }
+
+    // Guard: the secondary button reads its classes from ButtonClasses.Secondary, the one place HeroSection reads them
+    // from too, so the two sections' secondary buttons look the same under every framework.
+    [Theory]
+    [InlineData(CssFramework.None)]
+    [InlineData(CssFramework.Bootstrap)]
+    [InlineData(CssFramework.FluentUI)]
+    [InlineData(CssFramework.MudBlazor)]
+    [InlineData(CssFramework.Radzen)]
+    public void OsirionCallToActionSection_SecondaryButton_TakesTheSharedSecondaryClassesUnderEachFramework(CssFramework framework)
+    {
+        Services.AddSingleton(Options.Create(new ThemingOptions { Framework = framework }));
+
+        var cut = RenderStatic<OsirionCallToActionSection>(p => p
+            .Add(c => c.SecondaryButtonText, "Pricing")
+            .Add(c => c.SecondaryButtonUrl, "/pricing"));
+
+        var classes = cut.Find("a.osirion-call-to-action-button-secondary").ClassList;
+        foreach (var expected in ButtonClasses.Secondary(framework).Split(' '))
+        {
+            classes.ShouldContain(expected);
+        }
     }
 
     [Theory]

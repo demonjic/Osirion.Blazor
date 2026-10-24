@@ -20,4 +20,18 @@ public static class ButtonClasses
         CssFramework.Radzen => "rz-button rz-button-primary",
         _ => "osirion-button osirion-button-primary"
     };
+
+    /// <summary>
+    /// Gets the classes of a secondary button under <paramref name="framework"/>; an unknown framework gets the neutral
+    /// Osirion classes. Every section's secondary button, such as <c>HeroSection</c>'s and
+    /// <c>OsirionCallToActionSection</c>'s, takes these classes, so they look the same.
+    /// </summary>
+    public static string Secondary(CssFramework framework) => framework switch
+    {
+        CssFramework.Bootstrap => "btn btn-secondary",
+        CssFramework.FluentUI => "osirion-button osirion-button-secondary",
+        CssFramework.MudBlazor => "mud-button mud-button-filled mud-button-filled-secondary",
+        CssFramework.Radzen => "rz-button rz-button-secondary",
+        _ => "osirion-button osirion-button-secondary"
+    };
 }

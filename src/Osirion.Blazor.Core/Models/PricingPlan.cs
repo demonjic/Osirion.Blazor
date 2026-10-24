@@ -29,7 +29,10 @@ public sealed record PricingPlan
     /// <summary>Gets where the call to action goes: an http(s) URL or a path on the site.</summary>
     public string? CallToActionUrl { get; init; }
 
-    /// <summary>Gets whether this is the recommended plan, which is set apart and gets the primary button.</summary>
+    /// <summary>
+    /// Gets whether this is the recommended plan, which is set apart and gets the primary button while the other plans
+    /// get the secondary one. When no plan in the table is recommended, every plan gets the primary button.
+    /// </summary>
     public bool Highlighted { get; init; }
 
     /// <summary>Gets a short label on the plan, for example <c>Most popular</c>.</summary>

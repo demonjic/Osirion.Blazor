@@ -50,6 +50,25 @@ public class OsirionPricingTests : OsirionComponentTestBase
         actions[1].ClassList.ShouldContain("osirion-button-primary");
     }
 
+    // Fails before the fix: with no recommended plan every card is equal, yet each got the secondary button, so a
+    // table of plans quoted on request showed no primary action at all.
+    [Fact]
+    public void OsirionPricingTable_NoHighlightedPlan_GivesEveryPlanThePrimaryButton()
+    {
+        PricingPlan[] plans =
+        [
+            new() { Name = "Audit", CallToActionText = "Ask for a quote", CallToActionUrl = "/contact?plan=audit" },
+            new() { Name = "Retainer", CallToActionText = "Ask for a quote", CallToActionUrl = "/contact?plan=retainer" },
+        ];
+
+        var cut = Render<OsirionPricingTable>(p => p.Add(t => t.Plans, plans));
+
+        var actions = cut.FindAll("a.osirion-pricing-action");
+        actions.Count.ShouldBe(2);
+        actions.ShouldAllBe(action => action.ClassList.Contains("osirion-button-primary"));
+        actions.ShouldAllBe(action => !action.ClassList.Contains("osirion-button-secondary"));
+    }
+
     [Fact]
     public void OsirionPricingTable_UnsafeActionUrl_LeavesTheButtonOut()
     {

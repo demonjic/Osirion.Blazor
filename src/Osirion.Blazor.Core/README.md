@@ -432,7 +432,7 @@ Components adapt their styling to the framework set in `ThemingOptions.Framework
 
 Markup outside `OsirionComponentBase`, such as a layout that inherits `LayoutComponentBase`, gets the same primary
 button classes from `ButtonClasses.Primary(framework)` in `Osirion.Blazor.Core.Utils`, for example `btn btn-primary`
-under Bootstrap.
+under Bootstrap, and the secondary ones from `ButtonClasses.Secondary(framework)`, for example `btn btn-secondary`.
 
 ## Accessibility
 

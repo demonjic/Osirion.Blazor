@@ -47,17 +47,7 @@ public abstract partial class OsirionComponentBase : ComponentBase
     /// <summary>
     /// Gets the CSS class for a secondary button
     /// </summary>
-    protected virtual string GetSecondaryButtonClass()
-    {
-        return Framework switch
-        {
-            CssFramework.Bootstrap => "btn btn-secondary",
-            CssFramework.FluentUI => "osirion-button osirion-button-secondary",
-            CssFramework.MudBlazor => "mud-button mud-button-filled mud-button-filled-secondary",
-            CssFramework.Radzen => "rz-button rz-button-secondary",
-            _ => "osirion-button osirion-button-secondary"
-        };
-    }
+    protected virtual string GetSecondaryButtonClass() => ButtonClasses.Secondary(Framework);
 
     /// <summary>
     /// Gets the CSS class for an outlined primary button

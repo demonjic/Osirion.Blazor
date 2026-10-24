@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Logging;
 using Osirion.Blazor.Core.Utils;
 
@@ -167,6 +168,15 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     private string FieldId(string fieldName) => $"{_idPrefix}-{fieldName}";
 
     private string GetContainerClass() => CombineCssClasses("osirion-static-contact-form");
+
+    // Built here rather than in the markup, where the compiler would give the noscript the CSS isolation attribute: no
+    // scoped rule styles it, and the attribute would only show up in every exported page.
+    private void RenderNoScript(RenderTreeBuilder builder)
+    {
+        builder.OpenElement(0, "noscript");
+        builder.AddContent(1, NoScriptContent);
+        builder.CloseElement();
+    }
 
     [LoggerMessage(Level = LogLevel.Warning,
         Message = "OsirionStaticContactForm renders nothing: its Endpoint '{Endpoint}' is not a path on the site or an https URL.")]

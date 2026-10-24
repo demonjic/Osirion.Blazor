@@ -61,7 +61,7 @@
 
                         @if (ShowSecondaryButton && !string.IsNullOrWhiteSpace(SecondaryButtonText) && !string.IsNullOrWhiteSpace(SecondaryButtonUrl))
                         {
-                                    <a href="@SecondaryButtonUrl" class="@BuildButtonClass(ButtonVariant.OutlinedPrimary, ButtonSize.Large) osirion-hero-button osirion-hero-button-primary">
+                            <a href="@SecondaryButtonUrl" class="@BuildButtonClass(ButtonVariant.Secondary, ButtonSize.Large) osirion-hero-button osirion-hero-button-secondary">
                                 @SecondaryButtonText
                             </a>
                         }
