@@ -186,6 +186,25 @@ public partial class ComponentStylesheetTests
         stage.ShouldNotContain("overflow:visible");
     }
 
+    // Fails before the fix: the form rendered hidden, out of the layout, until its script revealed it, and everything
+    // below it moved down by the form's height (Lighthouse measured a layout shift of 0.45 on a phone). Where scripts
+    // run, the hidden form now keeps its place, invisible, until the script reveals it; without script it still takes
+    // no space, because NoScriptContent shows instead.
+    [Fact]
+    public void StaticContactForm_HiddenForm_KeepsItsSpaceOnlyWhereScriptsRun()
+    {
+        // Act
+        var css = Squash(ComponentCss("Forms", "OsirionStaticContactForm.razor.css"));
+        var outOfLayout = css.IndexOf(".osirion-static-contact-form-form[hidden]{display:none;}", StringComparison.Ordinal);
+        var heldInPlace = css.IndexOf(
+            "@media(scripting:enabled){.osirion-static-contact-form-form[hidden]{display:grid;visibility:hidden;}}",
+            StringComparison.Ordinal);
+
+        // Assert
+        outOfLayout.ShouldBeGreaterThanOrEqualTo(0);
+        heldInPlace.ShouldBeGreaterThan(outOfLayout, "the rule for pages with script must follow the one it overrides");
+    }
+
     // Fails before the fix: these declarations were inline (a style element or style attributes), which a Content
     // Security Policy without 'unsafe-inline' in style-src blocks. They now come from the component's stylesheet.
     [Theory]
