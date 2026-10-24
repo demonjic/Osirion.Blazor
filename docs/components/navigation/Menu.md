@@ -62,7 +62,7 @@ rendering and WebAssembly. Open and closed states are kept in visually hidden ch
 | `Alignment` | `MenuAlignment` | `Center` | Where a horizontal bar places its items: `Left`, `Center` or `Right`. In a right-aligned bar, dropdowns and nested flyouts open towards the page so they stay on screen. |
 | `CollapseOnMobile` | `bool` | `true` | Shows the hamburger and drawer below the collapse breakpoint. |
 | `CollapseBreakpoint` | `MenuCollapseBreakpoint` | `Mobile` | `Mobile` collapses at 768px and below, `Large` below 1200px, `ExtraLarge` below 1440px. Pick the narrowest breakpoint at which the bar still fits on one line. |
-| `Sticky`, `StickyZIndex` | `bool`, `int` | `true`, `1000` | Keeps a horizontal menu at the top while the page scrolls. |
+| `Sticky`, `StickyZIndex` | `bool`, `int` | `true`, `1000` | Keeps a horizontal menu at the top while the page scrolls. The default `z-index` comes from `.osirion-menu-sticky` in the stylesheet, so no `style` attribute is written (nothing for a Content Security Policy to allow); another value, or any `Style`, is written inline, after `Style`, so it still wins. |
 | `AutoExpandActive` | `bool` | `true` | Vertical menus only. Keeps the submenu of the active item open; its toggle cannot close it while the item is active. |
 | `AriaLabel`, `ToggleAriaLabel`, `Id` | `string` | | Accessible names and the id the generated ids derive from. |
 
@@ -103,6 +103,3 @@ it, on the menu or on any ancestor:
 | `--osirion-menu-radius`, `--osirion-menu-panel-radius`, `--osirion-menu-mega-radius` | `0.5rem`, `0.75rem`, `1rem` |
 | `--osirion-menu-shadow` | soft two-layer shadow for panels and the drawer |
 
-Content Security Policy: a sticky horizontal menu takes its default `z-index` (1000) from `.osirion-menu-sticky` in its
-stylesheet and writes no `style` attribute. A `StickyZIndex` other than 1000, or any `Style`, is written inline, with the
-sticky `z-index` after `Style` so it still wins.
