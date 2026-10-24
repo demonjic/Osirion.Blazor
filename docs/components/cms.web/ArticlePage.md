@@ -41,6 +41,10 @@ Notes
   </ArticlePage>
   ```
 
+- Below 640px the sidebar hides its table of contents, and the whole sidebar takes no space when it has no other
+  section (categories, tags or `SidebarContent`). For an article without headings, the table of contents section is
+  hidden at every width, since `TableOfContents` renders nothing.
+
 - With `ShowHero` (the default) the hero shows the title as the page's `h1`, so an opening `# Title` line in the
   Markdown is left out of the body. `HomePage` and `LandingPage` do the same while they show their hero, and
   `ContentView`, `DocumentPage` and `LocalizedContentView` (with its header) do it under their own title heading.

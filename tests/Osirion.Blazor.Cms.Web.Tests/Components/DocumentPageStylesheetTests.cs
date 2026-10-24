@@ -19,6 +19,18 @@ public partial class DocumentPageStylesheetTests
         title.ShouldContain("overflow-wrap:break-word;");
     }
 
+    // Fails before the fix: once TableOfContents rendered nothing for a document without headings, its box kept
+    // only the title.
+    [Fact]
+    public void TableOfContents_WithoutAList_IsHidden()
+    {
+        // Act
+        var css = Squash(DocumentPageCss());
+
+        // Assert
+        css.ShouldContain(".osirion-document-content::deep.osirion-document-toc:not(:has(.osirion-table-of-contents)){display:none;}");
+    }
+
     private static string Squash(string css) => WhitespaceRun().Replace(CssComment().Replace(css, string.Empty), string.Empty);
 
     private static string DocumentPageCss()

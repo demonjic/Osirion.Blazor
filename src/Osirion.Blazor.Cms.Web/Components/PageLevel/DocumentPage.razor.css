@@ -205,6 +205,12 @@
     margin-bottom: var(--osirion-spacing-8, 2rem);
 }
 
+/* TableOfContents renders nothing for a document without headings, which would leave the box with only its title.
+   The list belongs to TableOfContents, hence ::deep. */
+.osirion-document-content ::deep .osirion-document-toc:not(:has(.osirion-table-of-contents)) {
+    display: none;
+}
+
 .osirion-toc-title {
     font-size: var(--osirion-font-size-base, 1rem);
     font-weight: var(--osirion-font-weight-semibold, 600);

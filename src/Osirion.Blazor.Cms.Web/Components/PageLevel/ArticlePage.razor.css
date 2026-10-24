@@ -305,6 +305,18 @@
     .osirion-toc {
         display: none;
     }
+
+    /* With the table of contents hidden, a sidebar left with no other section would still add its padding and the
+       layout's gap below the article. The aside belongs to OsirionStickySidebar, hence ::deep. */
+    .osirion-article-layout ::deep .osirion-sticky-sidebar:not(:has(> .osirion-sidebar-section:not(.osirion-toc))) {
+        display: none;
+    }
+}
+
+/* TableOfContents renders nothing for an article without headings, which would leave its section with only the
+   title. The list belongs to TableOfContents, hence ::deep. */
+.osirion-article-layout ::deep .osirion-toc:not(:has(.osirion-table-of-contents)) {
+    display: none;
 }
 
 /* Accessibility - reduce motion */

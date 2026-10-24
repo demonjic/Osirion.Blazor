@@ -226,7 +226,9 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
 - **Sidebar.** `ShowSidebar` adds a column that stays in view while the article scrolls. It holds the table of
   contents, the item's categories and tags, and `SidebarContent`. Category and tag links default to
   `/category/{slug}` and `/tag/{slug}`. Tags take one of eight badge colors, chosen from the tag's name so a tag keeps
-  its color between requests.
+  its color between requests. For an article without headings the table of contents section is hidden, since
+  [TableOfContents](/components/table-of-contents) renders nothing. Below 640 pixels the table of contents is hidden,
+  and a sidebar with no other section takes no space under the article.
 - **Footer.** `FooterContent`, when set, follows the article and its sidebar in a `footer`, outside the article
   column. Nothing renders without it.
 - **Not found.** Without an item the page renders the not-found state of
