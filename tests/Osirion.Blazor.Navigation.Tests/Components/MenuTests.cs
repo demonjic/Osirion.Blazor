@@ -350,6 +350,20 @@ public class MenuTests : BunitContext
         cut.Find(".osirion-menu").QuerySelectorAll("a.book").ShouldBeEmpty();
     }
 
+    // Fails before the fix: nothing told the stylesheet that pinned actions follow the toggle, so the collapsed bar
+    // drew the toggle at its far edge, after them, while the keyboard reached it first.
+    [Fact]
+    public void Menu_PinnedActions_MarkTheContainerSoTheCollapsedBarDrawsTheToggleFirst()
+    {
+        // Act
+        var cut = Render<Menu>(parameters => parameters
+            .AddChildContent("Menu Content")
+            .Add(p => p.PinnedActions, "<a class=\"book\" href=\"/contact\">Book a call</a>"));
+
+        // Assert
+        cut.Find(".osirion-menu-container").ClassList.ShouldContain("osirion-menu-has-pinned-actions");
+    }
+
     [Fact]
     public void Menu_ShouldRenderNoPinnedActionsContainer_WhenPinnedActionsAreNotProvided()
     {
@@ -360,5 +374,6 @@ public class MenuTests : BunitContext
 
         // Assert
         cut.FindAll(".osirion-menu-pinned-actions").ShouldBeEmpty();
+        cut.Find(".osirion-menu-container").ClassList.ShouldNotContain("osirion-menu-has-pinned-actions");
     }
 }

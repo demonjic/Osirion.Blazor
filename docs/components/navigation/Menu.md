@@ -60,7 +60,7 @@ rendering and WebAssembly. Open and closed states are kept in visually hidden ch
 | --- | --- | --- | --- |
 | `ChildContent` | `RenderFragment?` | | `MenuItem`, `MenuDivider` and other items. |
 | `Actions` | `RenderFragment?` | | Content after the items: aligned to the end of the bar, and at the bottom of the drawer. |
-| `PinnedActions` | `RenderFragment?` | | Content that stays in the bar at every width: after `Actions` in a horizontal bar, and beside the toggle when the menu collapses. Rendered once; keep it short, a phone bar also holds the brand and the toggle. |
+| `PinnedActions` | `RenderFragment?` | | Content that stays in the bar at every width: after `Actions` in a horizontal bar, and right after the toggle when the menu collapses. Rendered once; keep it short, a phone bar also holds the brand and the toggle. |
 | `Href` | `string?` | `"/"` | Destination of the brand link. |
 | `BrandLogo`, `BrandText` | `string?` | | Brand image and text. |
 | `BrandingTemplate` | `RenderFragment?` | | Replaces the brand link. |
@@ -81,7 +81,8 @@ rendering and WebAssembly. Open and closed states are kept in visually hidden ch
   panel is skipped by Tab.
 - **Keyboard order when collapsed.** Tab reaches the brand, then the hamburger toggle (Space opens the drawer and the
   next Tab lands on its first item), then the pinned actions. Above the collapse breakpoint the toggle's checkbox is
-  not rendered visible and is not a tab stop.
+  not rendered visible and is not a tab stop. With pinned actions the collapsed bar draws the toggle ahead of them,
+  so the order on screen matches the order Tab follows.
 - **Parents without a page.** A `MenuItem` with `HasSubmenu` and no `Href` (or `Href="#"`) renders as the toggle
   itself, so a tap anywhere on it opens the submenu instead of following a dead link.
 - **Nested submenus.** Inside a dropdown, a nested submenu flies out beside its row. In the drawer and in vertical

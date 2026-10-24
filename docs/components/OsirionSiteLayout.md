@@ -91,7 +91,7 @@ Parameters, when you wrap it in your own layout
 - `MenuLabel`: the accessible name of the menu (`Main navigation`)
 
 Notes
-- The menu collapses behind its toggle below 1200px. The call to action stays in the bar beside the toggle (it is the
+- The menu collapses behind its toggle below 1200px. The call to action stays in the bar, after the toggle (it is the
   menu's `PinnedActions`), rendered once, while the items, search box, theme toggle and `MenuActions` move into the
   drawer. Keyboard order is the brand, the toggle, the drawer's items when it is open, then the call to action. On a
   phone the brand shares the bar with the button, so a long site name is shortened with an ellipsis.

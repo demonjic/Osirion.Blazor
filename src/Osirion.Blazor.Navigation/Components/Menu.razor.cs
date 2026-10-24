@@ -57,9 +57,9 @@ public partial class Menu
 
     /// <summary>
     /// Gets or sets content that stays in the bar at every width, for example the site's main call to action. A
-    /// horizontal menu shows it after <see cref="Actions"/>; below the collapse breakpoint it stays beside the toggle
-    /// instead of moving into the drawer. It renders once, after the drawer in keyboard order. Keep it short: on a
-    /// phone it shares the bar with the brand and the toggle.
+    /// horizontal menu shows it after <see cref="Actions"/>; below the collapse breakpoint it stays in the bar, drawn
+    /// after the toggle, instead of moving into the drawer. It renders once, after the drawer in keyboard order. Keep
+    /// it short: on a phone it shares the bar with the brand and the toggle.
     /// </summary>
     [Parameter]
     public RenderFragment? PinnedActions { get; set; }
@@ -222,6 +222,10 @@ public partial class Menu
                 MenuCollapseBreakpoint.ExtraLarge => "osirion-menu-collapse-extra-large",
                 _ => "osirion-menu-collapse-mobile"
             });
+
+        // Lets the collapsed bar draw the toggle before the pinned actions, the order the keyboard reaches them.
+        if (PinnedActions is not null)
+            classes.Add("osirion-menu-has-pinned-actions");
 
         if (Sticky && Orientation == MenuOrientation.Horizontal)
             classes.Add("osirion-menu-sticky");

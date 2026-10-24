@@ -110,7 +110,7 @@ the feeds use it too when `Feeds:SiteUrl` is not set. It arrives in the release 
 `Osirion:Site:CallToAction` adds a button at the end of the menu, after the search box and theme toggle, styled as the
 primary button of the CSS framework in `Osirion:Theming:Framework`. It needs a `Text` and an `Href`: a path on the site
 such as `/contact`, or an `http`, `https` or `mailto` address. An `http` or `https` address gets `rel="noopener"` and
-opens in the same tab. Below 1200px the button stays in the bar beside the menu toggle, so it is visible on a phone.
+opens in the same tab. Below 1200px the button stays in the bar after the menu toggle, so it is visible on a phone.
 `FooterSection`, set to the `Title` of one of `Osirion:Site:FooterSections`, adds the button's link to the end of that
 footer column as well, so the footer does not repeat the address. Leave the key out for no button. It arrives in the
 release after 4.2.0.

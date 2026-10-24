@@ -104,7 +104,7 @@ A mega menu has groups of links, a call to action and an aside:
 The `Actions` slot holds what belongs at the end of the bar, such as a search box or a theme toggle. A horizontal menu
 aligns it to the trailing edge, and a collapsed menu shows it at the bottom of the drawer. The `PinnedActions` slot
 holds what must stay visible at every width, such as the site's main call to action: a horizontal menu shows it after
-`Actions`, and a collapsed menu keeps it in the bar beside the toggle instead of moving it into the drawer. It is
+`Actions`, and a collapsed menu keeps it in the bar after the toggle instead of moving it into the drawer. It is
 rendered once, so a screen reader meets the link once. Keep it short, because on a phone it shares the bar with the
 brand and the toggle (a long brand name is shortened with an ellipsis):
 
@@ -140,7 +140,7 @@ inherited by the link and the submenu. In a `Menu`, `Style` comes before the sti
 | `BrandText` | `string?` | `null` | The brand name, rendered as the text of the brand link. Without a logo it is the whole link. |
 | `BrandingTemplate` | `RenderFragment?` | `null` | Your own brand markup. It replaces the brand link, `BrandLogo` and `BrandText` and is not wrapped in a link. |
 | `Actions` | `RenderFragment?` | `null` | Content shown at the end of the bar, after the menu items: a search box, a theme toggle or a call to action button. A horizontal menu aligns it to the trailing edge; a collapsed menu shows it at the bottom of its drawer. Put content that must stay visible when the menu collapses in `PinnedActions`. |
-| `PinnedActions` | `RenderFragment?` | `null` | Content that stays in the bar at every width, for example the site's main call to action. A horizontal menu shows it after `Actions`; below the collapse breakpoint it stays beside the toggle instead of moving into the drawer. It renders once, after the drawer in keyboard order. Keep it short: on a phone it shares the bar with the brand and the toggle. |
+| `PinnedActions` | `RenderFragment?` | `null` | Content that stays in the bar at every width, for example the site's main call to action. A horizontal menu shows it after `Actions`; below the collapse breakpoint it stays in the bar, drawn after the toggle, instead of moving into the drawer. It renders once, after the drawer in keyboard order. Keep it short: on a phone it shares the bar with the brand and the toggle. |
 | `Sticky` | `bool` | `true` | Whether a horizontal menu stays at the top of the page while it scrolls. It has no effect on a vertical menu. Turn it off for a menu inside a page. |
 | `StickyZIndex` | `int` | `1000` | The `z-index` written to the container's inline style while the menu is sticky. |
 | `Orientation` | `MenuOrientation` | `MenuOrientation.Horizontal` | The layout: `Horizontal`, a bar with dropdown submenus, or `Vertical`, a stack whose submenus open in place. |
@@ -318,7 +318,8 @@ as a mega menu aside for a customer story or a news item. Pass a real `ImageAlt`
   keyboard and without JavaScript.
 - **Keyboard order when collapsed.** Tab reaches the brand first, then the toggle, which shows a focus ring; Space opens
   the drawer, and the next Tab lands on its first item. The pinned actions follow the drawer. Above the breakpoint the
-  toggle is not drawn, and its checkbox is out of the tab order too.
+  toggle is not drawn, and its checkbox is out of the tab order too. With pinned actions the collapsed bar draws the
+  toggle ahead of them, so the order on screen (brand, toggle, pinned actions) is the order Tab follows.
 - **Parents without a page.** A `MenuItem` with `HasSubmenu` and no `Href` (or `Href="#"`) renders as the toggle itself,
   so a tap anywhere on it opens the submenu instead of following a dead link. An `OnClick` callback turns it back into a
   link.

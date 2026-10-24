@@ -65,6 +65,23 @@ public partial class MenuCollapsedBarStylesheetTests
         block.ShouldContain($"{prefix}.osirion-nav-branding{{flex-shrink:1;");
     }
 
+    // Fails before the fix: the toggle was drawn at the far right of the bar, after the pinned actions, while the
+    // keyboard reaches it before them, so on a phone focus jumped right to the toggle and then back left. With pinned
+    // actions the toggle now joins the row ahead of them: drawn brand, toggle, pinned actions, the order Tab visits.
+    [Theory]
+    [MemberData(nameof(Breakpoints))]
+    public void PinnedActions_FollowTheToggleOnScreenAsInKeyboardOrder(string media, string prefix)
+    {
+        // Act
+        var block = MediaBlock(media);
+
+        // Assert
+        var pinned = prefix + ".osirion-menu-has-pinned-actions";
+        block.ShouldContain($"{pinned}.osirion-menu-nav{{padding-right:var(--osirion-menu-padding-x,1rem);}}");
+        block.ShouldContain($"{pinned}.osirion-navbar-toggle{{position:static;flex-shrink:0;margin-inline-start:auto;}}");
+        block.ShouldContain($"{pinned}.osirion-menu-pinned-actions{{margin-inline-start:0;}}");
+    }
+
     // Fails before the fix: the theme toggle padded itself by 10px in the drawer, so it sat inset from the menu items.
     [Theory]
     [MemberData(nameof(Breakpoints))]

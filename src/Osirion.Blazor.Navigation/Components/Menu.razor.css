@@ -7,7 +7,8 @@
  * under it. A vertical menu stacks its items.
  *
  * In source order the hamburger's checkbox follows the brand and precedes the drawer, and the pinned actions come
- * last, so keyboard order is brand, toggle, drawer, pinned actions. The drawer opens from the checkbox through the
+ * last, so keyboard order is brand, toggle, drawer, pinned actions; with pinned actions the collapsed bar draws the
+ * toggle ahead of them to match. The drawer opens from the checkbox through the
  * sibling combinator (:checked ~ .osirion-menu), which needs the checkbox and the drawer to stay siblings in the nav.
  *
  * Theming hooks, settable on the menu or any ancestor:
@@ -385,6 +386,22 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
         padding: 0;
     }
 
+    /* With pinned actions the toggle joins the row ahead of them, so the bar is drawn brand, toggle, pinned actions:
+       the order the keyboard visits them. */
+    .osirion-menu-collapsible.osirion-menu-has-pinned-actions .osirion-menu-nav {
+        padding-right: var(--osirion-menu-padding-x, 1rem);
+    }
+
+    .osirion-menu-collapsible.osirion-menu-has-pinned-actions .osirion-navbar-toggle {
+        position: static;
+        flex-shrink: 0;
+        margin-inline-start: auto;
+    }
+
+    .osirion-menu-collapsible.osirion-menu-has-pinned-actions .osirion-menu-pinned-actions {
+        margin-inline-start: 0;
+    }
+
     .osirion-menu-collapsible .osirion-menu {
         display: none;
         position: absolute;
@@ -461,6 +478,22 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
         padding: 0;
     }
 
+    /* With pinned actions the toggle joins the row ahead of them, so the bar is drawn brand, toggle, pinned actions:
+       the order the keyboard visits them. */
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large).osirion-menu-has-pinned-actions .osirion-menu-nav {
+        padding-right: var(--osirion-menu-padding-x, 1rem);
+    }
+
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large).osirion-menu-has-pinned-actions .osirion-navbar-toggle {
+        position: static;
+        flex-shrink: 0;
+        margin-inline-start: auto;
+    }
+
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large).osirion-menu-has-pinned-actions .osirion-menu-pinned-actions {
+        margin-inline-start: 0;
+    }
+
     :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-menu {
         display: none;
         position: absolute;
@@ -535,6 +568,22 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     .osirion-menu-collapse-extra-large .osirion-menu-pinned-actions {
         margin-inline-start: auto;
         padding: 0;
+    }
+
+    /* With pinned actions the toggle joins the row ahead of them, so the bar is drawn brand, toggle, pinned actions:
+       the order the keyboard visits them. */
+    .osirion-menu-collapse-extra-large.osirion-menu-has-pinned-actions .osirion-menu-nav {
+        padding-right: var(--osirion-menu-padding-x, 1rem);
+    }
+
+    .osirion-menu-collapse-extra-large.osirion-menu-has-pinned-actions .osirion-navbar-toggle {
+        position: static;
+        flex-shrink: 0;
+        margin-inline-start: auto;
+    }
+
+    .osirion-menu-collapse-extra-large.osirion-menu-has-pinned-actions .osirion-menu-pinned-actions {
+        margin-inline-start: 0;
     }
 
     .osirion-menu-collapse-extra-large .osirion-menu {
