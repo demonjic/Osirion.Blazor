@@ -196,7 +196,8 @@ JSON-LD is chosen by the `SchemaTypes` parameter, else `Osirion:Seo:DefaultSchem
 else `WebPage`; `ArticlePage` writes `Article` where the others write `WebPage`. In 4.2.0 and earlier, a page with a
 front matter block got `Article` (and `og:type` `article`) unless it set another type; from the release after 4.2.0 a page
 without a `type` is a `WebPage` with `og:type` `website`, so set `type` on the pages that are articles when they are not
-shown by `ArticlePage`. The name is read ignoring case (`techarticle` is `TechArticle`); an unrecognized name gives `WebPage`. The generated types are
+shown by `ArticlePage`. The name is read ignoring case (`techarticle` is `TechArticle`); an unrecognized name, such as
+`NewsArticle`, counts as no `type`, so it gives `WebPage` (`Article` on `ArticlePage`), and `og:type` follows. The generated types are
 `Article`, `BlogPosting`, `TechArticle`, `WebPage`, `AboutPage`, `ContactPage`, `ProfilePage`, `SoftwareApplication`,
 `Product`, `Organization`, `Person`, `LocalBusiness`, `Event`, `Recipe`, `Course`, `Review`, `VideoObject`, `WebSite`,
 `BreadcrumbList` and `CollectionPage`, plus `HowTo`. With one type and `GenerateMultipleSchemas` on (the default), a

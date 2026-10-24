@@ -21,7 +21,7 @@ internal static class NavigationSchemas
 
         if (context.CustomBreadcrumbs?.Any() == true)
         {
-            items.AddRange(context.CustomBreadcrumbs.Select((crumb, index) => ListItem(index + 2, crumb.Name, crumb.Url)));
+            items.AddRange(CustomBreadcrumbItems(context));
         }
         else if (!string.IsNullOrWhiteSpace(context.Content?.Url))
         {
@@ -45,8 +45,9 @@ internal static class NavigationSchemas
     }
 
     /// <summary>
-    /// A collection page with its items as an item list, a two-level breadcrumb trail and the site as publisher. A
-    /// property without a value is left out, in the page and in each item.
+    /// A collection page with its items as an item list, a breadcrumb trail and the site as publisher. The trail is
+    /// Home and the custom breadcrumbs when given, otherwise Home and the list, the same trail <see cref="Breadcrumbs"/>
+    /// writes for a list page. A property without a value is left out, in the page and in each item.
     /// </summary>
     internal static object CollectionPage(SeoSchemaContext context)
     {
@@ -80,11 +81,11 @@ internal static class NavigationSchemas
             ["breadcrumb"] = new Dictionary<string, object?>
             {
                 ["@type"] = "BreadcrumbList",
-                ["itemListElement"] = new[]
-                {
+                ["itemListElement"] = (Dictionary<string, object?>[])
+                [
                     ListItem(1, context.BreadcrumbHomeText, context.BaseUrl),
-                    CollectionListItem(context)
-                }
+                    .. context.CustomBreadcrumbs?.Any() == true ? CustomBreadcrumbItems(context) : [CollectionListItem(context)]
+                ]
             },
             ["publisher"] = ContentSchemas.PublisherWithLogo(context)
         });
@@ -154,6 +155,10 @@ internal static class NavigationSchemas
             }
         }).ToArray()
     };
+
+    /// <summary>The custom breadcrumbs as list items, numbered from 2 after Home.</summary>
+    private static IEnumerable<Dictionary<string, object?>> CustomBreadcrumbItems(SeoSchemaContext context) =>
+        (context.CustomBreadcrumbs ?? []).Select((crumb, index) => ListItem(index + 2, crumb.Name, crumb.Url));
 
     /// <summary>The list page itself as the second breadcrumb entry.</summary>
     private static Dictionary<string, object?> CollectionListItem(SeoSchemaContext context) =>

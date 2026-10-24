@@ -867,15 +867,15 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     /// <summary>
     /// The name of the first schema type, else the front matter type, else <see cref="FallbackSchemaType"/>, else
-    /// WebPage. An empty <see cref="SchemaTypes"/> array or a blank front matter type counts as not set, as in
-    /// <see cref="ResolveSchemaTypes"/>, so og:type and content-type agree with the JSON-LD.
+    /// WebPage. An empty <see cref="SchemaTypes"/> array, or a front matter type that is blank or names no
+    /// <see cref="Cms.Web.Components.SchemaType"/>, counts as not set, as in <see cref="ResolveSchemaTypes"/>, so
+    /// og:type and content-type agree with the JSON-LD.
     /// </summary>
     private string PrimarySchemaTypeName =>
-        SeoText.FirstNonBlank(
-            SchemaTypes is { Length: > 0 } schemaTypes ? schemaTypes[0].ToString() : null,
-            Content?.Metadata?.SeoProperties?.Type,
-            FallbackSchemaType?.ToString())
-        ?? nameof(Cms.Web.Components.SchemaType.WebPage);
+        (SchemaTypes is { Length: > 0 } schemaTypes
+            ? schemaTypes[0]
+            : DeclaredSchemaType(Content) ?? FallbackSchemaType ?? Cms.Web.Components.SchemaType.WebPage)
+        .ToString();
 
     private bool HasCategories => _categories?.Any() == true;
 
@@ -993,21 +993,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     /// </summary>
     private List<SchemaType> ResolveSchemaTypes(ContentItem content)
     {
-        List<SchemaType> schemaTypes;
-        var declaredType = content.Metadata?.SeoProperties?.Type;
-
-        if (SchemaTypes?.Any() == true)
-        {
-            schemaTypes = [.. SchemaTypes];
-        }
-        else if (!string.IsNullOrWhiteSpace(declaredType) && Enum.TryParse<SchemaType>(declaredType, ignoreCase: true, out var contentSchemaType))
-        {
-            schemaTypes = [contentSchemaType];
-        }
-        else
-        {
-            schemaTypes = [FallbackSchemaType ?? Cms.Web.Components.SchemaType.WebPage];
-        }
+        List<SchemaType> schemaTypes = SchemaTypes?.Any() == true
+            ? [.. SchemaTypes]
+            : [DeclaredSchemaType(content) ?? FallbackSchemaType ?? Cms.Web.Components.SchemaType.WebPage];
 
         // When several schemas are given explicitly, the caller chose them all, so nothing is added.
         var shouldAutoAddBreadcrumbs = GenerateMultipleSchemas &&
@@ -1045,14 +1033,22 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     /// </summary>
     private static SchemaType ListedItemSchemaType(ContentItem item, SchemaType? pageItemType)
     {
-        var declaredType = item.Metadata?.SeoProperties?.Type;
-        if (Enum.TryParse<SchemaType>(declaredType, ignoreCase: true, out var itemType) && ArticleSchemaTypes.Contains(itemType))
+        if (DeclaredSchemaType(item) is { } itemType && ArticleSchemaTypes.Contains(itemType))
         {
             return itemType;
         }
 
         return pageItemType ?? Cms.Web.Components.SchemaType.Article;
     }
+
+    /// <summary>
+    /// The schema type the item's front matter names, read ignoring case, or null when the front matter names none or
+    /// a name that is not a <see cref="Cms.Web.Components.SchemaType"/> (for example NewsArticle).
+    /// </summary>
+    private static SchemaType? DeclaredSchemaType(ContentItem? content) =>
+        Enum.TryParse<SchemaType>(content?.Metadata?.SeoProperties?.Type, ignoreCase: true, out var declaredType)
+            ? declaredType
+            : null;
 
     /// <summary>
     /// Adds a schema.org FAQPage built from the generated questions. Only runs when

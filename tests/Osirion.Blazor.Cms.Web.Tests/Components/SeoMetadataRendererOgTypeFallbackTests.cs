@@ -69,6 +69,34 @@ public class SeoMetadataRendererOgTypeFallbackTests : CmsWebComponentTestBase
         Property(cut, "og:type").ShouldBe("profile");
     }
 
+    // The CMS admin form offers NewsArticle, which is not a SchemaType. The JSON-LD skips a name it cannot parse,
+    // so og:type and content-type must skip it too, or the head says website while the JSON-LD says Article.
+    [Fact]
+    public void SeoMetadataRenderer_UnrecognizedFrontMatterTypeWithFallback_AgreesWithTheJsonLd()
+    {
+        var item = SeoTestContent.Article();
+        item.Metadata = new FrontMatter { SeoProperties = new SeoMetadata { Type = "NewsArticle" } };
+
+        var cut = RenderPage(p => p.Add(c => c.FallbackSchemaType, SchemaType.Article), item);
+
+        Property(cut, "og:type").ShouldBe("article");
+        Meta(cut, "content-type").ShouldBe("Article");
+        cut.FindAll("script[type='application/ld+json']")[0].TextContent.ShouldContain("\"@type\": \"Article\"");
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_UnrecognizedFrontMatterTypeWithoutFallback_IsAWebPage()
+    {
+        var item = SeoTestContent.Article();
+        item.Metadata = new FrontMatter { SeoProperties = new SeoMetadata { Type = "NewsArticle" } };
+
+        var cut = RenderPage(_ => { }, item);
+
+        Property(cut, "og:type").ShouldBe("website");
+        Meta(cut, "content-type").ShouldBe("WebPage");
+        cut.FindAll("script[type='application/ld+json']")[0].TextContent.ShouldContain("\"@type\": \"WebPage\"");
+    }
+
     [Fact]
     public void SeoMetadataRenderer_FallbackSchemaType_YieldsToTheConfiguredDefaultSchemaTypes()
     {

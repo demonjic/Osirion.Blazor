@@ -7,7 +7,7 @@ permalink: /docs/front-matter
 description: "Every front matter key Osirion.Blazor reads, with its type, default and effect, how dates and custom_fields work, and a complete annotated example."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-24
 featured_image: 'https://media.getosirion.com/og/docs-front-matter.jpg'
 categories:
 - Documentation
@@ -169,14 +169,16 @@ key is optional.
 | `twitter_title` | `og_title` | `twitter:title`, cut to 70 characters. |
 | `twitter_description` | the meta description | `twitter:description`, cut to 200 characters. |
 | `twitter_image_url` | the Open Graph image | `twitter:image`. |
-| `type` | `Article` | The schema.org type, used when the component is not given `SchemaTypes`. Write a `SchemaType` name, such as `TechArticle`; case does not matter, but another spelling falls back to `WebPage` without a message. |
+| `type` | none (the page decides) | The schema.org type, used when the component is not given `SchemaTypes` and no `DefaultSchemaTypes` are configured. Write a `SchemaType` name, such as `TechArticle`; case does not matter, but another spelling counts as no `type`, without a message. |
 | `json_ld` | none | Your own JSON-LD, as a JSON string. It replaces the generated data; text that is not a JSON object or array is ignored and a warning is logged. |
 | `image` | none | The default social image: `og:image` and `twitter:image` use it when `og_image_url` is not set, before `featured_image`. |
 | `lang` | the page locale | `og:locale`, for example `de-DE` is written as `de_DE`. The `lang` meta tag and the structured data language keep the page locale. |
 | `meta_tags` | none | Extra meta elements, a map of name to content. A name starts with a letter and holds only letters, digits and `- _ . :` (at most 64 characters); other names are skipped with a logged warning, and so are the names the renderer writes itself (`description`, `keywords`, `author`, `generator`, `language`, `robots`, `googlebot`, `bingbot`, `referrer`). Values are HTML encoded. |
 
-These defaults apply to every page. A page with a front matter block has `type: Article` unless it sets another, so it gets `Article`; a file with none gets `WebPage` for the schema
-type, and `og:type` follows the schema type for both.
+These defaults apply to every page. Without `type`, `SchemaTypes` or `DefaultSchemaTypes`, a page is a `WebPage` with
+`og:type` `website`; `ArticlePage` writes `Article` instead. In 4.2.0 and earlier, a page with a front matter block got
+`type: Article` unless it set another, so it said `og:type` `article`; set `type` on the pages that are articles when they
+are not shown by `ArticlePage`.
 
 The page components pick their own schema types (`DocumentPage` uses `TechArticle`, `ArticlePage` takes the types you
 pass), so `type` matters mainly when you call the renderer yourself. See the [SEO guide](/docs/seo) for what the

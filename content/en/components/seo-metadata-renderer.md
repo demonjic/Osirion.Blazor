@@ -202,7 +202,7 @@ Relative image URLs become absolute with the site's base URL.
   its `PageImageUrl`, or the image of the section's own `_index.md` when the list is shown at the section's address.
 - **Breadcrumbs.** A single schema type for an item with a path gets a BreadcrumbList added when
   `GenerateMultipleSchemas` is on. Several types in `SchemaTypes` are used as listed. On a list page the
-  BreadcrumbList holds the home page and the list (`CollectionTitle` at the canonical address), or `CustomBreadcrumbs`
+  BreadcrumbList, and the `breadcrumb` of the CollectionPage, hold the home page and the list (`CollectionTitle` at the canonical address), or `CustomBreadcrumbs`
   when the page passes them.
 - **Security.** Meta values are HTML-encoded. JSON-LD is serialized with HTML-sensitive characters escaped; custom
   `json_ld` from front matter is parsed and re-serialized the same way, and ignored with a logged warning when it is

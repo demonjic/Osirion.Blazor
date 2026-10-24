@@ -103,6 +103,21 @@ public class SeoMetadataRendererCollectionSchemaTests : CmsWebComponentTestBase
             .ShouldBe(["Home", "Blog", "Guides"]);
     }
 
+    // The CollectionPage carries its own breadcrumb; it must name the same trail as the BreadcrumbList beside it.
+    [Fact]
+    public void SeoMetadataRenderer_CollectionPageWithCustomBreadcrumbs_EmbedsTheSameTrail()
+    {
+        var schemas = RenderSchemas(p => p
+            .Add(c => c.ContentItems, [SeoTestContent.Article()])
+            .Add(c => c.CollectionTitle, "Guides")
+            .Add(c => c.SchemaTypes, [SchemaType.CollectionPage, SchemaType.BreadcrumbList])
+            .Add(c => c.CustomBreadcrumbs, [("Blog", "http://localhost/blog"), ("Guides", "http://localhost/blog/guides")]));
+
+        var embedded = schemas[0]["breadcrumb"]!["itemListElement"]!.AsArray();
+        embedded.Select(crumb => crumb!["name"]!.GetValue<string>()).ShouldBe(["Home", "Blog", "Guides"]);
+        embedded.ToJsonString().ShouldBe(schemas[1]["itemListElement"]!.ToJsonString());
+    }
+
     // Fails before the fix: an item without tags, image or author wrote "keywords": null, "image": null and an
     // author named "".
     [Fact]
