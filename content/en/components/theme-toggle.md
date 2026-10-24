@@ -137,31 +137,40 @@ describes.
 - The button's `aria-label` and `title` state the current theme and the one a click switches to, for example "Toggle
   theme. Currently using light mode. Click to switch to dark mode."
 - A visually hidden text (`osirion-visually-hidden`) repeats the current theme; the icons are `aria-hidden`.
-- Keyboard focus shows a 2px outline (`:focus-visible`); mouse focus does not.
+- Keyboard focus (`:focus-visible`) shows the focus ring every Osirion component draws: `--osirion-focus-ring-width`
+  solid `--osirion-focus-ring-color`, offset by `--osirion-focus-ring-offset`. Mouse focus does not. The ring is drawn
+  at once; the button's transitions leave the outline out, so it does not fade in from another color.
 - The button is 44 by 44 pixels, 40 by 40 at 768px and below, and 36 by 36 at 576px and below.
 
 ## Styling
 
 | Class | Element |
 | --- | --- |
-| `theme-switcher` | The wrapper `div` (10px padding). |
+| `theme-switcher` | The wrapper `div`, padded by `--osirion-theme-toggle-padding` (10px). |
 | `theme-toggle-btn` | The round button. |
 | `theme-icon` | The sun or moon icon. |
 | `theme-text` | The visually hidden text. |
 
-The button takes its light and dark colors from `[data-osirion-theme]`. The focus outline and the hover ring use
+The button takes its light and dark colors from `[data-osirion-theme]`. The hover ring uses
 `--osirion-primary-color` and `--osirion-primary-color-hover`. The theme does not set these, so the fallbacks
-`#2563eb` and `#1d4ed8` apply until you define them:
+`#2563eb` and `#1d4ed8` apply until you define them. The focus ring follows the shared focus ring tokens, which the
+theme defines, so one setting restyles it together with the other components:
 
 ```css
 :root {
     --osirion-primary-color: #0b5ed7;
     --osirion-primary-color-hover: #0a58ca;
+    --osirion-focus-ring-color: #0b5ed7;
+    --osirion-focus-ring-width: 2px;
 }
 ```
 
-The component's own styles are scoped CSS, and several of them use `!important`. To restyle the button, use a
-selector that is at least as specific and add `!important` where the original has it.
+`--osirion-theme-toggle-padding` sets the wrapper's padding (10px by default). The `Menu` drawer sets it to `0` on its
+actions, so a toggle there lines up with the menu items; set it in any other container that spaces its children itself.
+
+The component's own styles are scoped CSS, and several of them use `!important` (the border and the shadow, never the
+focus outline). To restyle the button, use a selector that is at least as specific and add `!important` where the
+original has it.
 
 ## Related
 

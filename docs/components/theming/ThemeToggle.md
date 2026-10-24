@@ -18,3 +18,8 @@ Notes
 -----
 - The component loads a script file that handles toggling through a click listener; it writes no inline script and no `onclick` attribute, so a strict Content Security Policy does not block it. The button needs JavaScript; there is no server-side fallback form.
 - For customization, update `ThemingOptions` or the theme service implementation.
+- Keyboard focus draws the focus ring every component draws, from `--osirion-focus-ring-width`,
+  `--osirion-focus-ring-color` and `--osirion-focus-ring-offset` (falling back to `--osirion-primary-color`), without
+  `!important`, so a site that sets the tokens once restyles this ring too.
+- The wrapper's padding is `--osirion-theme-toggle-padding` (10px). The `Menu` drawer sets it to `0` on its actions,
+  so the toggle lines up with the menu items; set it yourself in any container that spaces its children.
