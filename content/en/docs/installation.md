@@ -169,6 +169,26 @@ A site references three things. Everything else Osirion needs, it loads itself.
 `OsirionStyles` loads its own script (`osirion-styles.js`) through the script loader, so you reference no Osirion
 JavaScript by hand. Its parameters are on the [OsirionStyles page](/components/osirion-styles).
 
+Keep `blazor.web.js` on static pages too. The script loader that every Osirion script goes through (BlazorJSComponents)
+starts from it, and so do enhanced navigation and enhanced form posts. Without it the pages still render and read, but
+the theme toggle, code highlighting, copy buttons and the other scripted features never run.
+
+### Leave the admin styles out of a public site
+
+`Osirion.Blazor` brings in `Osirion.Blazor.Cms.Admin`, so `{AssemblyName}.styles.css` also imports the admin's scoped
+styles, about 72 KB (10 KB compressed), as a render-blocking stylesheet on every page. In the release after 4.2.0, a
+site that renders no admin page leaves them out with one property in its project file:
+
+```xml
+<PropertyGroup>
+  <OsirionCmsAdminStyles>false</OsirionCmsAdminStyles>
+</PropertyGroup>
+```
+
+The admin pages take their styles only from that import, so keep the default on a site that serves them under
+`/osirion`. The property comes with the NuGet packages; a project that references the Osirion projects from source
+imports `src/Osirion.Blazor.Cms.Admin/buildTransitive/Osirion.Blazor.Cms.Admin.targets` itself.
+
 ## Choose a CSS framework
 
 Osirion has its own design system and works without a CSS framework. If your app already uses one, tell Osirion so its
