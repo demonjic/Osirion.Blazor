@@ -178,7 +178,8 @@ with `Icon` and `AriaLabel`; social links always open in a new tab.
 - **Copyright year.** The default line uses the server's current year each time the component renders, so a static
   export shows the year of the export.
 - **Small screens.** Below 768 pixels the top row stacks into one column: the links, the left content, then the
-  right content. With a `Logo`, the logo and description come first.
+  right content. With a `Logo`, the logo and description come first. The bottom row stacks too, centered unless
+  `--osirion-footer-bottom-align` says otherwise (see Styling).
 - **Social links without text.** When a link has only an icon, set `AriaLabel` so screen reader users hear where it
   goes.
 - **Printing.** The footer is hidden when the page is printed.
@@ -196,6 +197,20 @@ The outer element has `osirion-footer`, `osirion-footer-{Variant}` and `osirion-
 Colors come from the theme tokens `--osirion-background-primary`, `--osirion-text-primary`,
 `--osirion-text-secondary`, `--osirion-border-color` and `--osirion-action-primary`, so the CSS framework adapters
 recolor the footer. With `Theme` set to `Light` or `Dark`, the footer overrides those tokens on itself.
+
+Keyboard focus on the links and social links draws the shared focus ring, `--osirion-focus-ring-width` solid
+`--osirion-focus-ring-color`, offset by `--osirion-focus-ring-offset`. The ring shows at once: the social links'
+hover transition names its properties, so the outline does not fade in from the text color.
+
+Below 768 pixels the bottom row (the copyright line and the legal links) is stacked and centered.
+`--osirion-footer-bottom-align` moves it: `start`, `center` (the default) or `end`. Set it on the footer or any
+ancestor:
+
+```css
+.osirion-footer {
+    --osirion-footer-bottom-align: start;
+}
+```
 
 A fixed footer (`Docked="true"` with `DockingMode="fixed"`) covers the end of the page. Give your main content a
 bottom padding equal to the footer's height in your own stylesheet; the component's scoped stylesheet does not reach

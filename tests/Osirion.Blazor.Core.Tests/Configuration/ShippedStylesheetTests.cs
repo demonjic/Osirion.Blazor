@@ -173,6 +173,36 @@ public class ShippedStylesheetTests
         selectors.ShouldAllBe(selector => selector == ".osirion-html-renderer" || selector.Contains("::deep", StringComparison.Ordinal));
     }
 
+    // Fails before the fix: the social link animated every property ("transition: all"), its outline among them, so
+    // for the first 0.2 seconds of keyboard focus the ring grew out of the unfocused outline (3px in the text color)
+    // instead of showing the focus ring tokens.
+    [Fact]
+    public void Footer_Transitions_LeaveTheFocusRingOut()
+    {
+        // Act
+        var css = Squash(File.ReadAllText(ComponentCss("Layout", "OsirionFooter.razor.css")));
+        var transitions = System.Text.RegularExpressions.Regex.Matches(css, @"transition:([^;}]*)")
+            .Select(match => match.Groups[1].Value)
+            .ToList();
+
+        // Assert
+        transitions.ShouldNotBeEmpty();
+        transitions.ShouldAllBe(value => !value.StartsWith("all", StringComparison.Ordinal) && !value.Contains(",all", StringComparison.Ordinal) && !value.Contains("outline", StringComparison.Ordinal));
+    }
+
+    // Fails before the fix: below 768px the bottom row was centered with no way for a site to change it.
+    [Fact]
+    public void Footer_BottomRowOnPhones_AlignsFromTheBottomAlignProperty()
+    {
+        // Act
+        var css = Squash(File.ReadAllText(ComponentCss("Layout", "OsirionFooter.razor.css")));
+        var phones = css[css.IndexOf("@media(max-width:767.98px){", StringComparison.Ordinal)..];
+
+        // Assert: centered stays the default
+        phones.ShouldContain(".osirion-footer-bottom-content{flex-direction:column;align-items:var(--osirion-footer-bottom-align,center);text-align:var(--osirion-footer-bottom-align,center);}");
+        phones.ShouldContain(".osirion-footer-bottom-links{justify-content:var(--osirion-footer-bottom-align,center);}");
+    }
+
     private static string Squash(string css) => System.Text.RegularExpressions.Regex.Replace(
         System.Text.RegularExpressions.Regex.Replace(css, @"/\*.*?\*/", string.Empty, System.Text.RegularExpressions.RegexOptions.Singleline),
         @"\s+",

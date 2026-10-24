@@ -234,7 +234,9 @@ html.osirion-bootstrap-integration .osirion-footer[data-osirion-component-theme=
     background-color: var(--osirion-background-secondary);
     color: var(--osirion-text-primary);
     text-decoration: none;
-    transition: all var(--osirion-transition-duration-200, 0.2s) ease;
+    /* Named properties, not "all": an animated outline would grow out of the unfocused one (3px in the text color)
+       before it reached the focus ring tokens. */
+    transition: background-color var(--osirion-transition-duration-200, 0.2s) ease, color var(--osirion-transition-duration-200, 0.2s) ease, border-color var(--osirion-transition-duration-200, 0.2s) ease, transform var(--osirion-transition-duration-200, 0.2s) ease;
 }
 
 .osirion-footer-social-link:hover {
@@ -472,13 +474,15 @@ body:has(.osirion-footer-docked-fixed) {
         justify-items: start;
     }
 
+    /* Phones stack the bottom row and center it; --osirion-footer-bottom-align (start, center or end) moves it. */
     .osirion-footer-bottom-content {
         flex-direction: column;
-        text-align: center;
+        align-items: var(--osirion-footer-bottom-align, center);
+        text-align: var(--osirion-footer-bottom-align, center);
     }
 
     .osirion-footer-bottom-links {
-        justify-content: center;
+        justify-content: var(--osirion-footer-bottom-align, center);
     }
 }
 
