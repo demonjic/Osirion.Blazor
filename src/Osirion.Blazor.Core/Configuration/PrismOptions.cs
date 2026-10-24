@@ -20,7 +20,8 @@ public sealed class PrismOptions
     /// <c>plugins/line-numbers/prism-line-numbers.min.js</c> and <c>.min.css</c>. Files from this folder load without
     /// an integrity check, because the library cannot know their content. When <see langword="null"/> or empty, the
     /// pinned cdnjs release is used. Any other value (a relative path, a protocol-relative <c>//host</c>, <c>http</c>
-    /// or another scheme) fails validation when the application starts.
+    /// or another scheme, or a value with a tab, a line break or another control character) fails validation when the
+    /// application starts.
     /// </summary>
     public string? BaseUrl { get; set; }
 
@@ -32,6 +33,12 @@ public sealed class PrismOptions
         if (string.IsNullOrEmpty(baseUrl))
         {
             return true;
+        }
+
+        // Browsers remove tabs and line breaks from an address before parsing it, so "/\t/host" would load from host.
+        if (baseUrl.Any(char.IsControl))
+        {
+            return false;
         }
 
         if (baseUrl.StartsWith('/'))

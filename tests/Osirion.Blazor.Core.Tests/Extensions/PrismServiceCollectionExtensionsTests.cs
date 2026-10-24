@@ -34,6 +34,9 @@ public class PrismServiceCollectionExtensionsTests
     [InlineData("http://cdn.example.com/prism/")]
     [InlineData("javascript:alert(1)")]
     [InlineData("lib/prism/")]
+    // Browsers strip tabs and line breaks from an address before parsing it, so this becomes //cdn.example.com
+    [InlineData("/\t/cdn.example.com/prism/")]
+    [InlineData("/\n/cdn.example.com/prism/")]
     public void AddOsirionPrism_OtherAddress_FailsValidation(string baseUrl)
     {
         // Arrange
