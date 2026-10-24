@@ -107,6 +107,28 @@ public partial class ComponentStylesheetTests
         block.ShouldContain(selector + "{animation:none;}");
     }
 
+    // Fails before the fix: the dark rules selected only data-theme, which OsirionStyles never sets on <html>. It marks
+    // the dark theme with data-osirion-theme, and with data-bs-theme under Bootstrap, so the patterns kept their light
+    // look on dark pages.
+    [Theory]
+    [InlineData(".osirion-bg-dots")]
+    [InlineData(".osirion-bg-grid")]
+    [InlineData(".osirion-bg-diagonal")]
+    [InlineData(".osirion-bg-honeycomb")]
+    [InlineData(".osirion-bg-grid-animated")]
+    [InlineData(".osirion-bg-circuit")]
+    [InlineData(".osirion-bg-dots-fade")]
+    [InlineData(".osirion-bg-gradient-mesh")]
+    public void BackgroundPattern_DarkRules_MatchTheThemeAttributesOsirionStylesSets(string pattern)
+    {
+        // Act
+        var css = WhitespaceRun().Replace(CssComment().Replace(ComponentCss("Layout", "OsirionBackgroundPattern.razor.css"), string.Empty), " ");
+
+        // Assert
+        var selector = $":is([data-osirion-theme=\"dark\"], [data-bs-theme=\"dark\"], [data-theme=\"dark\"]) {pattern}";
+        css.ShouldMatch(Regex.Escape(selector) + " ?[,{]");
+    }
+
     // Fails before the fix: the spinner kept turning for visitors who ask for reduced motion.
     [Fact]
     public void PageLoading_Spinner_StopsUnderReducedMotion()
