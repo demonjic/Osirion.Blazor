@@ -47,4 +47,9 @@ Sections
 Notes
 
 - Variant: default|minimal|centered. GridLayout: auto|4-column|3-column|2-column.
+- Below 768px the bottom row (copyright and legal links) is stacked and centered. Set
+  `--osirion-footer-bottom-align` to `start` or `end` (default `center`) on the footer or an ancestor to move it; the
+  copyright line and the legal links then share the same edge.
+- Focus rings on the links and social links follow `--osirion-focus-ring-width`, `--osirion-focus-ring-color` and
+  `--osirion-focus-ring-offset`, and show at once (the social links' transition leaves the outline out).
 - Docked with DockingMode: fixed|sticky.

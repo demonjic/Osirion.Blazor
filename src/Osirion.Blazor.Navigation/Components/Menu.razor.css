@@ -2,14 +2,22 @@
  * Osirion Menu Component
  * Pure CSS navigation menu with SSR compatibility.
  *
- * A horizontal menu is a bar: brand, items, then the Actions slot. Below its collapse breakpoint the bar keeps the
- * brand and a hamburger, and the items open in a drawer under it. A vertical menu stacks its items.
+ * A horizontal menu is a bar: brand, items, the Actions slot, then the PinnedActions slot. Below its collapse
+ * breakpoint the bar keeps the brand, the pinned actions and a hamburger, and the items and actions open in a drawer
+ * under it. A vertical menu stacks its items.
+ *
+ * In source order the hamburger's checkbox follows the brand and precedes the drawer, and the pinned actions come
+ * last, so keyboard order is brand, toggle, drawer, pinned actions; with pinned actions the collapsed bar draws the
+ * toggle ahead of them to match. The drawer opens from the checkbox through the
+ * sibling combinator (:checked ~ .osirion-menu), which needs the checkbox and the drawer to stay siblings in the nav.
  *
  * Theming hooks, settable on the menu or any ancestor:
  *   --osirion-menu-height, --osirion-menu-max-width, --osirion-menu-padding-x, --osirion-menu-logo-size,
  *   --osirion-menu-background, --osirion-menu-color, --osirion-menu-muted-color, --osirion-menu-border-color,
  *   --osirion-menu-accent, --osirion-menu-hover-background, --osirion-menu-active-background,
  *   --osirion-menu-radius, --osirion-menu-panel-radius, --osirion-menu-shadow
+ *
+ * The drawer sets --osirion-theme-toggle-padding to 0 on its actions, so a ThemeToggle lines up with the items.
  */
 
 /* Component-specific theme overrides: these take priority over every other style, framework adapters included */
@@ -173,6 +181,27 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
         margin: 0;
     }
 
+/* Pinned actions: after the drawer in source order, and in the bar at every width */
+.osirion-menu-pinned-actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .osirion-menu-pinned-actions ::deep > * {
+        margin: 0;
+    }
+
+/* The bar's 1.5rem gap less this 1rem leaves the 0.5rem the actions row keeps between its own items. */
+.osirion-menu-horizontal .osirion-menu-pinned-actions {
+    margin-inline-start: -1rem;
+}
+
+.osirion-menu-vertical .osirion-menu-pinned-actions {
+    padding: 0 var(--osirion-menu-padding-x, 1rem) 1rem;
+}
+
 .osirion-menu-vertical .osirion-menu {
     padding: 0.5rem var(--osirion-menu-padding-x, 1rem) 1rem;
 }
@@ -212,8 +241,10 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     justify-content: flex-end;
 }
 
-/* Hamburger: a visually hidden checkbox, shown through its label */
+/* Hamburger: a visually hidden checkbox, shown through its label. Above the collapse breakpoint the label is not drawn,
+   so the checkbox leaves the tab order too (display: none); the breakpoint blocks below bring it back. */
 .osirion-navbar-toggler {
+    display: none;
     position: absolute;
     width: 1px;
     height: 1px;
@@ -326,6 +357,10 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
 /* Drawer: below its collapse breakpoint a collapsible menu shows the hamburger and opens its items in a panel.
    The blocks differ only in their media query and selector prefix; change them together. */
 @media (max-width: 768px) {
+    .osirion-menu-collapsible .osirion-navbar-toggler {
+        display: block;
+    }
+
     .osirion-menu-collapsible .osirion-navbar-toggle {
         display: inline-flex;
     }
@@ -333,14 +368,38 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     .osirion-menu-collapsible .osirion-menu-nav {
         flex-direction: row;
         align-items: center;
+        column-gap: 0.75rem;
         min-height: var(--osirion-menu-height, 4rem);
         padding-inline: var(--osirion-menu-padding-x, 1rem);
         padding-right: calc(var(--osirion-menu-padding-x, 1rem) + 3.5rem);
     }
 
     .osirion-menu-collapsible .osirion-nav-branding {
+        flex-shrink: 1;
         min-height: 0;
         padding: 0;
+    }
+
+    /* The pinned actions stay in the bar, at its trailing edge beside the toggle. */
+    .osirion-menu-collapsible .osirion-menu-pinned-actions {
+        margin-inline-start: auto;
+        padding: 0;
+    }
+
+    /* With pinned actions the toggle joins the row ahead of them, so the bar is drawn brand, toggle, pinned actions:
+       the order the keyboard visits them. */
+    .osirion-menu-collapsible.osirion-menu-has-pinned-actions .osirion-menu-nav {
+        padding-right: var(--osirion-menu-padding-x, 1rem);
+    }
+
+    .osirion-menu-collapsible.osirion-menu-has-pinned-actions .osirion-navbar-toggle {
+        position: static;
+        flex-shrink: 0;
+        margin-inline-start: auto;
+    }
+
+    .osirion-menu-collapsible.osirion-menu-has-pinned-actions .osirion-menu-pinned-actions {
+        margin-inline-start: 0;
     }
 
     .osirion-menu-collapsible .osirion-menu {
@@ -363,7 +422,7 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
         box-shadow: var(--osirion-menu-shadow, 0 18px 40px -12px rgba(15, 23, 42, 0.28), 0 6px 14px -6px rgba(15, 23, 42, 0.14));
     }
 
-    .osirion-menu-collapsible .osirion-navbar-toggler:checked ~ .osirion-menu-nav .osirion-menu {
+    .osirion-menu-collapsible .osirion-navbar-toggler:checked ~ .osirion-menu {
         display: flex;
         animation: osirion-menu-drawer-in 200ms ease-out;
     }
@@ -379,6 +438,7 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     }
 
     .osirion-menu-collapsible .osirion-menu-actions {
+        --osirion-theme-toggle-padding: 0;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
@@ -389,6 +449,10 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
 }
 
 @media (max-width: 1199.98px) {
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-navbar-toggler {
+        display: block;
+    }
+
     :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-navbar-toggle {
         display: inline-flex;
     }
@@ -396,14 +460,38 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-menu-nav {
         flex-direction: row;
         align-items: center;
+        column-gap: 0.75rem;
         min-height: var(--osirion-menu-height, 4rem);
         padding-inline: var(--osirion-menu-padding-x, 1rem);
         padding-right: calc(var(--osirion-menu-padding-x, 1rem) + 3.5rem);
     }
 
     :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-nav-branding {
+        flex-shrink: 1;
         min-height: 0;
         padding: 0;
+    }
+
+    /* The pinned actions stay in the bar, at its trailing edge beside the toggle. */
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-menu-pinned-actions {
+        margin-inline-start: auto;
+        padding: 0;
+    }
+
+    /* With pinned actions the toggle joins the row ahead of them, so the bar is drawn brand, toggle, pinned actions:
+       the order the keyboard visits them. */
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large).osirion-menu-has-pinned-actions .osirion-menu-nav {
+        padding-right: var(--osirion-menu-padding-x, 1rem);
+    }
+
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large).osirion-menu-has-pinned-actions .osirion-navbar-toggle {
+        position: static;
+        flex-shrink: 0;
+        margin-inline-start: auto;
+    }
+
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large).osirion-menu-has-pinned-actions .osirion-menu-pinned-actions {
+        margin-inline-start: 0;
     }
 
     :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-menu {
@@ -426,7 +514,7 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
         box-shadow: var(--osirion-menu-shadow, 0 18px 40px -12px rgba(15, 23, 42, 0.28), 0 6px 14px -6px rgba(15, 23, 42, 0.14));
     }
 
-    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-navbar-toggler:checked ~ .osirion-menu-nav .osirion-menu {
+    :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-navbar-toggler:checked ~ .osirion-menu {
         display: flex;
         animation: osirion-menu-drawer-in 200ms ease-out;
     }
@@ -442,6 +530,7 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     }
 
     :is(.osirion-menu-collapse-large, .osirion-menu-collapse-extra-large) .osirion-menu-actions {
+        --osirion-theme-toggle-padding: 0;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
@@ -452,6 +541,10 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
 }
 
 @media (max-width: 1439.98px) {
+    .osirion-menu-collapse-extra-large .osirion-navbar-toggler {
+        display: block;
+    }
+
     .osirion-menu-collapse-extra-large .osirion-navbar-toggle {
         display: inline-flex;
     }
@@ -459,14 +552,38 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     .osirion-menu-collapse-extra-large .osirion-menu-nav {
         flex-direction: row;
         align-items: center;
+        column-gap: 0.75rem;
         min-height: var(--osirion-menu-height, 4rem);
         padding-inline: var(--osirion-menu-padding-x, 1rem);
         padding-right: calc(var(--osirion-menu-padding-x, 1rem) + 3.5rem);
     }
 
     .osirion-menu-collapse-extra-large .osirion-nav-branding {
+        flex-shrink: 1;
         min-height: 0;
         padding: 0;
+    }
+
+    /* The pinned actions stay in the bar, at its trailing edge beside the toggle. */
+    .osirion-menu-collapse-extra-large .osirion-menu-pinned-actions {
+        margin-inline-start: auto;
+        padding: 0;
+    }
+
+    /* With pinned actions the toggle joins the row ahead of them, so the bar is drawn brand, toggle, pinned actions:
+       the order the keyboard visits them. */
+    .osirion-menu-collapse-extra-large.osirion-menu-has-pinned-actions .osirion-menu-nav {
+        padding-right: var(--osirion-menu-padding-x, 1rem);
+    }
+
+    .osirion-menu-collapse-extra-large.osirion-menu-has-pinned-actions .osirion-navbar-toggle {
+        position: static;
+        flex-shrink: 0;
+        margin-inline-start: auto;
+    }
+
+    .osirion-menu-collapse-extra-large.osirion-menu-has-pinned-actions .osirion-menu-pinned-actions {
+        margin-inline-start: 0;
     }
 
     .osirion-menu-collapse-extra-large .osirion-menu {
@@ -489,7 +606,7 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
         box-shadow: var(--osirion-menu-shadow, 0 18px 40px -12px rgba(15, 23, 42, 0.28), 0 6px 14px -6px rgba(15, 23, 42, 0.14));
     }
 
-    .osirion-menu-collapse-extra-large .osirion-navbar-toggler:checked ~ .osirion-menu-nav .osirion-menu {
+    .osirion-menu-collapse-extra-large .osirion-navbar-toggler:checked ~ .osirion-menu {
         display: flex;
         animation: osirion-menu-drawer-in 200ms ease-out;
     }
@@ -505,6 +622,7 @@ html.osirion-bootstrap-integration .osirion-menu-container[data-osirion-componen
     }
 
     .osirion-menu-collapse-extra-large .osirion-menu-actions {
+        --osirion-theme-toggle-padding: 0;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;

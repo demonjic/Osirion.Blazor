@@ -2,17 +2,6 @@
 @inherits OsirionComponentBase
 
 <div class="@_containerClass" data-osirion-component-theme="@GetComponentTheme()" @attributes="_containerAttributes">
-    @* Mobile toggle: a visually hidden but focusable checkbox (keyboard and CSS-only, no JavaScript), labelled by the visible hamburger. *@
-    @if (CollapseOnMobile)
-    {
-        <input type="checkbox" id="@ToggleId" class="osirion-navbar-toggler" aria-label="@ToggleAriaLabel" aria-controls="@NavId" />
-        <label for="@ToggleId" class="osirion-navbar-toggle">
-            <span class="osirion-toggle-icon"></span>
-        </label>
-        @* Dims the page behind the open drawer; a tap on it closes the drawer. *@
-        <label for="@ToggleId" class="osirion-menu-backdrop" aria-hidden="true"></label>
-    }
-
     <nav class="osirion-menu-nav" id="@NavId" aria-label="@AriaLabel">
         <div class="osirion-nav-branding">
             @if (BrandingTemplate is not null)
@@ -35,7 +24,20 @@
             }
         </div>
 
-        <div class="osirion-menu">
+        @* Mobile toggle: a visually hidden but focusable checkbox (keyboard and CSS-only, no JavaScript), labelled by the
+           visible hamburger. It follows the brand and precedes the drawer it opens, so the keyboard meets the brand
+           first and the next Tab after opening the drawer lands on its items. *@
+        @if (CollapseOnMobile)
+        {
+            <input type="checkbox" id="@ToggleId" class="osirion-navbar-toggler" aria-label="@ToggleAriaLabel" aria-controls="@DrawerId" />
+            <label for="@ToggleId" class="osirion-navbar-toggle">
+                <span class="osirion-toggle-icon"></span>
+            </label>
+            @* Dims the page behind the open drawer; a tap on it closes the drawer. *@
+            <label for="@ToggleId" class="osirion-menu-backdrop" aria-hidden="true"></label>
+        }
+
+        <div class="osirion-menu" id="@DrawerId">
             <div class="osirion-menu-inner">
                 @ChildContent
             </div>
@@ -46,5 +48,12 @@
                 </div>
             }
         </div>
+
+        @if (PinnedActions is not null)
+        {
+            <div class="osirion-menu-pinned-actions">
+                @PinnedActions
+            </div>
+        }
     </nav>
 </div>

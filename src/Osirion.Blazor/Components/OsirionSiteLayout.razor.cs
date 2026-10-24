@@ -43,7 +43,8 @@ public partial class OsirionSiteLayout
     public RenderFragment? Footer { get; set; }
 
     /// <summary>
-    /// Gets or sets more actions at the end of the menu, after the search box, theme toggle and call to action button.
+    /// Gets or sets more actions in the menu, after the search box and theme toggle. Like them they move into the menu's
+    /// drawer below its breakpoint; the call to action button stays in the bar, after them.
     /// </summary>
     [Parameter]
     public RenderFragment? MenuActions { get; set; }
@@ -67,7 +68,7 @@ public partial class OsirionSiteLayout
     // The banner records consent where the trackers look for it, so Osirion:Analytics:Consent:Evaluation moves both.
     private ConsentEvaluation CookieConsentEvaluation => AnalyticsConsent.Value.Evaluation;
 
-    private IReadOnlyList<FooterSection>? FooterSections => NullIfEmpty(Site.FooterSections);
+    private IReadOnlyList<FooterSection>? FooterSections => NullIfEmpty(WithCallToActionInFooter(Site.FooterSections));
 
     private IReadOnlyList<FooterLink>? LegalLinks => NullIfEmpty(Site.LegalLinks);
 
@@ -89,6 +90,30 @@ public partial class OsirionSiteLayout
         Uri.TryCreate(href, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp)
             ? "noopener"
             : null;
+
+    // The options are a singleton shared by every render, so the section that lists the call to action is a copy; adding
+    // the link to the configured list would add it once more on each render.
+    private IReadOnlyList<FooterSection> WithCallToActionInFooter(List<FooterSection> sections)
+    {
+        if (CallToAction is not { } callToAction || string.IsNullOrWhiteSpace(callToAction.FooterSection))
+        {
+            return sections;
+        }
+
+        var index = sections.FindIndex(section => string.Equals(section.Title, callToAction.FooterSection, StringComparison.Ordinal));
+        if (index < 0)
+        {
+            return sections;
+        }
+
+        var withCallToAction = new List<FooterSection>(sections);
+        withCallToAction[index] = new FooterSection
+        {
+            Title = sections[index].Title,
+            Links = [.. sections[index].Links, new FooterLink { Text = callToAction.Text, Href = callToAction.Href }],
+        };
+        return withCallToAction;
+    }
 
     private static NavLinkMatch GetMatch(SiteMenuItem item) =>
         item.MatchPrefix && item.Href is { Length: > 1 } ? NavLinkMatch.Prefix : NavLinkMatch.All;
