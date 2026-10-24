@@ -248,6 +248,20 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         cut.FindAll("form noscript").ShouldBeEmpty();
     }
 
+    // Fails before the fix: the noscript carried the component's CSS isolation attribute (b-...), which no rule uses
+    // there and which showed up in every exported page. The elements the scoped rules style keep it.
+    [Fact]
+    public void StaticContactForm_NoScript_CarriesNoCssIsolationAttribute()
+    {
+        var cut = RenderForm(parameters => parameters.Add(p => p.NoScriptContent, "<p>Email us.</p>"));
+
+        cut.Find("noscript").Attributes.ShouldBeEmpty();
+        cut.Find(".osirion-static-contact-form").Attributes.Select(a => a.Name)
+            .ShouldContain(name => name.StartsWith("b-", StringComparison.Ordinal));
+        cut.Find(".osirion-static-contact-form-form").Attributes.Select(a => a.Name)
+            .ShouldContain(name => name.StartsWith("b-", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void StaticContactForm_WithoutNoScriptContent_RendersNoNoscript()
     {

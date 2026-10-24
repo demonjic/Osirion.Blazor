@@ -115,7 +115,7 @@ An article header with the image behind the text and the author, date and readin
 | `BackgroundPattern` | `BackgroundPatternType?` | `null` | A decorative pattern behind the content, drawn unless `UseBackgroundImage` is on. |
 | `Alignment` | `Alignment` | `Alignment.Left` | The text alignment: `Left`, `Center` or `Right`. `Justify` is treated as `Left`. |
 | `ShowPrimaryButton` | `bool` | `true` | Whether the primary button is rendered; it also needs `PrimaryButtonText` and `PrimaryButtonUrl`. |
-| `ShowSecondaryButton` | `bool` | `true` | Whether the secondary (outlined) button is rendered; it also needs `SecondaryButtonText` and `SecondaryButtonUrl`. |
+| `ShowSecondaryButton` | `bool` | `true` | Whether the secondary button is rendered; it also needs `SecondaryButtonText` and `SecondaryButtonUrl`. |
 | `PrimaryButtonText` | `string?` | `null` | The primary button's text. |
 | `PrimaryButtonUrl` | `string?` | `null` | The primary button's address, written as given, so pass an address your application controls. |
 | `SecondaryButtonText` | `string?` | `null` | The secondary button's text. |
@@ -153,7 +153,11 @@ Unmatched attributes are written to the `<section>`.
   largest element in view.
 - `Culture` sets the language of the date in the metadata line; without it the current culture is used.
 - A button is rendered only when it is shown and has both its text and its address.
-- The buttons take the configured CSS framework's large primary and outlined primary button classes.
+- The buttons take the configured CSS framework's primary and secondary button classes in the large size
+  (`btn btn-primary btn-lg` and `btn btn-secondary btn-lg` under Bootstrap). The secondary classes come from
+  `ButtonClasses.Secondary` in `Osirion.Blazor.Core.Utils`, like the secondary button of
+  [OsirionCallToActionSection](/components/call-to-action-section), so the two sections' buttons look the same.
+  Up to 4.2.0 the secondary button had the outlined primary classes.
 - A background image has no alternative text, so use it for decoration only. The side image has `ImageAlt`.
 - A background pattern is drawn unless `UseBackgroundImage` is on.
 
@@ -163,7 +167,9 @@ The `<section>` has `osirion-hero-section`, `osirion-hero-variant-{hero|jumbotro
 `osirion-hero-align-{left|center|right}`, plus `osirion-hero-with-background` and `osirion-hero-with-overlay`, or
 `osirion-hero-with-side-image`, depending on the image. Inside are `osirion-hero-title`, `osirion-hero-subtitle`,
 `osirion-hero-summary`, `osirion-hero-buttons`, `osirion-hero-additional` and `osirion-hero-image-container`. Both
-buttons carry `osirion-hero-button` and `osirion-hero-button-primary`.
+buttons carry `osirion-hero-button`; the primary button adds `osirion-hero-button-primary` and the secondary button
+`osirion-hero-button-secondary`. Up to 4.2.0 the secondary button carried `osirion-hero-button-primary` too, so a
+rule written for both buttons through that class should select `osirion-hero-button` instead.
 
 The text sizes scale with the window between a minimum and a maximum, set as custom properties on the section:
 `--hero-title-min`, `--hero-title-pref`, `--hero-title-max` and the same three for `subtitle` and `summary`. Set them

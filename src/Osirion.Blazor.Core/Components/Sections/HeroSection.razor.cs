@@ -93,7 +93,7 @@ public partial class HeroSection
     public bool ShowPrimaryButton { get; set; } = true;
 
     /// <summary>
-    /// Whether the secondary (outlined) button is rendered; it also needs <see cref="SecondaryButtonText"/> and <see
+    /// Whether the secondary button is rendered; it also needs <see cref="SecondaryButtonText"/> and <see
     /// cref="SecondaryButtonUrl"/>.
     /// </summary>
     [Parameter]

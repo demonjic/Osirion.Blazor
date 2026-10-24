@@ -116,7 +116,9 @@ Unmatched attributes are written to the `<section>`, so an `id` set there makes 
 - Each button is a plain `<a>`, rendered only when it has a label and a safe address: a path starting with `/` (not
   `//` or `/\`), or an `http`, `https` or `mailto` address. Anything else, such as a `javascript:` URL, leaves that
   button out. The primary button gets the CSS framework's primary button class and the secondary button its
-  secondary class, `btn btn-primary` and `btn btn-secondary` under Bootstrap.
+  secondary class, `btn btn-primary` and `btn btn-secondary` under Bootstrap. They come from `ButtonClasses.Primary`
+  and `ButtonClasses.Secondary` in `Osirion.Blazor.Core.Utils`, like the buttons of
+  [HeroSection](/components/hero-section), so both sections' buttons look the same.
 - `ChildContent` is rendered after the description and before the buttons.
 - When there is nothing to show (no title, no description, no child content and no button that passes the rules
   above), the component renders nothing.

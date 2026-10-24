@@ -17,6 +17,7 @@
             <SeoMetadataRenderer Content="Item" 
                                  SiteNameOverride="@WebsiteName" 
                                  SchemaTypes="@SchemaTypes"
+                                 FallbackSchemaType="SchemaType.Article"
                                  CustomBreadcrumbs="@CustomBreadcrumbs"
                                  PrevPageUrl="@PrevPageUrl"
                                  NextPageUrl="@NextPageUrl"
@@ -156,6 +157,10 @@
             <div>
                 
             </div>
+            @if (FooterContent is not null)
+            {
+                <footer class="osirion-article-page-footer">@FooterContent(Item!)</footer>
+            }
         </div>
     }
 </div>

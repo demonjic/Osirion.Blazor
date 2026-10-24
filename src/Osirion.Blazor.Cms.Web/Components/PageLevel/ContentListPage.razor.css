@@ -13,6 +13,11 @@
     min-width: 0;
 }
 
+/* HeaderContent keeps the spacing of the list's own heading, which it replaces */
+.osirion-content-list-page-header {
+    margin-bottom: var(--osirion-spacing-8, 2rem);
+}
+
 .osirion-content-list-page-feed {
     margin: var(--osirion-spacing-4, 1rem) 0 0;
     font-size: var(--osirion-font-size-sm, 0.875rem);

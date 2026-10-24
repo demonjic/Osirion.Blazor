@@ -41,9 +41,6 @@ internal sealed record SeoSchemaContext
     /// <summary>The resolved Open Graph image, the fallback image of collection items.</summary>
     public string? OgImage { get; init; }
 
-    /// <summary>The page author, the fallback author of collection items.</summary>
-    public string? Author { get; init; }
-
     /// <summary>The absolute address of a page that identifies the author, or <see langword="null"/>.</summary>
     public string? AuthorUrl { get; init; }
 

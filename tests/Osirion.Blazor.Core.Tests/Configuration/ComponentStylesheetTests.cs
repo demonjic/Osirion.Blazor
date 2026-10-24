@@ -18,6 +18,55 @@ public partial class ComponentStylesheetTests
         css.ShouldNotContain("#123b2b");
     }
 
+    // Fails before the fix: each card label took its accent color. On a card set to the theme's background, every
+    // accent measured under 4.5:1 in every dark palette, for example #2563a9 at 2.90:1 on the Osirion dark #111827.
+    // The label now takes the card's text color, which a site already sets with the card background for the
+    // description; the accent stays on the card's top border.
+    [Fact]
+    public void ContextCardGrid_CardLabel_TakesTheCardTextColorInsteadOfTheAccent()
+    {
+        // Act
+        var css = Squash(ComponentCss("Sections", "OsirionContextCardGrid.razor.css"));
+        var label = Regex.Match(css, @"(?:^|\})\.osirion-context-card-grid-item>:is\(h1,h2,h3,h4,h5,h6\)\{[^}]*\}").Value;
+
+        // Assert
+        label.ShouldContain(
+            "color:var(--osirion-context-card-grid-item-heading-color,var(--osirion-context-card-grid-item-color,#555));");
+        Regex.IsMatch(css, @"h3\{color:").ShouldBeFalse();
+        css.ShouldContain(".osirion-context-card-grid-item-blue{border-top-color:#2563a9;}");
+    }
+
+    // The heading block was always centered. One custom property now aligns both its text and its 52rem-wide lines, so
+    // start puts them at the cards' left edge; the default keeps them centered.
+    [Fact]
+    public void ContextCardGrid_HeadingAlignment_IsACustomPropertyThatDefaultsToCenter()
+    {
+        // Act
+        var css = Squash(ComponentCss("Sections", "OsirionContextCardGrid.razor.css"));
+        var heading = Regex.Match(css, @"(?:^|\})\.osirion-context-card-grid-heading\{[^}]*\}").Value;
+
+        // Assert
+        heading.ShouldContain("justify-items:var(--osirion-context-card-grid-heading-align,center);");
+        heading.ShouldContain("text-align:var(--osirion-context-card-grid-heading-align,center);");
+    }
+
+    // The heading block used to be a centered box, so a site rule on the documented heading hook (text-align, or a
+    // narrower max-width) aligned the text inside that box. The box stays centered and its children fill its width, so
+    // such a rule still moves the text instead of leaving a short heading shrunk to fit in the middle.
+    [Fact]
+    public void ContextCardGrid_HeadingBlock_StaysACenteredBoxWhoseChildrenFillIt()
+    {
+        // Act
+        var css = Squash(ComponentCss("Sections", "OsirionContextCardGrid.razor.css"));
+        var heading = Regex.Match(css, @"(?:^|\})\.osirion-context-card-grid-heading\{[^}]*\}").Value;
+        var children = Regex.Match(css, @"(?:^|\})\.osirion-context-card-grid-heading>\*\{[^}]*\}").Value;
+
+        // Assert
+        heading.ShouldContain("margin:0auto2.5rem;");
+        children.ShouldContain("width:100%;");
+        children.ShouldContain("max-width:52rem;");
+    }
+
     // The grid no longer passes the Bootstrap-only class h-100 to each card. A rule in the grid's scoped stylesheet
     // cannot reach the card's root, which carries the card's scope, so the card's own rule is what fills the cell.
     [Fact]
@@ -73,6 +122,28 @@ public partial class ComponentStylesheetTests
 
         // Assert
         block.ShouldContain(selector + "{animation:none;}");
+    }
+
+    // Fails before the fix: the dark rules selected only data-theme, which OsirionStyles never sets on <html>. It marks
+    // the dark theme with data-osirion-theme, and with data-bs-theme under Bootstrap, so the patterns kept their light
+    // look on dark pages.
+    [Theory]
+    [InlineData(".osirion-bg-dots")]
+    [InlineData(".osirion-bg-grid")]
+    [InlineData(".osirion-bg-diagonal")]
+    [InlineData(".osirion-bg-honeycomb")]
+    [InlineData(".osirion-bg-grid-animated")]
+    [InlineData(".osirion-bg-circuit")]
+    [InlineData(".osirion-bg-dots-fade")]
+    [InlineData(".osirion-bg-gradient-mesh")]
+    public void BackgroundPattern_DarkRules_MatchTheThemeAttributesOsirionStylesSets(string pattern)
+    {
+        // Act
+        var css = WhitespaceRun().Replace(CssComment().Replace(ComponentCss("Layout", "OsirionBackgroundPattern.razor.css"), string.Empty), " ");
+
+        // Assert
+        var selector = $":is([data-osirion-theme=\"dark\"], [data-bs-theme=\"dark\"], [data-theme=\"dark\"]) {pattern}";
+        css.ShouldMatch(Regex.Escape(selector) + " ?[,{]");
     }
 
     // Fails before the fix: the spinner kept turning for visitors who ask for reduced motion.

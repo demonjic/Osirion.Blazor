@@ -1,7 +1,10 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Osirion.Blazor.Components;
 using Osirion.Blazor.Core.Tests.Base;
+using Osirion.Blazor.Core.Utils;
 using Shouldly;
 
 namespace Osirion.Blazor.Core.Tests.Components.Sections;
@@ -81,7 +84,7 @@ public class HeroSectionRenderingTests : OsirionComponentTestBase
     }
 
     [Fact]
-    public void HeroSection_BothButtons_RendersPrimaryThenOutlinedSecondary()
+    public void HeroSection_BothButtons_RendersPrimaryThenSecondary()
     {
         var cut = RenderStatic<HeroSection>(parameters => parameters
             .Add(p => p.PrimaryButtonText, "Start")
@@ -94,14 +97,14 @@ public class HeroSectionRenderingTests : OsirionComponentTestBase
         buttons[0].ClassList.ShouldBe(
             ["osirion-button", "osirion-button-primary", "osirion-button-lg", "osirion-hero-button", "osirion-hero-button-primary"],
             ignoreOrder: true);
-        buttons[1].ClassList.ShouldContain("osirion-button-outlined");
-        buttons[1].ClassList.ShouldContain("osirion-button-outlined-primary");
+        buttons[1].ClassList.ShouldContain("osirion-button-secondary");
         buttons[1].ClassList.ShouldNotContain("osirion-button-primary");
     }
 
-    // Known defect, pinned as current behavior: the secondary button carries osirion-hero-button-primary, so hero styles meant for the primary button also apply to it. Update this expectation when it is fixed.
+    // Fails before the fix: the secondary button carried osirion-hero-button-primary, so hero styles meant for the
+    // primary button also applied to it, and it was the outlined primary button rather than the secondary one.
     [Fact]
-    public void HeroSection_SecondaryButton_CarriesThePrimaryHeroClass()
+    public void HeroSection_SecondaryButton_CarriesTheSecondaryHeroClass()
     {
         var cut = RenderStatic<HeroSection>(parameters => parameters
             .Add(p => p.ShowPrimaryButton, false)
@@ -109,8 +112,32 @@ public class HeroSectionRenderingTests : OsirionComponentTestBase
             .Add(p => p.SecondaryButtonUrl, "/docs"));
 
         cut.Find(".osirion-hero-buttons a").ClassList.ShouldBe(
-            ["osirion-button", "osirion-button-outlined", "osirion-button-outlined-primary", "osirion-button-lg", "osirion-hero-button", "osirion-hero-button-primary"],
+            ["osirion-button", "osirion-button-secondary", "osirion-button-lg", "osirion-hero-button", "osirion-hero-button-secondary"],
             ignoreOrder: true);
+    }
+
+    // Fails before the fix: under every framework the hero's secondary button had the outlined primary classes while
+    // OsirionCallToActionSection's had the secondary ones, so the two sections' buttons looked different.
+    [Theory]
+    [InlineData(CssFramework.None)]
+    [InlineData(CssFramework.Bootstrap)]
+    [InlineData(CssFramework.FluentUI)]
+    [InlineData(CssFramework.MudBlazor)]
+    [InlineData(CssFramework.Radzen)]
+    public void HeroSection_SecondaryButton_TakesTheSharedSecondaryClassesUnderEachFramework(CssFramework framework)
+    {
+        Services.AddSingleton(Options.Create(new ThemingOptions { Framework = framework }));
+
+        var cut = RenderStatic<HeroSection>(parameters => parameters
+            .Add(p => p.ShowPrimaryButton, false)
+            .Add(p => p.SecondaryButtonText, "Docs")
+            .Add(p => p.SecondaryButtonUrl, "/docs"));
+
+        var classes = cut.Find(".osirion-hero-buttons a").ClassList;
+        foreach (var expected in ButtonClasses.Secondary(framework).Split(' '))
+        {
+            classes.ShouldContain(expected);
+        }
     }
 
     [Fact]

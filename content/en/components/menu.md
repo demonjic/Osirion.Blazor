@@ -48,7 +48,8 @@ seo_properties:
 
 # Menu
 
-`Menu` renders a site menu: a `<nav>` with an optional brand link, your items and an optional actions slot. Submenus,
+`Menu` renders a site menu: a `<nav>` with an optional brand link, your items, an optional actions slot and optional
+pinned actions that stay in the bar. Submenus,
 mega menus and the mobile drawer open with CSS only, so the menu works under static SSR without any script. The parts
 that fill it (`MenuItem`, `MenuGroup`, `MenuDivider`, `MenuCallToAction`, `MenuPanel`, `MenuPanelLink` and
 `MenuImageCard`) are described on this page too.
@@ -101,7 +102,11 @@ A mega menu has groups of links, a call to action and an aside:
 ```
 
 The `Actions` slot holds what belongs at the end of the bar, such as a search box or a theme toggle. A horizontal menu
-aligns it to the trailing edge, and a collapsed menu shows it at the bottom of the drawer:
+aligns it to the trailing edge, and a collapsed menu shows it at the bottom of the drawer. The `PinnedActions` slot
+holds what must stay visible at every width, such as the site's main call to action: a horizontal menu shows it after
+`Actions`, and a collapsed menu keeps it in the bar after the toggle instead of moving it into the drawer. It is
+rendered once, so a screen reader meets the link once. Keep it short, because on a phone it shares the bar with the
+brand and the toggle (a long brand name is shortened with an ellipsis):
 
 ```razor
 <Menu AriaLabel="Main navigation" BrandText="My site" CollapseBreakpoint="MenuCollapseBreakpoint.Large">
@@ -109,6 +114,9 @@ aligns it to the trailing edge, and a collapsed menu shows it at the bottom of t
     <Actions>
         <ThemeToggle />
     </Actions>
+    <PinnedActions>
+        <a class="osirion-button osirion-button-primary" href="/contact">Book a call</a>
+    </PinnedActions>
 </Menu>
 ```
 
@@ -133,7 +141,8 @@ no `style` attribute, so a strict Content Security Policy needs nothing for it; 
 | `BrandLogo` | `string?` | `null` | The address of the logo image, shown before `BrandText` inside the brand link. The image is drawn square at `--osirion-menu-logo-size` (2.25rem by default) and declares 36 by 36 pixels, the size of that default, so the bar does not shift while it loads. Beside `BrandText` its alternative text is empty, because the text already names the link; without `BrandText` the logo is the whole link and its alternative text is `Home`. |
 | `BrandText` | `string?` | `null` | The brand name, rendered as the text of the brand link. Without a logo it is the whole link. |
 | `BrandingTemplate` | `RenderFragment?` | `null` | Your own brand markup. It replaces the brand link, `BrandLogo` and `BrandText` and is not wrapped in a link. |
-| `Actions` | `RenderFragment?` | `null` | Content shown at the end of the bar, after the menu items: a search box, a theme toggle or a call to action button. A horizontal menu aligns it to the trailing edge; a collapsed menu shows it at the bottom of its drawer. |
+| `Actions` | `RenderFragment?` | `null` | Content shown at the end of the bar, after the menu items: a search box, a theme toggle or a call to action button. A horizontal menu aligns it to the trailing edge; a collapsed menu shows it at the bottom of its drawer. Put content that must stay visible when the menu collapses in `PinnedActions`. |
+| `PinnedActions` | `RenderFragment?` | `null` | Content that stays in the bar at every width, for example the site's main call to action. A horizontal menu shows it after `Actions`; below the collapse breakpoint it stays in the bar, drawn after the toggle, instead of moving into the drawer. It renders once, after the drawer in keyboard order. Keep it short: on a phone it shares the bar with the brand and the toggle. |
 | `Sticky` | `bool` | `true` | Whether a horizontal menu stays at the top of the page while it scrolls. It has no effect on a vertical menu. Turn it off for a menu inside a page. |
 | `StickyZIndex` | `int` | `1000` | The container's `z-index` while the menu is sticky. The default, 1000, comes from the stylesheet; another value, or any `OsirionComponentBase.Style`, is written to the container's inline style, after `Style`, so it wins over a `z-index` there. |
 | `Orientation` | `MenuOrientation` | `MenuOrientation.Horizontal` | The layout: `Horizontal`, a bar with dropdown submenus, or `Vertical`, a stack whose submenus open in place. |
@@ -305,9 +314,14 @@ as a mega menu aside for a customer story or a news item. Pass a real `ImageAlt`
 - **Hover and keyboard.** In a horizontal bar a submenu opens on hover. From the keyboard, Tab reaches the submenu
   toggle and Space opens the panel; Tab then moves through its links, and the panel closes when focus leaves it. A
   closed panel is skipped by Tab.
-- **Collapse.** Below the collapse breakpoint the bar keeps the brand and a hamburger. The items open in a drawer under
-  the bar, submenus open in place as indented lists, and a tap on the dimmed page closes the drawer. The toggle and every
-  submenu are visually hidden checkboxes with labels, so they work from the keyboard and without JavaScript.
+- **Collapse.** Below the collapse breakpoint the bar keeps the brand, the pinned actions and a hamburger. The items
+  and `Actions` open in a drawer under the bar, submenus open in place as indented lists, and a tap on the dimmed page
+  closes the drawer. The toggle and every submenu are visually hidden checkboxes with labels, so they work from the
+  keyboard and without JavaScript.
+- **Keyboard order when collapsed.** Tab reaches the brand first, then the toggle, which shows a focus ring; Space opens
+  the drawer, and the next Tab lands on its first item. The pinned actions follow the drawer. Above the breakpoint the
+  toggle is not drawn, and its checkbox is out of the tab order too. With pinned actions the collapsed bar draws the
+  toggle ahead of them, so the order on screen (brand, toggle, pinned actions) is the order Tab follows.
 - **Parents without a page.** A `MenuItem` with `HasSubmenu` and no `Href` (or `Href="#"`) renders as the toggle itself,
   so a tap anywhere on it opens the submenu instead of following a dead link. An `OnClick` callback turns it back into a
   link.
@@ -363,6 +377,9 @@ These variables override the defaults, on the menu or on any ancestor:
 | `--osirion-menu-radius`, `--osirion-menu-panel-radius`, `--osirion-menu-mega-radius` | `0.5rem`, `0.75rem`, `1rem` |
 | `--osirion-menu-shadow` | A soft two-layer shadow for panels and the drawer |
 | `--osirion-menu-panel-background`, `--osirion-menu-panel-color` | The inverted surface tokens, for `MenuPanel` |
+
+The drawer sets `--osirion-theme-toggle-padding` to `0` on its actions, so a `ThemeToggle` there lines up with the menu
+items instead of keeping its own 10px padding.
 
 ## Related
 

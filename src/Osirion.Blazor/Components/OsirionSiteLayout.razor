@@ -23,12 +23,21 @@
         }
         else
         {
+            // The call to action goes in the menu's pinned actions, which stay in the bar when the menu collapses, so
+            // on a phone it is not hidden behind the toggle. Without one the menu gets no pinned actions at all.
+            RenderFragment? callToActionButton = null;
+            if (CallToAction is { } callToAction)
+            {
+                callToActionButton = @<a class="@CallToActionClass" href="@callToAction.Href" rel="@GetCallToActionRel(callToAction.Href)">@callToAction.Text</a>;
+            }
+
             <Menu AriaLabel="@MenuLabel"
                   Href="@Site.HomeUrl"
                   BrandLogo="@Site.LogoUrl"
                   BrandText="@Site.Name"
                   Alignment="MenuAlignment.Right"
-                  CollapseBreakpoint="MenuCollapseBreakpoint.Large">
+                  CollapseBreakpoint="MenuCollapseBreakpoint.Large"
+                  PinnedActions="@callToActionButton">
                 <ChildContent>
                     @foreach (var item in Site.Menu)
                     {
@@ -55,10 +64,6 @@
                     @if (Site.ShowThemeToggle)
                     {
                         <ThemeToggle />
-                    }
-                    @if (CallToAction is { } callToAction)
-                    {
-                        <a class="@CallToActionClass" href="@callToAction.Href" rel="@GetCallToActionRel(callToAction.Href)">@callToAction.Text</a>
                     }
                     @MenuActions
                 </Actions>

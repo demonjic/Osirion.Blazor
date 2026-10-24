@@ -35,4 +35,8 @@ Notes
 - Alignment controls text alignment. ImagePosition applies when not using background images.
 - As a background image, ImageUrl is written into `url('...')` with quotes, backslashes, parentheses and control characters CSS-escaped, so a URL taken from content front matter cannot add style declarations. Other URLs are written unchanged.
 - Optional metadata: Author, PublishDate, ReadTime, ShowMetadata.
+- The buttons take the framework's large primary and secondary classes (`ButtonClasses.Primary` and
+  `ButtonClasses.Secondary`, the same as `OsirionCallToActionSection`). Both carry `osirion-hero-button`, plus
+  `osirion-hero-button-primary` or `osirion-hero-button-secondary`. Up to 4.2.0 the secondary button had the outlined
+  primary classes and the `-primary` hook; select `osirion-hero-button` for a rule meant for both buttons.
 - The default MinHeight (60vh) comes from `.osirion-hero-section` in the stylesheet, so a hero with default settings writes no `style` attribute and needs nothing in a Content Security Policy. Another MinHeight, a BackgroundColor, TextColor, background ImageUrl or Style is written inline as before.

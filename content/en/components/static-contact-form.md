@@ -281,7 +281,8 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
 
 - **Hidden until its script runs.** The endpoint takes JSON, so without script the form could send nothing. It
   renders with the `hidden` attribute and its script reveals it; visitors without script see `NoScriptContent`, so give
-  them another way to reach you, such as an email link.
+  them another way to reach you, such as an email link. The `<noscript>` is written without attributes: no scoped
+  rule styles it, so it does not carry the component's CSS isolation attribute (`b-...`) into exported pages.
 - **Static SSR and static files.** The script is a BlazorJSComponents module and needs no Blazor circuit. It works on a
   page served by ASP.NET Core with static SSR, and on a copy of that page served as a file, as long as the page loads
   `blazor.web.js` and keeps its `<!--Blazor-Web-Initializers:...-->` comment. A static export must include the

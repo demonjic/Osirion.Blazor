@@ -107,27 +107,21 @@
     mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 60%, transparent 100%);
 }
 
-/* Dark theme overrides */
-:root[data-theme="dark"] .osirion-bg-dots,
-:root[data-theme="dark"] .osirion-bg-grid,
-:root[data-theme="dark"] .osirion-bg-diagonal,
-:root[data-theme="dark"] .osirion-bg-honeycomb,
-:root[data-theme="dark"] .osirion-bg-grid-animated,
-:root[data-theme="dark"] .osirion-bg-circuit,
-:root[data-theme="dark"] .osirion-bg-dots-fade,
-[data-theme="dark"] .osirion-bg-dots,
-[data-theme="dark"] .osirion-bg-grid,
-[data-theme="dark"] .osirion-bg-diagonal,
-[data-theme="dark"] .osirion-bg-honeycomb,
-[data-theme="dark"] .osirion-bg-grid-animated,
-[data-theme="dark"] .osirion-bg-circuit,
-[data-theme="dark"] .osirion-bg-dots-fade {
+/* Dark theme overrides. OsirionStyles marks the dark theme on <html> with data-osirion-theme, and with data-bs-theme
+   as well under Bootstrap. data-theme is what a component's Theme parameter writes (outside Bootstrap) and what
+   Fluent UI reads from <body>. */
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-dots,
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-grid,
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-diagonal,
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-honeycomb,
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-grid-animated,
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-circuit,
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-dots-fade {
     opacity: 0.15;
     background-image: radial-gradient(var(--osirion-action-primary, #4b5563) 1px, transparent 1px);
 }
 
-:root[data-theme="dark"] .osirion-bg-gradient-mesh,
-[data-theme="dark"] .osirion-bg-gradient-mesh {
+:is([data-osirion-theme="dark"], [data-bs-theme="dark"], [data-theme="dark"]) .osirion-bg-gradient-mesh {
     opacity: 0.15;
 }
 

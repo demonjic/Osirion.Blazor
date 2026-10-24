@@ -293,26 +293,30 @@ public class OsirionSiteLayoutTests : BunitContext
         cut.FindAll(".osirion-footer-social-link").ShouldBeEmpty();
     }
 
-    // Guards the default: without CallToAction the menu actions keep their markup.
+    // Guards the default: without CallToAction the menu actions keep their markup and the bar holds nothing more.
     [Fact]
     public void OsirionSiteLayout_WithoutCallToAction_RendersNoLinkAmongTheMenuActions()
     {
         var cut = RenderLayout(Site);
 
         cut.Find(".osirion-menu-actions").QuerySelectorAll("a").ShouldBeEmpty();
+        cut.FindAll(".osirion-menu-pinned-actions").ShouldBeEmpty();
     }
 
-    // The menu's drawer (the no-script checkbox menu below its breakpoint) holds .osirion-menu, so a button inside it
-    // opens with the drawer at phone width.
+    // Fails before the fix: the button sat in .osirion-menu, the menu's no-script drawer below its 1200px breakpoint, so
+    // on a phone the site's main action was hidden behind the toggle. It is now in the menu's pinned actions, which stay
+    // in the bar at every width, and it is rendered once.
     [Fact]
-    public void OsirionSiteLayout_CallToAction_RendersAPrimaryButtonLinkInsideTheMenuDrawer()
+    public void OsirionSiteLayout_CallToAction_RendersOnePrimaryButtonLinkInTheBarOutsideTheDrawer()
     {
         var cut = RenderLayout(WithCallToAction("/contact"));
 
-        var button = cut.Find("nav[aria-label='Main navigation'] .osirion-menu .osirion-menu-actions a.osirion-site-call-to-action");
+        var button = cut.Find("nav[aria-label='Main navigation'] > .osirion-menu-pinned-actions > a.osirion-site-call-to-action");
         button.TextContent.ShouldBe("Book a call");
         button.GetAttribute("href").ShouldBe("/contact");
         button.ClassName.ShouldBe("osirion-button osirion-button-primary osirion-site-call-to-action");
+        cut.FindAll("nav a.osirion-site-call-to-action").ShouldHaveSingleItem();
+        cut.Find(".osirion-menu").QuerySelectorAll("a.osirion-site-call-to-action").ShouldBeEmpty();
     }
 
     [Fact]
@@ -357,24 +361,93 @@ public class OsirionSiteLayoutTests : BunitContext
 
         var cut = RenderLayout([]);
 
-        cut.Find(".osirion-menu-actions").QuerySelectorAll("a").ShouldBeEmpty();
+        cut.FindAll("a.osirion-site-call-to-action").ShouldBeEmpty();
+        cut.FindAll(".osirion-menu-pinned-actions").ShouldBeEmpty();
     }
 
+    // The search box, theme toggle and MenuActions stay in the drawer; the call to action ends the bar after them, in
+    // source and keyboard order as on screen.
     [Fact]
-    public void OsirionSiteLayout_CallToAction_FollowsSearchAndThemeToggleAndPrecedesMenuActions()
+    public void OsirionSiteLayout_CallToAction_FollowsSearchThemeToggleAndMenuActions()
     {
         var cut = RenderLayout(
             new Dictionary<string, string?>(WithCallToAction("/contact")) { ["Osirion:Site:ShowSearch"] = "true" },
             p => p.Add(c => c.MenuActions, "<a class=\"my-action\" href=\"/subscribe\">Subscribe</a>"));
 
-        var order = cut.Find(".osirion-menu-actions")
+        var order = cut.Find("nav[aria-label='Main navigation']")
             .QuerySelectorAll("form[action='/search'], .theme-switcher, a.osirion-site-call-to-action, a.my-action")
             .Select(element => element.Matches("form") ? "search"
                 : element.ClassList.Contains("theme-switcher") ? "theme toggle"
                 : element.ClassList.Contains("my-action") ? "menu actions"
                 : "call to action")
             .ToList();
-        order.ShouldBe(["search", "theme toggle", "call to action", "menu actions"]);
+        order.ShouldBe(["search", "theme toggle", "menu actions", "call to action"]);
+        cut.Find(".osirion-menu-actions a.my-action").ShouldNotBeNull();
+    }
+
+    // Fails before the fix: a footer column could not list the call to action, so a site copied its address into
+    // FooterSections and had to keep the two in step.
+    [Fact]
+    public void OsirionSiteLayout_CallToActionWithFooterSection_IsTheLastLinkOfThatSection()
+    {
+        var cut = RenderLayout(new Dictionary<string, string?>(WithCallToAction("https://cal.example/book"))
+        {
+            ["Osirion:Site:CallToAction:FooterSection"] = "Project",
+        });
+
+        var links = cut.FindAll("footer .osirion-footer-section").ShouldHaveSingleItem().QuerySelectorAll("a.osirion-footer-link");
+        links.Select(link => link.TextContent.Trim()).ShouldBe(["Contact", "Book a call"]);
+        links[^1].GetAttribute("href").ShouldBe("https://cal.example/book");
+    }
+
+    // The options are a singleton: rendering must not add the link to them, or every render would add it once more.
+    [Fact]
+    public void OsirionSiteLayout_CallToActionWithFooterSection_LeavesTheOptionsUnchanged()
+    {
+        var values = new Dictionary<string, string?>(WithCallToAction("/book")) { ["Osirion:Site:CallToAction:FooterSection"] = "Project" };
+
+        var cut = RenderLayout(values);
+        cut.Render();
+
+        Services.GetRequiredService<IOptions<OsirionSiteOptions>>().Value.FooterSections[0].Links.ShouldHaveSingleItem();
+        cut.FindAll("footer a[href='/book']").ShouldHaveSingleItem();
+    }
+
+    // Guards the default: without FooterSection the footer lists only the configured links.
+    [Fact]
+    public void OsirionSiteLayout_CallToActionWithoutFooterSection_AddsNoFooterLink()
+    {
+        var cut = RenderLayout(WithCallToAction("/book"));
+
+        cut.FindAll("footer a[href='/book']").ShouldBeEmpty();
+    }
+
+    [Theory]
+    [InlineData("Projects")]
+    [InlineData("project")]
+    public void GetErrors_CallToActionFooterSectionNamingNoSection_IsRejectedNamingTheKey(string footerSection)
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            CallToAction = new SiteCallToAction { Text = "Book a call", Href = "/book", FooterSection = footerSection },
+            FooterSections = [new FooterSection { Title = "Project", Links = [] }],
+        };
+
+        site.GetErrors().ShouldBe([$"Osirion:Site:CallToAction:FooterSection is \"{footerSection}\", which is not the Title of any of Osirion:Site:FooterSections."]);
+    }
+
+    [Fact]
+    public void GetErrors_CallToActionFooterSectionNamingASection_IsAccepted()
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            CallToAction = new SiteCallToAction { Text = "Book a call", Href = "/book", FooterSection = "Project" },
+            FooterSections = [new FooterSection { Title = "Project", Links = [] }],
+        };
+
+        site.GetErrors().ShouldBeEmpty();
     }
 
     private static Dictionary<string, string?> WithCallToAction(string href) => new(Site)

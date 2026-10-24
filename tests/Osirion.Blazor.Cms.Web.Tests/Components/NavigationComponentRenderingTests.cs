@@ -287,20 +287,41 @@ public class NavigationComponentRenderingTests : CmsWebComponentTestBase
         cut.FindAll("a.osirion-toc-link").Select(a => a.TextContent).ShouldBe(["Top", "Second"]);
     }
 
+    // Fails before the fix: a page without headings showed "No headings found." in its sidebar.
     [Fact]
-    public void TableOfContents_NoHeadings_ShowsTheEmptyText()
+    public void TableOfContents_NoHeadings_RendersNothing()
+    {
+        var cut = RenderStatic<TableOfContents>(p => p.Add(c => c.Content, "<p>No headings</p>"));
+
+        cut.Markup.Trim().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void TableOfContents_NoHeadingsWithEmptyText_ShowsTheEmptyText()
     {
         var cut = RenderStatic<TableOfContents>(p => p
             .Add(c => c.Content, "<p>No headings</p>")
             .Add(c => c.EmptyText, "Nothing to list"));
 
-        cut.Find(".osirion-toc-empty").TextContent.ShouldBe("Nothing to list");
+        cut.Find("nav.osirion-table-of-contents .osirion-toc-empty").TextContent.ShouldBe("Nothing to list");
     }
 
     [Fact]
-    public void TableOfContents_ContentCleared_ShowsTheEmptyText()
+    public void TableOfContents_ContentCleared_RendersNothing()
     {
         var cut = RenderStatic<TableOfContents>(p => p.Add(c => c.Content, "<h2>One</h2>"));
+
+        cut.Render(p => p.Add(c => c.Content, null));
+
+        cut.Markup.Trim().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void TableOfContents_ContentClearedWithEmptyText_ShowsTheEmptyText()
+    {
+        var cut = RenderStatic<TableOfContents>(p => p
+            .Add(c => c.Content, "<h2>One</h2>")
+            .Add(c => c.EmptyText, "Nothing to list"));
 
         cut.Render(p => p.Add(c => c.Content, null));
 

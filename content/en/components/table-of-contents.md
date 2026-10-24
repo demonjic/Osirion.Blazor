@@ -66,7 +66,8 @@ to go to.
 <TableOfContents Content="@Item?.Content" />
 ```
 
-A sidebar outline limited to the second and third heading levels:
+Content without headings renders nothing by default. A sidebar outline limited to the second and third heading
+levels, which says so instead through `EmptyText`:
 
 ```razor
 @using Osirion.Blazor.Cms.Domain.Entities
@@ -94,7 +95,7 @@ your headings already carry their own numbers:
 ```
 
 The built-in `ArticlePage` and `DocumentPage` render it the same way, under their own `TableOfContentsTitle`
-heading.
+heading, and hide that heading's section when the content has no headings.
 
 ## Parameters
 
@@ -106,7 +107,7 @@ heading.
 | `MinLevel` | `int` | `2` | The lowest heading level included, so the page's `h1` is left out by default. |
 | `MaxLevel` | `int` | `6` | The highest heading level included. |
 | `MaxDepth` | `int` | `3` | The nesting limit. `1` lists only top-level headings; the list renders at most two levels, so a value above `2` changes nothing. |
-| `EmptyText` | `string` | `"No headings found."` | The text shown when no heading matches. |
+| `EmptyText` | `string?` | `null` | The text shown when no heading matches. While it is null or blank (the default), content without headings renders nothing, so a sidebar does not show an empty outline. Set it, for example to `No headings found.`, to render the `nav` with this text in an `osirion-toc-empty` paragraph. |
 | `TrackActiveHeading` | `bool` | `true` | Whether the link to the section being read is marked as it scrolls by: it gets the `osirion-toc-link-active` class and `aria-current="location"`. A script does it, so without script the contents work as plain links. |
 | `ShowNumbers` | `bool` | `true` | Whether the entries are numbered, `1.` for a top-level heading and `1.2` for one under it. When on, the root element gets the `osirion-toc-numbered` class that the numbering rules hang on; `false` renders a plain list. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
@@ -133,9 +134,9 @@ captured but not rendered.
 - Tags inside a heading are stripped and the remaining text is written as text, so it is HTML-encoded. Character
   references are not decoded first, so a heading such as `Q&A`, which the Markdown renderer writes as `Q&amp;A`,
   shows as `Q&amp;A` in the outline.
-- The component always renders a `nav` with the accessible name "Table of Contents" (fixed English text), and the
-  `EmptyText` paragraph when there is nothing to list. Headings are read on every parameter change, so the outline
-  is part of the static SSR response.
+- The list is a `nav` with the accessible name "Table of Contents" (fixed English text). When there is nothing to
+  list, the component renders nothing, or, with `EmptyText` set, the `nav` with that text in a paragraph. Headings
+  are read on every parameter change, so the outline is part of the static SSR response.
 - With `TrackActiveHeading` on and at least one heading listed, a small script (loaded through BlazorJSComponents,
   which `AddOsirion` registers) marks the link of the section being read as the page scrolls:
   the last heading whose top has passed a line a quarter of the viewport below the top (plus the
@@ -152,7 +153,7 @@ captured but not rendered.
 | `osirion-toc-sublist` | The nested `ol` |
 | `osirion-toc-item` | Each `li`, together with `osirion-toc-level-{n}` for the heading level |
 | `osirion-toc-link` | Each link; the script adds `osirion-toc-link-active` to the one being read |
-| `osirion-toc-empty` | The empty-state paragraph |
+| `osirion-toc-empty` | The empty-state paragraph, rendered only with `EmptyText` set |
 
 Links use `--osirion-text-secondary` and `--osirion-action-primary`, with `--osirion-focus-ring-color` for keyboard
 focus. The marked link reads `--osirion-toc-active-color`, `--osirion-toc-active-accent` and

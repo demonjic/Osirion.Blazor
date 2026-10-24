@@ -245,7 +245,7 @@ public class SeoMetadataRendererTests : CmsWebComponentTestBase
         item.Metadata = new FrontMatter
         {
             Title = title,
-            SeoProperties = new SeoMetadata()
+            SeoProperties = new SeoMetadata { Type = "Article" }
         };
 
         return item;

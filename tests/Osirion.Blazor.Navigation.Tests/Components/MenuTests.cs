@@ -197,7 +197,26 @@ public class MenuTests : BunitContext
         toggler.HasAttribute("aria-hidden").ShouldBeFalse();
         toggler.HasAttribute("tabindex").ShouldBeFalse();
         toggler.GetAttribute("aria-label").ShouldBe("Open the menu");
-        toggler.GetAttribute("aria-controls").ShouldBe(cut.Find("nav.osirion-menu-nav").Id);
+        toggler.GetAttribute("aria-controls").ShouldBe(cut.Find(".osirion-menu").Id);
+    }
+
+    // Fails before the fix: the checkbox came first in the container, so at phone width the keyboard reached the
+    // toggle before the brand. The drawer follows the toggle, so the next Tab after opening it lands on the items.
+    [Fact]
+    public void Menu_Collapsible_PutsTheBrandBeforeTheToggleAndTheDrawerRightAfterIt()
+    {
+        // Act
+        var cut = Render<Menu>(parameters => parameters
+            .Add(p => p.BrandText, "Site")
+            .AddChildContent("<a href=\"/docs\">Docs</a>"));
+
+        // Assert
+        var order = cut.Find(".osirion-menu-container")
+            .QuerySelectorAll("a.osirion-brand-link, input.osirion-navbar-toggler, .osirion-menu a")
+            .Select(element => element.Matches("input") ? "toggle" : element.Matches(".osirion-brand-link") ? "brand" : "item")
+            .ToList();
+        order.ShouldBe(["brand", "toggle", "item"]);
+        cut.Find("input.osirion-navbar-toggler").NextElementSibling!.Matches("label.osirion-navbar-toggle").ShouldBeTrue();
     }
 
     [Fact]
@@ -324,5 +343,51 @@ public class MenuTests : BunitContext
 
         // Assert
         cut.FindAll(".osirion-menu-actions").ShouldBeEmpty();
+    }
+
+    // Fails before the fix: the menu had no place for content outside its drawer, so below the collapse breakpoint a
+    // site's main action was hidden behind the toggle.
+    [Fact]
+    public void Menu_PinnedActions_RenderOnceInTheBarAfterTheDrawer()
+    {
+        // Act
+        var cut = Render<Menu>(parameters => parameters
+            .AddChildContent("Menu Content")
+            .Add(p => p.Actions, "<button type=\"button\">Search</button>")
+            .Add(p => p.PinnedActions, "<a class=\"book\" href=\"/contact\">Book a call</a>"));
+
+        // Assert
+        var pinned = cut.Find("nav.osirion-menu-nav > .osirion-menu-pinned-actions");
+        pinned.PreviousElementSibling!.ClassList.ShouldContain("osirion-menu");
+        pinned.QuerySelector("a.book")!.TextContent.ShouldBe("Book a call");
+        cut.FindAll("a.book").Count.ShouldBe(1);
+        cut.Find(".osirion-menu").QuerySelectorAll("a.book").ShouldBeEmpty();
+    }
+
+    // Fails before the fix: nothing told the stylesheet that pinned actions follow the toggle, so the collapsed bar
+    // drew the toggle at its far edge, after them, while the keyboard reached it first.
+    [Fact]
+    public void Menu_PinnedActions_MarkTheContainerSoTheCollapsedBarDrawsTheToggleFirst()
+    {
+        // Act
+        var cut = Render<Menu>(parameters => parameters
+            .AddChildContent("Menu Content")
+            .Add(p => p.PinnedActions, "<a class=\"book\" href=\"/contact\">Book a call</a>"));
+
+        // Assert
+        cut.Find(".osirion-menu-container").ClassList.ShouldContain("osirion-menu-has-pinned-actions");
+    }
+
+    [Fact]
+    public void Menu_ShouldRenderNoPinnedActionsContainer_WhenPinnedActionsAreNotProvided()
+    {
+        // Act
+        var cut = Render<Menu>(parameters => parameters
+            .AddChildContent("Menu Content")
+            .Add(p => p.Actions, "<button type=\"button\">Search</button>"));
+
+        // Assert
+        cut.FindAll(".osirion-menu-pinned-actions").ShouldBeEmpty();
+        cut.Find(".osirion-menu-container").ClassList.ShouldNotContain("osirion-menu-has-pinned-actions");
     }
 }

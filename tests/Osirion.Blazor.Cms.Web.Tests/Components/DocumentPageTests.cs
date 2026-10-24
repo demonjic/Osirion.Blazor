@@ -141,15 +141,30 @@ public class DocumentPageTests : CmsWebComponentTestBase
     [Fact]
     public void DocumentPage_Defaults_NumberTheTableOfContents()
     {
+        // A table of contents renders nothing for a document without headings.
+        _configure.SetContent("<h2 id=\"steps\">Steps</h2><p>Configure body</p>");
+
         var cut = RenderDocument();
 
         cut.Find(".osirion-document-toc nav.osirion-table-of-contents").ClassList.ShouldContain("osirion-toc-numbered");
+    }
+
+    // The stylesheet hides the table of contents box with this selector (see DocumentPageStylesheetTests).
+    [Fact]
+    public void DocumentPage_DocumentWithoutHeadings_LeavesTheTableOfContentsBoxWithoutAList()
+    {
+        var cut = RenderDocument();
+
+        cut.FindAll(".osirion-document-content .osirion-document-toc:not(:has(.osirion-table-of-contents))").ShouldHaveSingleItem();
+        cut.Markup.ShouldNotContain("No headings found.");
     }
 
     // Fails before the change: the page had no TocShowNumbers parameter to pass on to its table of contents.
     [Fact]
     public void DocumentPage_TocShowNumbersFalse_ReachesTheTableOfContents()
     {
+        _configure.SetContent("<h2 id=\"steps\">Steps</h2><p>Configure body</p>");
+
         var cut = RenderDocument(p => p.Add(c => c.TocShowNumbers, false));
 
         cut.Find(".osirion-document-toc nav.osirion-table-of-contents").ClassList.ShouldNotContain("osirion-toc-numbered");

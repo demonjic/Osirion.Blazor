@@ -37,8 +37,9 @@ public abstract partial class OsirionContentPageBase : OsirionComponentBase
     /// <summary>
     /// The schema.org types written as the page's structured data, passed to <c>SeoMetadataRenderer</c>. When it is
     /// null, <c>AboutPage</c> uses <c>AboutPage</c>, <c>ContactPage</c> uses <c>ContactPage</c>, <c>DocumentPage</c>
-    /// uses <c>TechArticle</c> and the other pages leave the choice to the renderer. <c>DocumentPage</c> also takes
-    /// the first value as the article's microdata type.
+    /// uses <c>TechArticle</c> and the other pages leave the choice to the renderer; <c>ArticlePage</c> then writes
+    /// <c>Article</c> when neither the configured <c>DefaultSchemaTypes</c> nor the front matter <c>type</c> names one.
+    /// <c>DocumentPage</c> also takes the first value as the article's microdata type.
     /// </summary>
     [Parameter]
     public SchemaType[]? SchemaTypes { get; set; }

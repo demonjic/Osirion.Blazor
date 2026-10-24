@@ -125,9 +125,11 @@ two properties yourself, as above.
 `TechWave` and `Circuit` mix the theme color into a transparent one with `color-mix()`, so they follow the theme like
 the other patterns.
 
-Under a dark theme (`data-theme="dark"` on the root or a parent; the stylesheet does not look for Bootstrap's
-`data-bs-theme`), every pattern except `GradientMesh` and `TechWave` is drawn as dots at 0.15 opacity, and
-`GradientMesh` is drawn at 0.15.
+Under a dark theme, every pattern except `GradientMesh` and `TechWave` is drawn as dots at 0.15 opacity, and
+`GradientMesh` is drawn at 0.15. The stylesheet takes a page or a parent element as dark when it carries
+`data-osirion-theme="dark"`, which `OsirionStyles` sets on `<html>`, `data-bs-theme="dark"`, which it adds under
+Bootstrap, or `data-theme="dark"`, which a component's `Theme` parameter writes outside Bootstrap. Up to 4.2.0 it looked
+for `data-theme` alone, so on a site themed by `OsirionStyles` the patterns kept their light look in dark mode.
 
 ## Behavior
 

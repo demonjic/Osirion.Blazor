@@ -18,7 +18,8 @@ Key parameters
 - `NameLabel`, `EmailLabel`, `CompanyLabel`, `MessageLabel`, `SubmitButtonText`, `SubmittingText`
 - `SuccessMessage`, `FieldsErrorMessage`, `CheckErrorMessage`, `CheckPendingMessage`, `ErrorMessage`
 - `PrivacyNote`: plain text under the form, encoded
-- `NoScriptContent`: what visitors without script see, rendered inside `<noscript>`
+- `NoScriptContent`: what visitors without script see, rendered inside a `<noscript>` that carries no CSS isolation
+  attribute
 
 Usage
 ```razor
