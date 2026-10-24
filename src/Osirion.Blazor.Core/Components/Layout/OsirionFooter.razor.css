@@ -474,7 +474,13 @@ body:has(.osirion-footer-docked-fixed) {
         justify-items: start;
     }
 
-    /* Phones stack the bottom row and center it; --osirion-footer-bottom-align (start, center or end) moves it. */
+    /* Phones stack the bottom row and center it; --osirion-footer-bottom-align (start, center or end) moves it. The
+       row spans the footer (the container would otherwise center it at its content's width), and the legal links,
+       which sit beside the copyright rather than in it, take the copyright's inline padding so both share one edge. */
+    .osirion-footer-bottom {
+        justify-self: stretch;
+    }
+
     .osirion-footer-bottom-content {
         flex-direction: column;
         align-items: var(--osirion-footer-bottom-align, center);
@@ -483,6 +489,7 @@ body:has(.osirion-footer-docked-fixed) {
 
     .osirion-footer-bottom-links {
         justify-content: var(--osirion-footer-bottom-align, center);
+        padding: 0 var(--osirion-spacing-4, 1rem);
     }
 }
 

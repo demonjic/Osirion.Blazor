@@ -200,7 +200,22 @@ public class ShippedStylesheetTests
 
         // Assert: centered stays the default
         phones.ShouldContain(".osirion-footer-bottom-content{flex-direction:column;align-items:var(--osirion-footer-bottom-align,center);text-align:var(--osirion-footer-bottom-align,center);}");
-        phones.ShouldContain(".osirion-footer-bottom-links{justify-content:var(--osirion-footer-bottom-align,center);}");
+        phones.ShouldContain(".osirion-footer-bottom-links{justify-content:var(--osirion-footer-bottom-align,center);");
+    }
+
+    // Fails before the fix: on phones the bottom row shrank to its content and stayed centered (the container centers
+    // its children), so start and end only moved the text inside a centered box; and the legal links, a sibling of the
+    // padded copyright, touched the screen edge. Measured in Edge at 375px.
+    [Fact]
+    public void Footer_BottomRowOnPhones_SpansTheFooterWithTheLinksPaddedLikeTheCopyright()
+    {
+        // Act
+        var css = Squash(File.ReadAllText(ComponentCss("Layout", "OsirionFooter.razor.css")));
+        var phones = css[css.IndexOf("@media(max-width:767.98px){", StringComparison.Ordinal)..];
+
+        // Assert
+        phones.ShouldContain(".osirion-footer-bottom{justify-self:stretch;}");
+        phones.ShouldContain(".osirion-footer-bottom-links{justify-content:var(--osirion-footer-bottom-align,center);padding:0var(--osirion-spacing-4,1rem);}");
     }
 
     private static string Squash(string css) => System.Text.RegularExpressions.Regex.Replace(

@@ -203,8 +203,9 @@ Keyboard focus on the links and social links draws the shared focus ring, `--osi
 hover transition names its properties, so the outline does not fade in from the text color.
 
 Below 768 pixels the bottom row (the copyright line and the legal links) is stacked and centered.
-`--osirion-footer-bottom-align` moves it: `start`, `center` (the default) or `end`. Set it on the footer or any
-ancestor:
+`--osirion-footer-bottom-align` moves it: `start`, `center` (the default) or `end`. The row spans the footer, and the
+copyright line and the links share one inline padding, so `start` and `end` put both on the same edge. Set it on the
+footer or any ancestor:
 
 ```css
 .osirion-footer {
