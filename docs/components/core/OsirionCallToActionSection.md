@@ -29,6 +29,7 @@ Notes
   address. Any other URL, such as `javascript:` or a protocol-relative `//host`, leaves that button out.
 - The buttons get `GetPrimaryButtonClass()` and `GetSecondaryButtonClass()` (`btn btn-primary` and
   `btn btn-secondary` under Bootstrap) plus `osirion-call-to-action-button` and a `-primary` or `-secondary` hook.
+  Those classes come from `ButtonClasses.Primary` and `ButtonClasses.Secondary`, which `HeroSection` uses too.
 - With no title, description, child content or renderable button, nothing is rendered.
 - Title, description and button labels are plain text and HTML-encoded.
 - `LandingPage` in Osirion.Blazor.Cms.Web still renders its own CTA block with the `osirion-landing-cta` classes.
