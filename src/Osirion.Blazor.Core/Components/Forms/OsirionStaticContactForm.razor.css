@@ -56,6 +56,15 @@
     display: none;
 }
 
+/* Where scripts run, the hidden form keeps its place, invisible and out of the accessibility tree, so revealing it
+   moves nothing below it. Without script it stays out of the layout, and NoScriptContent shows instead. */
+@media (scripting: enabled) {
+    .osirion-static-contact-form-form[hidden] {
+        display: grid;
+        visibility: hidden;
+    }
+}
+
 .osirion-static-contact-form-field {
     display: grid;
     gap: var(--osirion-spacing-2, 0.5rem);

@@ -54,7 +54,8 @@ Wire contract
 - Browser limits mirror the reference endpoint: name 100, email 254, message 10 to 5000 characters, company 200, subject 200.
 
 Notes
-- The form renders with `hidden` and its script reveals it, so it never shows a form that cannot send.
+- The form renders with `hidden` and its script reveals it, so it never shows a form that cannot send. Where scripts
+  run, the hidden form keeps its place, invisible, so revealing it causes no layout shift.
 - Loads its script through BlazorJSComponents, which `AddOsirion` registers; without `AddOsirion`, call
   `builder.Services.AddJSComponents()`. The page must load `blazor.web.js` and carry its
   `<!--Blazor-Web-Initializers:...-->` comment, and a static export must include the files that comment names and
