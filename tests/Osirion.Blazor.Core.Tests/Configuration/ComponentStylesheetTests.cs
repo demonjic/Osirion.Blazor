@@ -50,6 +50,23 @@ public partial class ComponentStylesheetTests
         heading.ShouldContain("text-align:var(--osirion-context-card-grid-heading-align,center);");
     }
 
+    // The heading block used to be a centered box, so a site rule on the documented heading hook (text-align, or a
+    // narrower max-width) aligned the text inside that box. The box stays centered and its children fill its width, so
+    // such a rule still moves the text instead of leaving a short heading shrunk to fit in the middle.
+    [Fact]
+    public void ContextCardGrid_HeadingBlock_StaysACenteredBoxWhoseChildrenFillIt()
+    {
+        // Act
+        var css = Squash(ComponentCss("Sections", "OsirionContextCardGrid.razor.css"));
+        var heading = Regex.Match(css, @"(?:^|\})\.osirion-context-card-grid-heading\{[^}]*\}").Value;
+        var children = Regex.Match(css, @"(?:^|\})\.osirion-context-card-grid-heading>\*\{[^}]*\}").Value;
+
+        // Assert
+        heading.ShouldContain("margin:0auto2.5rem;");
+        children.ShouldContain("width:100%;");
+        children.ShouldContain("max-width:52rem;");
+    }
+
     // The grid no longer passes the Bootstrap-only class h-100 to each card. A rule in the grid's scoped stylesheet
     // cannot reach the card's root, which carries the card's scope, so the card's own rule is what fills the cell.
     [Fact]

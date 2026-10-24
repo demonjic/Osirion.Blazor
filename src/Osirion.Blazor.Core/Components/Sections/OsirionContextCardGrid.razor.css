@@ -8,15 +8,17 @@
     padding: 0 1rem;
 }
 
-/* One property aligns both the text and its 52rem-wide lines: start, center or end. */
+/* One property aligns both the text and its 52rem-wide lines: start, center or end. The box stays centered and its
+   children fill it, so a site rule that sets text-align or a narrower max-width on this class works as it used to. */
 .osirion-context-card-grid-heading {
     display: grid;
     justify-items: var(--osirion-context-card-grid-heading-align, center);
-    margin: 0 0 2.5rem;
+    margin: 0 auto 2.5rem;
     text-align: var(--osirion-context-card-grid-heading-align, center);
 }
 
 .osirion-context-card-grid-heading > * {
+    width: 100%;
     max-width: 52rem;
 }
 
