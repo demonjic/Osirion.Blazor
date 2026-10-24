@@ -74,6 +74,26 @@ A search page passes the `q` query-string value through:
 }
 ```
 
+`ContentListPage` wraps `ContentList` into a whole list page: the list's heading as the page's `h1`, a feed link and
+an optional sidebar. Its `HeaderContent` replaces that heading with your own header above the list, for example the
+title with a strip of series links under it. The header must render the page's `h1`; `Title` and `Description` still
+name the page in its head metadata:
+
+```razor
+@page "/blog"
+@using Osirion.Blazor.Cms.Web.Components
+
+<ContentListPage Directory="blog" Title="Blog" Description="Guides and release notes.">
+    <HeaderContent>
+        <h1>Blog</h1>
+        <nav aria-label="Series">
+            <a href="/series/build-a-blog">Build a blog</a>
+            <a href="/series/static-sites">Static sites</a>
+        </nav>
+    </HeaderContent>
+</ContentListPage>
+```
+
 ## Parameters
 
 | Parameter | Type | Default | Description |

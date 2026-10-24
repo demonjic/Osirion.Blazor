@@ -23,7 +23,14 @@
                                  @attributes="SeoRendererParameters" />
         </HeadContent>
 
-        @RenderPageHeading(Item.Title, Item.Description)
+        @if (HeaderContent is not null)
+        {
+            <header class="osirion-about-page-header">@HeaderContent(Item)</header>
+        }
+        else
+        {
+            @RenderPageHeading(Item.Title, Item.Description)
+        }
 
         <div class="osirion-about-page-body">
             <ContentRenderer Item="@Item" OmitLeadingTitle />

@@ -29,6 +29,22 @@ Notes
   title, a lede and a metadata block. It must render the page's `h1`; an opening `# Title` line in the Markdown is
   left out of the body, as it is under the hero.
 
+- `FooterContent` (`RenderFragment<ContentItem>`) is shown after the article and its sidebar, outside the article
+  column, in `footer.osirion-article-page-footer`; nothing renders without it. Use it for a closing call to action
+  or related links:
+
+  ```razor
+  <ArticlePage ItemSlug="@Slug" DirectoryName="blog">
+      <FooterContent>
+          <p>Questions about @context.Title? <a href="/contact">Get in touch</a>.</p>
+      </FooterContent>
+  </ArticlePage>
+  ```
+
+- Below 640px the sidebar hides its table of contents, and the whole sidebar takes no space when it has no other
+  section (categories, tags or `SidebarContent`). For an article without headings, the table of contents section is
+  hidden at every width, since `TableOfContents` renders nothing.
+
 - With `ShowHero` (the default) the hero shows the title as the page's `h1`, so an opening `# Title` line in the
   Markdown is left out of the body. `HomePage` and `LandingPage` do the same while they show their hero, and
   `ContentView`, `DocumentPage` and `LocalizedContentView` (with its header) do it under their own title heading.

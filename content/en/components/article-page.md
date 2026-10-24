@@ -96,6 +96,19 @@ Your own header and author block, in place of the hero and the default end of th
 </ArticlePage>
 ```
 
+A closing call to action after the article and its sidebar, outside the article column. `FooterContent` gets the
+item as `context`, like `HeaderContent`:
+
+```razor
+@using Osirion.Blazor.Cms.Web.Components
+
+<ArticlePage ItemSlug="@Slug" DirectoryName="blog">
+    <FooterContent>
+        <p>Questions about @context.Title? <a href="/contact">Get in touch</a>.</p>
+    </FooterContent>
+</ArticlePage>
+```
+
 ## Parameters
 
 The parameters come from three base classes besides the page itself: the lookup (`Item`, `ItemPath`, `ItemUrl`,
@@ -113,6 +126,7 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
 | `ShowSeriesNavigation` | `bool` | `true` | Whether an article that belongs to a series (`series` front matter) shows where it stands in it, with links to the other parts, above the body. Defaults to `true`; nothing renders for an article outside a series. |
 | `AuthorContent` | `RenderFragment<ContentItem>?` | `null` | What is shown after the body about the article's author, for example an `OsirionAuthorCard` built from `context.Author`. Nothing is shown when `null`. |
 | `HeaderContent` | `RenderFragment<ContentItem>?` | `null` | The article's header, shown instead of the hero. It must render the page's `h1`, usually from `context.Title`; a leading `h1` in the body is still left out, as it is under the hero. When `null`, the hero is shown as configured by `ShowHero`. |
+| `FooterContent` | `RenderFragment<ContentItem>?` | `null` | Content shown after the article and its sidebar, outside the article column, for example a closing call to action or related links. Unlike `CustomFooterContent`, which ends the article itself, it is your own markup, written as you give it. Nothing is rendered when `null`. |
 | `SidebarContent` | `RenderFragment?` | `null` | Content shown at the end of the sidebar, in a section of its own. It needs `ShowSidebar`. |
 | `ShowNavigation` | `bool` | `true` | Whether `ArticlePage` shows the previous and next articles under the body. The other pages do not read it. |
 | `PreviousItem` | `ContentItem?` | `null` | The item of the previous link. Read by `DocumentPage`, which looks it up when it is null and keeps a value you pass; `ArticlePage` finds its own neighbors and ignores it. |
@@ -212,7 +226,11 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
 - **Sidebar.** `ShowSidebar` adds a column that stays in view while the article scrolls. It holds the table of
   contents, the item's categories and tags, and `SidebarContent`. Category and tag links default to
   `/category/{slug}` and `/tag/{slug}`. Tags take one of eight badge colors, chosen from the tag's name so a tag keeps
-  its color between requests.
+  its color between requests. For an article without headings the table of contents section is hidden, since
+  [TableOfContents](/components/table-of-contents) renders nothing. Below 640 pixels the table of contents is hidden,
+  and a sidebar with no other section takes no space under the article.
+- **Footer.** `FooterContent`, when set, follows the article and its sidebar in a `footer`, outside the article
+  column. Nothing renders without it.
 - **Not found.** Without an item the page renders the not-found state of
   [OsirionContentNotFound](/components/content-not-found) and answers with status 404: `NavigationManager.NotFound()` on .NET 10, the status code of
   the request on .NET 9. The status is only set while the response has not started, and not during interactive
@@ -221,7 +239,7 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
   (`published: false`) answers 404 like a missing item. A `Query` you pass decides through its
   `IncludeUnpublished` and `Status`, and an `Item` you pass is shown as given.
 - **Security.** The body is sanitized by `ContentRenderer`, and `CustomFooterContent` is sanitized the same way.
-  `HeaderContent`, `AuthorContent` and `SidebarContent` are your own markup, written as you give it.
+  `HeaderContent`, `AuthorContent`, `SidebarContent` and `FooterContent` are your own markup, written as you give it.
 - **Attributes.** `Class`, `Style` and unmatched attributes go to the root element, and so does `Theme` as
   `data-theme` (`data-bs-theme` under Bootstrap) when it is `Light` or `Dark`.
 
@@ -230,7 +248,8 @@ metadata) and the neighbors and related items. A few shared parameters do nothin
 The root element has the classes `osirion-article-page` and, with the sidebar, `osirion-article-with-sidebar`. The
 page content is `osirion-article-page-content` with `osirion-article-layout` (plus `osirion-article-layout-with-sidebar`)
 and `osirion-article-main`. A custom header sits in `osirion-article-header`, the author block in
-`osirion-article-author`, the footer in `osirion-article-footer`. The sidebar sections use `osirion-sidebar-section`,
+`osirion-article-author`, the footer in `osirion-article-footer`, and `FooterContent` in `osirion-article-page-footer`
+after the layout. The sidebar sections use `osirion-sidebar-section`,
 `osirion-sidebar-title`, `osirion-toc`, `osirion-sidebar-category`, `osirion-sidebar-tag` and the badge classes
 `osirion-tag-badge-0` to `osirion-tag-badge-7`. Colors come from theme tokens such as `--osirion-text-primary`,
 `--osirion-text-secondary`, `--osirion-action-primary` and `--osirion-link-color`.

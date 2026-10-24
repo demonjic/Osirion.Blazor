@@ -51,9 +51,13 @@ public partial class TableOfContents(NavigationManager navigationManager)
     [Parameter]
     public int MaxDepth { get; set; } = 3;
 
-    /// <summary>Gets or sets the text shown when no heading matches.</summary>
+    /// <summary>
+    /// Gets or sets the text shown when no heading matches. While it is null or blank (the default), content without
+    /// headings renders nothing, so a sidebar does not show an empty outline. Set it, for example to
+    /// <c>No headings found.</c>, to render the <c>nav</c> with this text in an <c>osirion-toc-empty</c> paragraph.
+    /// </summary>
     [Parameter]
-    public string EmptyText { get; set; } = "No headings found.";
+    public string? EmptyText { get; set; }
 
     /// <summary>
     /// Gets or sets whether the link to the section being read is marked as it scrolls by: it gets the
@@ -75,6 +79,8 @@ public partial class TableOfContents(NavigationManager navigationManager)
     /// Gets the extracted headings
     /// </summary>
     private IReadOnlyList<HeadingItem> Headings { get; set; } = Array.Empty<HeadingItem>();
+
+    private bool HasAnythingToShow => Headings.Count > 0 || !string.IsNullOrWhiteSpace(EmptyText);
 
     private string CurrentUrl { get; set; } = "/";
 
