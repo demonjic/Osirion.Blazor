@@ -18,7 +18,9 @@ Key parameters
   wide or less it folds behind a button labelled `SideNavigationToggleText` ("Documentation menu"), so the page starts
   with its content
 - `ShowMetadata` (true): author and "Last updated", the front matter `last_modified` date or the publication date
-- `ShowTableOfContents` (true), `TableOfContentsTitle`, `TocMinLevel`, `TocMaxLevel`, `TocShowNumbers` (true)
+- `ShowTableOfContents` (true), `TableOfContentsTitle`, `TocMinLevel`, `TocMaxLevel`, `TocShowNumbers` (true). When
+  no heading falls between `TocMinLevel` and `TocMaxLevel`, the table of contents box and its title are hidden,
+  because `TableOfContents` renders nothing
 - `EditUrlFormatter`: builds the address of the page's source; when it returns one, an `EditLinkText` link follows
   the body
 - `ShowNavigationLinks` (true): previous and next pages of the folder, linked by their URLs (`ContentUrlFormatter`

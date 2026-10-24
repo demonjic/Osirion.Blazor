@@ -234,6 +234,8 @@ of the lookup parameters.
   inside a `<time>` element; `LastUpdatedText` sets the label in front of it.
 - **Table of contents.** `ShowTableOfContents` builds it from the headings between `TocMinLevel` and `TocMaxLevel`
   and places it above the body. `TocShowNumbers="false"` drops the `1.` and `1.2` numbers in front of its entries.
+  When no heading falls between `TocMinLevel` and `TocMaxLevel`, the box and its title are hidden, because
+  `TableOfContents` renders nothing.
 - **Edit link.** The link to the source of the page appears only when `EditUrlFormatter` returns an address. It opens
   in a new tab with `rel="noopener"`.
 - **Pager.** The previous and next links appear with `ShowNavigationLinks` when at least one neighbor exists.
