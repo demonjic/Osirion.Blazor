@@ -56,6 +56,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private string? _canonicalUrl;
     private string? _robotsDirective;
     private string? _languageCode;
+    private string? _referrerPolicy;
 
     // Structured data
     private string? _jsonLdContent;
@@ -87,8 +88,10 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     /// <summary>
     /// Gets or sets the items of a list page. The title becomes <c>{CollectionTitle} | {site name}</c>, <c>og:type</c> is
-    /// <c>website</c>, and the JSON-LD holds a <c>BlogPosting</c> per item, plus a <c>CollectionPage</c> when
-    /// <see cref="SchemaTypes"/> lists it. An empty list counts as not set.
+    /// <c>website</c>, and the JSON-LD holds an article per item, after a <c>CollectionPage</c> and a
+    /// <c>BreadcrumbList</c> when <see cref="SchemaTypes"/> lists them. Each item's article is the item's front matter
+    /// <c>type</c> when it is <c>Article</c>, <c>BlogPosting</c> or <c>TechArticle</c>, then the first of those three in
+    /// <see cref="SchemaTypes"/>, then <c>Article</c>. An empty list counts as not set.
     /// </summary>
     [Parameter]
     public IReadOnlyList<ContentItem>? ContentItems { get; set; }
@@ -149,7 +152,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     /// <summary>
     /// Gets or sets the JSON-LD types to generate, such as <c>Article</c>, <c>BlogPosting</c>, <c>TechArticle</c>,
     /// <c>WebPage</c>, <c>HowTo</c>, <c>BreadcrumbList</c> or <c>CollectionPage</c>. When empty, the configured
-    /// <c>DefaultSchemaTypes</c> apply, then the front matter <c>type</c>, then <c>WebPage</c>. The first type also sets
+    /// <c>DefaultSchemaTypes</c> apply, then the front matter <c>type</c>, then <see cref="FallbackSchemaType"/>, then
+    /// <c>WebPage</c>. On a list page only <c>CollectionPage</c> and <c>BreadcrumbList</c> write a schema of their own,
+    /// and an article type names the type of the listed items. The first type also sets
     /// <c>og:type</c> when the front matter has no <c>og_type</c>. <c>FAQ</c> generates no data: use
     /// <see cref="EnableGeneratedFaq"/>. A single type gets a <c>BreadcrumbList</c> added when
     /// <see cref="GenerateMultipleSchemas"/> is on.
@@ -306,6 +311,24 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     [Parameter]
     public bool EnableGeneratedFaq { get; set; }
 
+    /// <summary>
+    /// Gets or sets the referrer policy written as <c>&lt;meta name="referrer"&gt;</c>, such as <c>strict-origin</c>.
+    /// When empty, the configured <see cref="SeoMetadataOptions.ReferrerPolicy"/> applies; when that is empty too, no
+    /// tag is written, so the site's <c>Referrer-Policy</c> response header (or the browser default,
+    /// <c>strict-origin-when-cross-origin</c>) applies. A referrer meta tag replaces the header's policy for the whole
+    /// document. A value that is not one of the policy tokens of the Referrer Policy specification writes nothing.
+    /// </summary>
+    [Parameter]
+    public string? ReferrerPolicy { get; set; }
+
+    /// <summary>
+    /// Gets or sets the schema type of a content page when nothing else names one: <see cref="SchemaTypes"/>, the
+    /// configured <c>DefaultSchemaTypes</c> and the front matter <c>type</c> all come first. When not set,
+    /// <c>WebPage</c> applies. <c>ArticlePage</c> sets it to <see cref="SchemaType.Article"/>.
+    /// </summary>
+    [Parameter]
+    public SchemaType? FallbackSchemaType { get; set; }
+
     #endregion
 
     /// <summary>
@@ -328,6 +351,17 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         ["Product"] = "product",
         ["VideoObject"] = "video.other"
     };
+
+    /// <summary>The policies of the Referrer Policy specification, the values a referrer meta tag may carry.</summary>
+    private static readonly HashSet<string> ReferrerPolicyTokens = new(StringComparer.Ordinal)
+    {
+        "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin",
+        "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url"
+    };
+
+    /// <summary>The schema types a listed item can be written as: each takes the article properties.</summary>
+    private static readonly HashSet<SchemaType> ArticleSchemaTypes =
+        [Cms.Web.Components.SchemaType.Article, Cms.Web.Components.SchemaType.BlogPosting, Cms.Web.Components.SchemaType.TechArticle];
 
     /// <summary>The Open Graph image size Facebook and others recommend, written when neither a parameter nor an option sets one.</summary>
     private const int RecommendedImageWidth = 1200;
@@ -383,6 +417,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _isArticle = string.Equals(_ogType, "article", StringComparison.OrdinalIgnoreCase);
         BuildTwitterCardMetadata();
         BuildSeoEssentials();
+        _referrerPolicy = ResolveReferrerPolicy();
 
         // GEO & AEO optimization (before the structured data, which reuses the generated answers)
         if (EnableGeoOptimization)
@@ -422,6 +457,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _currentUrl = string.Empty;
         _robotsDirective = null;
         _languageCode = null;
+        _referrerPolicy = null;
         _jsonLdContent = null;
         _additionalJsonLdSchemas = null;
         _entitySummary = null;
@@ -504,6 +540,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         DefaultImageUrl ??= options.DefaultImageUrl;
         OrganizationName ??= options.OrganizationName;
         AuthorUrl ??= options.AuthorUrl;
+        ReferrerPolicy ??= options.ReferrerPolicy;
     }
 
     private void ApplyRenderingDefaults(SeoMetadataOptions options)
@@ -803,6 +840,23 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         return "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
     }
 
+    /// <summary>
+    /// The policy token of <see cref="ReferrerPolicy"/> in lower case, or <see langword="null"/> when none is set or
+    /// it is not a token of the Referrer Policy specification, which a browser would ignore.
+    /// </summary>
+    private string? ResolveReferrerPolicy()
+    {
+        if (string.IsNullOrWhiteSpace(ReferrerPolicy))
+            return null;
+
+        var token = ReferrerPolicy.Trim().ToLowerInvariant();
+        if (ReferrerPolicyTokens.Contains(token))
+            return token;
+
+        Logger.LogWarning("Skipping the referrer meta tag; '{ReferrerPolicy}' is not a referrer policy", ReferrerPolicy);
+        return null;
+    }
+
     private string? NormalizeImageUrl(string? url) => SeoText.NormalizeImageUrl(url, _baseUrl);
 
     private string DetermineOgType() => OgTypesBySchemaType.GetValueOrDefault(PrimarySchemaTypeName, "website");
@@ -812,14 +866,16 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     #region Values Shown in the Markup
 
     /// <summary>
-    /// The name of the first schema type, else the front matter type, else WebPage. An empty
-    /// <see cref="SchemaTypes"/> array counts as not set, as in <see cref="ResolveSchemaTypes"/>, so og:type and
-    /// content-type agree with the JSON-LD.
+    /// The name of the first schema type, else the front matter type, else <see cref="FallbackSchemaType"/>, else
+    /// WebPage. An empty <see cref="SchemaTypes"/> array or a blank front matter type counts as not set, as in
+    /// <see cref="ResolveSchemaTypes"/>, so og:type and content-type agree with the JSON-LD.
     /// </summary>
     private string PrimarySchemaTypeName =>
-        (SchemaTypes is { Length: > 0 } schemaTypes ? schemaTypes[0].ToString() : null)
-        ?? Content?.Metadata?.SeoProperties?.Type
-        ?? "WebPage";
+        SeoText.FirstNonBlank(
+            SchemaTypes is { Length: > 0 } schemaTypes ? schemaTypes[0].ToString() : null,
+            Content?.Metadata?.SeoProperties?.Type,
+            FallbackSchemaType?.ToString())
+        ?? nameof(Cms.Web.Components.SchemaType.WebPage);
 
     private bool HasCategories => _categories?.Any() == true;
 
@@ -851,7 +907,6 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         MetaTitle = _metaTitle,
         MetaDescription = _metaDescription,
         OgImage = _ogImage,
-        Author = _author,
         ApplicationCategory = ApplicationCategory
     };
 
@@ -886,13 +941,24 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         GenerateCollectionItemSchemas(context);
     }
 
+    /// <summary>
+    /// A list page writes the <c>CollectionPage</c> and the <c>BreadcrumbList</c> its <see cref="SchemaTypes"/> name,
+    /// in their order, the first as the primary schema, then one article per item. The other types describe a single
+    /// item and have no list page form.
+    /// </summary>
     private void GenerateCollectionJsonLd(SeoSchemaContext context)
     {
         _additionalJsonLdSchemas = [];
 
-        if (SchemaTypes?.Contains(Cms.Web.Components.SchemaType.CollectionPage) == true)
+        var pageSchemas = (SchemaTypes ?? [])
+            .Distinct()
+            .Where(type => type is Cms.Web.Components.SchemaType.CollectionPage or Cms.Web.Components.SchemaType.BreadcrumbList)
+            .Select(type => SeoSchemas.Serialize(SeoSchemas.Create(type, context)!))
+            .ToList();
+        if (pageSchemas.Count > 0)
         {
-            _jsonLdContent = SeoSchemas.Serialize(NavigationSchemas.CollectionPage(context));
+            _jsonLdContent = pageSchemas[0];
+            _additionalJsonLdSchemas.AddRange(pageSchemas.Skip(1));
         }
 
         GenerateCollectionItemSchemas(context);
@@ -922,7 +988,8 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     /// <summary>
     /// The schema types to generate: the explicit <see cref="SchemaTypes"/>, else the front matter type, else
-    /// WebPage. A single type gets a BreadcrumbList added when <see cref="GenerateMultipleSchemas"/> is on.
+    /// <see cref="FallbackSchemaType"/>, else WebPage. A single type gets a BreadcrumbList added when
+    /// <see cref="GenerateMultipleSchemas"/> is on.
     /// </summary>
     private List<SchemaType> ResolveSchemaTypes(ContentItem content)
     {
@@ -939,7 +1006,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         }
         else
         {
-            schemaTypes = [Cms.Web.Components.SchemaType.WebPage];
+            schemaTypes = [FallbackSchemaType ?? Cms.Web.Components.SchemaType.WebPage];
         }
 
         // When several schemas are given explicitly, the caller chose them all, so nothing is added.
@@ -957,16 +1024,34 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     }
 
     /// <summary>
-    /// Generates individual BlogPosting schemas for each item in a collection (Blog/Category/Tag pages).
+    /// Generates an article for each item in a collection (blog, category and tag pages), of the type
+    /// <see cref="ListedItemSchemaType"/> resolves.
     /// </summary>
     private void GenerateCollectionItemSchemas(SeoSchemaContext context)
     {
         if (ContentItems?.Any() != true)
             return;
 
+        var pageItemType = SchemaTypes?.Where(ArticleSchemaTypes.Contains).Select(type => (SchemaType?)type).FirstOrDefault();
         _additionalJsonLdSchemas ??= [];
-        _additionalJsonLdSchemas.AddRange(ContentItems.Select(item =>
-            SeoSchemas.Serialize(NavigationSchemas.CollectionItemPosting(item, context))));
+        _additionalJsonLdSchemas.AddRange(ContentItems.Select(item => SeoSchemas.Serialize(
+            NavigationSchemas.CollectionItemPosting(item, context, ListedItemSchemaType(item, pageItemType).ToString()))));
+    }
+
+    /// <summary>
+    /// The type of a listed item: its front matter type when that is an article type, then the article type the page
+    /// names, then Article. A list holds case studies and documentation as well as blog posts, so BlogPosting is
+    /// written only when the item or the page says so.
+    /// </summary>
+    private static SchemaType ListedItemSchemaType(ContentItem item, SchemaType? pageItemType)
+    {
+        var declaredType = item.Metadata?.SeoProperties?.Type;
+        if (Enum.TryParse<SchemaType>(declaredType, ignoreCase: true, out var itemType) && ArticleSchemaTypes.Contains(itemType))
+        {
+            return itemType;
+        }
+
+        return pageItemType ?? Cms.Web.Components.SchemaType.Article;
     }
 
     /// <summary>

@@ -71,13 +71,13 @@ public class SeoSchemasTests
         schema.ShouldContain("\"url\": \"https://site.test/docs/install\"");
     }
 
-    // Fails before the fix: same missing slash in the blog posting written for each collection item.
+    // Fails before the fix: same missing slash in the article written for each collection item.
     [Theory]
     [InlineData("docs/install")]
     [InlineData("/docs/install")]
     public void CollectionItemPosting_ItemUrl_IsJoinedToTheHostWithOneSlash(string itemUrl)
     {
-        var schema = SeoSchemas.Serialize(NavigationSchemas.CollectionItemPosting(CreateItem(itemUrl), CreateContext()));
+        var schema = SeoSchemas.Serialize(NavigationSchemas.CollectionItemPosting(CreateItem(itemUrl), CreateContext(), "Article"));
 
         schema.ShouldContain("\"url\": \"https://site.test/docs/install\"");
     }
