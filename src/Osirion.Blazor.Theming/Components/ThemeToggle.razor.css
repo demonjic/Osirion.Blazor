@@ -95,6 +95,12 @@
         opacity: 0.7;
     }
 
+    /* The token ring may be faint (the default light token is half transparent), so keyboard focus also shows the
+       button's own 2px ring in the primary color at full strength, just inside the token ring. */
+    .theme-toggle-btn:focus-visible::before {
+        opacity: 1;
+    }
+
     .theme-toggle-btn:hover {
         transform: scale(1.1) rotate(15deg);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;

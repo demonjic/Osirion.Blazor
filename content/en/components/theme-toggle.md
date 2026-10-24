@@ -139,7 +139,9 @@ describes.
 - A visually hidden text (`osirion-visually-hidden`) repeats the current theme; the icons are `aria-hidden`.
 - Keyboard focus (`:focus-visible`) shows the focus ring every Osirion component draws: `--osirion-focus-ring-width`
   solid `--osirion-focus-ring-color`, offset by `--osirion-focus-ring-offset`. Mouse focus does not. The ring is drawn
-  at once; the button's transitions leave the outline out, so it does not fade in from another color.
+  at once; the button's transitions leave the outline out, so it does not fade in from another color. Just inside it
+  the button's own 2px ring shows in `--osirion-primary-color` at full strength, so focus stays visible when the token
+  color is faint (the default light token is half transparent).
 - The button is 44 by 44 pixels, 40 by 40 at 768px and below, and 36 by 36 at 576px and below.
 
 ## Styling

@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Osirion.Blazor.Palettes;
 using Osirion.Blazor.Theming.Tests.Palettes;
 using Shouldly;
 
@@ -21,6 +22,37 @@ public partial class ThemeToggleStylesheetTests
 
         // Assert
         css.ShouldContain(".theme-toggle-btn:focus-visible{" + FocusRing + "}");
+    }
+
+    // Fails before the fix: the token ring was the only focus indicator, and the library's default light token
+    // (3px of rgba(59, 130, 246, 0.5)) reads about 1.8:1 on a white bar, the Bootstrap adapter's about 1.4:1. The
+    // button's own 2px ring (its ::before, in the primary color) now shows at full strength on keyboard focus too.
+    [Fact]
+    public void FocusVisible_AlsoDrawsTheOpaquePrimaryRing()
+    {
+        // Act
+        var css = Stylesheet();
+
+        // Assert
+        css.ShouldContain(".theme-toggle-btn:focus-visible::before{opacity:1;}");
+        css.ShouldContain("background:linear-gradient(45deg,var(--osirion-primary-color,#2563eb),var(--osirion-primary-color-hover,#1d4ed8));");
+    }
+
+    // The primary ring sits on the bar around the button, so it needs the 3:1 a focus indicator asks for there.
+    [Fact]
+    public void PrimaryRing_ReachesNonTextContrastInBothComponentThemes()
+    {
+        // Arrange
+        var themes = ComponentThemeColors().Matches(Stylesheet()).ToList();
+
+        // Act
+        var ratios = themes
+            .Select(theme => Rgb.Contrast(Rgb.Parse(theme.Groups["primary"].Value), Rgb.Parse(theme.Groups["background"].Value)))
+            .ToList();
+
+        // Assert
+        ratios.Count.ShouldBe(2);
+        ratios.ShouldAllBe(ratio => ratio >= 3.0);
     }
 
     [Fact]
@@ -74,4 +106,7 @@ public partial class ThemeToggleStylesheetTests
 
     [GeneratedRegex(@"(?<![\w\]-])\.theme-toggle-btn\{(?<body>[^}]*)\}")]
     private static partial Regex ButtonRule();
+
+    [GeneratedRegex(@"--osirion-background-primary:(?<background>#[0-9a-f]{6})!important;[^}]*--osirion-primary-color:(?<primary>#[0-9a-f]{6})!important;")]
+    private static partial Regex ComponentThemeColors();
 }
