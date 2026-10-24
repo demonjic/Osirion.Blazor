@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Osirion.Blazor.Components;
@@ -19,6 +20,31 @@ public class OsirionContactInfoSectionTests : OsirionComponentTestBase
 
         cut.Find("a[href='mailto:a@b.example']").TextContent.ShouldBe("a@b.example");
     }
+
+    // A guard test: a site that adds no extra items must keep getting the markup it always got.
+    [Fact]
+    public void ContactInfoSection_NoExtraItems_RendersTheMarkupItAlwaysDid()
+    {
+        var cut = Render(new ContactInformation
+        {
+            Address = "1 Main Street",
+            Phone = "+1 555 0100",
+            Email = "a@b.example",
+            Website = "https://example.org",
+            Message = "Write or call."
+        });
+
+        NormalizedMarkup(cut).ShouldBe(UnchangedMarkup);
+    }
+
+    private const string UnchangedMarkup =
+        """
+        <div class="osirion-contact-info-section"><h2 class="osirion-contact-info-title">Contact information</h2><p class="osirion-contact-info-description">Write or call.</p><div class="osirion-contact-info-list"><div class="osirion-contact-info-item"><div class="osirion-contact-info-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg></div><div class="osirion-contact-info-content"><span class="osirion-contact-info-label">Address:</span><span class="osirion-contact-info-value">1 Main Street</span></div></div><div class="osirion-contact-info-item"><div class="osirion-contact-info-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path></svg></div><div class="osirion-contact-info-content"><span class="osirion-contact-info-label">Phone:</span><a href="tel:+1 555 0100" class="osirion-contact-info-value osirion-contact-link">+1 555 0100</a></div></div><div class="osirion-contact-info-item"><div class="osirion-contact-info-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg></div><div class="osirion-contact-info-content"><span class="osirion-contact-info-label">Email:</span><a href="mailto:a@b.example" class="osirion-contact-info-value osirion-contact-link">a@b.example</a></div></div><div class="osirion-contact-info-item"><div class="osirion-contact-info-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg></div><div class="osirion-contact-info-content"><span class="osirion-contact-info-label">Website:</span><a href="https://example.org" target="_blank" rel="noopener noreferrer" class="osirion-contact-info-value osirion-contact-link">example.org</a></div></div></div></div>
+        """;
+
+    // The markup without the scope attribute and the white space between tags, which change with the build.
+    private static string NormalizedMarkup(IRenderedComponent<OsirionContactInfoSection> cut) =>
+        Regex.Replace(Regex.Replace(cut.Markup, " b-[a-z0-9]{10}", string.Empty), @">\s+<", "><");
 
     // Fails before the fix: Class was written twice on the root, once by CombineCssClasses and once by the markup.
     [Fact]
