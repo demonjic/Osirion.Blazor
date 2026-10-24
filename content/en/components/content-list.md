@@ -5,7 +5,7 @@ permalink: /components/content-list
 description: "List content items from the default provider as a grid of cards, filtered by directory, category, tag, author or search, with query-string pagination."
 author: "Osirion Team"
 date: 2025-01-26
-last_modified: 2026-10-17
+last_modified: 2026-10-24
 featured_image: 'https://media.getosirion.com/og/components-content-list.jpg'
 categories:
 - Components
@@ -123,8 +123,9 @@ attributes from the base class are not written to the markup either.
 - **SEO.** With `EnableSeoMetadata` and at least one item, the head gets a title (from `PageTitle`, otherwise
   "Category: {Category}", "Tag: {Tag}", the directory name in title case or "Blog", with " - Page N" after the first
   page), a description, a canonical URL that keeps only `page` (from page 2 on),
-  `rel="prev"` and `rel="next"` links, CollectionPage JSON-LD and a BlogPosting entry per item. Turn it off when the
-  page renders its own `SeoMetadataRenderer`.
+  `rel="prev"` and `rel="next"` links, CollectionPage and BreadcrumbList JSON-LD and an entry per item: an `Article`,
+  or the item's own `type` when it is `BlogPosting` or `TechArticle`. Add `SchemaType.BlogPosting` to `SchemaTypes`
+  to make every entry of a blog list a `BlogPosting`. Turn it off when the page renders its own `SeoMetadataRenderer`.
 - **Accessibility.** The previous and next page links are icons without a text label.
 - **Errors.** A provider failure is logged and the empty state is shown.
 

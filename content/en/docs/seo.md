@@ -7,7 +7,7 @@ permalink: /docs/seo
 description: "What Osirion.Blazor writes for search engines (metadata, canonical URLs, structured data, sitemap, feeds, redirects) and what your site must still do."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-24
 featured_image: 'https://media.getosirion.com/og/docs-seo.jpg'
 categories:
 - Documentation
@@ -106,7 +106,9 @@ proxy or on a preview host, make the app see the public scheme and host (ASP.NET
 `seo_properties.canonical` on the page.
 
 The release after 4.1.0 adds `Osirion:Seo:SiteUrl`: when it is an absolute `http` or `https` address, the canonical URL,
-`og:url` and the addresses in structured data use it, whatever host served the request.
+`og:url` and the addresses in structured data use it, whatever host served the request. Set it on a site you publish as
+static files: the export renders from a local address, and without it the canonical URL and the JSON-LD of every page,
+list pages included, name that local host. The feeds' `SiteUrl` covers only the feeds and the sitemap.
 
 Set `canonical` in front matter only when another address is the preferred one. A wrong canonical tells search engines to
 ignore the page.
@@ -190,13 +192,30 @@ as described in [How content is organized](/docs/content). A 301 tells search en
 
 ## Know the structured data
 
-JSON-LD is chosen by the `SchemaTypes` parameter, else `seo_properties.type`, else `WebPage`. A page with a front matter
-block has `type: Article` unless it sets another, so it gets `Article`; a file with no front matter gets `WebPage`.
-The name is read ignoring case (`techarticle` is `TechArticle`); an unrecognized name gives `WebPage`. The generated types are
+JSON-LD is chosen by the `SchemaTypes` parameter, else `Osirion:Seo:DefaultSchemaTypes`, else `seo_properties.type`,
+else `WebPage`; `ArticlePage` writes `Article` where the others write `WebPage`. In 4.2.0 and earlier, a page with a
+front matter block got `Article` (and `og:type` `article`) unless it set another type; from the release after 4.2.0 a page
+without a `type` is a `WebPage` with `og:type` `website`, so set `type` on the pages that are articles when they are not
+shown by `ArticlePage`. The name is read ignoring case (`techarticle` is `TechArticle`); an unrecognized name, such as
+`NewsArticle`, counts as no `type`, so it gives `WebPage` (`Article` on `ArticlePage`), and `og:type` follows. The generated types are
 `Article`, `BlogPosting`, `TechArticle`, `WebPage`, `AboutPage`, `ContactPage`, `ProfilePage`, `SoftwareApplication`,
 `Product`, `Organization`, `Person`, `LocalBusiness`, `Event`, `Recipe`, `Course`, `Review`, `VideoObject`, `WebSite`,
 `BreadcrumbList` and `CollectionPage`, plus `HowTo`. With one type and `GenerateMultipleSchemas` on (the default), a
 `BreadcrumbList` is added. To replace the data with your own, put a JSON string in `seo_properties.json_ld`.
+
+A list page (`ContentList`, `ContentListPage`) writes the `CollectionPage` and the `BreadcrumbList` in its
+`SchemaTypes`, then one entry per listed item. From the release after 4.2.0 that entry is an `Article`, or the item's own
+`type` when it is `BlogPosting` or `TechArticle`; add `SchemaType.BlogPosting` to the list's `SchemaTypes` to make every
+entry of a blog list a `BlogPosting`. Properties without a value are left out. In 4.2.0 and earlier every entry was a
+`BlogPosting`, the `BreadcrumbList` was not written, and empty values were written as `null`.
+
+## Leave the referrer policy to the server
+
+Send the policy as a response header (`Referrer-Policy: strict-origin-when-cross-origin`, or stricter) from the server
+or the host. A `<meta name="referrer">` tag sets the document's policy after the header did, so it replaces it. Up to
+4.2.0 `SeoMetadataRenderer` wrote `no-referrer-when-downgrade` on every page, which sends the full address to other
+sites and so weakened a stricter header; from the release after 4.2.0 it writes the tag only when you set
+`Osirion:Seo:ReferrerPolicy` (or the `ReferrerPolicy` parameter), for a host that cannot send headers.
 
 Google no longer shows FAQ or HowTo rich results, so treat neither as an SEO feature. `HowTo` is only schema.org
 markup. `FAQ` as a schema type writes nothing, and `EnableGeneratedFaq`, which is off, builds FAQ data from your title

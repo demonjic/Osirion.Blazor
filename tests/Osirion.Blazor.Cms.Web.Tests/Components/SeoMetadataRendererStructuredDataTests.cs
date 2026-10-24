@@ -218,7 +218,7 @@ public class SeoMetadataRendererStructuredDataTests : CmsWebComponentTestBase
     }
 
     [Fact]
-    public void SeoMetadataRenderer_CollectionPageSchema_RendersTheCollectionThenOnePostingPerItem()
+    public void SeoMetadataRenderer_CollectionPageSchema_RendersTheCollectionThenOneArticlePerItem()
     {
         var schemas = RenderJsonLd(p => p
             .Add(c => c.ContentItems, [SeoTestContent.Article(), SeoTestContent.BarePost()])
@@ -233,7 +233,7 @@ public class SeoMetadataRendererStructuredDataTests : CmsWebComponentTestBase
     }
 
     [Fact]
-    public void SeoMetadataRenderer_CollectionWithoutCollectionPageSchema_RendersOnlyThePostings()
+    public void SeoMetadataRenderer_CollectionWithoutCollectionPageSchema_RendersOnlyTheArticles()
     {
         var schemas = RenderJsonLd(p => p
             .Add(c => c.ContentItems, [SeoTestContent.Article(), SeoTestContent.BarePost()])
@@ -779,8 +779,7 @@ public class SeoMetadataRendererStructuredDataTests : CmsWebComponentTestBase
                 "url": "http://localhost/blog/second",
                 "name": "Second post",
                 "description": "A practical description of testing. It covers the basics.",
-                "datePublished": "2020-01-02T03:04:05Z",
-                "image": null
+                "datePublished": "2020-01-02T03:04:05Z"
               }
             ]
           },
@@ -816,7 +815,7 @@ public class SeoMetadataRendererStructuredDataTests : CmsWebComponentTestBase
     private const string FirstCollectionPostingJson = """
         {
           "@context": "https://schema.org",
-          "@type": "BlogPosting",
+          "@type": "Article",
           "headline": "Guide to testing Blazor",
           "description": "A practical description of testing. It covers the basics.",
           "image": "http://localhost/images/cover.png",
@@ -849,16 +848,12 @@ public class SeoMetadataRendererStructuredDataTests : CmsWebComponentTestBase
     private const string SecondCollectionPostingJson = """
         {
           "@context": "https://schema.org",
-          "@type": "BlogPosting",
+          "@type": "Article",
           "headline": "Second post",
           "description": "A practical description of testing. It covers the basics.",
           "image": "http://localhost/images/cover.png",
           "datePublished": "2020-01-02T03:04:05Z",
           "dateModified": "2020-01-02T03:04:05Z",
-          "author": {
-            "@type": "Person",
-            "name": ""
-          },
           "publisher": {
             "@type": "Organization",
             "name": "localhost",

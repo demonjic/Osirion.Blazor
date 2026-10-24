@@ -408,7 +408,7 @@ internal static class ContentSchemas
     internal static object Default(SeoSchemaContext context) => new Dictionary<string, object?>
     {
         ["@context"] = SchemaContext,
-        ["@type"] = context.Content?.Metadata?.SeoProperties?.Type ?? "Thing",
+        ["@type"] = SeoText.FirstNonBlank(context.Content?.Metadata?.SeoProperties?.Type) ?? "Thing",
         ["name"] = context.Content?.Title,
         ["description"] = context.Content?.Description,
         ["url"] = context.CurrentUrl,
