@@ -37,6 +37,26 @@ public partial class PageLevelStylesheetTests : CmsWebComponentTestBase
         body.ShouldContain("max-width: var(--osirion-about-page-width, var(--osirion-container-lg, 960px));");
     }
 
+    // Fails before the fix: the property widened the body, but the default heading kept --osirion-container-lg, so a
+    // wider page put its h1 out of line with the text below it.
+    [Fact]
+    public void AboutPage_DefaultHeading_TakesTheSameWidthAsTheBody()
+    {
+        // Arrange
+        var heading = AboutHeadingRule().Match(Collapse(PageCss("AboutPage.razor.css")));
+        heading.Success.ShouldBeTrue();
+        var about = ContentItem.Create("id-about", "About", "<p>Body</p>", "about.md", "test");
+
+        // Act
+        var cut = RenderStatic<AboutPage>(p => p.Add(c => c.Item, about));
+
+        // Assert
+        heading.Groups["body"].Value.ShouldContain(
+            "max-width: var(--osirion-about-page-width, var(--osirion-container-lg, 960px));");
+        cut.FindAll(".osirion-about-page " + heading.Groups["selector"].Value).ShouldHaveSingleItem()
+            .ClassList.ShouldContain("osirion-page-heading");
+    }
+
     // Fails before the fix: below 640 pixels the table of contents was hidden, but its empty sidebar kept its padding
     // and the layout's gap under the article.
     [Fact]
@@ -160,6 +180,9 @@ public partial class PageLevelStylesheetTests : CmsWebComponentTestBase
 
     [GeneratedRegex(@"(?:^|\} )[^{}]*\.osirion-about-page-body[^{}]*\{[^}]*\}")]
     private static partial Regex AboutBodyRule();
+
+    [GeneratedRegex(@"\.osirion-about-page ::deep (?<selector>[^{]+?) \{(?<body>[^}]*)\}")]
+    private static partial Regex AboutHeadingRule();
 
     [GeneratedRegex(@"\.osirion-article-layout ::deep (?<selector>[^{]+?) \{ display: none; \}")]
     private static partial Regex HidingRule();

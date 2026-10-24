@@ -204,10 +204,11 @@ or related items, so those parameters do nothing here, as the table says.
 ## Styling
 
 The root element has the class `osirion-about-page`. `HeaderContent` is in `osirion-about-page-header`, the body in
-`osirion-about-page-body` and the child content in `osirion-about-page-more`. All three are centered at the width
-`--osirion-about-page-width`, which defaults to `--osirion-container-lg` (960 pixels when unset), the width of
-`OsirionPageHeading`. Set the property to widen or narrow the page without changing the other components that read
-`--osirion-container-lg`:
+`osirion-about-page-body` and the child content in `osirion-about-page-more`. All three, and the default
+`OsirionPageHeading` when there is no `HeaderContent`, are centered at the width `--osirion-about-page-width`, which
+defaults to `--osirion-container-lg` (960 pixels when unset), so the h1 stays in line with the body. The hero, while
+`ShowHero` is on, keeps its own width. Set the property to widen or narrow the page without changing the other
+components that read `--osirion-container-lg`:
 
 ```css
 .osirion-about-page {

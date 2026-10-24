@@ -14,6 +14,11 @@
     max-width: var(--osirion-about-page-width, var(--osirion-container-lg, 960px));
 }
 
+/* The default heading follows the same width, so a wider or narrower page keeps its h1 in line with the body */
+.osirion-about-page ::deep .osirion-page-heading {
+    max-width: var(--osirion-about-page-width, var(--osirion-container-lg, 960px));
+}
+
 /* The spacing of OsirionPageHeading, which the header replaces */
 .osirion-about-page-header {
     margin-bottom: var(--osirion-spacing-8, 2rem);

@@ -32,8 +32,9 @@ Key parameters
   ```
 
 - `ChildContent`: shown after the body, for example author cards
-- Width: the header, the body and the child content are centered at `--osirion-about-page-width`, which defaults to
-  `--osirion-container-lg` (960px when unset). Set it on the page, for example
+- Width: the header (or the default heading), the body and the child content are centered at
+  `--osirion-about-page-width`, which defaults to `--osirion-container-lg` (960px when unset), so the h1 stays in line
+  with the body. The hero, while `ShowHero` is on, keeps its own width. Set the property on the page, for example
   `.osirion-about-page { --osirion-about-page-width: 1140px; }`
 - SEO: `SchemaTypes` (default `AboutPage`, plus a BreadcrumbList while `GenerateMultipleSchemas` is on),
   `WebsiteName`, `OrganizationName`, `SiteLogoUrl`, `AlternateLanguageUrls`, `SiteDescription`, `TwitterSite`, `TwitterCreator`, `FacebookAppId`, `DefaultImageUrl`, `DefaultImageWidth`, `DefaultImageHeight`, and the switches `AllowAiDiscovery`, `AllowAiTraining`, `AllowSearchIndexing`, `EnableGeoOptimization` and `EnableAeoOptimization` (each passed on only when you set it, so a switch you leave out keeps the configured value)
