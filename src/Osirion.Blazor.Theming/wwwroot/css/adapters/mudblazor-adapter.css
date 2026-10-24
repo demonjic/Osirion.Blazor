@@ -221,7 +221,6 @@ html.osirion-mudblazor-integration[data-osirion-theme] {
   --osirion-tag-radius: var(--mud-default-borderradius, 4px);
   /* Focus states */
   --osirion-focus-ring-width: 2px;
-  --osirion-focus-ring-color: rgba(89, 74, 226, 0.3);
   --osirion-focus-ring-offset: 2px;
   /* ScrollToTop specific */
   --osirion-scroll-background: var(--mud-palette-primary, #594ae2);
@@ -338,7 +337,6 @@ html.osirion-mudblazor-integration.mud-theme-dark {
   --osirion-card-background: var(--mud-palette-surface, #1e1e1e);
   --osirion-card-border-color: var(--mud-palette-divider, rgba(255, 255, 255, 0.12));
   /* Focus ring - more visible in dark mode */
-  --osirion-focus-ring-color: rgba(119, 107, 231, 0.5);
   /* Legacy compatibility */
   --osirion-color-background: var(--mud-palette-background, #121212);
   --osirion-color-background-light: var(--mud-palette-background-gray, #1e1e1e);

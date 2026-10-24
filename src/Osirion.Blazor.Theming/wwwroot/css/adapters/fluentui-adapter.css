@@ -361,7 +361,6 @@ html.osirion-fluent-integration > body {
         --osirion-card-background: var(--colorNeutralBackground1, var(--neutral-layer-card, #252423));
         --osirion-card-border-color: var(--colorNeutralStroke2, var(--neutral-stroke-rest, #3b3a39));
         /* Focus ring - more visible on dark backgrounds */
-        --osirion-focus-ring-color: rgba(40, 153, 245, 0.7); /* Brighter blue for dark mode */
         /* Legacy compatibility */
         --osirion-color-background: var(--colorNeutralBackground1, var(--neutral-layer-1, #1b1a19));
         --osirion-color-background-light: var(--colorNeutralBackground2, var(--neutral-layer-2, #252423));
