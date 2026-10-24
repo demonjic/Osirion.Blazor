@@ -265,7 +265,8 @@ public class PageLevelTests : CmsWebComponentTestBase
 
         var footer = cut.Find(".osirion-article-page-content > footer.osirion-article-page-footer");
         footer.QuerySelector(".cta")!.TextContent.ShouldBe("Talk about Closing");
-        footer.PreviousElementSibling!.ClassList.ShouldContain("osirion-article-layout");
+        cut.FindAll(".osirion-article-layout ~ footer.osirion-article-page-footer").ShouldHaveSingleItem();
+        footer.NextElementSibling.ShouldBeNull();
         cut.FindAll(".osirion-article-layout .cta").ShouldBeEmpty();
     }
 
