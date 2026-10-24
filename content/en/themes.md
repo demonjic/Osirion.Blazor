@@ -69,5 +69,5 @@ A palette of your own follows the same pattern: set the tokens under
 `data-osirion-palette` attribute on `<html>` yourself, since `ThemePalette` only knows the palettes Osirion ships.
 
 Keep the pairs in the table's last column apart: each text token at 4.5:1 on the backgrounds it is read on, and the
-focus colors at 3:1 on the page. Without a palette, the theme files and the framework adapter set these tokens;
+focus ring at 3:1 on the page and on the secondary and tertiary backgrounds, opaque so it does not depend on what is behind it. Without a palette, the theme files and the framework adapter set these tokens;
 [OsirionStyles](/components/osirion-styles) describes the other ways to override them.

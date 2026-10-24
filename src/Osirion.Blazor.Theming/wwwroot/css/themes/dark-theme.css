@@ -195,7 +195,7 @@
   --osirion-background-hover: var(--osirion-nav-hover-background);
   --osirion-nav-hover-text: var(--osirion-text-primary); /* #f3f4f6 - Light gray */
   /* Focus states - more visible in dark mode */
-  --osirion-focus-ring-color: rgba(96, 165, 250, 0.7); /* Semi-transparent bright blue */
+  --osirion-focus-ring-color: var(--osirion-color-primary-600); /* Opaque: 3:1 on the surfaces, WCAG 1.4.11 */
   --osirion-focus-ring-width: 3px;
   --osirion-focus-ring-offset: 2px;
   /* Scrollbar colors */
