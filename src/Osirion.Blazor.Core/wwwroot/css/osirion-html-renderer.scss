@@ -173,8 +173,11 @@
         color: var(--osirion-text-primary, #111827);
     }
 
-    /* ========== AUTOMATIC LINK STYLES ========== */
-    .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    /* ========== AUTOMATIC LINK STYLES ==========
+       The link part of each selector sits in :where(), so a rule weighs one class, the renderer's: enough to win
+       over element rules such as the reset's or a CSS framework's a { color } and a:hover, little enough that a
+       site theme rule such as .prose a restyles content links without !important. */
+    .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         display: inline-block;
         position: relative;
         padding: 0.125rem 0.5rem;
@@ -190,11 +193,11 @@
 
     /* Only a link that leaves the site carries the external-link icon, so only it keeps room for it. A relative
        address such as /blog/post is internal: it showed the icon before. */
-    .osirion-html-renderer a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    .osirion-html-renderer :where(a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         padding-right: 2rem;
     }
 
-        .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a):hover {
+        .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)):hover {
             color: var(--osirion-link-primary-hover);
             background-color: var(--osirion-link-bg-hover);
             transform: translateY(-1px);
@@ -403,7 +406,7 @@
 
 /* ========== HIGH CONTRAST MODE ========== */
 @media (prefers-contrast: high) {
-    .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         /* Maximum contrast colors */
         color: #0000ff !important; /* Pure blue */
         background-color: transparent !important;
@@ -412,7 +415,7 @@
         font-weight: bold !important;
     }
 
-        .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a):hover {
+        .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)):hover {
             color: #ffffff !important;
             background-color: #0000ff !important;
             border-color: #0000ff !important;
@@ -430,7 +433,7 @@
 
 /* Reduced contrast preference */
 @media (prefers-contrast: less) {
-    .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         /* Still WCAG AA compliant but softer */
         color: #0066cc; /* 4.8:1 contrast - AA compliant */
         background-color: rgba(0, 102, 204, 0.05);
@@ -439,13 +442,13 @@
 
 /* Windows High Contrast Mode */
 @media (forced-colors: active) {
-    .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         color: LinkText !important;
         background-color: transparent !important;
         border: 1px solid LinkText !important;
     }
 
-        .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a):hover {
+        .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)):hover {
             color: HighlightText !important;
             background-color: Highlight !important;
             border-color: Highlight !important;
@@ -453,7 +456,7 @@
 }
 
 /* ========== FOCUS STATES (WCAG 2.2 Compliant) ========== */
-.osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a):focus-visible {
+.osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)):focus-visible {
     outline: none;
     /* Double ring focus indicator */
     box-shadow: 0 0 0 2px var(--osirion-link-focus-offset), 0 0 0 4px var(--osirion-link-focus);
@@ -485,33 +488,18 @@
 
 /* Reduce transparency on smaller screens for better readability */
 @media (max-width: 768px) {
-    .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         background-color: rgba(0, 82, 204, 0.12);
         padding: 0.25rem 0.75rem;
     }
 
-    .osirion-html-renderer a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
+    .osirion-html-renderer :where(a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
         padding-right: 2.5rem;
     }
 }
 
-/* Print styles - maximum contrast */
-@media print {
-    .osirion-html-renderer a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a) {
-        color: #000000 !important;
-        background-color: transparent !important;
-        text-decoration: underline !important;
-        border: 1px solid #000000 !important;
-        font-weight: bold !important;
-    }
-
-        .osirion-html-renderer a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)::after {
-            display: none !important;
-        }
-}
-
 /* ========== ICON STYLING ========== */
-.osirion-html-renderer a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)::after {
+.osirion-html-renderer :where(a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a))::after {
     content: '';
     position: absolute;
     right: 0.25rem;
@@ -531,6 +519,147 @@
     transition: opacity 0.2s ease;
 }
 
-.osirion-html-renderer a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a):hover::after {
+.osirion-html-renderer :where(a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)):hover::after {
     opacity: 1;
+}
+
+/* ========== ACCESSIBLE CODE THEME ==========
+   The high-contrast dark Prism theme used while UseAccessibleTheme is on (the default): the renderer then adds
+   osirion-wcag-theme to its article. It was an inline <style> element, which a Content Security Policy without
+   'unsafe-inline' in style-src blocks. :where() keeps each rule at the specificity it had there, so the palettes'
+   code rules still outrank it, and it sits after the other screen rules, where the inline element was. */
+:where(.osirion-wcag-theme) code[class*="language-"],
+:where(.osirion-wcag-theme) pre[class*="language-"] {
+    color: #f8f8f2;
+    background: none;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
+}
+
+:where(.osirion-wcag-theme) pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 0.3em;
+    background: #1e1e1e;
+}
+
+:where(.osirion-wcag-theme) :not(pre) > code[class*="language-"] {
+    padding: 0.1em 0.3em;
+    border-radius: 0.3em;
+    white-space: normal;
+    background: #1e1e1e;
+}
+
+:where(.osirion-wcag-theme) .token.comment,
+:where(.osirion-wcag-theme) .token.prolog,
+:where(.osirion-wcag-theme) .token.doctype,
+:where(.osirion-wcag-theme) .token.cdata {
+    color: #8b949e;
+}
+
+:where(.osirion-wcag-theme) .token.punctuation {
+    color: #f8f8f2;
+}
+
+:where(.osirion-wcag-theme) .token.namespace {
+    opacity: 0.9;
+}
+
+:where(.osirion-wcag-theme) .token.property,
+:where(.osirion-wcag-theme) .token.tag,
+:where(.osirion-wcag-theme) .token.constant,
+:where(.osirion-wcag-theme) .token.symbol,
+:where(.osirion-wcag-theme) .token.deleted {
+    color: #ff79c6;
+}
+
+:where(.osirion-wcag-theme) .token.boolean,
+:where(.osirion-wcag-theme) .token.number {
+    color: #bd93f9;
+}
+
+:where(.osirion-wcag-theme) .token.selector,
+:where(.osirion-wcag-theme) .token.attr-name,
+:where(.osirion-wcag-theme) .token.string,
+:where(.osirion-wcag-theme) .token.char,
+:where(.osirion-wcag-theme) .token.builtin,
+:where(.osirion-wcag-theme) .token.inserted {
+    color: #50fa7b;
+}
+
+:where(.osirion-wcag-theme) .token.operator,
+:where(.osirion-wcag-theme) .token.entity,
+:where(.osirion-wcag-theme) .token.url,
+:where(.osirion-wcag-theme) .language-css .token.string,
+:where(.osirion-wcag-theme) .style .token.string,
+:where(.osirion-wcag-theme) .token.variable {
+    color: #f8f8f2;
+}
+
+:where(.osirion-wcag-theme) .token.atrule,
+:where(.osirion-wcag-theme) .token.attr-value,
+:where(.osirion-wcag-theme) .token.function,
+:where(.osirion-wcag-theme) .token.class-name {
+    color: #f1fa8c;
+}
+
+:where(.osirion-wcag-theme) .token.keyword {
+    color: #8be9fd;
+}
+
+:where(.osirion-wcag-theme) .token.regex,
+:where(.osirion-wcag-theme) .token.important {
+    color: #ffb86c;
+}
+
+:where(.osirion-wcag-theme) .token.important,
+:where(.osirion-wcag-theme) .token.bold {
+    font-weight: bold;
+}
+
+:where(.osirion-wcag-theme) .token.italic {
+    font-style: italic;
+}
+
+:where(.osirion-wcag-theme) .token.entity {
+    cursor: help;
+}
+
+/* ========== PRINT: LINKS ==========
+   Last in the file, so these rules win over the screen and small-screen rules at the same specificity, without
+   !important. A link prints as underlined text in the color of the text around it, and a link that leaves the site
+   prints its address after it, because paper cannot follow a link. */
+@media print {
+    .osirion-html-renderer :where(a:not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a)) {
+        display: inline;
+        padding: 0;
+        color: inherit;
+        background-color: transparent;
+        box-shadow: none;
+        transform: none;
+        text-decoration: underline;
+    }
+
+    .osirion-html-renderer :where(a:is([href^="http:"], [href^="https:"], [href^="//"]):not(:has(img)):not(:has(svg)):not(:has(span)):not(:has(div)):not(:has(i)):not(.osirion-content-demo-preview a))::after {
+        content: " (" attr(href) ")";
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none;
+        -webkit-mask-image: none;
+        mask-image: none;
+        background-color: transparent;
+        opacity: 1;
+        overflow-wrap: anywhere;
+    }
 }

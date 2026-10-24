@@ -136,8 +136,8 @@ site that uses them still needs `'unsafe-inline'` or must leave them out. The ta
 | `ThemeToggle` | Nothing inline: a click listener in `theme-toggle.js` does the work, and the page needs `OsirionStyles` as well |
 | `ThemePicker` | Nothing inline: no inline script and no event handler attribute |
 | `ScrollToTop`, `EnhancedNavigation` | One inline script each |
-| `OsirionHtmlRenderer` | An inline `style` element for the accessible code theme (`UseAccessibleTheme`) and an inline `onclick` on the Copy button; Prism from `cdnjs.cloudflare.com`, or from `PrismBaseUrl` when you serve it yourself |
-| `OsirionFooter` | An inline `style` element |
+| `OsirionHtmlRenderer` | An inline `onclick` on the Copy button (`EnableCopyButton`). The accessible code theme (`UseAccessibleTheme`) is part of `css/osirion-html-renderer.min.css`, a file from your own origin, in the release after 4.2.0, and an inline `style` element up to 4.2.0; Prism from `cdnjs.cloudflare.com`, or from your own site with `AddOsirionPrism` (see [Content Security Policy](/components/html-renderer#content-security-policy)) |
+| `OsirionFooter` | Nothing inline in the release after 4.2.0; up to 4.2.0, an inline `style` element and a `style` attribute on the brand |
 | Components with a `Style` parameter | `style-src` that allows inline style attributes |
 | Analytics: GA4, Clarity, Matomo, Plausible, Yandex Metrica | An inline script, and the provider's own script host |
 | Analytics: Umami | An external script tag only |
@@ -197,7 +197,51 @@ app.Use(async (context, next) =>
 ```
 
 The nonce does not cover inline `style` attributes: a component with a `Style` parameter, or one that writes a `style`
-attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-inline'` without a nonce.
+attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-inline'` without a nonce, or the hash of
+each attribute value with `'unsafe-hashes'`, as below.
+
+### Inline style attributes
+
+In the release after 4.2.0, the defaults of `OsirionHtmlRenderer`, `OsirionFooter`, `Menu`, `HeroSection`,
+`OsirionCookieConsent`, `OsirionContentNotFound`, `OsirionTestimonialCard` and `OsirionReadMoreLink` write no `style`
+attribute and no `style` element: the sticky `Menu`'s `z-index`, `HeroSection`'s `min-height: 60vh`, the
+`OsirionFooter` rules, the Customize button of `OsirionCookieConsent`, the buttons of `OsirionContentNotFound`, the
+read more link of `OsirionTestimonialCard` and the accessible code theme of `OsirionHtmlRenderer` moved into
+stylesheets, and `OsirionReadMoreLink` no longer writes an empty `style=""`. Other components still write a `style`
+attribute with their defaults; they are listed below the table. What the components on a typical page leave is
+fixed text, so a site exported to static files can allow each value by its hash. A hash of a `style` attribute needs
+`'unsafe-hashes'` next to it; it allows only that exact value, not any other inline style:
+
+| Source | Attribute value | Hash |
+| --- | --- | --- |
+| BlazorJSComponents, which loads the library's scripts: one `bl-script` element per script | `display: none; !important` | `'sha256-EXrMEQM0mPkgnkB6KboseHKD5Hs/aDUfUef9LAWu4uA='` |
+| Markdown table column alignment, the one inline style the sanitizer keeps | `text-align: left` | `'sha256-6l+tpow5lGPV0MHWZlDv8nD7HrL77FGFldqQ7zc5gxY='` |
+| | `text-align: center` | `'sha256-Y9v1MZrln1N8aPBY5lmpxYKwFkcp/nyBMMEnn7WFjuw='` |
+| | `text-align: right` | `'sha256-i0JPB0qmRu5AViJTxOIzqXnfGoiWFw+oNAm4uJd7ZQk='` |
+| `ScrollToTop`, which also needs an inline script | `display: none;` | `'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog='` |
+
+BlazorJSComponents is a third-party package; its attribute only hides the element and the page looks the same when
+the browser blocks it, so leaving the hash out costs one console report per page and nothing else. A typical page of
+the library, with a policy that also serves Prism from your own site
+([`AddOsirionPrism`](/components/html-renderer#content-security-policy)):
+
+```text
+style-src 'self' 'unsafe-hashes' 'sha256-EXrMEQM0mPkgnkB6KboseHKD5Hs/aDUfUef9LAWu4uA=';
+```
+
+Add the three alignment hashes when your Markdown has aligned table columns. These components write a `style`
+attribute even with their default parameters, because the value carries custom properties that the component works
+out from its parameters and items: `OsirionImageGallery` (columns and gap), `InfiniteLogoCarousel` (speed and logo
+sizes), `OsirionTestimonialCarousel` (speed and card sizes), `OsirionResponsiveShowcaseSection` (the viewport size)
+and the feature list of `LandingPage` (its column count). On a page that uses one, allow the exact value by its hash
+with `'unsafe-hashes'`, or use `style-src-attr 'unsafe-inline'`. Values that you pass in parameters are written
+inline as given, so they are yours to allow or to move into your stylesheet: `Style` on any component,
+`HeroSection`'s `MinHeight` other than `60vh`, `BackgroundColor`, `TextColor` and a background `ImageUrl`, the
+background settings of `OsirionBaseSection`, a `Menu` `StickyZIndex` other than 1000 or a `Menu` with a `Style`,
+`OsirionStickySidebar`'s `TopOffset`, the non-default sizes of the components above, and the call to action color of
+`LandingPage`. When the browser blocks one, its console names the hash it expected. `OsirionStyles` writes `CustomVariables` and the
+configured variables in `style` elements, which take the `Nonce`; on a static export, where no nonce is possible, the
+element's text is fixed by your configuration, so its hash (without `'unsafe-hashes'`) allows it.
 
 ## Know which cookies the library sets
 

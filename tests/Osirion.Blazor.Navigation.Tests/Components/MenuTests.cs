@@ -55,6 +55,20 @@ public class MenuTests : BunitContext
         cut.Find(".osirion-menu > .osirion-menu-inner").TextContent.Trim().ShouldBe("Menu Content");
     }
 
+    // Fails before the fix: every sticky menu wrote style="z-index: 1000;", which a Content Security Policy without
+    // 'unsafe-inline' in style-src blocks. The default comes from the stylesheet now; another value is still inline.
+    [Fact]
+    public void Menu_StickyWithDefaultZIndex_RendersNoStyleAttribute()
+    {
+        var cut = Render<Menu>(parameters => parameters
+            .Add(p => p.Sticky, true)
+            .AddChildContent("Menu Content"));
+
+        var container = cut.Find(".osirion-menu-container");
+        container.ClassList.ShouldContain("osirion-menu-sticky");
+        container.HasAttribute("style").ShouldBeFalse();
+    }
+
     [Fact]
     public void Menu_ShouldRenderStickyMenu_WhenIsSticky()
     {

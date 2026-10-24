@@ -139,6 +139,7 @@ html.osirion-bootstrap-integration .osirion-footer[data-osirion-component-theme=
 
 .osirion-footer-brand {
     width: 100%;
+    bottom: 0;
 }
 
 .osirion-footer-logo {
@@ -279,6 +280,7 @@ html.osirion-bootstrap-integration .osirion-footer[data-osirion-component-theme=
 
 .osirion-footer-bottom-links {
     display: flex;
+    margin-top: var(--osirion-spacing-2, .5rem);
     gap: var(--osirion-spacing-4, 1rem);
     flex-wrap: wrap;
 }

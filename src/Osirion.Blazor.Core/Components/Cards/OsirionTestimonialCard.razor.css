@@ -214,6 +214,14 @@
     border-top: 1px solid var(--osirion-border-color);
 }
 
+/* The read more link takes the card's action colors, as the inline style it replaces did; !important keeps that
+   precedence over the link's own color rules. */
+.osirion-testimonial-actions ::deep .osirion-testimonial-read-more {
+    color: var(--osirion-testimonial-action-color, var(--osirion-text-primary)) !important;
+    --osirion-action-primary: var(--osirion-testimonial-action-color, var(--osirion-text-primary));
+    --osirion-read-more-hover-color: var(--osirion-testimonial-action-hover-color, var(--osirion-text-primary));
+}
+
 /* Size variations - consistent with new layout and larger fonts */
 .osirion-testimonial-small {
     padding: var(--osirion-spacing-4);

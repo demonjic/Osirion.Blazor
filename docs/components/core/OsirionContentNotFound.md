@@ -13,3 +13,6 @@ Key parameters
 - Variant: default, minimal, centered, hero
 - Size: small, medium, large, full
 - BackgroundPattern
+
+Content Security Policy
+- The button links drop their underline through the class `osirion-content-not-found-button`; the component writes no `style` attribute of its own.

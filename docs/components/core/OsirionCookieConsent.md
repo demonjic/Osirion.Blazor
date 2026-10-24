@@ -36,3 +36,4 @@ Rendering modes
 Notes
 - Emits osirion-cookie-consent-{position} and -customizing classes
 - Map the server endpoint with MapOsirionCookieConsent and call UseAntiforgery; the endpoint rejects posts without a valid token and only redirects to local paths. See CookieConsent.md.
+- The Customize button takes the banner's text color for its label and border from the class `osirion-cookie-consent-customize-button`, not a `style` attribute, so a strict `style-src` needs nothing for it

@@ -185,12 +185,13 @@ public class OsirionReadMoreLinkTests : OsirionComponentTestBase
     }
 
     [Fact]
-    public void ReadMoreLink_NoStyle_RendersEmptyStyle()
+    public void ReadMoreLink_NoStyle_RendersNoStyleAttribute()
     {
         var cut = RenderStatic<OsirionReadMoreLink>(parameters => parameters
             .Add(p => p.Href, "/post"));
 
-        cut.Find("a").GetAttribute("style").ShouldBeNullOrEmpty();
+        // An empty style="" is still an inline style attribute to a Content Security Policy
+        cut.Find("a").HasAttribute("style").ShouldBeFalse();
     }
 
     // The filter keeps the framework classes; the component's own osirion-read-more classes are covered elsewhere.

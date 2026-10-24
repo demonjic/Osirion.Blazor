@@ -22,3 +22,4 @@ Notes
 - Variants: Default, Minimal, Highlighted, Compact.
 - Sizes: Small, Normal, Large. ImageSize auto-tunes by size.
 - Read more via ReadMoreHref/Text/Variant.
+- The read more link takes `--osirion-testimonial-action-color` and `--osirion-testimonial-action-hover-color` through the class `osirion-testimonial-read-more`, not a `style` attribute, so a strict Content Security Policy needs nothing for it.

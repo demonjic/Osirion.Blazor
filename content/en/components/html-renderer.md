@@ -102,7 +102,7 @@ and copy buttons:
 | `LanguageClasses` | `Dictionary<string, string>?` | `null` | CSS classes for specific languages. Obsolete and ignored: the component never read it. Style code blocks with CSS selectors on the `language-*` classes instead. |
 | `SanitizeHtml` | `bool` | `true` | Whether the HTML is sanitized before it is rendered. |
 | `HtmlSanitizer` | `Func<string, string>?` | `null` | A sanitizer to use instead of the registered `IHtmlContentSanitizer`. Used only while `SanitizeHtml` is `true`. |
-| `PrismBaseUrl` | `string?` | `null` | The base address Prism is loaded from, for hosts that serve it themselves (for example `/lib/prism/1.29.0/`). When empty, the pinned cdnjs release is used and every file is verified with its Subresource Integrity hash. Files from a custom address load without an integrity check. |
+| `PrismBaseUrl` | `string?` | `null` | The base address Prism is loaded from, for hosts that serve it themselves (for example `/lib/prism/1.29.0/`). When empty, `PrismOptions.BaseUrl` applies (set with `AddOsirionPrism`), and without that the pinned cdnjs release is used and every file is verified with its Subresource Integrity hash. Files from a custom address load without an integrity check. |
 | `EnableDemos` | `bool` | `true` | Whether fenced `demo` blocks whose text is a registered demo key (see `AddOsirionContentDemos`) render the live demo instead of the code block. Only blocks at the top level of the content are replaced; a block inside a list or quote stays a code block. |
 | `FocusableScrollBlocks` | `bool` | `true` | Whether code blocks and tables take a place in the tab order (`tabindex="0"`), so a keyboard user can scroll them sideways (WCAG 2.1.1). An element that already has a `tabindex` keeps it. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
@@ -143,8 +143,24 @@ that is not in that release is skipped. Short names are mapped to Prism's: `cs` 
 `ts`, `py`, `rb`, `yml`, `sh`, `ps1`, and `razor` or `blazor` to `cshtml`; `html` and `xml` use Prism's built-in
 `markup`.
 
-To serve Prism yourself, set `PrismBaseUrl`, for example `/lib/prism/1.29.0/`. Keep the release layout
-(`prism.min.js`, `components/prism-{language}.min.js`, `themes/prism-okaidia.min.css`, `plugins/line-numbers/...`).
+To serve Prism from your own site, register its folder once. It applies to every renderer, including the ones inside
+`ContentView`, `ArticlePage` and the other content components, which do not expose `PrismBaseUrl`:
+
+```csharp
+using Osirion.Blazor.Core.Extensions;
+
+builder.Services.AddOsirionPrism(options => options.BaseUrl = "/lib/prism/1.29.0/");
+```
+
+`BaseUrl` takes a path on the site or an `https` address; any other value stops the application at startup. A
+renderer's `PrismBaseUrl` parameter wins over it. Keep the layout of the cdnjs release, for example by downloading the
+files from `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/` into `wwwroot/lib/prism/1.29.0/`:
+
+- `prism.min.js`
+- `components/prism-{language}.min.js` for each language your content uses (`prism-csharp.min.js`, and so on)
+- `themes/prism-okaidia.min.css`, when `UseAccessibleTheme` is off
+- `plugins/line-numbers/prism-line-numbers.min.js` and `prism-line-numbers.min.css`, when `ShowLineNumbers` is on
+
 Files from your own address load without an integrity check.
 
 The scripts are rendered as part of the page rather than called through JavaScript interop, so highlighting also
@@ -175,21 +191,47 @@ marker that holds a demo's place is added after sanitizing, so content cannot fo
 
 ### Content Security Policy
 
-The accessible theme is an inline `<style>` element and the Copy button uses an inline `onclick` attribute. Under a
-policy without `'unsafe-inline'`, set `UseAccessibleTheme="false"` (and provide your theme as a file) and leave
-`EnableCopyButton` off. The component also links Prism's scripts and the Okaidia theme from cdnjs unless you set
-`PrismBaseUrl`, so the policy must allow that host for `script-src` and `style-src` (the Okaidia theme and the
-line numbers style), or you serve Prism yourself.
+The accessible theme is part of `osirion-html-renderer.min.css`, a file from your own origin, so `style-src 'self'`
+allows it (up to 4.2.0 it was an inline `<style>` element). The Copy button uses an inline
+`onclick` attribute, so under a policy without `'unsafe-inline'` in `script-src`, leave `EnableCopyButton` off. The
+script loader that BlazorJSComponents renders writes `style="display: none; !important"` on its `bl-script` elements;
+the [security guide](/docs/security#inline-style-attributes) gives the hash that allows it.
+
+Prism's script addresses appear in the page only inside the arguments of the script loader (a
+`<script type="application/json">` element, which is data and not run, so the policy does not apply to it), so write
+the hosts into the policy yourself. The Okaidia theme (`UseAccessibleTheme="false"`) and the line numbers style
+(`ShowLineNumbers`) are ordinary `<link rel="stylesheet">` elements that name their host in `href`. With the default
+cdnjs release, allow its host; `style-src` needs it only for those two stylesheets:
+
+```text
+script-src 'self' https://cdnjs.cloudflare.com;
+style-src 'self' https://cdnjs.cloudflare.com;
+```
+
+With Prism served from your own site through `AddOsirionPrism`, no other host is needed:
+
+```text
+script-src 'self';
+style-src 'self';
+```
+
+An `https` `BaseUrl` on another host takes that host in place of `https://cdnjs.cloudflare.com`.
 
 ## Styling
 
 The output is wrapped in `<article class="osirion-html-renderer osirion-content">`, with `osirion-wcag-theme` added
-when the accessible theme is in use. The component also links
+when the accessible theme is in use (the content has code and syntax highlighting is on). The component also links
 `_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css`, which styles headings, lists, tables, links and code
 inside the article from the theme tokens (`--osirion-text-primary`, `--osirion-font-family-base`,
 `--osirion-font-family-mono` and others). That stylesheet is the only source of the content typography: to change it,
 override its rules or set the tokens in your app's stylesheet. The component's scoped styles only set the article's base
 font, size and color, because the rendered HTML does not carry their scope attribute.
+
+The text link rules weigh one class, `.osirion-html-renderer`, because the link part of each selector sits in
+`:where()`. They win over element rules such as a CSS framework's `a` and `a:hover`, and a rule of your theme with a
+class and an element, such as `.prose a` or `.osirion-html-renderer a`, restyles content links without `!important`.
+In print, a link is underlined text in the color of the text around it, without a box or a background, and a link that
+leaves the site prints its address after it, for example "Prism (https://prismjs.com/)".
 
 Two custom properties are yours to set:
 

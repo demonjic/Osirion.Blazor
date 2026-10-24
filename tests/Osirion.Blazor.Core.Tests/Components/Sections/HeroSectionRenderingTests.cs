@@ -12,14 +12,24 @@ namespace Osirion.Blazor.Core.Tests.Components.Sections;
 public class HeroSectionRenderingTests : OsirionComponentTestBase
 {
     [Fact]
-    public void HeroSection_Defaults_RendersDefaultClassesAndMinHeight()
+    public void HeroSection_Defaults_RendersDefaultClassesAndNoInlineStyle()
     {
         var cut = RenderStatic<HeroSection>(_ => { });
 
+        // The default minimum height (60vh) comes from the stylesheet, so a policy without 'unsafe-inline' in
+        // style-src has nothing to block; it was written as style="min-height: 60vh;" before.
         var section = cut.Find("section");
         section.ClassList.ShouldBe(
             ["osirion-hero-section", "osirion-hero-variant-hero", "osirion-hero-align-left", "hero-divider"]);
-        section.GetAttribute("style").ShouldBe("min-height: 60vh;");
+        section.HasAttribute("style").ShouldBeFalse();
+    }
+
+    [Fact]
+    public void HeroSection_StyleOnly_IsWrittenAsGiven()
+    {
+        var cut = RenderStatic<HeroSection>(parameters => parameters.Add(p => p.Style, "padding: 0"));
+
+        cut.Find("section").GetAttribute("style").ShouldBe("padding: 0");
     }
 
     [Fact]

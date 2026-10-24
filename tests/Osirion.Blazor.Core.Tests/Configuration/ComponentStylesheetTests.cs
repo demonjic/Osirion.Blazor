@@ -186,6 +186,24 @@ public partial class ComponentStylesheetTests
         stage.ShouldNotContain("overflow:visible");
     }
 
+    // Fails before the fix: these declarations were inline (a style element or style attributes), which a Content
+    // Security Policy without 'unsafe-inline' in style-src blocks. They now come from the component's stylesheet.
+    [Theory]
+    [InlineData("Layout", "OsirionFooter.razor.css", ".osirion-footer-bottom-links", "margin-top:var(--osirion-spacing-2,.5rem);")]
+    [InlineData("Layout", "OsirionFooter.razor.css", ".osirion-footer-brand", "bottom:0;")]
+    [InlineData("Popups", "OsirionCookieConsent.razor.css", ".osirion-cookie-consent-customize-button", "color:inherit!important;border-color:inherit!important;")]
+    [InlineData("States", "OsirionContentNotFound.razor.css", ".osirion-content-not-found-button", "text-decoration:none!important;")]
+    [InlineData("Sections", "HeroSection.razor.css", ".osirion-hero-section", "min-height:60vh;")]
+    [InlineData("Cards", "OsirionTestimonialCard.razor.css", ".osirion-testimonial-actions::deep.osirion-testimonial-read-more", "color:var(--osirion-testimonial-action-color,var(--osirion-text-primary))!important;--osirion-action-primary:var(--osirion-testimonial-action-color,var(--osirion-text-primary));--osirion-read-more-hover-color:var(--osirion-testimonial-action-hover-color,var(--osirion-text-primary));")]
+    public void FormerlyInlineDeclarations_AreInTheComponentStylesheet(string folder, string file, string selector, string declarations)
+    {
+        // Act
+        var rule = Regex.Match(Squash(ComponentCss(folder, file)), @"(?:^|\})" + Regex.Escape(selector) + @"\{[^}]*\}").Value;
+
+        // Assert
+        rule.ShouldContain(declarations);
+    }
+
     private static string Squash(string css) => WhitespaceRun().Replace(CssComment().Replace(css, string.Empty), string.Empty);
 
     private static string ComponentCss(string folder, string file)

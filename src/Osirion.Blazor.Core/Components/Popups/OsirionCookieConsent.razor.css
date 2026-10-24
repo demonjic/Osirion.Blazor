@@ -101,6 +101,13 @@
     align-items: center;
 }
 
+/* The Customize button takes the banner's text color for its label and border in every state, as the inline style it
+   replaces did; !important keeps that precedence over a framework's hover and active rules (.btn:hover and others). */
+.osirion-cookie-consent-customize-button {
+    color: inherit !important;
+    border-color: inherit !important;
+}
+
 /* Button styles */
 .osirion-cookie-consent-button {
     padding: var(--osirion-spacing-2, 0.5rem) var(--osirion-spacing-4, 1rem);

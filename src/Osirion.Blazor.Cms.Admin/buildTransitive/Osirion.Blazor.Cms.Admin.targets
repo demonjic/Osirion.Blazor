@@ -1,0 +1,25 @@
+<Project>
+  <!--
+    Lets a site leave the admin's scoped styles out of its {App}.styles.css.
+
+    That bundle @imports the scoped stylesheet of every package the site references, and Osirion.Blazor references
+    this package through Osirion.Blazor.Cms, so every page of a public site downloaded the admin's bundle (about 70 KB)
+    as a render-blocking import. A site that renders no admin component sets this in its project file:
+
+      <PropertyGroup>
+        <OsirionCmsAdminStyles>false</OsirionCmsAdminStyles>
+      </PropertyGroup>
+
+    The admin components take their styles only from that bundle, so leave the property unset on a site that renders
+    them. Unset, nothing changes. The target removes the admin's entry from the bundles the SDK collected
+    (_CollectAllScopedCssAssets) before it writes the app bundle; the file itself is still served.
+  -->
+  <Target Name="OsirionExcludeCmsAdminScopedCss"
+          AfterTargets="_CollectAllScopedCssAssets"
+          Condition="'$(OsirionCmsAdminStyles)' == 'false'">
+    <ItemGroup>
+      <_ScopedCssProjectBundles Remove="@(_ScopedCssProjectBundles)"
+                                Condition="'%(_ScopedCssProjectBundles.SourceId)' == 'Osirion.Blazor.Cms.Admin'" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -25,3 +25,4 @@ Notes
 
 - Stretched links for clickable cards.
 - Framework-aware classes adapt to Bootstrap, MudBlazor, etc.
+- Without `Style` the link has no `style` attribute at all (it wrote an empty `style=""` before), so a strict Content Security Policy needs nothing for it.

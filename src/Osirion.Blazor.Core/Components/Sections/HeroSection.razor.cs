@@ -136,10 +136,14 @@ public partial class HeroSection
     public string? TextColor { get; set; }
 
     /// <summary>
-    /// The section's minimum height as a CSS length, written to the inline style as given.
+    /// The section's minimum height as a CSS length. The default, <c>60vh</c>, comes from the stylesheet; another value
+    /// is written to the inline style as given.
     /// </summary>
     [Parameter]
-    public string MinHeight { get; set; } = "60vh";
+    public string MinHeight { get; set; } = DefaultMinHeight;
+
+    /// <summary>The minimum height the stylesheet sets on <c>.osirion-hero-section</c>.</summary>
+    private const string DefaultMinHeight = "60vh";
 
     /// <summary>
     /// The author name shown in the metadata line when <see cref="ShowMetadata"/> is on.
@@ -256,9 +260,10 @@ public partial class HeroSection
     }
 
     /// <summary>
-    /// Gets the background style for the hero section
+    /// Gets the inline style of the section, or <see langword="null"/> when it needs none, so that a hero with the
+    /// default settings writes no <c>style</c> attribute for a Content Security Policy to block.
     /// </summary>
-    private string GetBackgroundStyle()
+    private string? GetBackgroundStyle()
     {
         var styles = new List<string>();
 
@@ -277,7 +282,15 @@ public partial class HeroSection
             styles.Add($"color: {TextColor}");
         }
 
-        styles.Add($"min-height: {MinHeight}");
+        if (MinHeight != DefaultMinHeight)
+        {
+            styles.Add($"min-height: {MinHeight}");
+        }
+
+        if (styles.Count == 0)
+        {
+            return string.IsNullOrWhiteSpace(Style) ? null : Style;
+        }
 
         return string.Join("; ", styles) + ";" + Style;
     }

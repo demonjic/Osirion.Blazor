@@ -177,9 +177,10 @@ public partial class OsirionReadMoreLink
     }
 
     /// <summary>
-    /// Gets the inline style for the link element
+    /// Gets the inline style for the link element, or <see langword="null"/> without a <see cref="OsirionComponentBase.Style"/>,
+    /// so the link carries no empty <c>style</c> attribute.
     /// </summary>
-    private string GetLinkStyle()
+    private string? GetLinkStyle()
     {
         var styles = new List<string>();
 
@@ -188,7 +189,7 @@ public partial class OsirionReadMoreLink
             styles.Add(Style);
         }
 
-        return string.Join("; ", styles) + (styles.Count > 0 ? ";" : "");
+        return styles.Count > 0 ? string.Join("; ", styles) + ";" : null;
     }
 
     /// <summary>

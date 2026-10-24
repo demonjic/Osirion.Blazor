@@ -53,3 +53,4 @@ Notes
 - Focus rings on the links and social links follow `--osirion-focus-ring-width`, `--osirion-focus-ring-color` and
   `--osirion-focus-ring-offset`, and show at once (the social links' transition leaves the outline out).
 - Docked with DockingMode: fixed|sticky.
+- Writes no inline `style` element or attribute of its own, so a strict Content Security Policy needs nothing for it.

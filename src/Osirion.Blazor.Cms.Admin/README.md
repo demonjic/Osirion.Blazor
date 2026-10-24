@@ -68,6 +68,19 @@ The package ships routed admin pages. Once the package assembly is added to rout
 - `CmsAdminDashboard` and `OsirionAdminLayout` frame the admin pages
 - `AuthGuard` shows its content only to users who satisfy an authorization policy
 
+## Sites without the admin
+
+A site that gets this package through `Osirion.Blazor` or `Osirion.Blazor.Cms` but renders no admin page can keep its
+scoped styles (about 72 KB) out of the app's `{AssemblyName}.styles.css`:
+
+```xml
+<PropertyGroup>
+  <OsirionCmsAdminStyles>false</OsirionCmsAdminStyles>
+</PropertyGroup>
+```
+
+Leave it unset on a site that serves the admin: its components take their styles only from that bundle.
+
 ## Securing the Admin
 
 Every routed admin page (`/osirion`, `/osirion/dashboard`, `/osirion/content`, `/osirion/content/edit`, `/osirion/settings` and `/osirion/login`) requires the authorization policy named `CmsAdminAuthorization.PolicyName` (`"Osirion.Cms.Admin"`, namespace `Osirion.Blazor.Cms.Admin.Features.Security`). `AddOsirionCmsAdmin` registers authorization, the cascading authentication state and a default policy that requires an authenticated user, unless the host has already defined a policy with that name. The library never adds an authentication scheme: who may sign in, and how, is the host's decision.

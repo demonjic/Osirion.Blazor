@@ -39,3 +39,4 @@ Notes
   `ButtonClasses.Secondary`, the same as `OsirionCallToActionSection`). Both carry `osirion-hero-button`, plus
   `osirion-hero-button-primary` or `osirion-hero-button-secondary`. Up to 4.2.0 the secondary button had the outlined
   primary classes and the `-primary` hook; select `osirion-hero-button` for a rule meant for both buttons.
+- The default MinHeight (60vh) comes from `.osirion-hero-section` in the stylesheet, so a hero with default settings writes no `style` attribute and needs nothing in a Content Security Policy. Another MinHeight, a BackgroundColor, TextColor, background ImageUrl or Style is written inline as before.
