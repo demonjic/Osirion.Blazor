@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 using Osirion.Blazor.Components;
+using Osirion.Blazor.Core.Models;
 using Osirion.Blazor.Core.Tests.Base;
 using Shouldly;
 
@@ -386,6 +387,160 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         root.ClassList.ShouldContain("site-contact");
         root.GetAttribute("style").ShouldBe("max-width: 40rem");
         root.Id.ShouldBe("contact-form");
+    }
+
+    [Fact]
+    public void StaticContactForm_SubjectFieldUnused_RendersNoSubject()
+    {
+        var cut = RenderForm();
+
+        cut.FindAll("[name=subject]").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void StaticContactForm_ShowSubjectField_AddsAnOptionalLabelledFieldBeforeTheMessage()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ShowSubjectField, true)
+            .Add(p => p.ShowCompanyField, true));
+
+        var subject = Field(cut, "subject");
+        subject.GetAttribute("type").ShouldBe("text");
+        subject.GetAttribute("maxlength").ShouldBe("200");
+        subject.HasAttribute("required").ShouldBeFalse();
+        AccessibleLabelOf(cut, subject).ShouldBe("Subject");
+        cut.FindAll("[name]").Select(field => field.GetAttribute("name"))
+            .ShouldBe(["name", "email", "company", "subject", "message", "website"]);
+    }
+
+    [Fact]
+    public void StaticContactForm_SubjectLabel_ReplacesTheDefault()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ShowSubjectField, true)
+            .Add(p => p.SubjectLabel, "Topic"));
+
+        AccessibleLabelOf(cut, Field(cut, "subject")).ShouldBe("Topic");
+    }
+
+    [Fact]
+    public void StaticContactForm_Placeholders_AreWrittenOnlyWhenSet()
+    {
+        var plain = RenderForm(parameters => parameters.Add(p => p.ShowSubjectField, true));
+        plain.FindAll("[placeholder]").ShouldBeEmpty();
+
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ShowSubjectField, true)
+            .Add(p => p.NamePlaceholder, "Your name")
+            .Add(p => p.EmailPlaceholder, "Your email address")
+            .Add(p => p.SubjectPlaceholder, "Subject")
+            .Add(p => p.MessagePlaceholder, "Your message"));
+
+        Field(cut, "name").GetAttribute("placeholder").ShouldBe("Your name");
+        Field(cut, "email").GetAttribute("placeholder").ShouldBe("Your email address");
+        Field(cut, "subject").GetAttribute("placeholder").ShouldBe("Subject");
+        Field(cut, "message").GetAttribute("placeholder").ShouldBe("Your message");
+    }
+
+    [Fact]
+    public void StaticContactForm_FormTitleAndDescription_AreRenderedAboveTheForm()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.FormTitle, "Get in touch")
+            .Add(p => p.FormDescription, "Tell me <b>what</b> you need."));
+
+        var container = cut.Find("div.osirion-static-contact-form");
+        container.Children.Select(child => child.TagName).ShouldBe(["H2", "P", "FORM"]);
+        cut.Find("h2").TextContent.ShouldBe("Get in touch");
+        cut.Find("p.osirion-static-contact-form-description").TextContent.ShouldBe("Tell me <b>what</b> you need.");
+        cut.FindAll("b").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void StaticContactForm_WithoutContactInfo_RendersNoPanelAndNoLayoutClass()
+    {
+        var cut = RenderForm();
+
+        cut.FindAll(".osirion-contact-info-section").ShouldBeEmpty();
+        cut.Find("div.osirion-static-contact-form").ClassList
+            .ShouldBe(["osirion-static-contact-form"]);
+    }
+
+    [Fact]
+    public void StaticContactForm_ContactInfo_RendersThePanelAfterTheFormBesideIt()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.FormTitle, "Get in touch")
+            .Add(p => p.ContactInfo, new ContactInformation
+            {
+                Address = "Belgrade, Serbia",
+                AdditionalItems = [new ContactInfoItem("Reply time:", "Within one business day", Icon: ContactInfoIcon.Clock)]
+            }));
+
+        var container = cut.Find("div.osirion-static-contact-form");
+        container.ClassList.ShouldBe(["osirion-static-contact-form", "osirion-static-contact-form-side-by-side"]);
+        container.Children.Select(child => child.ClassList.First()).ShouldBe(
+            ["osirion-static-contact-form-main", "osirion-contact-info-section"]);
+        cut.Find(".osirion-static-contact-form-main > form").ShouldNotBeNull();
+        cut.Find(".osirion-static-contact-form-main > h2").TextContent.ShouldBe("Get in touch");
+
+        var panel = cut.Find(".osirion-contact-info-section");
+        panel.ClassList.ShouldContain("osirion-static-contact-form-panel");
+        panel.QuerySelector("h2")!.TextContent.ShouldBe("Contact information");
+        panel.QuerySelectorAll(".osirion-contact-info-label").Select(label => label.TextContent)
+            .ShouldBe(["Address:", "Reply time:"]);
+    }
+
+    [Fact]
+    public void StaticContactForm_ContactInfo_KeepsTheNoScriptContentWithTheForm()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ContactInfo, new ContactInformation { Address = "Belgrade" })
+            .Add(p => p.NoScriptContent, builder => builder.AddContent(0, "Book a call instead.")));
+
+        cut.Find(".osirion-static-contact-form-main > noscript").ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void StaticContactForm_ContactInfoTitle_ReplacesTheDefault()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ContactInfo, new ContactInformation { Address = "Belgrade" })
+            .Add(p => p.ContactInfoTitle, "Other ways to reach me"));
+
+        cut.Find(".osirion-contact-info-section h2").TextContent.ShouldBe("Other ways to reach me");
+    }
+
+    [Fact]
+    public void StaticContactForm_SideBySideLayoutOff_StacksThePanelBelowTheForm()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.SideBySideLayout, false)
+            .Add(p => p.ContactInfo, new ContactInformation { Address = "Belgrade" }));
+
+        cut.Find("div.osirion-static-contact-form").ClassList
+            .ShouldBe(["osirion-static-contact-form", "osirion-static-contact-form-stacked"]);
+    }
+
+    [Fact]
+    public void StaticContactForm_ShowContactInformationOff_HidesThePanel()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ShowContactInformation, false)
+            .Add(p => p.ContactInfo, new ContactInformation { Address = "Belgrade" }));
+
+        cut.FindAll(".osirion-contact-info-section").ShouldBeEmpty();
+        cut.Find("div.osirion-static-contact-form").ClassList.ShouldBe(["osirion-static-contact-form"]);
+    }
+
+    [Fact]
+    public void StaticContactForm_UnsafeEndpoint_RendersNoPanelEither()
+    {
+        var cut = RenderForm(
+            parameters => parameters.Add(p => p.ContactInfo, new ContactInformation { Address = "Belgrade" }),
+            endpoint: "javascript:alert(1)");
+
+        cut.Markup.ShouldNotContain("osirion-contact-info-section");
     }
 
     // A guard test: a site that uses none of the layout parameters must keep getting the markup it always got.
