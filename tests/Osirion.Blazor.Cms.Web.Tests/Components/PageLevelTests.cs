@@ -254,6 +254,22 @@ public class PageLevelTests : CmsWebComponentTestBase
     }
 
     [Fact]
+    public void ArticlePage_FooterContent_FollowsTheLayoutOutsideTheArticleColumn()
+    {
+        ReturnFromQuery(Article("Closing"));
+
+        var cut = RenderStatic<ArticlePage>(p => p
+            .Add(c => c.ItemSlug, "closing")
+            .Add(c => c.ShowRelatedContent, false)
+            .Add(c => c.FooterContent, article => $"<p class=\"cta\">Talk about {article.Title}</p>"));
+
+        var footer = cut.Find(".osirion-article-page-content > footer.osirion-article-page-footer");
+        footer.QuerySelector(".cta")!.TextContent.ShouldBe("Talk about Closing");
+        footer.PreviousElementSibling!.ClassList.ShouldContain("osirion-article-layout");
+        cut.FindAll(".osirion-article-layout .cta").ShouldBeEmpty();
+    }
+
+    [Fact]
     public void ArticlePage_AuthorContent_FollowsTheBodyWithTheArticle()
     {
         var item = Article("Signed");

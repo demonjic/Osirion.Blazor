@@ -77,6 +77,27 @@ Author cards below the body, and a hero instead of the plain heading:
 </AboutPage>
 ```
 
+Your own header above the body, for example the title with a call to action beside it. `HeaderContent` takes the
+place of the heading (and of the hero), so it must render the page's `h1`; `context` is the content item. With
+`HeaderContent` set, author cards go in an explicit `ChildContent` element:
+
+```razor
+@page "/about"
+@using Osirion.Blazor.Cms.Web.Components
+@using Osirion.Blazor.Components
+
+<AboutPage>
+    <HeaderContent>
+        <h1>@context.Title</h1>
+        <p>@context.Description</p>
+        <a class="btn btn-primary" href="/contact">Book a call</a>
+    </HeaderContent>
+    <ChildContent>
+        <OsirionAuthorCard Name="Ana Petrović" Role="Founder" />
+    </ChildContent>
+</AboutPage>
+```
+
 To use another item, set `ItemSlug`, `ItemUrl` or `ItemPath`, or pass `Item` or a full `Query`. `ItemSlug` defaults to
 `about` and `ShowHero` to `false`, which the constructor sets. The item's `title` is the heading and its `description`
 the sentence under it.
@@ -92,6 +113,7 @@ or related items, so those parameters do nothing here, as the table says.
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ChildContent` | `RenderFragment?` | `null` | Content shown after the body, for example author cards, a timeline or links to the project. |
+| `HeaderContent` | `RenderFragment<ContentItem>?` | `null` | The page's header, shown above the body instead of the heading (or the hero, with `ShowHero`), for example the title with a call to action beside it. It must render the page's `h1`, usually from `context.Title`; a leading `h1` in the body is still left out. When `null`, the heading is shown as before. |
 | `Item` | `ContentItem?` | `null` | The item to show. When you set it, the page shows it and loads nothing; otherwise the page finds the first match of `OsirionContentPageBase.Query` or of the `ItemPath`, `ItemUrl`, `ItemSlug`, locale and directory parameters, and sets this property. Used by `ArticlePage`, `AboutPage` and `ContactPage`; `HomePage` and `DocumentPage` take their item as `Content`. |
 | `ItemPath` | `string?` | `null` | The source path of the item to find (`ContentItem.Path`, for example `en/articles/my-article.md`). A change of it, of `ItemUrl`, `ItemSlug`, the locale or the directory makes the page look the item up again. |
 | `ItemUrl` | `string?` | `null` | The public URL of the item to find (`ContentItem.Url`, for example `articles/my-article`), without a locale folder. |
@@ -168,7 +190,9 @@ or related items, so those parameters do nothing here, as the table says.
   `AlternateLanguageUrls` reach it. `SiteDescription`, `TwitterSite`, `TwitterCreator`, `FacebookAppId`, `DefaultImageUrl`, `DefaultImageWidth` and `DefaultImageHeight` reach the renderer when set, and so do `AllowAiDiscovery`, `AllowAiTraining`, `AllowSearchIndexing`, `EnableGeoOptimization` and `EnableAeoOptimization` when you set them: a switch you leave out keeps the value of `AddOsirionSeoMetadata` or the `Osirion:Seo` section.
 - **Heading.** With `ShowHero` off, the title and description are an
   [OsirionPageHeading](/components/page-heading); with it on, a `HeroSection` styled by the `Hero` parameters. Either
-  way the title is the page's `h1`, and the body leaves out its own leading `h1`.
+  way the title is the page's `h1`, and the body leaves out its own leading `h1`. `HeaderContent`, when set, replaces
+  both: it is rendered in a `header` above the body, and it supplies the `h1` itself. It is your own markup, written
+  as you give it.
 - **Body.** The item's body is rendered by `ContentRenderer`, so it is sanitized and code blocks are highlighted.
   `ChildContent` follows it.
 - **Not found.** Without an item the page renders the not-found state of
@@ -179,9 +203,17 @@ or related items, so those parameters do nothing here, as the table says.
 
 ## Styling
 
-The root element has the class `osirion-about-page`. The body is in `osirion-about-page-body` and the child content in
-`osirion-about-page-more`; both are centered at the width `--osirion-container-lg` (960 pixels when unset), the width
-of `OsirionPageHeading`.
+The root element has the class `osirion-about-page`. `HeaderContent` is in `osirion-about-page-header`, the body in
+`osirion-about-page-body` and the child content in `osirion-about-page-more`. All three are centered at the width
+`--osirion-about-page-width`, which defaults to `--osirion-container-lg` (960 pixels when unset), the width of
+`OsirionPageHeading`. Set the property to widen or narrow the page without changing the other components that read
+`--osirion-container-lg`:
+
+```css
+.osirion-about-page {
+    --osirion-about-page-width: 1140px;
+}
+```
 
 ## Related
 

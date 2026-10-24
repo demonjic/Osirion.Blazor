@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Osirion.Blazor.Cms.Domain.Entities;
 
 namespace Osirion.Blazor.Cms.Web.Components;
 
@@ -27,6 +28,15 @@ public partial class AboutPage
     /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the page's header, shown above the body instead of the heading (or the hero, with
+    /// <c>ShowHero</c>), for example the title with a call to action beside it. It must render the page's <c>h1</c>,
+    /// usually from <c>context.Title</c>; a leading <c>h1</c> in the body is still left out. When
+    /// <see langword="null"/>, the heading is shown as before.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<ContentItem>? HeaderContent { get; set; }
 
     /// <inheritdoc/>
     protected override async Task OnParametersSetAsync()

@@ -22,6 +22,21 @@ Key parameters
 - Filter: `Directory`, `Category`, `Tag`, `Author`, `Locale`
 - Heading: `Title` and `Description`; without them both are built from the filter (`Tag: blazor`, the directory's
   name), the same text the title tag and meta description use
+- `HeaderContent` (`RenderFragment`): the page's own header above the list, in `header.osirion-content-list-page-header`,
+  in place of the title and description, for example the title with a strip of series links. It must render the
+  page's `h1`; `Title` and `Description` still name the page in its head metadata:
+
+  ```razor
+  <ContentListPage Directory="blog" Title="Blog">
+      <HeaderContent>
+          <h1>Blog</h1>
+          <nav aria-label="Series">
+              <a href="/series/build-a-blog">Build a blog</a>
+          </nav>
+      </HeaderContent>
+  </ContentListPage>
+  ```
+
 - List: `ShowPagination` (true), `ItemsPerPage` (12), `SortBy`, `SortDirection`, `NoContentText`,
   `ContentUrlFormatter`, `PaginationUrlFormatter`, `WebsiteName`
 - Items: `ItemTemplate` (`RenderFragment<ContentItem>`) renders each item in an `ol.osirion-content-index` instead of

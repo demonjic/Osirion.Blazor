@@ -76,6 +76,34 @@ public class StandalonePageTests : CmsWebComponentTestBase
     }
 
     [Fact]
+    public void AboutPage_HeaderContent_ReplacesTheHeadingAboveTheBodyAndKeepsOneH1()
+    {
+        ReturnFromQuery(Page("About", "<h1>About</h1><p>Body</p>", "Who we are."));
+
+        var cut = RenderStatic<AboutPage>(p => p
+            .Add(c => c.HeaderContent, item => $"<h1>{item.Title}</h1><a class=\"book\" href=\"/book\">Book a call</a>"));
+
+        var header = cut.Find("header.osirion-about-page-header");
+        header.QuerySelector("a.book")!.TextContent.ShouldBe("Book a call");
+        header.NextElementSibling!.ClassList.ShouldContain("osirion-about-page-body");
+        cut.FindAll("h1").Select(h => h.TextContent.Trim()).ShouldBe(["About"]);
+        cut.FindAll(".osirion-page-heading").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void AboutPage_HeaderContentWithShowHero_ShowsTheHeaderInsteadOfTheHero()
+    {
+        ReturnFromQuery(Page("About", "<p>Body</p>"));
+
+        var cut = RenderStatic<AboutPage>(p => p
+            .Add(c => c.ShowHero, true)
+            .Add(c => c.HeaderContent, item => $"<h1>{item.Title}</h1>"));
+
+        cut.FindAll(".osirion-hero-title").ShouldBeEmpty();
+        cut.FindAll("h1").ShouldHaveSingleItem().TextContent.ShouldBe("About");
+    }
+
+    [Fact]
     public void AboutPage_ContentMissing_SignalsNotFound()
     {
         var cut = RenderStatic<AboutPage>(_ => { });

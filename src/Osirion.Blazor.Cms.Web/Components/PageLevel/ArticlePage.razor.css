@@ -363,3 +363,8 @@
 .osirion-article-footer {
     margin-top: var(--osirion-spacing-8, 2rem);
 }
+
+/* FooterContent, after the layout and across the page content's width */
+.osirion-article-page-footer {
+    margin-bottom: var(--osirion-spacing-8, 2rem);
+}

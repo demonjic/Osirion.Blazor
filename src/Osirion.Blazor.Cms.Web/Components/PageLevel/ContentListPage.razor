@@ -9,7 +9,12 @@
 
 <div class="@GetPageClass()" style="@Style" @attributes="Attributes">
     <div class="osirion-content-list-page-main">
-        <ContentList ShowTitle
+        @if (HeaderContent is not null)
+        {
+            <header class="osirion-content-list-page-header">@HeaderContent</header>
+        }
+
+        <ContentList ShowTitle="@(HeaderContent is null)"
                      NotFoundWhenFilterMatchesNothing
                      PageTitle="@Title"
                      PageDescription="@Description"
