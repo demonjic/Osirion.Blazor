@@ -8,7 +8,8 @@ Key parameters
 - EnableSyntaxHighlighting (default true)
 - ShowLineNumbers, EnableCopyButton, EnableLineHighlighting
 - UseAccessibleTheme (WCAG-friendly): the theme is in css/osirion-html-renderer.min.css under the article's
-  osirion-wcag-theme class (rules wrapped in :where(), so palettes still outrank them), not an inline style element
+  osirion-wcag-theme class (rules wrapped in :where(), so palettes still outrank them), not an inline style element;
+  the class is added only when syntax highlighting is on
 - LanguageClasses (obsolete, never read by the component; style code blocks with CSS selectors on the language-* classes)
 - PrismBaseUrl (optional base address Prism is served from; empty uses the site-wide PrismOptions.BaseUrl, and without
   that the pinned cdnjs release 1.29.0 with Subresource Integrity)

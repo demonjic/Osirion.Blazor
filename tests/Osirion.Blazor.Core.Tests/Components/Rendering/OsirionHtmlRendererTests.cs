@@ -180,6 +180,19 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
             .ShouldBe(["_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css"]);
     }
 
+    // Fails before the fix: the accessible theme's rules in the stylesheet follow the article class, which was also
+    // added with highlighting off. Prism then never gives the pre its dark background, so the theme's near-white
+    // code text landed on the site's light page.
+    [Fact]
+    public void OsirionHtmlRenderer_SyntaxHighlightingDisabled_DoesNotApplyTheAccessibleTheme()
+    {
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-cs\">x</code></pre>")
+            .Add(p => p.EnableSyntaxHighlighting, false));
+
+        cut.Find("article").ClassList.ShouldNotContain("osirion-wcag-theme");
+    }
+
     [Fact]
     public void OsirionHtmlRenderer_CustomPrismBaseUrl_LoadsFromTheHostWithoutIntegrity()
     {

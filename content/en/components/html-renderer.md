@@ -197,10 +197,11 @@ allows it (up to 4.2.0 it was an inline `<style>` element). The Copy button uses
 script loader that BlazorJSComponents renders writes `style="display: none; !important"` on its `bl-script` elements;
 the [security guide](/docs/security#inline-style-attributes) gives the hash that allows it.
 
-Prism's addresses appear in the page only inside the arguments of the script loader (a
+Prism's script addresses appear in the page only inside the arguments of the script loader (a
 `<script type="application/json">` element, which is data and not run, so the policy does not apply to it), so write
-the hosts into the policy yourself. With the default cdnjs release, allow its host; `style-src` needs it only for the
-Okaidia theme (`UseAccessibleTheme="false"`) and the line numbers style (`ShowLineNumbers`):
+the hosts into the policy yourself. The Okaidia theme (`UseAccessibleTheme="false"`) and the line numbers style
+(`ShowLineNumbers`) are ordinary `<link rel="stylesheet">` elements that name their host in `href`. With the default
+cdnjs release, allow its host; `style-src` needs it only for those two stylesheets:
 
 ```text
 script-src 'self' https://cdnjs.cloudflare.com;
@@ -219,7 +220,7 @@ An `https` `BaseUrl` on another host takes that host in place of `https://cdnjs.
 ## Styling
 
 The output is wrapped in `<article class="osirion-html-renderer osirion-content">`, with `osirion-wcag-theme` added
-when the accessible theme is in use. The component also links
+when the accessible theme is in use (the content has code and syntax highlighting is on). The component also links
 `_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css`, which styles headings, lists, tables, links and code
 inside the article from the theme tokens (`--osirion-text-primary`, `--osirion-font-family-base`,
 `--osirion-font-family-mono` and others). That stylesheet is the only source of the content typography: to change it,

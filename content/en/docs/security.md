@@ -202,11 +202,13 @@ each attribute value with `'unsafe-hashes'`, as below.
 
 ### Inline style attributes
 
-In the release after 4.2.0, the library's own defaults write no `style` attribute and no `style` element: the sticky
-`Menu`'s `z-index`, `HeroSection`'s `min-height: 60vh`, the `OsirionFooter` rules, the Customize button of
-`OsirionCookieConsent`, the buttons of `OsirionContentNotFound`, the read more link of `OsirionTestimonialCard` and the
-accessible code theme of `OsirionHtmlRenderer` moved into stylesheets, and `OsirionReadMoreLink` no longer writes an
-empty `style=""`. What can remain on a page is
+In the release after 4.2.0, the defaults of `OsirionHtmlRenderer`, `OsirionFooter`, `Menu`, `HeroSection`,
+`OsirionCookieConsent`, `OsirionContentNotFound`, `OsirionTestimonialCard` and `OsirionReadMoreLink` write no `style`
+attribute and no `style` element: the sticky `Menu`'s `z-index`, `HeroSection`'s `min-height: 60vh`, the
+`OsirionFooter` rules, the Customize button of `OsirionCookieConsent`, the buttons of `OsirionContentNotFound`, the
+read more link of `OsirionTestimonialCard` and the accessible code theme of `OsirionHtmlRenderer` moved into
+stylesheets, and `OsirionReadMoreLink` no longer writes an empty `style=""`. Other components still write a `style`
+attribute with their defaults; they are listed below the table. What the components on a typical page leave is
 fixed text, so a site exported to static files can allow each value by its hash. A hash of a `style` attribute needs
 `'unsafe-hashes'` next to it; it allows only that exact value, not any other inline style:
 
@@ -227,13 +229,17 @@ the library, with a policy that also serves Prism from your own site
 style-src 'self' 'unsafe-hashes' 'sha256-EXrMEQM0mPkgnkB6KboseHKD5Hs/aDUfUef9LAWu4uA=';
 ```
 
-Add the three alignment hashes when your Markdown has aligned table columns. Values that you pass in parameters are
-written inline as given, so they are yours to allow or to move into your stylesheet: `Style` on any component,
+Add the three alignment hashes when your Markdown has aligned table columns. These components write a `style`
+attribute even with their default parameters, because the value carries custom properties that the component works
+out from its parameters and items: `OsirionImageGallery` (columns and gap), `InfiniteLogoCarousel` (speed and logo
+sizes), `OsirionTestimonialCarousel` (speed and card sizes), `OsirionResponsiveShowcaseSection` (the viewport size)
+and the feature list of `LandingPage` (its column count). On a page that uses one, allow the exact value by its hash
+with `'unsafe-hashes'`, or use `style-src-attr 'unsafe-inline'`. Values that you pass in parameters are written
+inline as given, so they are yours to allow or to move into your stylesheet: `Style` on any component,
 `HeroSection`'s `MinHeight` other than `60vh`, `BackgroundColor`, `TextColor` and a background `ImageUrl`, the
 background settings of `OsirionBaseSection`, a `Menu` `StickyZIndex` other than 1000 or a `Menu` with a `Style`,
-`OsirionStickySidebar`'s `TopOffset`, the columns and gap of `OsirionImageGallery`, the sizes and speed of
-`InfiniteLogoCarousel`, the track of `OsirionTestimonialCarousel`, the viewport of `OsirionResponsiveShowcaseSection`,
-and the feature columns and call to action of `LandingPage`. When the browser blocks one, its console names the hash it expected. `OsirionStyles` writes `CustomVariables` and the
+`OsirionStickySidebar`'s `TopOffset`, the non-default sizes of the components above, and the call to action color of
+`LandingPage`. When the browser blocks one, its console names the hash it expected. `OsirionStyles` writes `CustomVariables` and the
 configured variables in `style` elements, which take the `Nonce`; on a static export, where no nonce is possible, the
 element's text is fixed by your configuration, so its hash (without `'unsafe-hashes'`) allows it.
 

@@ -476,7 +476,9 @@ public partial class OsirionHtmlRenderer
     {
         var classes = new List<string> { "osirion-html-renderer osirion-content" };
 
-        if (UseAccessibleTheme && HasCodeBlocks)
+        // The theme's rules in osirion-html-renderer.css follow this class. Without highlighting Prism never gives the
+        // pre its dark background, so the theme's light code text would sit on the page's own background.
+        if (UseAccessibleTheme && HasCodeBlocks && EnableSyntaxHighlighting)
         {
             classes.Add("osirion-wcag-theme");
         }
