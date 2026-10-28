@@ -120,7 +120,8 @@ language of the site; each defaults to the English text. `Osirion:Site:Locales` 
 differently, keyed by culture name (`"en"`, `"sr-Latn-RS"`), and the layout picks the entry of the request's UI
 culture, which `app.UseRequestLocalization()` sets. The
 [OsirionSiteLayout reference](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md)
-lists every key. Both arrive in the release after 4.2.0.
+lists every key. Both arrive in the release after 4.2.0. `Osirion:Localization` decides which culture a request has,
+from the first segment of its address; [Locale routing](/docs/locale-routing) sets it up.
 
 ## Configure in code
 

@@ -158,6 +158,19 @@ The `ScrollToTopProvider` component uses global configuration to render a Scroll
 
 This component takes its configuration from the registered `ScrollToTopManager`, which can be configured through dependency injection.
 
+### OsirionLanguagePicker
+
+Links the current page in each of the site's languages, for a site whose addresses carry the culture in their first
+path segment. It needs `Osirion:Localization` (or `AddOsirionLocalization`) and `app.UseOsirionLocalization()`:
+
+```razor
+<OsirionLanguagePicker AriaLabel="Language" />
+```
+
+It renders plain links with `hreflang` and `lang`, marks the current language with `aria-current="true"`, keeps the
+query string, and renders nothing with fewer than two cultures. See
+[OsirionLanguagePicker](components/navigation/OsirionLanguagePicker.md).
+
 ## Customizing with CSS Variables
 
 Customize the appearance with CSS variables:
