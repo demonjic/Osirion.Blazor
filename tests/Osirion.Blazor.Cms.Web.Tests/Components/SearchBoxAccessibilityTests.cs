@@ -31,6 +31,27 @@ public class SearchBoxAccessibilityTests : CmsWebComponentTestBase
         cut.Find("label").TextContent.ShouldBe("Suchen");
     }
 
+    // Fails before the change: the button's name was always the English "Submit search".
+    [Fact]
+    public void SearchBox_SubmitButton_IsNamedBySubmitLabelAndShowsItsText()
+    {
+        var cut = RenderStatic<SearchBox>(p => p
+            .Add(c => c.SubmitLabel, "Suche starten")
+            .Add(c => c.SearchButtonText, "Suche"));
+
+        var button = cut.Find("button[type='submit']");
+        button.GetAttribute("aria-label").ShouldBe("Suche starten");
+        button.TextContent.Trim().ShouldBe("Suche");
+    }
+
+    [Fact]
+    public void SearchBox_SubmitButton_IsNamedSubmitSearchByDefault()
+    {
+        var cut = RenderStatic<SearchBox>(_ => { });
+
+        cut.Find("button[type='submit']").GetAttribute("aria-label").ShouldBe("Submit search");
+    }
+
     // Fails before the fix: the id came from GetHashCode(), which differs between instances and processes, so a prerendered and an interactive box disagreed.
     [Fact]
     public void SearchBox_DefaultId_IsTheSameForEveryInstanceWithTheSameSettings()

@@ -4,11 +4,11 @@
 @using Osirion.Blazor.Navigation.Components
 @using Osirion.Blazor.Theming.Components
 
-<OsirionPageLayout StickyFooter EnableHeaderScrollBehavior>
+<OsirionPageLayout StickyFooter EnableHeaderScrollBehavior SkipLinkText="@Site.Labels.SkipLink">
     <Header>
         @if (Site.Announcement is { } announcement)
         {
-            <OsirionAnnouncementBar Id="@announcement.Id">
+            <OsirionAnnouncementBar Id="@announcement.Id" RegionLabel="@Site.Labels.Announcement" DismissText="@Site.Labels.DismissAnnouncement">
                 @announcement.Text
                 @if (!string.IsNullOrWhiteSpace(announcement.LinkUrl))
                 {
@@ -31,7 +31,8 @@
                 callToActionButton = @<a class="@CallToActionClass" href="@callToAction.Href" rel="@GetCallToActionRel(callToAction.Href)">@callToAction.Text</a>;
             }
 
-            <Menu AriaLabel="@MenuLabel"
+            <Menu AriaLabel="@(MenuLabel ?? Site.Labels.Menu)"
+                  ToggleAriaLabel="@Site.Labels.MenuToggle"
                   Href="@Site.HomeUrl"
                   BrandLogo="@Site.LogoUrl"
                   BrandText="@Site.Name"
@@ -59,11 +60,15 @@
                 <Actions>
                     @if (Site.ShowSearch)
                     {
-                        <SearchBox ActionUrl="@Site.SearchUrl" Placeholder="@Site.SearchPlaceholder" />
+                        <SearchBox ActionUrl="@Site.SearchUrl"
+                                   Placeholder="@Site.SearchPlaceholder"
+                                   Label="@Site.Labels.Search"
+                                   SearchButtonText="@Site.Labels.Search"
+                                   SubmitLabel="@Site.Labels.SubmitSearch" />
                     }
                     @if (Site.ShowThemeToggle)
                     {
-                        <ThemeToggle />
+                        <ThemeToggle SwitchToDarkLabel="@Site.Labels.SwitchToDarkTheme" SwitchToLightLabel="@Site.Labels.SwitchToLightTheme" />
                     }
                     @MenuActions
                 </Actions>
@@ -88,6 +93,7 @@
                            Links="@FooterSections"
                            SocialLinks="@SocialLinks"
                            BottomLinks="@LegalLinks"
+                           BottomLinksLabel="@Site.Labels.LegalLinks"
                            Copyright="@Site.Copyright"
                            SocialTitle="@Site.SocialTitle">
                 <Logo>

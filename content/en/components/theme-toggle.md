@@ -94,6 +94,8 @@ The toggle needs theming registered: `AddOsirion`, or `AddOsirionTheming` togeth
 | --- | --- | --- | --- |
 | `Id` | `string?` | `null` | The id of the toggle button. No id is written when it is `null`, so several toggles can share a page without repeating an id; set it only when a host stylesheet or script needs to address one. |
 | `OnThemeChanged` | `EventCallback<string>` | - | A callback raised with `light` or `dark` after the visitor switches the theme. It runs only when the toggle itself is interactive (Interactive Server, WebAssembly or Auto): under Static SSR the browser switches the theme and the server is not notified, so the callback is never raised there. Listen for the `osirion-theme-update` browser event on `window` to react in every render mode. |
+| `SwitchToDarkLabel` | `string` | `"Switch to dark mode"` | What the button says while the light theme is on: its accessible name, its tooltip and its hidden text, in the language of the page. Defaults to `Switch to dark mode`. |
+| `SwitchToLightLabel` | `string` | `"Switch to light mode"` | What the button says while the dark theme is on. Defaults to `Switch to light mode`. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -134,9 +136,12 @@ describes.
 
 ### Accessibility
 
-- The button's `aria-label` and `title` state the current theme and the one a click switches to, for example "Toggle
-  theme. Currently using light mode. Click to switch to dark mode."
-- A visually hidden text (`osirion-visually-hidden`) repeats the current theme; the icons are `aria-hidden`.
+- The button is named by what it does: its `aria-label`, its `title` and a visually hidden text
+  (`osirion-visually-hidden`) are `SwitchToDarkLabel` while the light theme is on ("Switch to dark mode") and
+  `SwitchToLightLabel` while the dark theme is on ("Switch to light mode"). The icons are `aria-hidden`. Set both
+  labels in the language of the page; the script reads them from the button's `data-switch-to-dark-label` and
+  `data-switch-to-light-label`, so the name stays in that language after a switch. Before the release after 4.2.0 the
+  name was the English sentence "Toggle theme. Currently using light mode. Click to switch to dark mode."
 - Keyboard focus (`:focus-visible`) shows the focus ring every Osirion component draws: `--osirion-focus-ring-width`
   solid `--osirion-focus-ring-color`, offset by `--osirion-focus-ring-offset`. Mouse focus does not. The ring is drawn
   at once; the button's transitions leave the outline out, so it does not fade in from another color. Just inside it

@@ -129,7 +129,7 @@
 
                 @if (BottomLinks?.Any() == true)
                 {
-                    <nav class="osirion-footer-bottom-links" aria-label="Footer legal navigation">
+                    <nav class="osirion-footer-bottom-links" aria-label="@BottomLinksLabel">
                         @foreach (var link in BottomLinks)
                         {
                             <a href="@link.Href" class="osirion-footer-bottom-link">

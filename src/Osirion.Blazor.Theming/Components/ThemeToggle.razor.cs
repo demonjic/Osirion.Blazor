@@ -34,10 +34,24 @@ public partial class ThemeToggle : IDisposable, IAsyncDisposable
     [Parameter]
     public EventCallback<string> OnThemeChanged { get; set; }
 
+    /// <summary>
+    /// Gets or sets what the button says while the light theme is on: its accessible name, its tooltip and its hidden
+    /// text, in the language of the page. Defaults to <c>Switch to dark mode</c>.
+    /// </summary>
+    [Parameter]
+    public string SwitchToDarkLabel { get; set; } = "Switch to dark mode";
+
+    /// <summary>
+    /// Gets or sets what the button says while the dark theme is on. Defaults to <c>Switch to light mode</c>.
+    /// </summary>
+    [Parameter]
+    public string SwitchToLightLabel { get; set; } = "Switch to light mode";
+
     private string CurrentTheme => ThemeService.CurrentMode == ThemeMode.Dark ? "dark" : "light";
-    private string GetTooltipText() => CurrentTheme == "dark" ? "Switch to light mode" : "Switch to dark mode";
-    private string GetAriaLabel() => $"Toggle theme. Currently using {CurrentTheme} mode. Click to switch to {(CurrentTheme == "dark" ? "light" : "dark")} mode.";
-    private string GetScreenReaderText() => $"Current theme: {CurrentTheme}. Click to toggle.";
+
+    // The button is named by what it does. Both labels are also written on the button, so the script can say the
+    // other one after a switch without a round trip to the server.
+    private string ActionLabel => CurrentTheme == "dark" ? SwitchToLightLabel : SwitchToDarkLabel;
     private string GetDefaultTheme() => ThemingOptions.Value.DefaultMode.ToString().ToLowerInvariant();
     private string GetFramework() => ThemingOptions.Value.Framework.ToString();
 

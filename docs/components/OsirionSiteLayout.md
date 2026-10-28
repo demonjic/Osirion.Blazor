@@ -67,11 +67,53 @@ Options (`OsirionSiteOptions`)
   (see docs/components/core/CookieConsent.md, static hosting). In either mode a legal link to a page with
   `?customize-cookies=true`, such as `{ "Text": "Cookie settings", "Href": "/privacy-policy?customize-cookies=true" }`,
   reopens the banner, so visitors can change or withdraw consent from the footer
+- `Labels`: the shell's own texts, English by default (the text each component used before): `SkipLink` (`Skip to
+  main content`), `Menu` (`Main navigation`), `MenuToggle` (`Toggle navigation menu`), `SwitchToDarkTheme` and
+  `SwitchToLightTheme` (`Switch to dark mode`, `Switch to light mode`), `Search` (`Search`, the field's label and the
+  button's visible text), `SubmitSearch` (`Submit search`, the button's name; keep the words of `Search` in it),
+  `LegalLinks` (`Footer legal navigation`), `Announcement` and `DismissAnnouncement`
+- `Locales`: what each language version says differently, keyed by culture name in any letter case. An entry may set
+  `Name`, `LogoUrl`, `HomeUrl`, `Menu`, `SearchUrl`, `SearchPlaceholder`, `CallToAction`, `Announcement`,
+  `FooterDescription`, `FooterSections`, `SocialLinks`, `LegalLinks`, `Owner`, `OwnerUrl`, `Copyright`, `SocialTitle`
+  and `Labels`. A value it sets replaces the site's as a whole (a `Menu` is the whole menu; `Labels` are all the
+  labels, English for any it leaves out), and a value it leaves out is the site's. Whether search, the theme toggle,
+  the cookie banner and the scroll-to-top button are shown is the same for every version
+
+Language versions
+```json
+{
+  "Osirion": {
+    "Site": {
+      "Name": "Mein Blog",
+      "Menu": [ { "Text": "Über uns", "Href": "/ueber-uns" } ],
+      "Labels": { "SkipLink": "Zum Inhalt springen", "Menu": "Hauptnavigation" },
+      "Locales": {
+        "en": {
+          "Name": "My blog",
+          "HomeUrl": "/en",
+          "Menu": [ { "Text": "About us", "Href": "/en/about" } ],
+          "Labels": { "Menu": "Main navigation" }
+        }
+      }
+    }
+  }
+}
+```
+The layout takes the entry of `CultureInfo.CurrentUICulture`, which `app.UseRequestLocalization()` sets for each
+request, or of its nearest parent culture with an entry (`sr-Latn`, then `sr`, for `sr-Latn-RS`); a culture with
+neither renders the site's own values. Above, an English request gets the English name, menu and labels (the label it
+sets, and English for every other), and every other request the German ones. Give a locale's `Labels` at least one
+key: configuration has no empty sections, so `"Labels": {}` sets nothing and the version would keep the site's labels.
+Choose the culture from the address (a path
+prefix) rather than from `Accept-Language`, so one address always answers with the same page.
+`OsirionSiteOptions.ForCulture(culture)` returns the same view for your own code.
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a
 menu nested more than one level, a call to action without `Text` or `Href` or with an `Href` of another kind (such
 as `javascript:` or `//other.example`), or a `CallToAction:FooterSection` that is not the `Title` of any footer section
-stops startup with a message naming the configuration key. Options set another
+stops startup with a message naming the configuration key. A locale key that is not a culture name fails too, and so
+does a problem in a value a locale sets, named under `Osirion:Site:Locales:<culture>`; its call to action is checked
+against the footer sections that version shows. Options set another
 way, for example with `Services.Configure<OsirionSiteOptions>`, skip that check; the layout then renders no call to
 action for such a value.
 
@@ -88,7 +130,7 @@ Parameters, when you wrap it in your own layout
 - `Footer`: replaces the footer built from the options
 - `MenuActions`: more actions after the search box and theme toggle; like them they move into the menu's drawer below
   its breakpoint, while the call to action stays in the bar after them
-- `MenuLabel`: the accessible name of the menu (`Main navigation`)
+- `MenuLabel`: the accessible name of the menu; unset, it is `Labels:Menu` of the request's language version
 
 Notes
 - The menu collapses behind its toggle below 1200px. The call to action stays in the bar, after the toggle (it is the
