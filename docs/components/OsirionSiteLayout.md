@@ -84,14 +84,14 @@ Language versions
 {
   "Osirion": {
     "Site": {
-      "Name": "Очевина",
-      "Menu": [ { "Text": "О нама", "Href": "/o-nama" } ],
-      "Labels": { "SkipLink": "Пређи на садржај", "Menu": "Главни мени" },
+      "Name": "Mein Blog",
+      "Menu": [ { "Text": "Über uns", "Href": "/ueber-uns" } ],
+      "Labels": { "SkipLink": "Zum Inhalt springen", "Menu": "Hauptnavigation" },
       "Locales": {
         "en": {
-          "Name": "Očevina",
+          "Name": "My blog",
           "HomeUrl": "/en",
-          "Menu": [ { "Text": "About us", "Href": "/en/o-nama" } ],
+          "Menu": [ { "Text": "About us", "Href": "/en/about" } ],
           "Labels": { "Menu": "Main navigation" }
         }
       }
@@ -102,7 +102,7 @@ Language versions
 The layout takes the entry of `CultureInfo.CurrentUICulture`, which `app.UseRequestLocalization()` sets for each
 request, or of its nearest parent culture with an entry (`sr-Latn`, then `sr`, for `sr-Latn-RS`); a culture with
 neither renders the site's own values. Above, an English request gets the English name, menu and labels (the label it
-sets, and English for every other), and every other request the Serbian ones. Give a locale's `Labels` at least one
+sets, and English for every other), and every other request the German ones. Give a locale's `Labels` at least one
 key: configuration has no empty sections, so `"Labels": {}` sets nothing and the version would keep the site's labels.
 Choose the culture from the address (a path
 prefix) rather than from `Accept-Language`, so one address always answers with the same page.
