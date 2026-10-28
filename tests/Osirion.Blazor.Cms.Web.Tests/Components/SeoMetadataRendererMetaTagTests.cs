@@ -380,7 +380,31 @@ public class SeoMetadataRendererMetaTagTests : CmsWebComponentTestBase
         var cut = RenderPage(p => p.Add(c => c.Content, SeoTestContent.Article(locale: "sr-Latn-RS")));
 
         Meta(cut, "language").ShouldBe("sr-Latn-RS");
-        Property(cut, "og:locale").ShouldBe("sr_Latn_RS");
+        Property(cut, "og:locale").ShouldBe("sr_RS");
+    }
+
+    // Fails before the fix: a list page had no way to name its language and always counted as English.
+    [Fact]
+    public void SeoMetadataRenderer_CollectionPageWithLocale_WritesThatLanguage()
+    {
+        var cut = RenderPage(p => p
+            .Add(c => c.ContentItems, [SeoTestContent.Article(), SeoTestContent.BarePost()])
+            .Add(c => c.CollectionTitle, "Svi tekstovi")
+            .Add(c => c.Locale, "sr-Latn-RS"));
+
+        Meta(cut, "language").ShouldBe("sr-Latn-RS");
+        Property(cut, "og:locale").ShouldBe("sr_RS");
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_ContentAndLocale_TakesTheLanguageOfTheContent()
+    {
+        var cut = RenderPage(p => p
+            .Add(c => c.Content, SeoTestContent.Article(locale: "de-DE"))
+            .Add(c => c.Locale, "sr-Latn-RS"));
+
+        Meta(cut, "language").ShouldBe("de-DE");
+        Property(cut, "og:locale").ShouldBe("de_DE");
     }
 
     [Fact]

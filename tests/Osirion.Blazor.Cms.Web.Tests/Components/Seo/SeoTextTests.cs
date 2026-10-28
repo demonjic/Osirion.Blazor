@@ -71,11 +71,19 @@ public class SeoTextTests
         SeoText.ExtractSiteName(url).ShouldBe(expected);
     }
 
+    // Fails before the fix for a tag with a script: sr-Latn-RS became sr_Latn_RS, which is not an Open Graph locale.
     [Theory]
     [InlineData(null, "en_US")]
     [InlineData("", "en_US")]
-    [InlineData("sr-Latn-RS", "sr_Latn_RS")]
-    public void ToOpenGraphLocale_UsesUnderscores(string? locale, string expected)
+    [InlineData("en-US", "en_US")]
+    [InlineData("en-us", "en_US")]
+    [InlineData("sr-Latn-RS", "sr_RS")]
+    [InlineData("sr-latn-rs", "sr_RS")]
+    [InlineData("sr_Cyrl_RS", "sr_RS")]
+    [InlineData("zh-Hant-TW", "zh_TW")]
+    [InlineData("es-419", "es_419")]
+    [InlineData("sr-Latn", "sr")]
+    public void ToOpenGraphLocale_WritesTheLanguageAndTheTerritory(string? locale, string expected)
     {
         SeoText.ToOpenGraphLocale(locale).ShouldBe(expected);
     }
