@@ -8,7 +8,7 @@ Key parameters
 - Logo (RenderFragment), LeftContent, RightContent
 - Links: IReadOnlyList<FooterSection>
 - SocialLinks: IReadOnlyList<FooterSocialLink>, SocialTitle, ShowSocialLinks
-- BottomLinks: IReadOnlyList<FooterLink>
+- BottomLinks: IReadOnlyList<FooterLink>, BottomLinksLabel (the name of their nav, "Footer legal navigation" by default)
 - Variant: default, minimal, centered
 - GridLayout: auto, 4-column, 3-column, 2-column
 - Docked (bool), DockingMode: fixed or sticky

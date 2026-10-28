@@ -141,7 +141,8 @@ A fuller footer passes link data from code:
 | `RightContent` | `RenderFragment?` | `null` | Free content for the right column of the top row. |
 | `Links` | `IReadOnlyList<FooterSection>?` | `null` | The link columns: each `FooterSection` has an optional `Title` (an `h2`) and a list of `FooterLink`. |
 | `SocialLinks` | `IReadOnlyList<FooterSocialLink>?` | `null` | The social links. Each shows its `Icon`, or its `Text` when there is no icon, and always opens in a new tab; set `AriaLabel` on icon-only links. |
-| `BottomLinks` | `IReadOnlyList<FooterLink>?` | `null` | The links in the bottom row, such as privacy and terms. They sit in a `nav` labelled "Footer legal navigation". |
+| `BottomLinks` | `IReadOnlyList<FooterLink>?` | `null` | The links in the bottom row, such as privacy and terms. They sit in a `nav` named by `BottomLinksLabel`. |
+| `BottomLinksLabel` | `string` | `"Footer legal navigation"` | The accessible name of the `nav` around `BottomLinks`. Set it for another language. Defaults to `Footer legal navigation`. |
 | `ShowSocialLinks` | `bool` | `true` | Whether `SocialLinks` are shown. |
 | `SocialTitle` | `string` | `"Follow Us"` | The `h2` above the social links. An empty value hides it. |
 | `ShowDivider` | `bool` | `true` | Whether a line separates the top and bottom rows. It shows only when both rows render. |
@@ -171,7 +172,8 @@ with `Icon` and `AriaLabel`; social links always open in a new tab.
   layout already provides the `footer` landmark. Available from 4.0; in 3.x the footer nested a second `footer`.
 - **Headings.** Section titles and the social title are `h2` elements, so the outline does not skip a level after a
   page's `h1`.
-- **Legal links** are wrapped in a `nav` labelled "Footer legal navigation".
+- **Legal links** are wrapped in a `nav` named by `BottomLinksLabel`, "Footer legal navigation" by default; set it
+  in the language of the page.
 - **Top row.** It renders when at least one of `Logo`, `Links`, `SocialLinks`, `LeftContent` or `RightContent` is set.
   `SocialLinks` count only while `ShowSocialLinks` is on, so switching them off leaves no empty row. `Description` alone
   does not make it render.

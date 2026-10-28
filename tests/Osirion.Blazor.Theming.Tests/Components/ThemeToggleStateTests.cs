@@ -35,11 +35,41 @@ public class ThemeToggleStateTests : BunitContext
 
         var button = cut.Find("button");
         button.GetAttribute("title").ShouldBe("Switch to dark mode");
-        button.GetAttribute("aria-label")
-            .ShouldBe("Toggle theme. Currently using light mode. Click to switch to dark mode.");
+        button.GetAttribute("aria-label").ShouldBe("Switch to dark mode");
         cut.FindAll("svg.bi-moon").Count.ShouldBe(1);
         cut.FindAll("svg.bi-sun").ShouldBeEmpty();
-        cut.Find(".theme-text").TextContent.ShouldBe("Current theme: light. Click to toggle.");
+        cut.Find(".theme-text").TextContent.ShouldBe("Switch to dark mode");
+    }
+
+    // Fails before the change: the name, the tooltip and the hidden text were English sentences built in code.
+    [Theory]
+    [InlineData(ThemeMode.Light, "Пређи на тамну тему")]
+    [InlineData(ThemeMode.Dark, "Пређи на светлу тему")]
+    public void ThemeToggle_Labels_NameTheButtonInTheLanguageOfThePage(ThemeMode mode, string expected)
+    {
+        _themeService.CurrentMode.Returns(mode);
+
+        var cut = Render<ThemeToggle>(parameters => parameters
+            .Add(p => p.SwitchToDarkLabel, "Пређи на тамну тему")
+            .Add(p => p.SwitchToLightLabel, "Пређи на светлу тему"));
+
+        var button = cut.Find("button");
+        button.GetAttribute("aria-label").ShouldBe(expected);
+        button.GetAttribute("title").ShouldBe(expected);
+        cut.Find(".theme-text").TextContent.ShouldBe(expected);
+    }
+
+    // The script switches the theme in the browser and names the button anew from these, without the server.
+    [Fact]
+    public void ThemeToggle_Button_CarriesBothLabelsForTheScript()
+    {
+        var cut = Render<ThemeToggle>(parameters => parameters
+            .Add(p => p.SwitchToDarkLabel, "Tamna tema")
+            .Add(p => p.SwitchToLightLabel, "Svetla tema"));
+
+        var button = cut.Find("button.theme-toggle-btn");
+        button.GetAttribute("data-switch-to-dark-label").ShouldBe("Tamna tema");
+        button.GetAttribute("data-switch-to-light-label").ShouldBe("Svetla tema");
     }
 
     [Fact]
@@ -51,10 +81,9 @@ public class ThemeToggleStateTests : BunitContext
 
         var button = cut.Find("button");
         button.GetAttribute("title").ShouldBe("Switch to light mode");
-        button.GetAttribute("aria-label")
-            .ShouldBe("Toggle theme. Currently using dark mode. Click to switch to light mode.");
+        button.GetAttribute("aria-label").ShouldBe("Switch to light mode");
         cut.FindAll("svg.bi-sun").Count.ShouldBe(1);
-        cut.Find(".theme-text").TextContent.ShouldBe("Current theme: dark. Click to toggle.");
+        cut.Find(".theme-text").TextContent.ShouldBe("Switch to light mode");
     }
 
     [Fact]
