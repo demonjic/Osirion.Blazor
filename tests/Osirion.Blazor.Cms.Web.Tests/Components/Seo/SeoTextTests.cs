@@ -83,6 +83,8 @@ public class SeoTextTests
     [InlineData("zh-Hant-TW", "zh_TW")]
     [InlineData("es-419", "es_419")]
     [InlineData("sr-Latn", "sr")]
+    [InlineData("zh-yue-HK", "zh_HK")]
+    [InlineData("sr-1a", "sr")]
     public void ToOpenGraphLocale_WritesTheLanguageAndTheTerritory(string? locale, string expected)
     {
         SeoText.ToOpenGraphLocale(locale).ShouldBe(expected);

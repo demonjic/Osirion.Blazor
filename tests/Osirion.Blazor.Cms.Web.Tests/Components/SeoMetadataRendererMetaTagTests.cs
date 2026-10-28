@@ -396,6 +396,18 @@ public class SeoMetadataRendererMetaTagTests : CmsWebComponentTestBase
         Property(cut, "og:locale").ShouldBe("sr_RS");
     }
 
+    // An empty seo_properties section in front matter deserializes to null; the item's own locale still applies.
+    [Fact]
+    public void SeoMetadataRenderer_SeoPropertiesWithoutValues_TakesTheLanguageOfTheItem()
+    {
+        var item = SeoTestContent.Article(locale: "sr-Latn-RS");
+        item.Metadata = new FrontMatter { SeoProperties = null! };
+
+        var cut = RenderPage(p => p.Add(c => c.Content, item));
+
+        Property(cut, "og:locale").ShouldBe("sr_RS");
+    }
+
     [Fact]
     public void SeoMetadataRenderer_ContentAndLocale_TakesTheLanguageOfTheContent()
     {
