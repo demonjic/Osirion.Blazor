@@ -28,7 +28,7 @@
         "heading": "Blog",
         "theme": "dark"
       },
-      "featured_image_now": "https://media.getosirion.com/og/blog-blog.jpg",
+      "featured_image_now": "https://media.getosirion.com/og/blog.jpg",
       "shots": []
     },
     {
@@ -1630,6 +1630,20 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/docs-installation.jpg",
+      "shots": []
+    },
+    {
+      "file": "docs/locale-routing.md",
+      "path": "/docs/locale-routing",
+      "section": "Guides",
+      "title": "Locale routing",
+      "card": {
+        "key": "og/docs-locale-routing.jpg",
+        "url": "https://media.getosirion.com/og/docs-locale-routing.jpg",
+        "heading": "Locale routing for Osirion.Blazor sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/docs-locale-routing.jpg",
       "shots": []
     },
     {

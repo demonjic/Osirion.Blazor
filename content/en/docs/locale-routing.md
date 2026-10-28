@@ -61,6 +61,10 @@ always answers with the same page, for caches and crawlers alike.
 The path is not rewritten: a page declares the route of each language itself, and `NavigationManager.Uri` keeps the
 address the visitor asked for.
 
+Components with an interactive render mode run in a circuit that the browser opens at `/_blazor`, an address without a
+prefix, so inside the circuit the culture is the default one. Keep text that must follow the page's language in static
+rendering, or pass the culture to the interactive component as a parameter.
+
 ## Configure the cultures
 
 ```json
