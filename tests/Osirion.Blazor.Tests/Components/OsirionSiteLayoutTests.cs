@@ -673,6 +673,51 @@ public class OsirionSiteLayoutTests : BunitContext
         ]);
     }
 
+    [Fact]
+    public void GetErrors_IncompleteAnnouncementOrSocialLink_IsRejectedUnderTheKeyThatSetsIt()
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            Announcement = new SiteAnnouncement { Id = "launch" },
+            SocialLinks = [new SiteSocialLink { Network = "github" }],
+            Locales =
+            {
+                ["en"] = new SiteLocaleOptions
+                {
+                    Announcement = new SiteAnnouncement { Text = "We are live." },
+                    SocialLinks = [new SiteSocialLink { Network = "x", Href = "https://x.com/site" }, new SiteSocialLink { Network = "rss" }],
+                },
+            },
+        };
+
+        site.GetErrors().ShouldBe(
+        [
+            "Osirion:Site:Announcement needs an Id and a Text.",
+            "Osirion:Site:SocialLinks:0 needs an Href.",
+            "Osirion:Site:Locales:en:Announcement needs an Id and a Text.",
+            "Osirion:Site:Locales:en:SocialLinks:1 needs an Href.",
+        ]);
+    }
+
+    [Fact]
+    public void GetErrors_BlankLocaleKey_IsRejected()
+    {
+        var site = new OsirionSiteOptions { Name = "Site", Locales = { [" "] = new SiteLocaleOptions() } };
+
+        site.GetErrors().ShouldBe(["Osirion:Site:Locales:  is not a culture name, such as sr-Latn-RS or en."]);
+    }
+
+    // Options set in code can hold an entry without values; it changes nothing and is no error.
+    [Fact]
+    public void LocaleWithoutValues_IsNoErrorAndChangesNothing()
+    {
+        var site = new OsirionSiteOptions { Name = "Site", Locales = { ["en"] = null! } };
+
+        site.GetErrors().ShouldBeEmpty();
+        site.ForCulture(CultureInfo.GetCultureInfo("en")).ShouldBeSameAs(site);
+    }
+
     // A problem in a value the version inherits is the site's, reported once under the site's key.
     [Fact]
     public void GetErrors_ValueALocaleInherits_IsReportedOnceUnderTheSiteKey()
