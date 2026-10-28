@@ -1,3 +1,4 @@
+using System.Globalization;
 using Osirion.Blazor.Components;
 using Osirion.Blazor.Core.Utils;
 
@@ -90,6 +91,45 @@ public sealed class OsirionSiteOptions
     /// <summary>Gets or sets whether the scroll-to-top button is shown. Defaults to <see langword="true"/>.</summary>
     public bool ShowScrollToTop { get; set; } = true;
 
+    /// <summary>
+    /// Gets or sets the shell's own texts: the skip link, the names of the menu and its toggle, the theme toggle, the
+    /// search box, and the names of the footer's legal links and of the announcement. English by default.
+    /// </summary>
+    public SiteLabels Labels { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets what each language version of the site says differently, keyed by culture name in any letter case,
+    /// for example <c>sr-Latn-RS</c> or <c>en</c>. The layout uses the entry of the request's UI culture
+    /// (<see cref="CultureInfo.CurrentUICulture"/>, which <c>UseRequestLocalization</c> sets), or of its nearest parent
+    /// culture with an entry (<c>sr-Latn</c>, then <c>sr</c>, for <c>sr-Latn-RS</c>); a culture with neither gets these
+    /// options as they are. Empty by default.
+    /// </summary>
+    public Dictionary<string, SiteLocaleOptions> Locales { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Gets the site as one language version renders it: these options with the values of the <see cref="Locales"/>
+    /// entry for <paramref name="culture"/> or its nearest parent culture, or these options when no entry matches. The
+    /// options themselves are not changed.
+    /// </summary>
+    /// <param name="culture">The culture of the request, usually <see cref="CultureInfo.CurrentUICulture"/>.</param>
+    /// <returns>The options of that version, which have no locales of their own.</returns>
+    public OsirionSiteOptions ForCulture(CultureInfo culture)
+    {
+        ArgumentNullException.ThrowIfNull(culture);
+
+        for (var current = culture; !string.IsNullOrEmpty(current.Name); current = current.Parent)
+        {
+            // Compared here, not by the dictionary, because options set in code may bring a dictionary of their own.
+            var entry = Locales.FirstOrDefault(locale => string.Equals(locale.Key, current.Name, StringComparison.OrdinalIgnoreCase));
+            if (entry.Value is not null)
+            {
+                return With(entry.Value);
+            }
+        }
+
+        return this;
+    }
+
     /// <summary>Gets the problems that keep the options from describing a site; empty when they are valid.</summary>
     public IReadOnlyList<string> GetErrors()
     {
@@ -99,26 +139,99 @@ public sealed class OsirionSiteOptions
             errors.Add($"{Section}:Name is required.");
         }
 
-        AddMenuErrors(Menu, "Menu", errors);
-        AddCallToActionErrors(CallToAction, errors);
-        AddCallToActionFooterSectionErrors(errors);
-        if (Announcement is { } announcement && (string.IsNullOrWhiteSpace(announcement.Id) || string.IsNullOrWhiteSpace(announcement.Text)))
-        {
-            errors.Add($"{Section}:Announcement needs an Id and a Text.");
-        }
+        AddMenuErrors(Menu, $"{Section}:Menu", errors);
+        AddCallToActionErrors(CallToAction, Section, errors);
+        AddCallToActionFooterSectionErrors(Section, errors);
+        AddAnnouncementErrors(Announcement, Section, errors);
+        AddSocialLinkErrors(SocialLinks, Section, errors);
 
-        for (var index = 0; index < SocialLinks.Count; index++)
+        foreach (var (culture, entry) in Locales)
         {
-            if (string.IsNullOrWhiteSpace(SocialLinks[index].Href))
-            {
-                errors.Add($"{Section}:SocialLinks:{index} needs an Href.");
-            }
+            AddLocaleErrors(culture, entry, errors);
         }
 
         return errors;
     }
 
-    private static void AddCallToActionErrors(SiteCallToAction? callToAction, List<string> errors)
+    private OsirionSiteOptions With(SiteLocaleOptions entry) => new()
+    {
+        Name = entry.Name ?? Name,
+        LogoUrl = entry.LogoUrl ?? LogoUrl,
+        HomeUrl = entry.HomeUrl ?? HomeUrl,
+        Menu = entry.Menu ?? Menu,
+        ShowSearch = ShowSearch,
+        SearchUrl = entry.SearchUrl ?? SearchUrl,
+        SearchPlaceholder = entry.SearchPlaceholder ?? SearchPlaceholder,
+        ShowThemeToggle = ShowThemeToggle,
+        CallToAction = entry.CallToAction ?? CallToAction,
+        Announcement = entry.Announcement ?? Announcement,
+        FooterDescription = entry.FooterDescription ?? FooterDescription,
+        FooterSections = entry.FooterSections ?? FooterSections,
+        SocialLinks = entry.SocialLinks ?? SocialLinks,
+        LegalLinks = entry.LegalLinks ?? LegalLinks,
+        Owner = entry.Owner ?? Owner,
+        OwnerUrl = entry.OwnerUrl ?? OwnerUrl,
+        Copyright = entry.Copyright ?? Copyright,
+        SocialTitle = entry.SocialTitle ?? SocialTitle,
+        ShowCookieConsent = ShowCookieConsent,
+        ShowScrollToTop = ShowScrollToTop,
+        Labels = entry.Labels ?? Labels,
+    };
+
+    // A version is checked for the values it sets, so a problem in a value it inherits is reported once, under the
+    // site's own key. The footer section of a call to action is checked against the sections the version shows.
+    private void AddLocaleErrors(string culture, SiteLocaleOptions? entry, List<string> errors)
+    {
+        var key = $"{Section}:Locales:{culture}";
+        if (!IsCultureName(culture))
+        {
+            errors.Add($"{key} is not a culture name, such as sr-Latn-RS or en.");
+            return;
+        }
+
+        if (entry is null)
+        {
+            return;
+        }
+
+        if (entry.Name is not null && string.IsNullOrWhiteSpace(entry.Name))
+        {
+            errors.Add($"{key}:Name cannot be blank.");
+        }
+
+        if (entry.Menu is not null)
+        {
+            AddMenuErrors(entry.Menu, $"{key}:Menu", errors);
+        }
+
+        AddCallToActionErrors(entry.CallToAction, key, errors);
+        if (entry.CallToAction is not null || entry.FooterSections is not null)
+        {
+            With(entry).AddCallToActionFooterSectionErrors(key, errors);
+        }
+
+        AddAnnouncementErrors(entry.Announcement, key, errors);
+        AddSocialLinkErrors(entry.SocialLinks ?? [], key, errors);
+    }
+
+    private static bool IsCultureName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return false;
+        }
+
+        try
+        {
+            return CultureInfo.GetCultureInfo(name).Name.Length > 0;
+        }
+        catch (CultureNotFoundException)
+        {
+            return false;
+        }
+    }
+
+    private static void AddCallToActionErrors(SiteCallToAction? callToAction, string key, List<string> errors)
     {
         if (callToAction is null)
         {
@@ -127,22 +240,22 @@ public sealed class OsirionSiteOptions
 
         if (string.IsNullOrWhiteSpace(callToAction.Text))
         {
-            errors.Add($"{Section}:CallToAction needs a Text.");
+            errors.Add($"{key}:CallToAction needs a Text.");
         }
 
         if (string.IsNullOrWhiteSpace(callToAction.Href))
         {
-            errors.Add($"{Section}:CallToAction needs an Href.");
+            errors.Add($"{key}:CallToAction needs an Href.");
         }
         else if (!SafeLink.IsSafe(callToAction.Href))
         {
             // The address goes into the button's href, where a javascript: or data: URL would run. The layout skips such a
             // button too, but failing here tells the site why it is missing.
-            errors.Add($"{Section}:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.");
+            errors.Add($"{key}:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.");
         }
     }
 
-    private void AddCallToActionFooterSectionErrors(List<string> errors)
+    private void AddCallToActionFooterSectionErrors(string key, List<string> errors)
     {
         var title = CallToAction?.FooterSection;
         if (string.IsNullOrWhiteSpace(title) || FooterSections.Exists(section => string.Equals(section.Title, title, StringComparison.Ordinal)))
@@ -151,7 +264,26 @@ public sealed class OsirionSiteOptions
         }
 
         // The layout would find no column to add the link to; failing here tells the site why the link is missing.
-        errors.Add($"{Section}:CallToAction:FooterSection is \"{title}\", which is not the Title of any of {Section}:FooterSections.");
+        errors.Add($"{key}:CallToAction:FooterSection is \"{title}\", which is not the Title of any of {key}:FooterSections.");
+    }
+
+    private static void AddAnnouncementErrors(SiteAnnouncement? announcement, string key, List<string> errors)
+    {
+        if (announcement is not null && (string.IsNullOrWhiteSpace(announcement.Id) || string.IsNullOrWhiteSpace(announcement.Text)))
+        {
+            errors.Add($"{key}:Announcement needs an Id and a Text.");
+        }
+    }
+
+    private static void AddSocialLinkErrors(List<SiteSocialLink> socialLinks, string key, List<string> errors)
+    {
+        for (var index = 0; index < socialLinks.Count; index++)
+        {
+            if (string.IsNullOrWhiteSpace(socialLinks[index].Href))
+            {
+                errors.Add($"{key}:SocialLinks:{index} needs an Href.");
+            }
+        }
     }
 
     private static void AddMenuErrors(List<SiteMenuItem> items, string path, List<string> errors)
@@ -161,17 +293,17 @@ public sealed class OsirionSiteOptions
             var item = items[index];
             if (string.IsNullOrWhiteSpace(item.Text))
             {
-                errors.Add($"{Section}:{path}:{index} needs a Text.");
+                errors.Add($"{path}:{index} needs a Text.");
             }
 
             if (item.Items.Count == 0 && string.IsNullOrWhiteSpace(item.Href))
             {
-                errors.Add($"{Section}:{path}:{index} needs an Href or Items.");
+                errors.Add($"{path}:{index} needs an Href or Items.");
             }
 
             if (item.Items.Any(child => child.Items.Count > 0))
             {
-                errors.Add($"{Section}:{path}:{index} nests deeper than one level; pass your own menu to the layout's Header for that.");
+                errors.Add($"{path}:{index} nests deeper than one level; pass your own menu to the layout's Header for that.");
             }
 
             AddMenuErrors(item.Items, $"{path}:{index}:Items", errors);

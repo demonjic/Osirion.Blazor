@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Options;
@@ -12,7 +13,10 @@ namespace Osirion.Blazor.Components;
 /// The whole site shell in one line: a skip link, an optional announcement, the main menu with the brand, search,
 /// theme toggle and an optional call to action button, the page, and the footer with link columns, social profiles and
 /// the copyright, plus the theme styles, the scroll-to-top button and, when turned on, the cookie consent banner.
-/// Everything comes from <see cref="OsirionSiteOptions"/> (the <c>Osirion:Site</c> configuration section). Use it as
+/// Everything comes from <see cref="OsirionSiteOptions"/> (the <c>Osirion:Site</c> configuration section), in the
+/// language of the request: <see cref="OsirionSiteOptions.Locales"/> holds what each language version says
+/// differently, chosen by <see cref="CultureInfo.CurrentUICulture"/>, and <see cref="OsirionSiteOptions.Labels"/> the
+/// shell's own texts. Use it as
 /// the router's default layout (<c>DefaultLayout="typeof(OsirionSiteLayout)"</c>), or wrap it in your own layout to
 /// replace the header or footer. It renders without script; the menu and theme toggle add behavior where script runs.
 /// </summary>
@@ -49,11 +53,22 @@ public partial class OsirionSiteLayout
     [Parameter]
     public RenderFragment? MenuActions { get; set; }
 
-    /// <summary>Gets or sets the accessible name of the main menu. Defaults to <c>Main navigation</c>.</summary>
+    /// <summary>
+    /// Gets or sets the accessible name of the main menu. When <see langword="null"/>, the default, it is
+    /// <c>Osirion:Site:Labels:Menu</c> of the request's language version (<c>Main navigation</c> unless configured).
+    /// </summary>
     [Parameter]
-    public string MenuLabel { get; set; } = "Main navigation";
+    public string? MenuLabel { get; set; }
 
-    private OsirionSiteOptions Site => SiteOptions.Value;
+    // The site as the request's language version renders it (Osirion:Site:Locales), resolved once per render.
+    private OsirionSiteOptions Site { get; set; } = new();
+
+    /// <inheritdoc/>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Site = SiteOptions.Value.ForCulture(CultureInfo.CurrentUICulture);
+    }
 
     // UseSite and the Osirion:Site section reject a blank Text or an unsafe Href at startup, but options configured
     // another way skip that check, so the layout applies the same rule before it writes the address, as the menu does

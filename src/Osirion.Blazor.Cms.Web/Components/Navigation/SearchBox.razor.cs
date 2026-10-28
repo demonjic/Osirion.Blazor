@@ -31,10 +31,18 @@ public partial class SearchBox
     public string Placeholder { get; set; } = "Search content...";
 
     /// <summary>
-    /// Gets or sets the visible text of the submit button. The button's accessible name stays <c>Submit search</c>.
+    /// Gets or sets the visible text of the submit button. The button's accessible name is <see cref="SubmitLabel"/>.
     /// </summary>
     [Parameter]
     public string SearchButtonText { get; set; } = "Search";
+
+    /// <summary>
+    /// Gets or sets the accessible name of the submit button. Set it for another language, and keep the words of
+    /// <see cref="SearchButtonText"/> in it, so a reader who names the button by what it shows reaches it. Defaults to
+    /// <c>Submit search</c>.
+    /// </summary>
+    [Parameter]
+    public string SubmitLabel { get; set; } = "Submit search";
 
     /// <summary>Gets or sets the heading above the form, rendered as an <c>h2</c>. No heading when <c>null</c>.</summary>
     [Parameter]

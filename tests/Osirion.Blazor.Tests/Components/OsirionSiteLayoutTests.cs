@@ -1,3 +1,4 @@
+using System.Globalization;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
@@ -448,6 +449,257 @@ public class OsirionSiteLayoutTests : BunitContext
         };
 
         site.GetErrors().ShouldBeEmpty();
+    }
+
+    // Fails before the change: the shell's texts were English, and only the menu's name could be set.
+    [Fact]
+    public void OsirionSiteLayout_Labels_NameEveryPartOfTheShell()
+    {
+        var cut = RenderLayout(new Dictionary<string, string?>(Site)
+        {
+            ["Osirion:Site:ShowSearch"] = "true",
+            ["Osirion:Site:Announcement:Id"] = "launch",
+            ["Osirion:Site:Announcement:Text"] = "Почињемо.",
+            ["Osirion:Site:Labels:SkipLink"] = "Пређи на садржај",
+            ["Osirion:Site:Labels:Menu"] = "Главни мени",
+            ["Osirion:Site:Labels:MenuToggle"] = "Отвори мени",
+            ["Osirion:Site:Labels:SwitchToDarkTheme"] = "Тамна тема",
+            ["Osirion:Site:Labels:SwitchToLightTheme"] = "Светла тема",
+            ["Osirion:Site:Labels:Search"] = "Претрага",
+            ["Osirion:Site:Labels:SubmitSearch"] = "Покрени претрагу",
+            ["Osirion:Site:Labels:LegalLinks"] = "Правне напомене",
+            ["Osirion:Site:Labels:Announcement"] = "Обавештење",
+            ["Osirion:Site:Labels:DismissAnnouncement"] = "Затвори обавештење",
+        });
+
+        cut.Find("a.osirion-skip-link").TextContent.ShouldBe("Пређи на садржај");
+        cut.FindAll("nav[aria-label='Главни мени']").ShouldHaveSingleItem();
+        cut.Find("input.osirion-navbar-toggler").GetAttribute("aria-label").ShouldBe("Отвори мени");
+        var themeToggle = cut.Find("button.theme-toggle-btn");
+        themeToggle.GetAttribute("data-switch-to-dark-label").ShouldBe("Тамна тема");
+        themeToggle.GetAttribute("data-switch-to-light-label").ShouldBe("Светла тема");
+        cut.Find("form[role='search'] label").TextContent.ShouldBe("Претрага");
+        var submit = cut.Find("form[role='search'] button[type='submit']");
+        submit.GetAttribute("aria-label").ShouldBe("Покрени претрагу");
+        submit.TextContent.Trim().ShouldBe("Претрага");
+        cut.Find("nav.osirion-footer-bottom-links").GetAttribute("aria-label").ShouldBe("Правне напомене");
+        cut.Find("[role='region']").GetAttribute("aria-label").ShouldBe("Обавештење");
+        cut.Find("button.osirion-announcement-dismiss").GetAttribute("aria-label").ShouldBe("Затвори обавештење");
+    }
+
+    [Fact]
+    public void OsirionSiteLayout_MenuLabelParameter_WinsOverTheLabel()
+    {
+        var cut = RenderLayout(
+            new Dictionary<string, string?>(Site) { ["Osirion:Site:Labels:Menu"] = "Главни мени" },
+            parameters => parameters.Add(p => p.MenuLabel, "Site menu"));
+
+        cut.FindAll("nav[aria-label='Site menu']").ShouldHaveSingleItem();
+    }
+
+    // The defaults of the labels are the components' own English texts, so a site that sets no label renders as before.
+    [Fact]
+    public void SiteLabels_Defaults_AreTheComponentsOwnDefaults()
+    {
+        var labels = new SiteLabels();
+
+        labels.SkipLink.ShouldBe(new OsirionPageLayout().SkipLinkText);
+        labels.MenuToggle.ShouldBe(new Navigation.Components.Menu().ToggleAriaLabel);
+        labels.SwitchToDarkTheme.ShouldBe(new Theming.Components.ThemeToggle().SwitchToDarkLabel);
+        labels.SwitchToLightTheme.ShouldBe(new Theming.Components.ThemeToggle().SwitchToLightLabel);
+        labels.Search.ShouldBe(new Cms.Web.Components.SearchBox().Label);
+        labels.Search.ShouldBe(new Cms.Web.Components.SearchBox().SearchButtonText);
+        labels.SubmitSearch.ShouldBe(new Cms.Web.Components.SearchBox().SubmitLabel);
+        labels.LegalLinks.ShouldBe(new OsirionFooter().BottomLinksLabel);
+        labels.Announcement.ShouldBe(new OsirionAnnouncementBar().RegionLabel);
+        labels.DismissAnnouncement.ShouldBe(new OsirionAnnouncementBar().DismissText);
+        labels.Menu.ShouldBe("Main navigation");
+    }
+
+    [Fact]
+    public void OsirionSiteLayout_UiCultureWithALocale_RendersThatVersion()
+    {
+        var values = new Dictionary<string, string?>(Site)
+        {
+            ["Osirion:Site:Locales:sr-Latn-RS:Name"] = "Osirion latinicom",
+            ["Osirion:Site:Locales:sr-Latn-RS:Menu:0:Text"] = "Dokumentacija",
+            ["Osirion:Site:Locales:sr-Latn-RS:Menu:0:Href"] = "/sr-latn-rs/docs",
+            ["Osirion:Site:Locales:sr-Latn-RS:Labels:SkipLink"] = "Pređi na sadržaj",
+        };
+
+        var cut = WithUiCulture("sr-Latn-RS", () => RenderLayout(values));
+
+        cut.Find("a.osirion-skip-link").TextContent.ShouldBe("Pređi na sadržaj");
+        var menu = cut.Find("nav[aria-label='Main navigation']");
+        menu.TextContent.ShouldContain("Osirion latinicom");
+        menu.QuerySelector("a[href='/sr-latn-rs/docs']").ShouldNotBeNull();
+        menu.QuerySelector("a[href='/docs']").ShouldBeNull();
+        // What the version leaves out is the site's.
+        cut.Find("footer a[href='/privacy-policy']").TextContent.Trim().ShouldBe("Privacy");
+    }
+
+    [Fact]
+    public void OsirionSiteLayout_UiCultureWithoutALocale_RendersTheSite()
+    {
+        var values = new Dictionary<string, string?>(Site) { ["Osirion:Site:Locales:sr-Latn-RS:Name"] = "Osirion latinicom" };
+
+        var cut = WithUiCulture("de-DE", () => RenderLayout(values));
+
+        cut.Find("nav[aria-label='Main navigation']").TextContent.ShouldContain("Osirion.Blazor");
+        cut.Find("nav[aria-label='Main navigation'] a[href='/docs']").ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void ForCulture_CultureWithoutAnEntryForItOrItsParents_ReturnsTheSameOptions()
+    {
+        var site = new OsirionSiteOptions { Name = "Site", Locales = { ["sr-Latn-RS"] = new SiteLocaleOptions { Name = "Sajt" } } };
+
+        site.ForCulture(CultureInfo.GetCultureInfo("de-DE")).ShouldBeSameAs(site);
+        site.ForCulture(CultureInfo.InvariantCulture).ShouldBeSameAs(site);
+    }
+
+    [Fact]
+    public void ForCulture_ParentCultureEntry_ServesTheChildCulture()
+    {
+        var site = new OsirionSiteOptions { Name = "Site", Locales = { ["sr"] = new SiteLocaleOptions { Name = "Сајт" } } };
+
+        site.ForCulture(CultureInfo.GetCultureInfo("sr-Latn-RS")).Name.ShouldBe("Сајт");
+    }
+
+    [Fact]
+    public void ForCulture_MostSpecificEntry_Wins()
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            Locales =
+            {
+                ["sr"] = new SiteLocaleOptions { Name = "Сајт" },
+                ["sr-Latn-RS"] = new SiteLocaleOptions { Name = "Sajt" },
+            },
+        };
+
+        site.ForCulture(CultureInfo.GetCultureInfo("sr-Latn-RS")).Name.ShouldBe("Sajt");
+    }
+
+    // Options set in code may bring a dictionary that compares keys by letter case.
+    [Fact]
+    public void ForCulture_KeyInAnotherLetterCase_StillMatches()
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            Locales = new Dictionary<string, SiteLocaleOptions> { ["sr-latn-rs"] = new() { Name = "Sajt" } },
+        };
+
+        site.ForCulture(CultureInfo.GetCultureInfo("sr-Latn-RS")).Name.ShouldBe("Sajt");
+    }
+
+    [Fact]
+    public void ForCulture_TakesEveryValueTheEntrySetsAndLeavesTheOptionsUnchanged()
+    {
+        var entry = new SiteLocaleOptions();
+        foreach (var property in typeof(SiteLocaleOptions).GetProperties())
+        {
+            property.SetValue(entry, property.PropertyType == typeof(string) ? $"locale {property.Name}" : Activator.CreateInstance(property.PropertyType));
+        }
+
+        var site = new OsirionSiteOptions { Name = "Site", Locales = { ["en"] = entry } };
+        var english = site.ForCulture(CultureInfo.GetCultureInfo("en-GB"));
+
+        foreach (var property in typeof(SiteLocaleOptions).GetProperties())
+        {
+            typeof(OsirionSiteOptions).GetProperty(property.Name)!.GetValue(english).ShouldBe(property.GetValue(entry), property.Name);
+        }
+
+        site.Name.ShouldBe("Site");
+        english.Locales.ShouldBeEmpty();
+    }
+
+    // A new site option needs a decision: it differs per language version (and is in SiteLocaleOptions) or it does not.
+    [Fact]
+    public void SiteLocaleOptions_HoldEveryValueThatIsNotTheSameForEveryVersion()
+    {
+        string[] sameForEveryVersion = ["ShowSearch", "ShowThemeToggle", "ShowCookieConsent", "ShowScrollToTop", "Locales"];
+
+        typeof(OsirionSiteOptions).GetProperties().Select(property => property.Name).Except(sameForEveryVersion)
+            .ShouldBe(typeof(SiteLocaleOptions).GetProperties().Select(property => property.Name), ignoreOrder: true);
+    }
+
+    [Fact]
+    public void AddOsirion_LocalesSection_BindsEachVersionInAnyLetterCase()
+    {
+        var site = BuildOptions(new Dictionary<string, string?>(Site)
+        {
+            ["Osirion:Site:Locales:en:Name"] = "Site in English",
+            ["Osirion:Site:Locales:en:Labels:SkipLink"] = "Skip to the text",
+        });
+
+        site.Locales["EN"].Name.ShouldBe("Site in English");
+        site.ForCulture(CultureInfo.GetCultureInfo("en-US")).Labels.SkipLink.ShouldBe("Skip to the text");
+    }
+
+    [Fact]
+    public void GetErrors_LocaleKeyThatIsNotACultureName_IsRejectedNamingTheKey()
+    {
+        var site = new OsirionSiteOptions { Name = "Site", Locales = { ["not a culture!"] = new SiteLocaleOptions() } };
+
+        site.GetErrors().ShouldBe(["Osirion:Site:Locales:not a culture! is not a culture name, such as sr-Latn-RS or en."]);
+    }
+
+    [Fact]
+    public void GetErrors_ValuesALocaleSets_AreCheckedUnderTheLocaleKey()
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            FooterSections = [new FooterSection { Title = "Contact", Links = [] }],
+            Locales =
+            {
+                ["sr"] = new SiteLocaleOptions
+                {
+                    Name = " ",
+                    Menu = [new SiteMenuItem { Text = "Документи" }],
+                    CallToAction = new SiteCallToAction { Text = "Пишите нам", Href = "/kontakt", FooterSection = "Контакт" },
+                },
+            },
+        };
+
+        site.GetErrors().ShouldBe(
+        [
+            "Osirion:Site:Locales:sr:Name cannot be blank.",
+            "Osirion:Site:Locales:sr:Menu:0 needs an Href or Items.",
+            "Osirion:Site:Locales:sr:CallToAction:FooterSection is \"Контакт\", which is not the Title of any of Osirion:Site:Locales:sr:FooterSections.",
+        ]);
+    }
+
+    // A problem in a value the version inherits is the site's, reported once under the site's key.
+    [Fact]
+    public void GetErrors_ValueALocaleInherits_IsReportedOnceUnderTheSiteKey()
+    {
+        var site = new OsirionSiteOptions
+        {
+            Name = "Site",
+            Menu = [new SiteMenuItem { Text = "Docs" }],
+            Locales = { ["sr"] = new SiteLocaleOptions { Name = "Сајт" } },
+        };
+
+        site.GetErrors().ShouldBe(["Osirion:Site:Menu:0 needs an Href or Items."]);
+    }
+
+    // CultureInfo.CurrentUICulture is what UseRequestLocalization sets for a request; the render runs under it.
+    private static T WithUiCulture<T>(string culture, Func<T> render)
+    {
+        var previous = CultureInfo.CurrentUICulture;
+        CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
+        try
+        {
+            return render();
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previous;
+        }
     }
 
     private static Dictionary<string, string?> WithCallToAction(string href) => new(Site)

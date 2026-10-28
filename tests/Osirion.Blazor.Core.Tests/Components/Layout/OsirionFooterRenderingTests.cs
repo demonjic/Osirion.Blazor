@@ -203,6 +203,17 @@ public class OsirionFooterRenderingTests : OsirionComponentTestBase
         nav.QuerySelectorAll("a").Select(a => a.GetAttribute("href")).ShouldBe(["/privacy", "/terms"]);
     }
 
+    // Fails before the change: the legal links were always named in English.
+    [Fact]
+    public void Footer_BottomLinksLabel_NamesTheLegalNavigation()
+    {
+        var cut = RenderStatic<OsirionFooter>(parameters => parameters
+            .Add(p => p.BottomLinks, [new FooterLink { Text = "Приватност", Href = "/privatnost" }])
+            .Add(p => p.BottomLinksLabel, "Правне напомене"));
+
+        cut.Find("nav.osirion-footer-bottom-links").GetAttribute("aria-label").ShouldBe("Правне напомене");
+    }
+
     [Fact]
     public void Footer_ChildContent_RendersExtraBlock()
     {

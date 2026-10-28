@@ -90,11 +90,18 @@ public partial class OsirionFooter
     public IReadOnlyList<FooterSocialLink>? SocialLinks { get; set; }
 
     /// <summary>
-    /// Gets or sets the links in the bottom row, such as privacy and terms. They sit in a <c>nav</c> labelled "Footer
-    /// legal navigation".
+    /// Gets or sets the links in the bottom row, such as privacy and terms. They sit in a <c>nav</c> named by
+    /// <see cref="BottomLinksLabel"/>.
     /// </summary>
     [Parameter]
     public IReadOnlyList<FooterLink>? BottomLinks { get; set; }
+
+    /// <summary>
+    /// Gets or sets the accessible name of the <c>nav</c> around <see cref="BottomLinks"/>. Set it for another
+    /// language. Defaults to <c>Footer legal navigation</c>.
+    /// </summary>
+    [Parameter]
+    public string BottomLinksLabel { get; set; } = "Footer legal navigation";
 
     /// <summary>
     /// Gets or sets whether <see cref="SocialLinks"/> are shown.

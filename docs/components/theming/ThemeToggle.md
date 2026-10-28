@@ -6,6 +6,7 @@ Parameters
 ----------
 - `Id` (optional): id of the button. No id is written by default, so several toggles can share a page.
 - `OnThemeChanged` (optional): raised with `light` or `dark` after a switch, only when the toggle is interactive. Under Static SSR it is never raised; listen for the `osirion-theme-update` browser event instead.
+- `SwitchToDarkLabel` (`Switch to dark mode`) and `SwitchToLightLabel` (`Switch to light mode`): what the button says while the light or the dark theme is on, as its `aria-label`, its `title` and its hidden text. Set both in the language of the page; both are written on the button (`data-switch-to-dark-label`, `data-switch-to-light-label`), so the script names it anew after a switch in the browser. `OsirionSiteLayout` passes `Osirion:Site:Labels:SwitchToDarkTheme` and `SwitchToLightTheme`.
 - State and configuration come from `IThemeService` and `ThemingOptions`.
 
 Example
