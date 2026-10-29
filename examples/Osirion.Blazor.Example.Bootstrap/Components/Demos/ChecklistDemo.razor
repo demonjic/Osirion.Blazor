@@ -1,0 +1,13 @@
+@using Osirion.Blazor.Components
+@using Osirion.Blazor.Core.Models
+
+<OsirionChecklist Title="Included in every plan" Items="items" />
+
+@code {
+    private static readonly ChecklistItem[] items =
+    [
+        new("Static SSR", "Every page arrives as complete HTML."),
+        new("Light and dark themes", "Colors come from the theme tokens."),
+        new("No client script required"),
+    ];
+}

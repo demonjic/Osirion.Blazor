@@ -1,5 +1,6 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Components;
+using Osirion.Blazor.Core.Models;
 using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Components;
@@ -45,6 +46,27 @@ public partial class HeroSection
     /// </summary>
     [Parameter]
     public RenderFragment? SummaryContent { get; set; }
+
+    /// <summary>
+    /// A short label above the title, such as <c>New</c> or the product's category, as plain text in a paragraph with
+    /// the class <c>osirion-hero-eyebrow</c>.
+    /// </summary>
+    [Parameter]
+    public string? Eyebrow { get; set; }
+
+    /// <summary>
+    /// Short phrases shown under the summary, each behind a check mark, as an <see cref="OsirionChecklist"/> inside a
+    /// <c>div</c> with the class <c>osirion-hero-highlights</c>. Empty phrases are left out.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<string>? Highlights { get; set; }
+
+    /// <summary>
+    /// Whether the side image sits in a subtle browser-like frame (a bar with three dots above it, a border and a
+    /// shadow), for a product screenshot. Has no effect on a background image.
+    /// </summary>
+    [Parameter]
+    public bool FrameImage { get; set; }
 
     /// <summary>
     /// The image, shown beside the text or, with <see cref="UseBackgroundImage"/>, behind it. As a background it is
@@ -211,12 +233,28 @@ public partial class HeroSection
     private Alignment _imageposition => ImagePosition == Alignment.Left || ImagePosition == Alignment.Justify ? Alignment.Right : ImagePosition;
     private Alignment _alignment => Alignment == Alignment.Justify ? Alignment.Left : Alignment;
 
+    // The phrases as checklist items, without the empty ones; built when the parameters are set, not on every render.
+    private IReadOnlyList<ChecklistItem> _highlightItems = [];
+
+    private bool HasHighlights => _highlightItems.Count > 0;
+
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var att = Attributes;
     }
+
+    /// <inheritdoc/>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _highlightItems = ChecklistPhrases.ToItems(Highlights);
+    }
+
+    private string GetImageContainerClass() => FrameImage
+        ? "osirion-hero-image-container osirion-hero-image-framed"
+        : "osirion-hero-image-container";
 
     /// <summary>
     /// Gets the CSS class for the hero section

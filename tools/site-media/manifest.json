@@ -474,6 +474,20 @@
       "shots": []
     },
     {
+      "file": "components/card-grid.md",
+      "path": "/components/card-grid",
+      "section": "Components",
+      "title": "OsirionCardGrid",
+      "card": {
+        "key": "og/components-card-grid.jpg",
+        "url": "https://media.getosirion.com/og/components-card-grid.jpg",
+        "heading": "OsirionCardGrid: a responsive card grid for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-card-grid.jpg",
+      "shots": []
+    },
+    {
       "file": "components/cards.md",
       "path": "/components/cards",
       "section": "Components",
@@ -499,6 +513,20 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/components-categories-list.jpg",
+      "shots": []
+    },
+    {
+      "file": "components/checklist.md",
+      "path": "/components/checklist",
+      "section": "Components",
+      "title": "OsirionChecklist",
+      "card": {
+        "key": "og/components-checklist.jpg",
+        "url": "https://media.getosirion.com/og/components-checklist.jpg",
+        "heading": "OsirionChecklist: a check mark list for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-checklist.jpg",
       "shots": []
     },
     {
@@ -1174,6 +1202,20 @@
       "shots": []
     },
     {
+      "file": "components/record-card.md",
+      "path": "/components/record-card",
+      "section": "Components",
+      "title": "OsirionRecordCard",
+      "card": {
+        "key": "og/components-record-card.jpg",
+        "url": "https://media.getosirion.com/og/components-record-card.jpg",
+        "heading": "OsirionRecordCard: a sample record card for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-record-card.jpg",
+      "shots": []
+    },
+    {
       "file": "components/responsive-image.md",
       "path": "/components/responsive-image",
       "section": "Components",
@@ -1297,6 +1339,20 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/components-series-navigation.jpg",
+      "shots": []
+    },
+    {
+      "file": "components/split-section.md",
+      "path": "/components/split-section",
+      "section": "Components",
+      "title": "OsirionSplitSection",
+      "card": {
+        "key": "og/components-split-section.jpg",
+        "url": "https://media.getosirion.com/og/components-split-section.jpg",
+        "heading": "OsirionSplitSection: copy beside an aside for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-split-section.jpg",
       "shots": []
     },
     {

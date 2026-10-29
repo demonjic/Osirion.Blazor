@@ -36,7 +36,7 @@ public abstract partial class OsirionComponentBase : ComponentBase
     private IOptions<ThemingOptions> ThemingOptions { get; set; } = default!;
 
     private IDictionary<string, object>? _ownedAttributes;
-    private string? _themeAttributeName;
+    private string? _appliedThemeAttributeName;
 
     /// <summary>
     /// Indicates that the code is not running in the browser (WebAssembly runtime).
@@ -67,6 +67,12 @@ public abstract partial class OsirionComponentBase : ComponentBase
     /// </summary>
     protected CssFramework Framework => ThemingOptions.Value.Framework;
 
+    /// <summary>
+    /// The attribute the configured CSS framework reads the color mode from: <c>data-bs-theme</c> under Bootstrap,
+    /// <c>data-theme</c> otherwise.
+    /// </summary>
+    private protected string ThemeAttributeName => Framework == CssFramework.Bootstrap ? "data-bs-theme" : "data-theme";
+
     /// <inheritdoc />
     /// <remarks>
     /// Applies the theme attribute on every parameter update, so a changed <see cref="Theme"/> reaches the markup and
@@ -89,29 +95,29 @@ public abstract partial class OsirionComponentBase : ComponentBase
             // A dictionary supplied by the parent belongs to the parent: work on a copy.
             _ownedAttributes = new Dictionary<string, object>(Attributes ?? new Dictionary<string, object>());
             Attributes = _ownedAttributes;
-            _themeAttributeName = null;
+            _appliedThemeAttributeName = null;
         }
 
-        var attributeName = Framework == CssFramework.Bootstrap ? "data-bs-theme" : "data-theme";
-        if (_themeAttributeName is not null && _themeAttributeName != attributeName)
+        var attributeName = ThemeAttributeName;
+        if (_appliedThemeAttributeName is not null && _appliedThemeAttributeName != attributeName)
         {
-            _ownedAttributes.Remove(_themeAttributeName);
-            _themeAttributeName = null;
+            _ownedAttributes.Remove(_appliedThemeAttributeName);
+            _appliedThemeAttributeName = null;
         }
 
         if (Theme == ThemeMode.System)
         {
-            if (_themeAttributeName is not null)
+            if (_appliedThemeAttributeName is not null)
             {
-                _ownedAttributes.Remove(_themeAttributeName);
-                _themeAttributeName = null;
+                _ownedAttributes.Remove(_appliedThemeAttributeName);
+                _appliedThemeAttributeName = null;
             }
 
             return;
         }
 
         _ownedAttributes[attributeName] = Theme.ToString().ToLowerInvariant();
-        _themeAttributeName = attributeName;
+        _appliedThemeAttributeName = attributeName;
     }
 
     /// <summary>

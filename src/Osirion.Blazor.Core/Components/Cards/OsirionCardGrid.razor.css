@@ -1,0 +1,30 @@
+/* One column on phones, at most two on tablets, the requested count from 992px. The columns are set by class rather
+   than an inline style, so the grid writes no style attribute for a Content Security Policy to block. */
+.osirion-card-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--osirion-spacing-6, 1.5rem);
+}
+
+    /* A cell may shrink below its content's width, so a wide card cannot widen the page. */
+    .osirion-card-grid > * {
+        min-width: 0;
+    }
+
+@media (min-width: 640px) {
+    .osirion-card-grid-columns-2,
+    .osirion-card-grid-columns-3,
+    .osirion-card-grid-columns-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 992px) {
+    .osirion-card-grid-columns-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .osirion-card-grid-columns-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}

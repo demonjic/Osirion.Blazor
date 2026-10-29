@@ -1,0 +1,16 @@
+@using Osirion.Blazor.Components
+
+@* The title is TitleContent so the demo adds an h2, not a second h1, to the documentation page *@
+<HeroSection MinHeight="18rem"
+             Eyebrow="Component library"
+             Summary="Server-rendered Blazor components for content sites."
+             Highlights="@(["Complete HTML before any script", "Light and dark themes", "Bootstrap, Fluent UI and MudBlazor"])"
+             ImageUrl="/images/osirion-hero.png"
+             ImageAlt="An illustration of a browser window showing the Blazor logo, on a purple background"
+             FrameImage="true"
+             PrimaryButtonText="Read the docs"
+             PrimaryButtonUrl="/docs">
+    <TitleContent>
+        <h2 class="osirion-hero-title">Build the site, not the parts</h2>
+    </TitleContent>
+</HeroSection>

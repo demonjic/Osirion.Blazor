@@ -7,7 +7,7 @@ permalink: /docs/packages/core
 description: Osirion.Blazor.Core holds the layout, content, card, section, navigation and form components. Setup steps and every category.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-23
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/docs-packages-core.jpg'
 categories:
 - Components
@@ -88,9 +88,9 @@ adapter for your CSS framework; see [OsirionStyles](/components/osirion-styles).
 | Category | Components |
 | --- | --- |
 | [Layout](/components/layout) | [`OsirionPageLayout`](/components/page-layout) (header, body and footer slots, sticky footer, and from 4.0 a skip link to the main content), `OsirionFooter`, `OsirionStickySidebar`, `OsirionBackgroundPattern`, `OsirionPageLoading`. |
-| [Content](/components/content) | [`OsirionArticleMetdata`](/components/article-metadata) (author, date, read time). From 4.0: [callouts](/components/callout), [tabs](/components/tabs), [accordion and FAQ](/components/accordion-and-faq), [responsive image](/components/responsive-image), [video embed](/components/video-embed), [reading progress](/components/reading-progress). |
-| [Cards](/components/cards) | Feature, testimonial, subscription and metric cards, and from 4.0 [`OsirionAuthorCard`](/components/author-card). |
-| [Sections](/components/sections) | `HeroSection`, `OsirionBaseSection`, `OsirionContactInfoSection`, `OsirionResponsiveShowcaseSection`, `OsirionMetricGrid`, `OsirionContextCardGrid`. From 4.0: `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`. |
+| [Content](/components/content) | [`OsirionArticleMetdata`](/components/article-metadata) (author, date, read time). From 4.0: [callouts](/components/callout), [tabs](/components/tabs), [accordion and FAQ](/components/accordion-and-faq), [responsive image](/components/responsive-image), [video embed](/components/video-embed), [reading progress](/components/reading-progress). From 4.3: [checklist](/components/checklist). |
+| [Cards](/components/cards) | Feature, testimonial, subscription and metric cards, and from 4.0 [`OsirionAuthorCard`](/components/author-card). From 4.3: [`OsirionCardGrid`](/components/card-grid) and [`OsirionRecordCard`](/components/record-card). |
+| [Sections](/components/sections) | `HeroSection`, `OsirionBaseSection`, `OsirionContactInfoSection`, `OsirionResponsiveShowcaseSection`, `OsirionMetricGrid`, `OsirionContextCardGrid`. From 4.0: `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`, `OsirionSplitSection`. |
 | [Navigation](/components/navigation) | `OsirionBreadcrumbs` and `OsirionReadMoreLink`. Menus and scroll helpers are in the [Navigation package](/docs/packages/navigation). |
 | [Carousels](/components/sections) | `InfiniteLogoCarousel` and `OsirionTestimonialCarousel`. |
 | [Forms](/components/forms-and-feedback) | `OsirionContactForm`, which posts under static SSR, and [`OsirionStaticContactForm`](/components/static-contact-form) for sites published as static files, which sends JSON to your endpoint with a script: it renders hidden and only its script shows it. The newsletter form is a card: `OsirionSubscriptionCard`. |

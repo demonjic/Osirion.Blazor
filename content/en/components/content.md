@@ -7,7 +7,7 @@ permalink: /components/content
 description: Components for the body of articles and docs pages in Osirion.Blazor Core, from callouts and tabs to video embeds and the HTML renderer, rendering under static SSR.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-content.jpg'
 categories:
 - Components
@@ -73,6 +73,7 @@ They live in the `Osirion.Blazor.Components` namespace of the Osirion.Blazor.Cor
 | [HTML renderer](/components/html-renderer) | Sanitized HTML in an `<article>`, with Prism highlighting, line numbers and copy buttons for code blocks | Only for code blocks | 3.0 |
 | [Reveal](/components/reveal) | Content that fades or slides into view the first time it scrolls into the viewport | Required for the reveal | 3.0 |
 | [Content demo](/components/content-demo) | A registered Razor component as a live example, with Preview and Code tabs | None | 4.0 |
+| [Checklist](/components/checklist) | Short phrases behind check marks, with optional descriptions, under an optional heading | None | 4.3 |
 
 "Optional" means the component works without script and the script adds behavior: the video embed is a link to the
 video until its script swaps in the player. "Required for the reveal" means the content stays hidden until the script
