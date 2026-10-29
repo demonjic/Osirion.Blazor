@@ -166,6 +166,34 @@ public class OsirionCookieConsentBrowserTests : BunitContext
         server.ShouldContain("<form method=\"post\"");
     }
 
+    [Fact]
+    public void OsirionCookieConsent_RequiredLabel_ReplacesTheEnglishMark()
+    {
+        var cut = RenderInBrowserMode(p => p.Add(c => c.RequiredLabel, "(obavezno)"));
+
+        cut.Find(".osirion-cookie-consent-required").TextContent.ShouldBe(" (obavezno)");
+    }
+
+    // Guards the default mark.
+    [Fact]
+    public void OsirionCookieConsent_WithoutRequiredLabel_WritesTheEnglishMark()
+    {
+        var cut = RenderInBrowserMode();
+
+        cut.Find(".osirion-cookie-consent-required").TextContent.ShouldBe(" (Required)");
+    }
+
+    [Fact]
+    public void CreateDefaultCategories_ReturnsNewInstancesOfTheFourCategories()
+    {
+        var first = OsirionCookieConsent.CreateDefaultCategories();
+        var second = OsirionCookieConsent.CreateDefaultCategories();
+
+        first.Select(category => category.Id).ShouldBe(["necessary", "analytics", "marketing", "preferences"]);
+        first[0].IsRequired.ShouldBeTrue();
+        first[0].ShouldNotBeSameAs(second[0]);
+    }
+
     private IRenderedComponent<OsirionCookieConsent> RenderInBrowserMode(
         Action<ComponentParameterCollectionBuilder<OsirionCookieConsent>>? configure = null) =>
         Render<OsirionCookieConsent>(p =>

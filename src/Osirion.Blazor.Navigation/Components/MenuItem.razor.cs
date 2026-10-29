@@ -67,6 +67,17 @@ public partial class MenuItem : IDisposable
     public bool HasSubmenu { get; set; }
 
     /// <summary>
+    /// Gets or sets the accessible name of the submenu's toggle, with <c>{0}</c> where the item's <see cref="Text"/>
+    /// goes. Defaults to <c>Toggle {0} submenu</c>; set it in the page's language, for example
+    /// <c>Otvori podmeni {0}</c>, so the name matches the language of the page (WCAG 3.1.2).
+    /// </summary>
+    [Parameter]
+    public string ToggleSubmenuLabel { get; set; } = DefaultToggleSubmenuLabel;
+
+    /// <summary>The default of <see cref="ToggleSubmenuLabel"/>.</summary>
+    public const string DefaultToggleSubmenuLabel = "Toggle {0} submenu";
+
+    /// <summary>
     /// Gets or sets the submenu content: menu items, or groups and other parts for a mega submenu. It is rendered only
     /// when <see cref="HasSubmenu"/> is on.
     /// </summary>
@@ -145,6 +156,9 @@ public partial class MenuItem : IDisposable
     /// Gets the identifier for the submenu toggle control.
     /// </summary>
     internal string SubmenuToggleId => $"{SubmenuId}-toggle";
+
+    // Replaced, not formatted, so a label with other braces never throws.
+    private string SubmenuToggleLabel => ToggleSubmenuLabel.Replace("{0}", Text, StringComparison.Ordinal);
 
     internal string SubmenuVariantClass => SubmenuVariant switch
     {

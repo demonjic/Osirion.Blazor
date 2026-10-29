@@ -6,7 +6,7 @@
     {
         @* Disclosure toggle: a visually hidden but focusable checkbox, so the submenu opens from the keyboard
            and without JavaScript. Its checked state is the expanded state. *@
-        <input type="checkbox" class="osirion-submenu-toggler" id="@SubmenuToggleId" aria-controls="@SubmenuId" aria-label="Toggle @Text submenu" />
+        <input type="checkbox" class="osirion-submenu-toggler" id="@SubmenuToggleId" aria-controls="@SubmenuId" aria-label="@SubmenuToggleLabel" />
     }
     @if (_isToggleOnly)
     {
