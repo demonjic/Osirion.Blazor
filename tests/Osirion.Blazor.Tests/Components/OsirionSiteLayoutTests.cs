@@ -595,11 +595,17 @@ public class OsirionSiteLayoutTests : BunitContext
         site.ForCulture(CultureInfo.GetCultureInfo("sr-Latn-RS")).Name.ShouldBe("Sajt");
     }
 
+    // DerivedFrom and Transliteration say how an entry is made, not what the version shows.
+    private static readonly string[] DerivationKeys = [nameof(SiteLocaleOptions.DerivedFrom), nameof(SiteLocaleOptions.Transliteration)];
+
+    private static IEnumerable<System.Reflection.PropertyInfo> VersionValues() =>
+        typeof(SiteLocaleOptions).GetProperties().Where(property => !DerivationKeys.Contains(property.Name));
+
     [Fact]
     public void ForCulture_TakesEveryValueTheEntrySetsAndLeavesTheOptionsUnchanged()
     {
         var entry = new SiteLocaleOptions();
-        foreach (var property in typeof(SiteLocaleOptions).GetProperties())
+        foreach (var property in VersionValues())
         {
             property.SetValue(entry, property.PropertyType == typeof(string) ? $"locale {property.Name}" : Activator.CreateInstance(property.PropertyType));
         }
@@ -607,7 +613,7 @@ public class OsirionSiteLayoutTests : BunitContext
         var site = new OsirionSiteOptions { Name = "Site", Locales = { ["en"] = entry } };
         var english = site.ForCulture(CultureInfo.GetCultureInfo("en-GB"));
 
-        foreach (var property in typeof(SiteLocaleOptions).GetProperties())
+        foreach (var property in VersionValues())
         {
             typeof(OsirionSiteOptions).GetProperty(property.Name)!.GetValue(english).ShouldBe(property.GetValue(entry), property.Name);
         }
@@ -623,7 +629,7 @@ public class OsirionSiteLayoutTests : BunitContext
         string[] sameForEveryVersion = ["ShowSearch", "ShowThemeToggle", "ShowCookieConsent", "ShowScrollToTop", "Locales"];
 
         typeof(OsirionSiteOptions).GetProperties().Select(property => property.Name).Except(sameForEveryVersion)
-            .ShouldBe(typeof(SiteLocaleOptions).GetProperties().Select(property => property.Name), ignoreOrder: true);
+            .ShouldBe(VersionValues().Select(property => property.Name), ignoreOrder: true);
     }
 
     [Fact]

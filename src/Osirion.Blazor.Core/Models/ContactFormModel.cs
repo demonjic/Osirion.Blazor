@@ -52,4 +52,11 @@ public class ContactFormModel
     /// Should remain empty for legitimate submissions.
     /// </summary>
     public string Website { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets the answers to the form's <c>AdditionalFields</c>, one per definition in definition order, validated by
+    /// <c>OsirionContactForm</c> before it calls <c>OnSubmit</c> or sends the email. Empty for a form without additional
+    /// fields. Only the form sets it, so nothing posted under its name reaches the email.
+    /// </summary>
+    public IReadOnlyList<ContactFormFieldValue> AdditionalFieldValues { get; internal set; } = [];
 }

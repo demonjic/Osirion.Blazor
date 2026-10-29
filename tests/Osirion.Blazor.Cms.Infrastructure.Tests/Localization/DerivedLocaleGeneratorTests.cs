@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Enums;
@@ -5,6 +6,8 @@ using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.ValueObjects;
 using Osirion.Blazor.Cms.Infrastructure.Localization;
 using Osirion.Blazor.Cms.Infrastructure.Utilities;
+using Osirion.Blazor.Core.Extensions;
+using Osirion.Blazor.Core.Localization;
 using Osirion.Blazor.Core.Transliteration;
 using Shouldly;
 
@@ -178,6 +181,29 @@ public class DerivedLocaleGeneratorTests
         _generator.AddDerivedItems(items, Options(), string.Empty);
 
         items.Values.Single(item => item.IsDerived).Content.ShouldBe("<p>Vodič</p>");
+    }
+
+    [Fact]
+    public void AddDerivedItems_SiteLocalizationRegistered_MovesLinksUnderTheConfiguredPrefix()
+    {
+        var paths = new ServiceCollection()
+            .AddOsirionLocalization(options =>
+            {
+                options.DefaultCulture = "en";
+                options.Cultures.Add(new LocalizationCulture { Name = "sr" });
+                options.Cultures.Add(new LocalizationCulture { Name = "sr-Latn", Prefix = "lat" });
+            })
+            .BuildServiceProvider()
+            .GetRequiredService<IOsirionLocalePaths>();
+        var generator = new DerivedLocaleGenerator(
+            new TextTransliterators([new SerbianCyrillicToLatinTransliterator()]), paths, NullLogger<DerivedLocaleGenerator>.Instance);
+        var source = Item("sr/vodic.md", "sr", "vodic", "Водич");
+        source.SetContent("<p><a href=\"/sr/kontakt\">Контакт</a></p>");
+        var items = Cache(source);
+
+        generator.AddDerivedItems(items, Options(), string.Empty);
+
+        items.Values.Single(item => item.IsDerived).Content.ShouldBe("<p><a href=\"/lat/kontakt\">Kontakt</a></p>");
     }
 
     [Fact]

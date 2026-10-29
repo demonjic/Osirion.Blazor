@@ -5,6 +5,7 @@ using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.ValueObjects;
 using Osirion.Blazor.Cms.Infrastructure.Utilities;
+using Osirion.Blazor.Core.Localization;
 using Osirion.Blazor.Core.Transliteration;
 
 namespace Osirion.Blazor.Cms.Infrastructure.Localization;
@@ -33,6 +34,7 @@ public sealed class DerivedLocaleGenerator
 {
     private readonly TextTransliterators _transliterators;
     private readonly ILogger<DerivedLocaleGenerator> _logger;
+    private readonly IOsirionLocalePaths? _localePaths;
 
     /// <summary>Initializes the generator.</summary>
     /// <param name="transliterators">Resolves the transliterator each derived locale names.</param>
@@ -41,6 +43,20 @@ public sealed class DerivedLocaleGenerator
     {
         _transliterators = transliterators ?? throw new ArgumentNullException(nameof(transliterators));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    /// <summary>
+    /// Initializes a generator that moves the content's links with the site's culture prefixes (from
+    /// <c>Osirion:Localization</c>), so they agree with the site's routes: <c>/sr/contact</c> becomes
+    /// <c>/sr-latn/contact</c> with the prefix configured for the derived culture.
+    /// </summary>
+    /// <param name="transliterators">Resolves the transliterator each derived locale names.</param>
+    /// <param name="localePaths">The site's culture prefixes.</param>
+    /// <param name="logger">The logger.</param>
+    public DerivedLocaleGenerator(TextTransliterators transliterators, IOsirionLocalePaths localePaths, ILogger<DerivedLocaleGenerator> logger)
+        : this(transliterators, logger)
+    {
+        _localePaths = localePaths ?? throw new ArgumentNullException(nameof(localePaths));
     }
 
     /// <summary>
@@ -87,7 +103,7 @@ public sealed class DerivedLocaleGenerator
         }
     }
 
-    private static int AddDerivedLocale(
+    private int AddDerivedLocale(
         IDictionary<string, ContentItem> items,
         DerivedLocaleOptions derivedLocale,
         ITextTransliterator transliterator,
@@ -122,7 +138,7 @@ public sealed class DerivedLocaleGenerator
             derived.SetUrl(UrlGenerator.GenerateUrl(
                 source.Metadata?.Permalink ?? string.Empty, path, source.Slug, enableLocalization: true, supportedLocales, contentPath));
             TransliterateText(derived, source, transliterator);
-            derived.SetContent(TransliteratedHtml.Transform(source.Content, transliterator, derivedLocale.From, derivedLocale.Locale));
+            derived.SetContent(HtmlTransliteration.Transform(source.Content, transliterator, derivedLocale.From, derivedLocale.Locale, _localePaths));
             derived.SetBlocks(ContentBlockText.Map(new ContentBlockSet(source.Blocks, source.BodyPlacement), transliterator.Transliterate));
 
             // The setters above move the date of the last change; the content changed when its source did

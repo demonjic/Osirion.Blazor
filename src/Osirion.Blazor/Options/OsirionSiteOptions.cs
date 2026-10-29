@@ -212,6 +212,58 @@ public sealed class OsirionSiteOptions
 
         AddAnnouncementErrors(entry.Announcement, key, errors);
         AddSocialLinkErrors(entry.SocialLinks ?? [], key, errors);
+        AddDerivedFromErrors(culture, entry, key, errors);
+    }
+
+    // The checks that need no service; the transliterator and the source culture are checked where they are registered.
+    private void AddDerivedFromErrors(string culture, SiteLocaleOptions entry, string key, List<string> errors)
+    {
+        if (entry.DerivedFrom is null && entry.Transliteration is null)
+        {
+            return;
+        }
+
+        if (!IsPredefinedCultureName(entry.DerivedFrom))
+        {
+            errors.Add($"{key}:DerivedFrom '{entry.DerivedFrom}' is not a culture name, such as sr.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(entry.Transliteration))
+        {
+            errors.Add($"{key}:Transliteration is required with DerivedFrom.");
+        }
+
+        if (CultureInfo.GetCultureInfo(entry.DerivedFrom!).Name.Equals(CultureInfo.GetCultureInfo(culture).Name, StringComparison.OrdinalIgnoreCase))
+        {
+            errors.Add($"{key}:DerivedFrom cannot be the entry's own culture.");
+            return;
+        }
+
+        // A chain would need an order to derive in, and a cycle has none; one level is all a second script needs.
+        var source = Locales.FirstOrDefault(locale => string.Equals(locale.Key, entry.DerivedFrom, StringComparison.OrdinalIgnoreCase)).Value;
+        if (source?.DerivedFrom is not null)
+        {
+            errors.Add($"{key}:DerivedFrom '{entry.DerivedFrom}' is itself derived; derive from a version written by hand.");
+        }
+    }
+
+    // A source must be a culture the platform knows: a misspelt name would otherwise become a custom culture.
+    private static bool IsPredefinedCultureName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return false;
+        }
+
+        try
+        {
+            return CultureInfo.GetCultureInfo(name, predefinedOnly: true).Name.Length > 0;
+        }
+        catch (CultureNotFoundException)
+        {
+            return false;
+        }
     }
 
     private static bool IsCultureName(string name)

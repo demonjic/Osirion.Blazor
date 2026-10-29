@@ -47,7 +47,7 @@ public sealed class FileSystemDerivedLocaleTests : IDisposable
         derived.ContentId.ShouldBe(source.ContentId);
         derived.Url.ShouldBe(source.Url);
         derived.Path.ShouldBe("sr-Latn/blog/prvi.md");
-        derived.Content.ShouldContain("Dobro došli na <a href=\"/sr-Latn/blog\">blog</a>.");
+        derived.Content.ShouldContain("Dobro došli na <a href=\"/sr-latn/blog\">blog</a>.");
         derived.Content.ShouldContain("<code>код");
     }
 

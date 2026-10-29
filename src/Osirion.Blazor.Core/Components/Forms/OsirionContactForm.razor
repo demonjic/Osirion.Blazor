@@ -29,7 +29,7 @@
             }
 
             <!-- Contact Form -->
-            <EditForm Enhance Model="@FormModel" OnValidSubmit="@HandleValidSubmit" class="osirion-contact-form" FormName="@Id">
+            <EditForm Enhance EditContext="@_editContext" OnValidSubmit="@HandleValidSubmit" class="osirion-contact-form" FormName="@Id">
                 <DataAnnotationsValidator />
 
                 <!-- Honeypot for spam protection (hidden) -->
@@ -99,6 +99,117 @@
                                    aria-describedby="@($"message-error-{Id}")" />
                     <ValidationMessage For="@(() => FormModel.Message)" class="osirion-validation-message" id="@($"message-error-{Id}")" />
                 </div>
+
+                <!-- Additional Fields -->
+                @foreach (var definition in _fields)
+                {
+                    var inputId = FieldInputId(definition);
+                    var error = FieldError(definition);
+                    var invalid = error is null ? null : "true";
+                    var describedBy = FieldDescribedBy(definition, error);
+                    var showRequired = definition.Required && ShowRequiredIndicators;
+                    var inputName = ContactFormFieldRules.InputName(definition);
+                    if (ContactFormFieldRules.IsGroup(definition))
+                    {
+                        var isRadio = definition.Type == ContactFormFieldType.Radio;
+                        <fieldset class="osirion-form-group osirion-form-fieldset" aria-describedby="@describedBy">
+                            <legend class="@GetLabelClass()">
+                                @definition.Label
+                                @if (showRequired)
+                                {
+                                    <span class="osirion-required" aria-hidden="true">*</span>
+                                }
+                            </legend>
+                            @for (var index = 0; index < definition.Options.Count; index++)
+                            {
+                                var option = definition.Options[index];
+                                <label class="osirion-form-checkbox-label osirion-form-option" for="@($"{inputId}-{index}")">
+                                    @if (isRadio)
+                                    {
+                                        <input id="@($"{inputId}-{index}")" type="radio" name="@inputName" value="@option.Value"
+                                               class="@GetRadioClass()" checked="@IsChosen(definition, option)"
+                                               required="@definition.Required" aria-invalid="@invalid"
+                                               @onchange="@(() => SetFieldValue(definition, option.Value))" />
+                                    }
+                                    else
+                                    {
+                                        <input id="@($"{inputId}-{index}")" type="checkbox" name="@inputName" value="@option.Value"
+                                               class="@GetCheckboxClass()" checked="@IsChosen(definition, option)" aria-invalid="@invalid"
+                                               @onchange="@(args => SetOptionChosen(definition, option.Value, args.Value))" />
+                                    }
+                                    <span class="osirion-checkbox-text">@option.DisplayLabel</span>
+                                </label>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(definition.HelpText))
+                            {
+                                <p class="osirion-form-help" id="@FieldHelpId(definition)">@definition.HelpText</p>
+                            }
+                            @if (error is not null)
+                            {
+                                <div class="osirion-validation-message" id="@FieldErrorId(definition)">@error</div>
+                            }
+                        </fieldset>
+                    }
+                    else
+                    {
+                        <div class="osirion-form-group">
+                            <label for="@inputId" class="@GetLabelClass()">
+                                @definition.Label
+                                @if (showRequired)
+                                {
+                                    <span class="osirion-required" aria-hidden="true">*</span>
+                                }
+                            </label>
+                            @if (definition.Type == ContactFormFieldType.Select)
+                            {
+                                <select id="@inputId" name="@inputName" class="@GetSelectClass()" required="@definition.Required"
+                                        aria-describedby="@describedBy" aria-invalid="@invalid"
+                                        @onchange="@(args => SetFieldValue(definition, args.Value))">
+                                    <option value="">@definition.Placeholder</option>
+                                    @foreach (var option in definition.Options)
+                                    {
+                                        <option value="@option.Value" selected="@IsChosen(definition, option)">@option.DisplayLabel</option>
+                                    }
+                                </select>
+                            }
+                            else if (definition.Type == ContactFormFieldType.MultilineText)
+                            {
+                                <textarea id="@inputId" name="@inputName" class="@GetTextAreaClass()" rows="4"
+                                          required="@definition.Required" maxlength="@ContactFormFieldRules.MaxLength(definition)"
+                                          placeholder="@definition.Placeholder" aria-describedby="@describedBy" aria-invalid="@invalid"
+                                          @onchange="@(args => SetFieldValue(definition, args.Value))">@FieldValue(definition)</textarea>
+                            }
+                            else if (definition.Type == ContactFormFieldType.Number)
+                            {
+                                <input id="@inputId" name="@inputName" type="number" class="@GetInputClass()" step="any"
+                                       min="@ContactFormFieldRules.FormatNumber(definition.Min)" max="@ContactFormFieldRules.FormatNumber(definition.Max)"
+                                       required="@definition.Required" placeholder="@definition.Placeholder" value="@FieldValue(definition)"
+                                       aria-describedby="@describedBy" aria-invalid="@invalid"
+                                       @onchange="@(args => SetFieldValue(definition, args.Value))" />
+                            }
+                            else
+                            {
+                                <input id="@inputId" name="@inputName" type="@ContactFormFieldRules.InputType(definition)" class="@GetInputClass()"
+                                       required="@definition.Required" maxlength="@ContactFormFieldRules.MaxLength(definition)"
+                                       placeholder="@definition.Placeholder" value="@FieldValue(definition)"
+                                       aria-describedby="@describedBy" aria-invalid="@invalid"
+                                       @onchange="@(args => SetFieldValue(definition, args.Value))" />
+                            }
+                            @if (!string.IsNullOrWhiteSpace(definition.HelpText))
+                            {
+                                <p class="osirion-form-help" id="@FieldHelpId(definition)">@definition.HelpText</p>
+                            }
+                            @if (error is not null)
+                            {
+                                <div class="osirion-validation-message" id="@FieldErrorId(definition)">@error</div>
+                            }
+                        </div>
+                    }
+                }
+                @if (TotalLengthError is { } totalLengthError)
+                {
+                    <div class="osirion-validation-message" id="@($"fields-error-{Id}")">@totalLengthError</div>
+                }
 
                 <!-- Privacy Policy Checkbox -->
                 @if (!string.IsNullOrWhiteSpace(PrivacyPolicyText))
