@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Cms.Admin</PackageId>
-		<Version>4.3.0</Version>
+		<Version>4.4.0</Version>
 		<Description>Content Management System (CMS) Administration module for Osirion.Blazor, providing a robust, flexible admin interface for managing content across different providers.</Description>
 		<PackageTags>blazor;components;content;cms;markdown;github;osirion</PackageTags>
 	</PropertyGroup>
