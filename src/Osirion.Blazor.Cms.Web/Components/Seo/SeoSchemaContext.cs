@@ -38,6 +38,12 @@ internal sealed record SeoSchemaContext
 
     public string? MetaDescription { get; init; }
 
+    /// <summary>
+    /// Whether the site's own structured data is on, so a page names the site's <c>Organization</c> and
+    /// <c>WebSite</c> by <c>@id</c> instead of repeating them.
+    /// </summary>
+    public bool LinkToSite { get; init; }
+
     /// <summary>The title of a page that is not a content item, without the site name; null on every other page.</summary>
     public string? PageTitle { get; init; }
 

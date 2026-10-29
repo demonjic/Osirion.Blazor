@@ -402,6 +402,21 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     [Parameter]
     public string? CanonicalPath { get; set; }
 
+    /// <summary>
+    /// Gets or sets the robots directives of the page, written as <c>robots</c>, <c>googlebot</c> and <c>bingbot</c>,
+    /// for example <c>noindex, follow</c> for a page that crawlers should follow but not index, or
+    /// <c>max-snippet:50</c>. A comma-separated list of the directives search engines document: <c>all</c>,
+    /// <c>none</c>, <c>index</c>, <c>noindex</c>, <c>follow</c>, <c>nofollow</c>, <c>noarchive</c>, <c>nocache</c>,
+    /// <c>nosnippet</c>, <c>notranslate</c>, <c>noimageindex</c>, <c>indexifembedded</c>, <c>max-snippet:N</c>,
+    /// <c>max-video-preview:N</c> (<c>N</c> at least <c>-1</c>), <c>max-image-preview:none|standard|large</c> and
+    /// <c>unavailable_after:</c> with an ISO 8601 date. Any other value is ignored with a logged warning. A content
+    /// item's front matter <c>robots</c> comes first, and <see cref="AllowSearchIndexing"/> set to <c>false</c> always
+    /// writes <c>noindex, nofollow</c>. When empty, the page gets
+    /// <c>index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1</c>.
+    /// </summary>
+    [Parameter]
+    public string? Robots { get; set; }
+
     #endregion
 
     /// <summary>
@@ -516,6 +531,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
         // Generate structured data
         GenerateAllJsonLdSchemas();
+        AddSiteSchemas();
         AddGeneratedFaqSchema();
     }
 
@@ -1026,6 +1042,14 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         if (!string.IsNullOrWhiteSpace(Content?.Metadata?.SeoProperties?.Robots))
             return Content.Metadata.SeoProperties.Robots;
 
+        if (!string.IsNullOrWhiteSpace(Robots))
+        {
+            if (RobotsDirectives.Normalize(Robots) is { } directives)
+                return directives;
+
+            Logger.LogWarning("Ignoring Robots '{Robots}'; it is not a list of robots directives", Robots);
+        }
+
         // Default: index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1
         return "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
     }
@@ -1129,8 +1153,42 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         PageTitle = CodePageTitle,
         PageDescription = CodePageDescription,
         OgImage = _ogImage,
-        ApplicationCategory = ApplicationCategory
+        ApplicationCategory = ApplicationCategory,
+        LinkToSite = SiteSchemasEnabled
     };
+
+    /// <summary>Whether the site's own structured data is configured (<see cref="SeoMetadataOptions.EnableSiteSchemas"/>).</summary>
+    private bool SiteSchemasEnabled => SeoOptions?.Value.EnableSiteSchemas == true;
+
+    /// <summary>
+    /// Whether the page is the home page: the site root, or on a site with locale routing a culture's root (<c>/sr</c>).
+    /// The site's <c>WebSite</c> and <c>Organization</c> are written there.
+    /// </summary>
+    private bool IsHomePage()
+    {
+        var path = "/" + navigationManager.ToBaseRelativePath(ContentUrls.StripQueryAndFragment(navigationManager.Uri));
+        return (_localePaths?.WithoutLocale(path) ?? path) == "/";
+    }
+
+    /// <summary>
+    /// On the home page, with the site's own structured data on, writes the site's <c>WebSite</c> and
+    /// <c>Organization</c> after the page's own schemas. The page writes neither type itself there (see
+    /// <see cref="ResolveSchemaTypes"/>), so neither is written twice.
+    /// </summary>
+    private void AddSiteSchemas()
+    {
+        if (!SiteSchemasEnabled || !IsHomePage())
+        {
+            return;
+        }
+
+        var options = SeoOptions!.Value;
+        var context = CreateSchemaContext();
+        _additionalJsonLdSchemas ??= [];
+        _additionalJsonLdSchemas.Add(SeoSchemas.Serialize(SiteSchemas.WebSite(context, SiteDescription, options.SearchUrlTemplate)));
+        _additionalJsonLdSchemas.Add(SeoSchemas.Serialize(SiteSchemas.Organization(
+            context, SeoText.FirstNonBlank(OrganizationName, _siteName)!, options.SameAs)));
+    }
 
     private void GenerateAllJsonLdSchemas()
     {
@@ -1138,7 +1196,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
         if (_isCodePage)
         {
-            _jsonLdContent = SeoSchemas.Serialize(ContentSchemas.CodePage(context, CodePageSchemaType().ToString()));
+            _jsonLdContent = SeoSchemas.Serialize(ContentSchemas.CodePage(context, CodePageSchemaType().ToString()), context);
             return;
         }
 
@@ -1158,7 +1216,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         var generatedSchemas = ResolveSchemaTypes(Content)
             .Select(schemaType => SeoSchemas.Create(schemaType, context))
             .OfType<object>()
-            .Select(SeoSchemas.Serialize)
+            .Select(schema => SeoSchemas.Serialize(schema, context))
             .ToList();
         if (generatedSchemas.Count > 0)
         {
@@ -1199,7 +1257,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         var pageSchemas = (SchemaTypes ?? [])
             .Distinct()
             .Where(type => type is Cms.Web.Components.SchemaType.CollectionPage or Cms.Web.Components.SchemaType.BreadcrumbList)
-            .Select(type => SeoSchemas.Serialize(SeoSchemas.Create(type, context)!))
+            .Select(type => SeoSchemas.Serialize(SeoSchemas.Create(type, context)!, context))
             .ToList();
         if (pageSchemas.Count > 0)
         {
@@ -1254,6 +1312,13 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
             schemaTypes.Add(Cms.Web.Components.SchemaType.BreadcrumbList);
         }
 
+        // The home page gets the site's own WebSite and Organization (AddSiteSchemas); a second copy of either
+        // without its @id would describe the site twice.
+        if (SiteSchemasEnabled && IsHomePage())
+        {
+            schemaTypes.RemoveAll(type => type is Cms.Web.Components.SchemaType.WebSite or Cms.Web.Components.SchemaType.Organization);
+        }
+
         return schemaTypes;
     }
 
@@ -1269,7 +1334,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         var pageItemType = SchemaTypes?.Where(ArticleSchemaTypes.Contains).Select(type => (SchemaType?)type).FirstOrDefault();
         _additionalJsonLdSchemas ??= [];
         _additionalJsonLdSchemas.AddRange(ContentItems.Select(item => SeoSchemas.Serialize(
-            NavigationSchemas.CollectionItemPosting(item, context, ListedItemSchemaType(item, pageItemType).ToString()))));
+            NavigationSchemas.CollectionItemPosting(item, context, ListedItemSchemaType(item, pageItemType).ToString()), context)));
     }
 
     /// <summary>

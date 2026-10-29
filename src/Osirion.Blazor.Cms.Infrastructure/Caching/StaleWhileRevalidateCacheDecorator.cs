@@ -217,6 +217,7 @@ public class StaleWhileRevalidateCacheDecorator : IContentRepository
 
         keyBuilder.Append("unpub=").Append(query.IncludeUnpublished).Append(';');
         keyBuilder.Append("subdirs=").Append(query.IncludeSubdirectories).Append(';');
+        keyBuilder.Append("raw=").Append(query.IncludeRawFiles).Append(';');
         keyBuilder.Append("sort=").Append(query.SortBy).Append(',').Append(query.SortDirection).Append(';');
 
         if (query.Skip.HasValue)

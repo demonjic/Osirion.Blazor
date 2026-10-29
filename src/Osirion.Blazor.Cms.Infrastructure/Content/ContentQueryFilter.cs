@@ -36,6 +36,7 @@ public class ContentQueryFilter : IContentQueryFilter
         filteredItems = ApplyTagFilters(filteredItems, query);
         filteredItems = ApplyAttributeFilters(filteredItems, query);
         filteredItems = ApplyStatusFilter(filteredItems, query);
+        filteredItems = ApplyRawFileFilter(filteredItems, query);
         filteredItems = ApplyDateFilters(filteredItems, query);
         filteredItems = ApplySearchFilter(filteredItems, query);
         filteredItems = ApplyLocalizationFilters(filteredItems, query);
@@ -189,6 +190,10 @@ public class ContentQueryFilter : IContentQueryFilter
 
         return items;
     }
+
+    // A raw file (robots.txt loaded as content) is not a page: only a query that asks for raw files gets one.
+    private static IQueryable<ContentItem> ApplyRawFileFilter(IQueryable<ContentItem> items, ContentQuery query) =>
+        query.IncludeRawFiles ? items : items.Where(item => !item.IsRawFile);
 
     private static IQueryable<ContentItem> ApplyDateFilters(IQueryable<ContentItem> items, ContentQuery query)
     {

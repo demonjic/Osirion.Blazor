@@ -203,6 +203,9 @@ public partial class LocalizedNavigation
         return directories.Where(directory => directory.Parent is null || !listed.Contains(directory.Parent)).ToList();
     }
 
+    // A folder's own _index.md is the folder's page, and a raw file (robots.txt loaded as content) is no page at all.
+    private static bool IsListedItem(ContentItem item) => !item.IsRawFile && !IsIndexPage(item);
+
     private static bool IsIndexPage(ContentItem item) =>
         string.Equals(System.IO.Path.GetFileName(item.Path), "_index.md", StringComparison.OrdinalIgnoreCase);
 
@@ -309,7 +312,7 @@ public partial class LocalizedNavigation
 
             // Content items and subdirectories
             bool shouldExpand = ExpandAllDirectories || directory.Id == ExpandedDirectoryId;
-            if (shouldExpand && (directory.Children.Any() || (ShowContentItems && directory.Items.Any(i => !IsIndexPage(i)))))
+            if (shouldExpand && (directory.Children.Any() || (ShowContentItems && directory.Items.Any(IsListedItem))))
             {
                 builder.OpenElement(8, "ul");
                 builder.AddAttribute(9, "class", "osirion-nav-sublist");
@@ -317,7 +320,7 @@ public partial class LocalizedNavigation
                 // Show content items
                 if (ShowContentItems)
                 {
-                    foreach (var item in directory.Items.Where(i => !IsIndexPage(i)).OrderBy(i => i.Title))
+                    foreach (var item in directory.Items.Where(IsListedItem).OrderBy(i => i.Title))
                     {
                         builder.OpenElement(10, "li");
                         builder.AddAttribute(11, "class", "osirion-nav-content-item");

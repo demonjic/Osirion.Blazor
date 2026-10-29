@@ -143,4 +143,30 @@ public class SeoMetadataOptions
     /// <c>meta_tags</c>: a letter, then letters, digits and <c>- _ . :</c>, and not a name the renderer writes itself.
     /// </summary>
     public Dictionary<string, string> AdditionalMetaTags { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets whether the site's own structured data is written: the home page (the site root, or a culture's
+    /// root on a site with locale routing) gets a schema.org <c>WebSite</c> (<c>@id</c> <c>{SiteUrl}/#website</c>) and
+    /// an <c>Organization</c> (<c>@id</c> <c>{SiteUrl}/#organization</c>, from <see cref="OrganizationName"/> or
+    /// <see cref="SiteName"/>, <see cref="SiteLogoUrl"/> and <see cref="SameAs"/>), and every page names them by
+    /// <c>@id</c>: its <c>publisher</c> is the organization, and a web page is <c>isPartOf</c> the web site. Off by
+    /// default, which writes the structured data as before. Set <see cref="SiteUrl"/> with it, so the ids name the
+    /// public address.
+    /// </summary>
+    public bool EnableSiteSchemas { get; set; }
+
+    /// <summary>
+    /// Gets or sets the organization's profiles on other sites, such as its social accounts, written as the
+    /// <c>sameAs</c> of the site's <c>Organization</c> (<see cref="EnableSiteSchemas"/>). Only absolute <c>http</c> and
+    /// <c>https</c> addresses are written.
+    /// </summary>
+    public List<string> SameAs { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the address of the site's search results with <c>{search_term_string}</c> where the query goes,
+    /// such as <c>/search?q={search_term_string}</c>, written as the <c>SearchAction</c> of the site's <c>WebSite</c>
+    /// (<see cref="EnableSiteSchemas"/>). A path is made absolute with the site address. Without it, or without the
+    /// placeholder, no search action is written.
+    /// </summary>
+    public string? SearchUrlTemplate { get; set; }
 }
