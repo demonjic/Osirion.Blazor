@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Osirion.Blazor.Cms.Domain.Interfaces;
+using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Infrastructure.FileSystem;
 using Osirion.Blazor.Cms.Infrastructure.GitHub;
 using Osirion.Blazor.Cms.Infrastructure.Services;
@@ -18,6 +19,7 @@ public static class RepositoryExtensions
     public static IServiceCollection AddOsirionRepositories(this IServiceCollection services)
     {
         // Register GitHub repositories
+        services.TryAddDerivedLocales<GitHubOptions>();
         services.TryAddScoped<GitHubContentRepository>();
         services.TryAddScoped<GitHubDirectoryRepository>();
 
@@ -25,6 +27,7 @@ public static class RepositoryExtensions
         services.TryAddSingleton<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
 
         // Register FileSystem repositories
+        services.TryAddDerivedLocales<FileSystemOptions>();
         services.TryAddSingleton<FileSystemContentRepository>();
         services.TryAddFileSystemDirectoryCache();
         services.TryAddSingleton(DirectoryExtensions.CreateFileSystemDirectoryRepository);
