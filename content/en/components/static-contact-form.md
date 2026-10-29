@@ -7,7 +7,7 @@ permalink: /components/static-contact-form
 description: "A contact form for sites published as static files: it posts JSON to an endpoint you provide, such as a Cloudflare Worker, with a Turnstile check and a honeypot."
 author: Dejan Demonjić
 date: 2026-10-23
-last_modified: 2026-10-24
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-static-contact-form.jpg'
 categories:
 - Components
@@ -128,7 +128,8 @@ The script sends one request per attempt:
 
 - `POST` to `Endpoint`, with `Content-Type: application/json`.
 - The body is `{"name": "...", "email": "...", "message": "...", "website": "", "token": "..."}`, plus `"company"`
-  after `"email"` when `ShowCompanyField` is on, and `"subject"` after that when `ShowSubjectField` is on. `website` is the honeypot: people never see it, so it is empty unless a
+  after `"email"` when `ShowCompanyField` is on, `"subject"` after that when `ShowSubjectField` is on, and `"fields"`
+  after `"message"` when the form has [additional fields](#additional-fields). `website` is the honeypot: people never see it, so it is empty unless a
   bot filled it. `token` is the Turnstile response, or empty when no site key is set, which an endpoint that checks
   Turnstile refuses as `fields`.
 - The browser sends it from the page, so it carries the page's `Origin`. A same-origin endpoint, such as `/api/contact`
@@ -147,6 +148,118 @@ The endpoint answers JSON, and the status next to the button shows:
 The browser checks the fields before anything is sent: name and email are required, the email must look like one, and
 the lengths match the endpoint below: name up to 100 characters, email up to 254, message from 10 to 5,000, company up
 to 200, subject up to 200. The endpoint must still check everything itself, because anyone can post to it without the page.
+
+## Additional fields
+
+`AdditionalFields` adds questions of your own after the message, for a qualification or quote form: up to 20
+`ContactFormField` definitions, rendered in list order. Each has a `Name` (a letter, then up to 49 letters, digits,
+underscores or hyphens, unique in the form), a `Label`, a `Type` (`Text`, `MultilineText`, `Number`, `Email`, `Phone`,
+`Select`, `Radio` or `Checkboxes`), `Required`, `MaxLength`, `Min` and `Max` for numbers, `Options` for the three choice
+types (a `ContactFormFieldOption` with a `Value` and an optional `Label`), and an optional `Placeholder` and `HelpText`.
+The form throws an `ArgumentException` naming the field for a definition it cannot render safely, such as a name with a
+space, a name used twice or a choice field without options.
+
+```razor
+<OsirionStaticContactForm Endpoint="/api/contact"
+                          TurnstileSiteKey="0x4AAAAAAA..."
+                          ShowCompanyField="true"
+                          AdditionalFields="@questions" />
+
+@code {
+    private static readonly ContactFormField[] questions =
+    [
+        new() { Name = "team_size", Label = "Team size", Type = ContactFormFieldType.Select, Required = true,
+                Placeholder = "Choose one", Options = [new("1-10", "1 to 10"), new("11-50", "11 to 50"), new("51+")] },
+        new() { Name = "services", Label = "What do you need?", Type = ContactFormFieldType.Checkboxes,
+                Options = [new("design", "Design"), new("build", "Build"), new("support", "Support")] },
+        new() { Name = "budget", Label = "Budget in euros", Type = ContactFormFieldType.Number, Min = 1000,
+                HelpText = "A rough figure is enough." },
+        new() { Name = "start", Label = "When should it start?", MaxLength = 100 }
+    ];
+}
+```
+
+The script adds the answers to the JSON it posts, under `fields`, keyed by name, after `message`:
+
+```json
+{
+  "name": "Ann", "email": "ann@example.com", "company": "Example Ltd", "message": "...",
+  "fields": { "team_size": "11-50", "services": ["design", "support"], "budget": "25000", "start": "" },
+  "website": "", "token": "..."
+}
+```
+
+Every defined field is present: a string for each type, empty when unanswered, and for `Checkboxes` an array of the
+checked option values, empty when none is checked. Numbers are sent as typed. Without `AdditionalFields` the body has
+no `fields` key and is exactly what it was before.
+
+The browser checks the answers with native constraint validation only: `required` (on inputs, selects and radio
+buttons), `maxlength` (200 for text, 2,000 for multi-line text, 254 for email and 40 for phone unless `MaxLength` says
+otherwise), `min` and `max`, and the email type. A required group of checkboxes is not checked in the browser, because
+HTML has no constraint for "at least one of these". So the endpoint must check every value again against the same
+definitions: a required field is answered, a value is within its length and on one line (except `MultilineText`), a
+number parses and lies in range, an email address looks like one, a phone number holds only digits, spaces and
+`+ ( ) - . /`, a choice is one of the option values, and all answers together hold at most 10,000 characters. Ignore
+names you did not define, and answer `fields` to anything else. `FieldsErrorMessage` names only the standard fields by
+default, so reword it when the additional fields can fail too.
+
+A check for the definitions above, to add to the endpoint below:
+
+```js
+const QUESTIONS = [
+  { name: 'team_size', required: true, options: ['1-10', '11-50', '51+'] },
+  { name: 'services', multiple: true, options: ['design', 'build', 'support'] },
+  { name: 'budget', number: true, min: 1000, maxLength: 40 },
+  { name: 'start', maxLength: 100 }
+];
+
+// The answers keyed by name, or null when one is invalid. Names that are not defined are ignored.
+function answersOf(fields) {
+  const answers = {};
+  let total = 0;
+  for (const question of QUESTIONS) {
+    const raw = fields?.[question.name];
+    if (question.multiple) {
+      const chosen = Array.isArray(raw) ? raw.map(text) : [];
+      if (chosen.some((value) => !question.options.includes(value))) return null;
+      if (question.required && chosen.length === 0) return null;
+      answers[question.name] = chosen;
+      total += chosen.join('').length;
+      continue;
+    }
+
+    const value = text(raw);
+    if (!value) {
+      if (question.required) return null;
+      answers[question.name] = '';
+      continue;
+    }
+
+    if (CONTROL.test(value) || value.length > (question.maxLength ?? 200)) return null;
+    if (question.options && !question.options.includes(value)) return null;
+    if (question.number) {
+      const number = Number(value);
+      if (!/^-?\d+(\.\d+)?$/.test(value)
+        || number < (question.min ?? -Infinity) || number > (question.max ?? Infinity)) return null;
+    }
+
+    answers[question.name] = value;
+    total += value.length;
+  }
+
+  return total <= 10000 ? answers : null;
+}
+```
+
+In the handler, after the standard fields are checked:
+
+```js
+    const answers = answersOf(input.fields);
+    if (!answers) return reply(400, { ok: false, error: 'fields' });
+```
+
+`CONTROL` refuses line breaks, which suits single-line answers; check a `MultilineText` answer with a pattern that
+allows `\n`. Raise the outline's 16,384-byte body limit when your questions allow long answers.
 
 ## The endpoint
 
@@ -313,6 +426,7 @@ The [security guide](/docs/security#write-a-content-security-policy) covers the 
 | `ErrorMessage` | `string` | `"The message could not be sent. Please try again later."` | The message shown for any other answer: `{"ok": false, "error": "failed"}`, an unknown error, a response that is not JSON, or no response at all. |
 | `PrivacyNote` | `string?` | `null` | A short note under the form, such as where the message goes and who checks it for spam. Plain text; it is encoded. Nothing is rendered when it is empty. |
 | `NoScriptContent` | `RenderFragment?` | `null` | What visitors without script see instead of the form, rendered inside `noscript`, for example an email link. Nothing is rendered when it is not set. |
+| `AdditionalFields` | `IReadOnlyList<ContactFormField>?` | `null` | Fields the site adds after the message, in list order, such as a company size or a budget on a quote form: at most `ContactFormField.MaxFields`, each with a unique, safe `ContactFormField.Name`. The script sends their values as `fields`, an object keyed by name: a string for each field, an empty one when unanswered, and an array of the chosen option values for `ContactFormFieldType.Checkboxes`. The browser checks them only with native constraint validation (`required`, `maxlength`, `min`, `max`, the email type), so the endpoint must check every value against the same definitions. Null or empty, the default, renders the form as before and sends no `fields`. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -367,6 +481,9 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
 - The status is a `role="status"` live region. It is emptied before each attempt, so the same answer twice in a row is
   announced again.
 - The browser's own validation messages explain a missing or malformed field before anything is sent.
+- An additional field has a `label`, or a `fieldset` named by its `legend` for radio buttons and checkboxes, and its
+  `HelpText` is linked with `aria-describedby`. Its `*` follows `Required` and `ShowRequiredIndicators`, and is
+  `aria-hidden` like the others.
 
 ## Styling
 
@@ -375,6 +492,9 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
 | `osirion-static-contact-form` | The outer `<div>`, which takes `Class` and `Style` |
 | `osirion-static-contact-form-form` | The `<form>`, a single column grid |
 | `osirion-static-contact-form-field` | A label and its input |
+| `osirion-static-contact-form-group` | The `<fieldset>` of an additional field with radio buttons or checkboxes |
+| `osirion-static-contact-form-option` | One radio button or checkbox with its text |
+| `osirion-static-contact-form-help` | The `HelpText` under an additional field, in `--osirion-text-secondary` |
 | `osirion-static-contact-form-required` | The `*` after the label of a required field, in `--osirion-status-danger-text` |
 | `osirion-static-contact-form-trap` | The honeypot's wrapper, clipped out of sight |
 | `osirion-static-contact-form-turnstile` | The widget container, 65px high before the widget loads so the button does not move |

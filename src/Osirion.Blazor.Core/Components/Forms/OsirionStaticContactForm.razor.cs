@@ -221,6 +221,21 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     [Parameter]
     public RenderFragment? NoScriptContent { get; set; }
 
+    /// <summary>
+    /// Gets or sets fields the site adds after the message, in list order, such as a company size or a budget on a quote
+    /// form: at most <see cref="ContactFormField.MaxFields"/>, each with a unique, safe <see cref="ContactFormField.Name"/>.
+    /// The script sends their values as <c>fields</c>, an object keyed by name: a string for each field, an empty one
+    /// when unanswered, and an array of the chosen option values for <see cref="ContactFormFieldType.Checkboxes"/>. The
+    /// browser checks them only with native constraint validation (<c>required</c>, <c>maxlength</c>, <c>min</c>,
+    /// <c>max</c>, the email type), so the endpoint must check every value against the same definitions. Null or empty,
+    /// the default, renders the form as before and sends no <c>fields</c>.
+    /// </summary>
+    /// <exception cref="ArgumentException">A definition is invalid, repeats a name, or there are too many.</exception>
+    [Parameter]
+    public IReadOnlyList<ContactFormField>? AdditionalFields { get; set; }
+
+    private IReadOnlyList<ContactFormField> _fields = [];
+
     private bool HasSafeEndpoint { get; set; }
 
     private bool HasContactInformationPanel => ShowContactInformation && ContactInfo is not null;
@@ -232,6 +247,7 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     {
         base.OnParametersSet();
 
+        _fields = ContactFormFieldRules.Checked(AdditionalFields);
         HasSafeEndpoint = IsSafeEndpoint(Endpoint);
         if (!HasSafeEndpoint && GetDevelopmentLogger() is { } logger)
         {
@@ -247,6 +263,11 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
             || (Uri.TryCreate(endpoint, UriKind.Absolute, out var uri) && uri.Scheme == Uri.UriSchemeHttps));
 
     private string FieldId(string fieldName) => $"{_idPrefix}-{fieldName}";
+
+    private string AdditionalFieldId(ContactFormField field) => FieldId($"field-{field.Name}");
+
+    private string? AdditionalFieldHelpId(ContactFormField field) =>
+        string.IsNullOrWhiteSpace(field.HelpText) ? null : $"{AdditionalFieldId(field)}-help";
 
     private string GetContainerClass() => CombineCssClasses(
         HasContactInformationPanel
