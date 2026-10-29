@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Osirion.Blazor.Core and Osirion.Blazor.Cms.Web: every link of a feature card has an accessible name (axe `link-name`, WCAG 2.4.4 and 4.1.2). A card with a `Url` but no image or icon, such as every item of a `cards` content block without an icon, drew its image placeholder inside a link with no text. A card without an image now renders no image column and no image link (class `osirion-feature-card-without-image`); the image is a link only when its alternative text is not empty and the read more link does not already go to the same place, so a card links to a place once; and a pillow button without text or an aria label is left out. A card with an image renders as before. `FeaturedPostsSection` had the same defect for a post without a featured image: its placeholder is no longer wrapped in a link, and the post's title still links it
+
 ## [4.4.0] - 2026-10-29
 
 ### Added

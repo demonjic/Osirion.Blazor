@@ -78,6 +78,22 @@ public class ContentBlockRendererTests : ContentBlockTestBase
         steps[1].QuerySelector(".osirion-step-description").ShouldBeNull();
     }
 
+    // Fails before the fix: a card with a url but no image or icon drew its image placeholder in a link with no name.
+    [Fact]
+    public void Cards_WithoutIconsOrImages_EveryLinkHasANameAndEachCardLinksOnce()
+    {
+        var cut = RenderBlocks("blocks:\n  - { type: cards, items: [{ title: A, url: /a }, { title: B, url: /b, link_text: Open }, { title: C }] }\n");
+
+        var links = cut.FindAll("a[href]");
+        links.Select(link => link.GetAttribute("href")).ShouldBe(["/a", "/b"]);
+        foreach (var link in links)
+        {
+            (link.TextContent.Trim().Length > 0 || !string.IsNullOrWhiteSpace(link.GetAttribute("aria-label"))).ShouldBeTrue(link.OuterHtml);
+        }
+
+        cut.FindAll(".osirion-feature-card-image-link").ShouldBeEmpty();
+    }
+
     [Fact]
     public void Cards_RendersAGridOfFeatureCardsWithTheirLinks()
     {

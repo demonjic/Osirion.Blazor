@@ -23,7 +23,7 @@ public class OsirionFeatureCardTests : OsirionComponentTestBase
         CardClasses(cut).ShouldBe(
         [
             "osirion-feature-card",
-            "osirion-feature-card-image-left",
+            "osirion-feature-card-without-image",
             "osirion-feature-card-md",
             "osirion-feature-card-content-center-left",
             "osirion-feature-card-font-md",
@@ -62,13 +62,15 @@ public class OsirionFeatureCardTests : OsirionComponentTestBase
         CardClasses(cut).ShouldContain(expected);
     }
 
+    // Without an image the card has one column of text, whatever ImagePosition says.
     [Fact]
-    public void FeatureCard_WithoutImage_AlwaysUsesTheLeftImageClass()
+    public void FeatureCard_WithoutImage_UsesTheTextOnlyLayout()
     {
         var cut = RenderCard(p => p.Add(c => c.ImagePosition, ImagePosition.Top));
 
-        CardClasses(cut).ShouldContain("osirion-feature-card-image-left");
+        CardClasses(cut).ShouldContain("osirion-feature-card-without-image");
         CardClasses(cut).ShouldNotContain("osirion-feature-card-image-top");
+        CardClasses(cut).ShouldNotContain("osirion-feature-card-image-left");
     }
 
     [Theory]
@@ -221,13 +223,13 @@ public class OsirionFeatureCardTests : OsirionComponentTestBase
         CardClasses(cut).ShouldContain("osirion-feature-card-image-transform");
     }
 
+    // Fails before the fix: a card without an image drew a placeholder, inside a link when it had a Url.
     [Fact]
-    public void FeatureCard_WithoutImage_RendersThePlaceholderIcon()
+    public void FeatureCard_WithoutImage_RendersNoImageArea()
     {
-        var cut = RenderCard();
+        var cut = RenderCard(p => p.Add(c => c.Url, "/features/fast"));
 
-        cut.Find(".osirion-feature-card-image-placeholder svg").ShouldNotBeNull();
-        cut.FindAll("img").ShouldBeEmpty();
+        cut.FindAll(".osirion-feature-card-image-container, .osirion-feature-card-image-link, img, svg").ShouldBeEmpty();
     }
 
     [Fact]

@@ -45,8 +45,9 @@
     grid-template-columns: 1fr auto;
 }
 
-/* An icon card has no image column and no fixed size: one column, as tall as its content. */
-.osirion-feature-card-with-icon {
+/* An icon card, or a card with text only, has no image column and no fixed size: one column, as tall as its content. */
+.osirion-feature-card-with-icon,
+.osirion-feature-card-without-image {
     grid-template-columns: minmax(0, 1fr);
     height: auto;
 }
@@ -566,8 +567,7 @@
 /* Image Handling */
 /* ================================================ */
 
-.osirion-feature-card-image-container,
-.osirion-feature-card-image-placeholder {
+.osirion-feature-card-image-container {
     overflow: hidden;
     background-color: var(--osirion-background-secondary, #f3f4f6);
     display: flex;
@@ -582,11 +582,6 @@
     object-fit: cover;
     transition: transform var(--osirion-transition-duration-300, 0.3s) ease;
     display: block;
-}
-
-.osirion-feature-card-image-placeholder {
-    color: var(--osirion-text-secondary, #6b7280);
-    min-height: 100px;
 }
 
 .osirion-feature-card-image-link {

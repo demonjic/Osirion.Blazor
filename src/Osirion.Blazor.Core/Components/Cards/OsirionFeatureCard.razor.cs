@@ -40,8 +40,8 @@ public partial class OsirionFeatureCard : OsirionComponentBase
     /// <summary>
     /// A small decorative icon above the title, such as an <c>svg</c>, in a <c>div</c> with the class
     /// <c>osirion-feature-card-icon</c> and <c>aria-hidden="true"</c>, so put no meaning in it that the title does not
-    /// carry. Without an <see cref="ImageUrl"/>, the icon takes the place of the image placeholder: the card has a
-    /// single column and its height follows its content.
+    /// carry. Without an <see cref="ImageUrl"/> the card has no image column: it has a single column and its height
+    /// follows its content.
     /// </summary>
     [Parameter]
     public RenderFragment? Icon { get; set; }
@@ -58,7 +58,8 @@ public partial class OsirionFeatureCard : OsirionComponentBase
     #region Navigation Properties
 
     /// <summary>
-    /// The link around the image, and the read more link's target when <see cref="ReadMoreHref"/> is not set.
+    /// The read more link's target when <see cref="ReadMoreHref"/> is not set, and the link around the image when the
+    /// image has alternative text and the read more link does not already go to the same place.
     /// </summary>
     [Parameter]
     public string? Url { get; set; }
@@ -68,7 +69,7 @@ public partial class OsirionFeatureCard : OsirionComponentBase
     #region Image Properties
 
     /// <summary>
-    /// The image source. Without it the card shows a placeholder icon.
+    /// The image source. Without it the card has no image column and is one column of text, as tall as its content.
     /// </summary>
     [Parameter]
     public string? ImageUrl { get; set; }
@@ -217,7 +218,7 @@ public partial class OsirionFeatureCard : OsirionComponentBase
         var classes = new List<string>
     {
             "osirion-feature-card",
-            IsIconCard() ? "osirion-feature-card-with-icon" : GetImagePositionClass(),
+            GetLayoutClass(),
             GetCardSizeClass(),
             GetContentAlignmentClass(),
             GetContentFontSizeClass()
@@ -439,6 +440,35 @@ public partial class OsirionFeatureCard : OsirionComponentBase
     /// Whether the card shows its icon instead of an image column: an icon is set and there is no image.
     /// </summary>
     private bool IsIconCard() => Icon is not null && !HasImage();
+
+    /// <summary>
+    /// The card's layout: beside or above its image, one column with its icon, or one column with text only.
+    /// </summary>
+    private string GetLayoutClass()
+    {
+        if (HasImage())
+        {
+            return GetImagePositionClass();
+        }
+
+        return IsIconCard() ? "osirion-feature-card-with-icon" : "osirion-feature-card-without-image";
+    }
+
+    /// <summary>
+    /// Whether the image is a link to <see cref="Url"/>. It is not when the read more link already goes there, so the
+    /// card has one link to a place, nor when its alternative text is empty, which would leave the link without a name.
+    /// </summary>
+    private bool LinksImage() =>
+        !string.IsNullOrWhiteSpace(Url)
+        && !string.IsNullOrWhiteSpace(GetImageAltText())
+        && !(HasReadMoreLink() && string.Equals(GetReadMoreHref(), Url, StringComparison.Ordinal));
+
+    /// <summary>
+    /// Whether a pillow button has a name for assistive technology: its text or its aria label. A button without
+    /// either is left out rather than rendered as a link nobody can name.
+    /// </summary>
+    private static bool HasName(PillowButton button) =>
+        !string.IsNullOrWhiteSpace(button.Text) || !string.IsNullOrWhiteSpace(button.AriaLabel);
 
     /// <summary>
     /// Whether the card has any item phrases to show.
