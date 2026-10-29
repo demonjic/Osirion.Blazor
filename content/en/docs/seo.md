@@ -206,6 +206,21 @@ Let browsers and feed readers find the feeds from your layout, in `App.razor`:
 List old addresses in `redirect_from` and register `app.UseOsirionRedirects()` before the endpoints that render pages,
 as described in [How content is organized](/docs/content). A 301 tells search engines the page moved for good.
 
+On a site with [locale routing](/docs/locale-routing), a fixed redirect can apply in every language:
+
+```csharp
+app.UseOsirionRedirects(redirects =>
+{
+    redirects.Redirects["/pricing"] = "/contact";
+    redirects.ApplyUnderCulturePrefixes = true;
+});
+```
+
+`/sr/pricing` then goes to `/sr/contact`, and an absolute target is used as given. A source written with a prefix
+(`["/sr/pricing"] = "/sr/cenovnik"`) wins over the one without. It is off by default, because it would redirect a page
+that exists at a prefixed address, and it applies to the fixed redirects only: content lists its earlier addresses per
+language in its own `redirect_from`.
+
 ## Know the structured data
 
 JSON-LD is chosen by the `SchemaTypes` parameter, else `Osirion:Seo:DefaultSchemaTypes`, else `seo_properties.type`,
