@@ -5,7 +5,7 @@
 
 @if (HasAnythingToShow)
 {
-    <nav class="@GetTableOfContentsClass()" aria-label="Table of Contents" data-ref="@Refs["nav"]">
+    <nav class="@GetTableOfContentsClass()" aria-label="@AriaLabel" data-ref="@Refs["nav"]" @attributes="Attributes">
         @if (Headings.Any())
         {
             <ol class="osirion-toc-list">

@@ -59,6 +59,10 @@ public partial class TableOfContents(NavigationManager navigationManager)
     [Parameter]
     public string? EmptyText { get; set; }
 
+    /// <summary>Gets or sets the accessible name of the <c>nav</c> element, in the page's language.</summary>
+    [Parameter]
+    public string AriaLabel { get; set; } = "Table of Contents";
+
     /// <summary>
     /// Gets or sets whether the link to the section being read is marked as it scrolls by: it gets the
     /// <c>osirion-toc-link-active</c> class and <c>aria-current="location"</c>. A script does it, so without script

@@ -108,6 +108,7 @@ heading, and hide that heading's section when the content has no headings.
 | `MaxLevel` | `int` | `6` | The highest heading level included. |
 | `MaxDepth` | `int` | `3` | The nesting limit. `1` lists only top-level headings; the list renders at most two levels, so a value above `2` changes nothing. |
 | `EmptyText` | `string?` | `null` | The text shown when no heading matches. While it is null or blank (the default), content without headings renders nothing, so a sidebar does not show an empty outline. Set it, for example to `No headings found.`, to render the `nav` with this text in an `osirion-toc-empty` paragraph. |
+| `AriaLabel` | `string` | `"Table of Contents"` | The accessible name of the `nav` element, in the page's language. |
 | `TrackActiveHeading` | `bool` | `true` | Whether the link to the section being read is marked as it scrolls by: it gets the `osirion-toc-link-active` class and `aria-current="location"`. A script does it, so without script the contents work as plain links. |
 | `ShowNumbers` | `bool` | `true` | Whether the entries are numbered, `1.` for a top-level heading and `1.2` for one under it. When on, the root element gets the `osirion-toc-numbered` class that the numbering rules hang on; `false` renders a plain list. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
@@ -116,8 +117,12 @@ heading, and hide that heading's section when the content has no headings.
 
 <!-- /osirion:parameters -->
 
-`Class` goes on the `nav`. `Style` and `Theme` are accepted but not written, and other attributes on the tag are
-captured but not rendered.
+`Class` goes on the `nav`, and so do other attributes on the tag. `Style` and `Theme` are accepted but not written.
+On a page in another language, name the contents in that language:
+
+```razor
+<TableOfContents Content="@Item?.Content" AriaLabel="Sadržaj" />
+```
 
 ## Behavior
 
@@ -134,7 +139,7 @@ captured but not rendered.
 - Tags inside a heading are stripped and the remaining text is written as text, so it is HTML-encoded. Character
   references are not decoded first, so a heading such as `Q&A`, which the Markdown renderer writes as `Q&amp;A`,
   shows as `Q&amp;A` in the outline.
-- The list is a `nav` with the accessible name "Table of Contents" (fixed English text). When there is nothing to
+- The list is a `nav` named by `AriaLabel`, "Table of Contents" unless the page sets it. When there is nothing to
   list, the component renders nothing, or, with `EmptyText` set, the `nav` with that text in a paragraph. Headings
   are read on every parameter change, so the outline is part of the static SSR response.
 - With `TrackActiveHeading` on and at least one heading listed, a small script (loaded through BlazorJSComponents,

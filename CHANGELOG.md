@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Osirion.Blazor.Cms.Web: `TableOfContents` named its `nav` "Table of Contents" in every language and dropped the attributes it was given. The new `AriaLabel` sets the name (default `Table of Contents`, so the markup is as before), and the captured attributes now reach the `nav`
+
 ## [4.4.2] - 2026-10-29
 
 ### Added
