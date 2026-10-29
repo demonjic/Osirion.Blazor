@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Osirion.Blazor.Cms.Web: `SeoMetadataRenderer` wrote `"author": {"@type": "Person", "name": ""}` in the structured data of every item without an author, which is invalid. An item without an author now gets no `author` in any schema type (`Article`, `BlogPosting`, `TechArticle`, `WebPage`, `ContactPage`, `AboutPage`, `Recipe`, `VideoObject`, `Review` and the listed items of a list page)
+- Osirion.Blazor.Cms.Web: `SeoMetadataRenderer` declared `og:image:width` 1200 and `og:image:height` 630 for any image, so an item's 800 by 400 image was said to be 1200 by 630. The size is now declared only for the default image (`DefaultImageUrl`), from `DefaultImageWidth` and `DefaultImageHeight` (1200 by 630 unless the site sets another), and never for an item's own image, whose size is not known
+- Osirion.Blazor.Cms.Web: a content item could not name its canonical address, so a post shown under another language's prefix declared that address canonical. `SeoMetadataRenderer.CanonicalPath` now applies to every page, after the item's front matter `canonical`, and `ArticlePage`, `DocumentPage`, `HomePage`, `AboutPage` and `ContactPage` take a `CanonicalPath` and pass it on
+- Osirion.Blazor.Cms.Web and Osirion.Blazor: the first entry of the structured data breadcrumbs was `Home` in every language, and `Osirion:Seo:BreadcrumbHomeText` never applied because the parameter's default replaced it. The name now comes from the new `Osirion:Site:Labels:Home` (`SiteLabels.Home`) for the request's language version, derived versions transliterated, through the new `IBreadcrumbHomeText` that `AddOsirion` registers, then `Osirion:Seo:BreadcrumbHomeText`, then `Home`; a `BreadcrumbHomeText` the page passes still wins. The request's language is the culture of the address's prefix with locale routing, else the UI culture
+
 ## [4.4.1] - 2026-10-29
 
 ### Fixed

@@ -71,7 +71,8 @@ Options (`OsirionSiteOptions`)
   main content`), `Menu` (`Main navigation`), `MenuToggle` (`Toggle navigation menu`), `SwitchToDarkTheme` and
   `SwitchToLightTheme` (`Switch to dark mode`, `Switch to light mode`), `Search` (`Search`, the field's label and the
   button's visible text), `SubmitSearch` (`Submit search`, the button's name; keep the words of `Search` in it),
-  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement` and `Language` (`Language`, the
+  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement`, `Home` (the name of the home page in the structured data breadcrumbs; empty by default, so
+  `Osirion:Seo:BreadcrumbHomeText` and then `Home` apply) and `Language` (`Language`, the
   language picker's name)
 - `LanguagePicker`: `None` (default), `Header`, `Footer` or `Both`. `Header` puts a compact `OsirionLanguagePicker`
   (a `details` disclosure that names the current language and opens the list, no script) among the menu's actions,
