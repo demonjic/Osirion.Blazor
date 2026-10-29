@@ -118,6 +118,12 @@ public class ContentQuery
     public bool IncludeSubdirectories { get; set; }
 
     /// <summary>
+    /// Gets or sets whether to include raw files (<see cref="Entities.ContentItem.IsRawFile"/>), such as a
+    /// <c>robots.txt</c> loaded as content. They are not pages, so a query leaves them out unless this is set.
+    /// </summary>
+    public bool IncludeRawFiles { get; set; }
+
+    /// <summary>
     /// Gets or sets a collection of content IDs to include (for targeted queries)
     /// </summary>
     public ICollection<string>? IncludeIds { get; set; }
@@ -164,7 +170,9 @@ public class ContentQuery
             ProviderId = ProviderId,
             IncludeUnpublished = IncludeUnpublished,
             IncludeSubdirectories = IncludeSubdirectories,
+            IncludeRawFiles = IncludeRawFiles,
             Path = Path,
+            Url = Url,
         };
 
         if (IncludeIds is not null)

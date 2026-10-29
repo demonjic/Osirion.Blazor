@@ -50,6 +50,13 @@ internal static class SeoSchemas
     internal static object? Create(SchemaType schemaType, SeoSchemaContext context) =>
         Builders.GetValueOrDefault(schemaType, ContentSchemas.Default)(context);
 
+    /// <summary>
+    /// Serializes a page's schema; with the site's own structured data on (<see cref="SeoSchemaContext.LinkToSite"/>),
+    /// its publisher and web site are first replaced by references to the site's nodes.
+    /// </summary>
+    internal static string Serialize(object schema, SeoSchemaContext context) =>
+        Serialize(context.LinkToSite ? SiteSchemas.Link(schema, context) : schema);
+
     /// <summary>Serializes a schema as indented JSON-LD, leaving out null properties.</summary>
     internal static string Serialize(object schema) => JsonSerializer.Serialize(schema, JsonLdOptions);
 }

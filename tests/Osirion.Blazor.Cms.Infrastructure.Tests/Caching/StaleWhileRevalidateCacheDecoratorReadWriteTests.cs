@@ -156,6 +156,21 @@ public sealed class StaleWhileRevalidateCacheDecoratorReadWriteTests : IDisposab
         second!.Single().Id.ShouldBe("second");
     }
 
+    // Fails without the raw file flag in the key: the robots generator's query (raw files included) and a page query
+    // for the same address shared one cache entry, so whichever ran first answered both.
+    [Fact]
+    public async Task FindByQueryAsync_QueriesDifferingOnlyInRawFiles_AreCachedSeparately()
+    {
+        _decorated.FindByQueryAsync(Arg.Is<ContentQuery>(q => !q.IncludeRawFiles), Arg.Any<CancellationToken>()).Returns([]);
+        _decorated.FindByQueryAsync(Arg.Is<ContentQuery>(q => q.IncludeRawFiles), Arg.Any<CancellationToken>()).Returns([Item("robots")]);
+
+        var pages = await _decorator.FindByQueryAsync(new ContentQuery { Url = "robots" });
+        var rawFiles = await _decorator.FindByQueryAsync(new ContentQuery { Url = "robots", IncludeRawFiles = true });
+
+        pages!.ShouldBeEmpty();
+        rawFiles!.Single().Id.ShouldBe("robots");
+    }
+
     [Fact]
     public async Task SaveWithCommitMessageAsync_SavesAndEvictsCachedReads()
     {

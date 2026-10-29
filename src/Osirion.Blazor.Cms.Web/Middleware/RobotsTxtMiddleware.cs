@@ -55,7 +55,7 @@ public class RobotsTxtMiddleware
     {
         if (context.Request.Path.StartsWithSegments("/robots.txt"))
         {
-            var result = await _contentProviderManager.GetContentByQueryAsync(new Cms.Domain.Repositories.ContentQuery { Url = "robots" });
+            var result = await _contentProviderManager.GetContentByQueryAsync(new Cms.Domain.Repositories.ContentQuery { Url = "robots", IncludeRawFiles = true });
             var robots = result.FirstOrDefault();
             // Content is the sanitized HTML (<p>User-agent: *</p>), which crawlers cannot read as robots rules.
             var output = string.IsNullOrWhiteSpace(robots?.OriginalMarkdown) ? robots?.Content : robots.OriginalMarkdown;

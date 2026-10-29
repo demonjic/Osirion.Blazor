@@ -45,6 +45,16 @@ Structured data
   `IOsirionLocalePaths.Localize`. On such a site a page without `Locale` takes its language from the address prefix.
 - `AlternateLanguageUrls` always wins; an empty list writes no links.
 
+## Robots and site structured data
+
+- `Robots` writes documented robots directives (`noindex, follow`, `max-snippet:50`, ...) as `robots`, `googlebot` and
+  `bingbot`; front matter `robots` comes first, `AllowSearchIndexing=false` still writes `noindex, nofollow`, and an
+  invalid value keeps the default and logs a warning.
+- `SeoMetadataOptions.EnableSiteSchemas` writes the site's `WebSite` (`{SiteUrl}/#website`, with a `SearchAction`
+  from `SearchUrlTemplate`) and `Organization` (`{SiteUrl}/#organization`, with `SameAs`) on the home page or a
+  culture's root, and makes every page's `publisher` and a web page's `isPartOf` references to them. The home page
+  drops its own `WebSite` and `Organization` schema types. Off by default.
+
 ## Pages that are not content items
 
 - `Title`, `Description`, `ImageUrl` and `CanonicalPath` give a Razor page (no `ContentItem`) the full head: title,

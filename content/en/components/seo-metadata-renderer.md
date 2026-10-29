@@ -180,6 +180,7 @@ effect.
 | `Description` | `string?` | `null` | The description of a page that is not a content item: the meta description (cut to 160 characters), `og:description` (cut to 200) and the description of its structured data. Read only with `Title`. |
 | `ImageUrl` | `string?` | `null` | The social image of a page that is not a content item (`og:image` and `twitter:image`), absolute or relative to the site address. When empty, `DefaultImageUrl` applies. Read only with `Title`. |
 | `CanonicalPath` | `string?` | `null` | The canonical address of a page that is not a content item, as a path on the site such as `/contact`, made absolute with the site address, or an absolute `http` or `https` address. On a localized page pass the localized path (`/sr/contact`), for example from `IOsirionLocalePaths.LocalizeForCurrentCulture`. When empty, the current address is the canonical one, as on every other page. The `hreflang` links are built from it. Read only with `Title`. |
+| `Robots` | `string?` | `null` | The robots directives of the page, written as `robots`, `googlebot` and `bingbot`, for example `noindex, follow` for a page that crawlers should follow but not index, or `max-snippet:50`. A comma-separated list of the directives search engines document: `all`, `none`, `index`, `noindex`, `follow`, `nofollow`, `noarchive`, `nocache`, `nosnippet`, `notranslate`, `noimageindex`, `indexifembedded`, `max-snippet:N`, `max-video-preview:N` (`N` at least `-1`), `max-image-preview:none\|standard\|large` and `unavailable_after:` with an ISO 8601 date. Any other value is ignored with a logged warning. A content item's front matter `robots` comes first, and `AllowSearchIndexing` set to `false` always writes `noindex, nofollow`. When empty, the page gets `index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1`. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -275,6 +276,21 @@ Relative image URLs become absolute with the site's base URL.
   Nothing is written for fewer than two versions. On such a site a page without `Locale` (and a content item without a
   locale) takes its language from the address's prefix. `AlternateLanguageUrls` always wins, and an empty list writes
   no links.
+- **Robots.** The `robots`, `googlebot` and `bingbot` tags hold `noindex, nofollow` when `AllowSearchIndexing` is
+  off, else the item's `seo_properties.robots`, else `Robots`, else
+  `index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1`. `Robots` takes a comma-separated
+  list of the documented directives (`all`, `none`, `index`, `noindex`, `follow`, `nofollow`, `noarchive`, `nocache`,
+  `nosnippet`, `notranslate`, `noimageindex`, `indexifembedded`, `max-snippet:N`, `max-video-preview:N`,
+  `max-image-preview:none|standard|large`, `unavailable_after:` with an ISO 8601 date), written in lower case; any
+  other value is ignored with a logged warning.
+- **Site structured data.** With `EnableSiteSchemas` in `Osirion:Seo`, the home page (the site root, or a culture's
+  root) also writes a `WebSite` (`@id` `{SiteUrl}/#website`, url, name, `SiteDescription`, `inLanguage`, and a
+  `SearchAction` from `SearchUrlTemplate` when it holds `{search_term_string}`) and an `Organization` (`@id`
+  `{SiteUrl}/#organization`, `OrganizationName` or the site name, url, logo, and the absolute http(s) addresses of
+  `SameAs`). Every page's `publisher` becomes a reference to that `@id`, and the web page types (`WebPage`,
+  `ContactPage`, `AboutPage`, `CollectionPage`, `ProfilePage`) get `isPartOf` the web site. The home page leaves the
+  `WebSite` and `Organization` of its own `SchemaTypes` out, so neither is written twice; custom `json_ld` keeps its
+  own data and the site's nodes are still written.
 - **Public address.** `SiteUrl` (for example `https://example.com`) makes the canonical URL, `og:url` and the
   addresses in structured data use the site's address with the page's path, whatever host served the request: a
   proxy, a preview host or a second domain. Only an absolute `http` or `https` address is used; otherwise they follow

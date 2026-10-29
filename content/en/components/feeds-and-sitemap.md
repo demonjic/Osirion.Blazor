@@ -105,7 +105,9 @@ the application at startup instead of producing broken feeds.
   provider and `FileSystemOptions.UseFileWriteTimeAsLastModified` turned on (it is off by default), the file's write
   time, then the item's creation date: its `date` front matter, or for a file the file's creation time. Set
   `last_modified` when dates must survive a fresh checkout or a new deployment. Items whose `seo_properties.robots` contains `noindex` are left out, and duplicate URLs are written
-  once. The sitemap covers all content; `FeedDirectory` and `FeedLocale` do not apply to it.
+  once. The sitemap covers all content; `FeedDirectory` and `FeedLocale` do not apply to it. Raw files (a
+  `robots.txt` or another `.txt`, `.json`, `.yml`, `.log` or `.bak` file a provider loads because its
+  `SupportedExtensions` include the extension) are not pages, so neither the sitemap nor the feeds list them.
 - **Language versions.** On a site with [locale routing](/docs/locale-routing) (`IOsirionLocalePaths` registered),
   the sitemap follows Google's format for localized versions: `urlset` declares
   `xmlns:xhtml="http://www.w3.org/1999/xhtml"`, and a `url` with other language versions lists every version,
