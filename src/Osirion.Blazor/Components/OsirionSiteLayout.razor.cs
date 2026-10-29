@@ -2,7 +2,9 @@ using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Osirion.Blazor.Analytics.Options;
+using Osirion.Blazor.Core.Localization;
 using Osirion.Blazor.Core.Utils;
 using Osirion.Blazor.Internal;
 using Osirion.Blazor.Options;
@@ -30,6 +32,12 @@ public partial class OsirionSiteLayout
 
     [Inject]
     private IOptions<AnalyticsConsentOptions> AnalyticsConsent { get; set; } = default!;
+
+    // Read from the provider because Osirion:Localization is optional: without it the addresses are used as written.
+    [Inject]
+    private IServiceProvider Services { get; set; } = default!;
+
+    private IOsirionLocalePaths? LocalePaths { get; set; }
 
     /// <summary>
     /// Gets or sets the page when the layout wraps it in your own layout (<c>&lt;OsirionSiteLayout&gt;@Body&lt;/OsirionSiteLayout&gt;</c>).
@@ -67,8 +75,12 @@ public partial class OsirionSiteLayout
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        Site = SiteOptions.Value.ForCulture(CultureInfo.CurrentUICulture);
+        LocalePaths = Services.GetService<IOsirionLocalePaths>();
+        Site = SiteOptions.Value.ForCulture(CultureInfo.CurrentUICulture, LocalePaths);
     }
+
+    // The picker needs the site's cultures; options configured without validation may ask for it without them.
+    private bool ShowsLanguagePicker(SiteLanguagePicker place) => LocalePaths is not null && Site.LanguagePicker.HasFlag(place);
 
     // UseSite and the Osirion:Site section reject a blank Text or an unsafe Href at startup, but options configured
     // another way skip that check, so the layout applies the same rule before it writes the address, as the menu does

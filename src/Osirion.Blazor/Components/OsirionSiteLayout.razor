@@ -2,6 +2,7 @@
 @inherits LayoutComponentBase
 @using Osirion.Blazor.Cms.Web.Components
 @using Osirion.Blazor.Navigation.Components
+@using Osirion.Blazor.Options
 @using Osirion.Blazor.Theming.Components
 
 <OsirionPageLayout StickyFooter EnableHeaderScrollBehavior SkipLinkText="@Site.Labels.SkipLink">
@@ -70,6 +71,10 @@
                     {
                         <ThemeToggle SwitchToDarkLabel="@Site.Labels.SwitchToDarkTheme" SwitchToLightLabel="@Site.Labels.SwitchToLightTheme" />
                     }
+                    @if (ShowsLanguagePicker(SiteLanguagePicker.Header))
+                    {
+                        <OsirionLanguagePicker Compact AriaLabel="@Site.Labels.Language" />
+                    }
                     @MenuActions
                 </Actions>
             </Menu>
@@ -87,6 +92,11 @@
         }
         else
         {
+            // Passed only when shown, so a footer without the picker keeps its markup.
+            RenderFragment? footerLanguagePicker = ShowsLanguagePicker(SiteLanguagePicker.Footer)
+                ? @<OsirionLanguagePicker AriaLabel="@Site.Labels.Language" />
+                : null;
+
             <OsirionFooter CompanyName="@(Site.Owner ?? Site.Name)"
                            CompanyUrl="@(Site.OwnerUrl ?? Site.HomeUrl)"
                            Description="@Site.FooterDescription"
@@ -95,7 +105,8 @@
                            BottomLinks="@LegalLinks"
                            BottomLinksLabel="@Site.Labels.LegalLinks"
                            Copyright="@Site.Copyright"
-                           SocialTitle="@Site.SocialTitle">
+                           SocialTitle="@Site.SocialTitle"
+                           ChildContent="@footerLanguagePicker">
                 <Logo>
                     <a class="osirion-site-footer-brand" href="@Site.HomeUrl">
                         @if (!string.IsNullOrWhiteSpace(Site.LogoUrl))

@@ -626,7 +626,7 @@ public class OsirionSiteLayoutTests : BunitContext
     [Fact]
     public void SiteLocaleOptions_HoldEveryValueThatIsNotTheSameForEveryVersion()
     {
-        string[] sameForEveryVersion = ["ShowSearch", "ShowThemeToggle", "ShowCookieConsent", "ShowScrollToTop", "Locales"];
+        string[] sameForEveryVersion = ["ShowSearch", "ShowThemeToggle", "ShowCookieConsent", "ShowScrollToTop", "LanguagePicker", "Locales"];
 
         typeof(OsirionSiteOptions).GetProperties().Select(property => property.Name).Except(sameForEveryVersion)
             .ShouldBe(VersionValues().Select(property => property.Name), ignoreOrder: true);
