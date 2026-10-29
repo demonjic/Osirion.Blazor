@@ -69,6 +69,15 @@ public partial class HeroSection
     public bool FrameImage { get; set; }
 
     /// <summary>
+    /// Content shown beside the copy instead of the side image, such as a sample record or a short checklist, in a
+    /// <c>div</c> with the class <c>osirion-hero-aside</c>: on the right on wide screens and below the copy on narrow
+    /// ones. When it is set, the side image (and <see cref="FrameImage"/>) is not shown; a background image still is,
+    /// and keeps the section in one column, so the aside sits below the copy.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Aside { get; set; }
+
+    /// <summary>
     /// The image, shown beside the text or, with <see cref="UseBackgroundImage"/>, behind it. As a background it is
     /// CSS-escaped before it is written to the inline style.
     /// </summary>
@@ -266,7 +275,12 @@ public partial class HeroSection
         classes.Add($"osirion-hero-variant-{Variant.ToString().ToLower()}");
         classes.Add($"osirion-hero-align-{_alignment.ToString().ToLower()}");
 
-        if (!string.IsNullOrWhiteSpace(ImageUrl))
+        if (Aside is not null)
+        {
+            classes.Add("osirion-hero-with-aside");
+        }
+
+        if (!string.IsNullOrWhiteSpace(ImageUrl) && (UseBackgroundImage || Aside is null))
         {
             if (UseBackgroundImage)
             {

@@ -94,6 +94,23 @@
     grid-template-columns: 1fr !important;
     grid-template-areas: "content" !important;
 }
+/* An aside sits below the copy on narrow screens and beside it from 768px; a background image keeps one column. */
+.osirion-hero-aside {
+    grid-area: aside;
+    min-width: 0;
+}
+
+.osirion-hero-with-aside .osirion-hero-grid,
+.osirion-hero-section.osirion-hero-with-background.osirion-hero-with-aside .osirion-hero-grid {
+    grid-template-areas: "content" "aside" !important;
+}
+
+@media (min-width: 768px) {
+    .osirion-hero-section.osirion-hero-with-aside:not(.osirion-hero-with-background) .osirion-hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        grid-template-areas: "content aside" !important;
+    }
+}
 /* Image on the left variant */
 .osirion-hero-with-side-image.osirion-hero-image-left .osirion-hero-grid {
     grid-template-areas: "image content";
