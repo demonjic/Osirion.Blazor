@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Cms</PackageId>
-		<Version>4.4.1</Version>
+		<Version>4.4.2</Version>
 		<Description>Cms module for Osirion.Blazor - Provides cms management with provider pattern.</Description>
 		<PackageTags>blazor;components;content;cms;markdown;github;osirion</PackageTags>
 	</PropertyGroup>
