@@ -87,14 +87,20 @@ rendering, or pass the culture to the interactive component as a parameter.
   it defaults to the culture's own name for itself, starting with a capital letter.
 - List the default culture to give it a display name. When it is not listed it is added first, with the defaults.
   Either way its prefix (`/en/...`) redirects to the address without one.
+- `Aliases` lists other first segments that reach a culture, for example addresses the site used before:
+  `{ "Name": "sr-Latn", "Aliases": [ "sr-Latn-RS", "sr_latn" ] }`. A GET or HEAD request under an alias is
+  redirected (301) to the same address under the prefix (`/sr_latn/kontakt` to `/sr-latn/kontakt`), keeping the path
+  base and the query string; other methods are not redirected. An alias is matched ignoring letter case and is
+  letters, digits, hyphens and underscores.
 
 `AddOsirion(builder.Configuration)` registers localization when the section exists. Without `AddOsirion`, call
 `builder.Services.AddOsirionLocalization(builder.Configuration)`, or set the options in code with
 `AddOsirionLocalization(options => ...)`.
 
 The options are checked when the application starts. A missing `DefaultCulture`, a name that is not a culture, the
-same culture twice, two cultures with one prefix, or a prefix that is not lower-case letters and digits in words joined
-by hyphens stops startup with a message naming the key, for example
+same culture twice, two cultures with one prefix, a prefix that is not lower-case letters and digits in words joined
+by hyphens, or an alias with another character or one that is already a prefix or alias stops startup with a message
+naming the key, for example
 `Osirion:Localization:Cultures:1:Prefix 'sr' is the prefix of another culture.`
 
 ## Add the middleware in the right place
@@ -161,8 +167,11 @@ Inject `IOsirionLocalePaths` and let it add the prefix:
 - `Localize("/pricing", culture)` gives the address in a given culture. A path that already has a prefix gets the new
   one instead; `/` gives `/sr`; the query string and fragment are kept.
 - `WithoutLocale("/sr/pricing")` gives `/pricing`.
-- `TryGetCulture(path, out var culture, out var remainder)` reads the prefix of a path.
+- `TryGetCulture(path, out var culture, out var remainder)` reads the prefix (or an alias) of a path.
 - `Cultures` and `DefaultCulture` list the cultures with their prefix and display name.
+- `CurrentCulture` is the culture of the request, with its `Culture` and `Prefix`, matched from
+  `CultureInfo.CurrentUICulture` as `LocalizeForCurrentCulture` does, so a site needs no helper for "the prefix of this
+  page".
 
 Anything that is not a path on the site (an absolute URL, `//host`, `mailto:`, `tel:`, a relative path) is returned
 unchanged, so you can pass every link through it.
@@ -179,13 +188,24 @@ unchanged, so you can pass every link through it.
 
 It renders a `nav` with a list of plain links, so it works under static rendering without a script. Each link has
 `hreflang` and `lang` set to the culture name, the current language has `aria-current="true"`, and the query string of
-the current address is kept. With fewer than two cultures it renders nothing.
+the current address is kept. With fewer than two cultures it renders nothing. `Compact` makes it a `details`
+disclosure whose summary names the current language and opens the list, still without a script and opened with Enter
+or Space, for a header where a row of names would wrap the menu. On a page re-executed for a status code or an error
+(`UseStatusCodePagesWithReExecute`, `UseExceptionHandler`) it reads the address the visitor asked for, so a not-found
+page under `/sr/` marks Serbian and links that address. `Osirion:Site:LanguagePicker` puts it in the
+`OsirionSiteLayout` shell for you.
+
+Fixed redirects (`UseOsirionRedirects`) can follow the prefixes too: with `ApplyUnderCulturePrefixes = true`, an entry
+for `/pricing` also answers `/sr/pricing`, with a target on the site under the same prefix (`/sr/contact`); a source
+written with a prefix wins. It is off by default, because a page that exists at a prefixed address would otherwise be
+redirected away.
 
 <!-- osirion:parameters OsirionLanguagePicker -->
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `AriaLabel` | `string` | `"Language"` | The accessible name of the navigation landmark. Defaults to `Language`. |
+| `Compact` | `bool` | `false` | Whether the picker is a disclosure that shows the current language and opens the list (`details` and `summary`, so it needs no script and opens with Enter or Space), for a header where a row of language names would wrap the menu. Defaults to `false`, a row of links. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |

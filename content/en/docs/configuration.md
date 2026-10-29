@@ -122,7 +122,13 @@ culture, which `app.UseRequestLocalization()` sets. The
 [OsirionSiteLayout reference](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md)
 lists every key. Both arrive in the release after 4.2.0. A `Locales` entry with `DerivedFrom` and `Transliteration`
 (`"sr-Latn": { "DerivedFrom": "sr", "Transliteration": "serbian-cyrillic-to-latin" }`) is another version written in
-a second script; [Localization](/docs/localization#derive-the-shell-and-the-resource-strings-too) explains it. `Osirion:Localization` decides which culture a request has,
+a second script; [Localization](/docs/localization#derive-the-shell-and-the-resource-strings-too) explains it. With
+`Osirion:Localization` registered, every address on the site that a version takes from `Osirion:Site` is written under
+the request's culture prefix, and a `Locales` entry's link without an address takes the site's at the same position,
+so an entry needs only its texts. `Osirion:Site:LanguagePicker` (`Header`, `Footer` or `Both`) shows a language
+picker in the shell; the
+[OsirionSiteLayout reference](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md)
+has both. `Osirion:Localization` decides which culture a request has,
 from the first segment of its address; [Locale routing](/docs/locale-routing) sets it up.
 
 ## Configure in code

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Osirion.Blazor.Core.Localization;
 
 namespace Osirion.Blazor.Navigation.Components;
@@ -12,7 +14,10 @@ namespace Osirion.Blazor.Navigation.Components;
 /// </summary>
 /// <remarks>
 /// Needs <c>AddOsirionLocalization</c> (or <c>AddOsirion(configuration)</c> with an <c>Osirion:Localization</c>
-/// section), which registers <see cref="IOsirionLocalePaths"/>. The query string of the current address is kept.
+/// section), which registers <see cref="IOsirionLocalePaths"/>. The query string of the current address is kept. On a
+/// page the framework re-executes for a status code or an error (<c>UseStatusCodePagesWithReExecute</c>,
+/// <c>UseExceptionHandler</c>) the picker reads the address the visitor asked for, as the culture provider does, so a
+/// not-found page under <c>/sr/</c> marks Serbian and links that address in each language.
 /// </remarks>
 public partial class OsirionLanguagePicker : IDisposable
 {
@@ -25,9 +30,25 @@ public partial class OsirionLanguagePicker : IDisposable
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
 
+    // Present under static rendering, where a re-executed status page keeps the address the visitor asked for.
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
     /// <summary>Gets or sets the accessible name of the navigation landmark. Defaults to <c>Language</c>.</summary>
     [Parameter]
     public string AriaLabel { get; set; } = "Language";
+
+    /// <summary>
+    /// Gets or sets whether the picker is a disclosure that shows the current language and opens the list
+    /// (<c>details</c> and <c>summary</c>, so it needs no script and opens with Enter or Space), for a header where a
+    /// row of language names would wrap the menu. Defaults to <see langword="false"/>, a row of links.
+    /// </summary>
+    [Parameter]
+    public bool Compact { get; set; }
+
+    private string NavClass => Compact ? "osirion-language-picker osirion-language-picker-compact" : "osirion-language-picker";
+
+    private LanguageLink CurrentLink => _links.FirstOrDefault(link => link.IsCurrent) ?? _links[0];
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -67,7 +88,7 @@ public partial class OsirionLanguagePicker : IDisposable
 
     private List<LanguageLink> BuildLinks()
     {
-        var relative = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var relative = OriginalRequestPath() ?? NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         var fragment = relative.IndexOf('#', StringComparison.Ordinal);
 
         // Leading slashes and backslashes collapse, so an address such as //example.com never becomes a link to
@@ -88,6 +109,18 @@ public partial class OsirionLanguagePicker : IDisposable
                 pathBase + LocalePaths.Localize(page, culture.Culture),
                 culture == current))
             .ToList();
+    }
+
+    // The path and query the visitor asked for, below the path base, when this render re-executes the request for a
+    // status code or an error page; null otherwise.
+    private string? OriginalRequestPath()
+    {
+        if (HttpContext?.Features.Get<IStatusCodeReExecuteFeature>() is { } reExecute)
+        {
+            return reExecute.OriginalPath + reExecute.OriginalQueryString;
+        }
+
+        return HttpContext?.Features.Get<IExceptionHandlerPathFeature>()?.Path;
     }
 
     private sealed record LanguageLink(string Name, string DisplayName, string Href, bool IsCurrent);

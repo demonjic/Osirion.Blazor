@@ -21,6 +21,15 @@ public sealed class OsirionRedirectOptions
     public Func<ContentItem, string>? ContentUrlFormatter { get; set; }
 
     /// <summary>
+    /// Gets or sets whether each of <see cref="Redirects"/> also applies under every culture prefix of
+    /// <c>Osirion:Localization</c>: with <c>["/pricing"] = "/contact"</c>, <c>/sr/pricing</c> goes to <c>/sr/contact</c>.
+    /// A target on the site gets the request's prefix; an absolute URL is used as given. A source written with a prefix
+    /// (<c>["/sr/pricing"]</c>) wins over the one without. Defaults to <see langword="false"/>, because a page that
+    /// exists at a prefixed address would otherwise be redirected away; it needs <c>AddOsirionLocalization</c>.
+    /// </summary>
+    public bool ApplyUnderCulturePrefixes { get; set; }
+
+    /// <summary>
     /// Gets or sets whether redirects are permanent (301, the default, which moves search rankings to the new URL) or
     /// temporary (302).
     /// </summary>
