@@ -192,6 +192,14 @@ the current address is kept. With fewer than two cultures it renders nothing.
 
 <!-- /osirion:parameters -->
 
+## Language versions for search engines
+
+With locale routing registered, `SeoMetadataRenderer` writes the `hreflang` links of each page (every culture plus
+`x-default`; a content item links only its translations) and `/sitemap.xml` lists every language version with
+`xhtml:link` alternates. A page written in Razor passes `Title`, `Description` and `CanonicalPath` to the renderer to
+get the same head as a content page. See [SEO](/docs/seo), the
+[SeoMetadataRenderer reference](/components/seo-metadata-renderer) and [Feeds and sitemap](/components/feeds-and-sitemap).
+
 ## Sites in a non-Latin script
 
 Blazor encodes text with the default `HtmlEncoder`, which writes letters outside Basic Latin as character references
@@ -217,5 +225,6 @@ Run the site and request a few addresses, for example with `curl -I`:
 ## Next steps
 
 - [Localization](/docs/localization): content in several languages and `hreflang` links
+- [SEO](/docs/seo): `hreflang` links in the head and the sitemap, and the head of a page that is not content
 - [Configure Osirion.Blazor](/docs/configuration): `Osirion:Site:Locales` and `Osirion:Site:Labels` for the site shell
 - [Navigation components](/components/navigation)

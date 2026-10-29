@@ -52,6 +52,22 @@ internal static class ContentSchemas
         return schema;
     }
 
+    /// <summary>
+    /// A page that is not a content item, such as a contact page written in Razor: its title, description, address,
+    /// language and image, with the site as publisher. It has no author and no dates, because the page names none.
+    /// </summary>
+    internal static Dictionary<string, object?> CodePage(SeoSchemaContext context, string type) => new()
+    {
+        ["@context"] = SchemaContext,
+        ["@type"] = type,
+        ["name"] = context.PageTitle,
+        ["description"] = context.PageDescription,
+        ["url"] = context.CurrentUrl,
+        ["inLanguage"] = context.LanguageCode,
+        ["image"] = context.OgImage,
+        ["publisher"] = Organization(context.SiteName)
+    };
+
     internal static Dictionary<string, object?> WebPage(SeoSchemaContext context, string type)
     {
         var content = context.Content!;

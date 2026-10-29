@@ -688,6 +688,10 @@ app.MapOsirionFeeds(feeds =>
 - `lastmod` and Atom `updated` come from the front matter's `last_modified`, then the file's write time (file system
   provider), then `date`. Set `last_modified` when dates must survive a fresh checkout or deployment.
 - Items whose `seo.robots` contains `noindex` are left out of the sitemap.
+- With locale routing (`AddOsirionLocalization`), each `AdditionalSitemapUrls` path is listed in every culture, each
+  item at its address in its own culture, and every `url` carries its language versions as
+  `<xhtml:link rel="alternate" hreflang="...">` plus `x-default` (translations share a `ContentId`). Without locale
+  routing the sitemap is unchanged.
 - Responses carry `Cache-Control: public, max-age=600`; change it with `CacheDuration`. Turn single endpoints off
   with `EnableSitemap`, `EnableRss` or `EnableAtom`.
 - Point crawlers at the sitemap from `robots.txt` with `Sitemap: https://mysite.com/sitemap.xml`, and let feed readers
