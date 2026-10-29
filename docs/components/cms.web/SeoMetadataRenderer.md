@@ -45,6 +45,15 @@ Structured data
   `IOsirionLocalePaths.Localize`. On such a site a page without `Locale` takes its language from the address prefix.
 - `AlternateLanguageUrls` always wins; an empty list writes no links.
 
+## Author, image size, canonical path and breadcrumbs
+
+- An item without an author gets no `author` in any schema: a `Person` with an empty name is invalid.
+- `og:image:width` and `og:image:height` are written only for the default image (`DefaultImageUrl`), with
+  `DefaultImageWidth` and `DefaultImageHeight`; an item's own image has no known size, so none is declared.
+- `CanonicalPath` applies to content items too, after front matter `canonical`; the page components pass theirs on.
+- The first breadcrumb is named by `IBreadcrumbHomeText` for the request's language (`Osirion:Site:Labels:Home` with
+  `AddOsirion`), then `SeoMetadataOptions.BreadcrumbHomeText`, then `Home`; a `BreadcrumbHomeText` parameter wins.
+
 ## Robots and site structured data
 
 - `Robots` writes documented robots directives (`noindex, follow`, `max-snippet:50`, ...) as `robots`, `googlebot` and

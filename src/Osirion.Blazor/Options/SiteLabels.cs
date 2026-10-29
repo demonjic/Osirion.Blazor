@@ -60,6 +60,12 @@ public sealed class SiteLabels
     public string Language { get; set; } = "Language";
 
     /// <summary>
+    /// Gets or sets the name of the home page as the first entry of the breadcrumbs in structured data, for example
+    /// <c>Početna</c>. When empty, <c>Osirion:Seo:BreadcrumbHomeText</c> applies, then <c>Home</c>.
+    /// </summary>
+    public string? Home { get; set; }
+
+    /// <summary>
     /// Gets or sets the accessible name of a menu entry's submenu toggle, with <c>{0}</c> where the entry's text goes.
     /// Defaults to <c>Toggle {0} submenu</c>.
     /// </summary>

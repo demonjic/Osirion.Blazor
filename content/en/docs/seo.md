@@ -272,6 +272,13 @@ name, address, logo and the `SameAs` profiles). Every page names them by `@id`: 
 `ProfilePage` is `isPartOf` the web site. On the home page the page's own `WebSite` and `Organization` types are left
 out, so neither is written twice, while its `WebPage` stays. Without the option the structured data is as before.
 
+## Name the home page in each language
+
+The first entry of the `BreadcrumbList` is the home page. Its name comes from `Osirion:Site:Labels:Home` for the
+request's language (set it per version under `Osirion:Site:Locales`, for example `"Labels": { "Home": "Početna" }`;
+a derived version transliterates it), then `Osirion:Seo:BreadcrumbHomeText`, then `Home`. A page can still pass
+`BreadcrumbHomeText` to the renderer. From the release after 4.4.1; earlier releases wrote `Home` in every language.
+
 ## Keep a page out of the index
 
 A content page sets `robots` in `seo_properties`. A page written in Razor passes `Robots` to `SeoMetadataRenderer`, for

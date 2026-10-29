@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -52,6 +53,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private string? _ogType;
     private int? _ogImageWidth;
     private int? _ogImageHeight;
+
+    // Whether og:image is the default image (DefaultImageUrl), the only image whose size is known.
+    private bool _ogImageIsDefault;
     private string? _ogImageAlt;
 
     // The DefaultImageUrl the page passed, before the site-wide default fills the parameter: a list page's own image.
@@ -261,15 +265,17 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     public string? DefaultImageUrl { get; set; }
 
     /// <summary>
-    /// Gets or sets the width written as <c>og:image:width</c>, in pixels. When not set, the configured width applies,
-    /// then <c>1200</c>.
+    /// Gets or sets the width of the default image (<see cref="DefaultImageUrl"/>), written as <c>og:image:width</c>
+    /// when that image is shared, in pixels. When not set, the configured width applies. An item's own image has no
+    /// known size, so no width is written for it.
     /// </summary>
     [Parameter]
     public int? DefaultImageWidth { get; set; }
 
     /// <summary>
-    /// Gets or sets the height written as <c>og:image:height</c>, in pixels. When not set, the configured height applies,
-    /// then <c>630</c>.
+    /// Gets or sets the height of the default image (<see cref="DefaultImageUrl"/>), written as <c>og:image:height</c>
+    /// when that image is shared, in pixels. When not set, the configured height applies. An item's own image has no
+    /// known size, so no height is written for it.
     /// </summary>
     [Parameter]
     public int? DefaultImageHeight { get; set; }
@@ -312,10 +318,16 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     public string? NextPageUrl { get; set; }
 
     /// <summary>
-    /// Gets or sets the name of the first <c>BreadcrumbList</c> entry. When empty, the configured value applies.
+    /// Gets or sets the name of the first <c>BreadcrumbList</c> entry, the home page. When not set (or empty), the name
+    /// for the request's language comes from <see cref="IBreadcrumbHomeText"/> (<c>Osirion:Site:Labels:Home</c> with
+    /// <c>AddOsirion</c>), then the configured <see cref="SeoMetadataOptions.BreadcrumbHomeText"/>, then <c>Home</c>. The
+    /// request's language is the culture of the address's prefix on a site with locale routing, else
+    /// <see cref="System.Globalization.CultureInfo.CurrentUICulture"/>.
     /// </summary>
     [Parameter]
-    public string BreadcrumbHomeText { get; set; } = "Home";
+    public string BreadcrumbHomeText { get; set; } = DefaultBreadcrumbHomeText;
+
+    private const string DefaultBreadcrumbHomeText = "Home";
 
     /// <summary>
     /// Gets or sets the breadcrumb entries after the home entry, as name and address pairs, in place of the ones built from
@@ -393,11 +405,12 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     public string? ImageUrl { get; set; }
 
     /// <summary>
-    /// Gets or sets the canonical address of a page that is not a content item, as a path on the site such as
-    /// <c>/contact</c>, made absolute with the site address, or an absolute <c>http</c> or <c>https</c> address. On a
-    /// localized page pass the localized path (<c>/sr/contact</c>), for example from
-    /// <c>IOsirionLocalePaths.LocalizeForCurrentCulture</c>. When empty, the current address is the canonical one, as on
-    /// every other page. The <c>hreflang</c> links are built from it. Read only with <see cref="Title"/>.
+    /// Gets or sets the canonical address of the page, as a path on the site such as <c>/contact</c>, made absolute with
+    /// the site address, or an absolute <c>http</c> or <c>https</c> address; anything else is ignored with a logged
+    /// warning. On a localized page pass the localized path (<c>/sr/contact</c>), for example from
+    /// <c>IOsirionLocalePaths.LocalizeForCurrentCulture</c>; a post shown under another language's prefix names its own
+    /// address here. A content item's front matter <c>canonical</c> comes first. When empty, the current address is the
+    /// canonical one. On a page that is not a content item the <c>hreflang</c> links are built from it.
     /// </summary>
     [Parameter]
     public string? CanonicalPath { get; set; }
@@ -455,10 +468,6 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private static readonly HashSet<SchemaType> ArticleSchemaTypes =
         [Cms.Web.Components.SchemaType.Article, Cms.Web.Components.SchemaType.BlogPosting, Cms.Web.Components.SchemaType.TechArticle];
 
-    /// <summary>The Open Graph image size Facebook and others recommend, written when neither a parameter nor an option sets one.</summary>
-    private const int RecommendedImageWidth = 1200;
-
-    private const int RecommendedImageHeight = 630;
 
     private readonly HashSet<string> _explicitParameters = new(StringComparer.Ordinal);
 
@@ -493,6 +502,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
         // Apply defaults from options if available
         ApplyDefaultsFromOptions();
+        ResolveBreadcrumbHomeText();
 
         // Initialize helper properties based on whether we have single Content or ContentItems
         InitializeHelperProperties();
@@ -571,6 +581,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _ogType = null;
         _ogImageWidth = null;
         _ogImageHeight = null;
+        _ogImageIsDefault = false;
         _ogImageAlt = null;
         _twitterTitle = null;
         _twitterDescription = null;
@@ -674,7 +685,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
             return;
         }
 
-        var sitePath = _isCodePage && LocalUrl.IsLocalPath(CanonicalPath)
+        var sitePath = LocalUrl.IsLocalPath(CanonicalPath)
             ? CanonicalPath!
             : "/" + navigationManager.ToBaseRelativePath(ResolvePageUrl());
         _alternateLinks = LanguageVersions.ForPage(_localePaths, sitePath, path => _baseUrl + path);
@@ -723,6 +734,24 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     }
 
     /// <summary>
+    /// The name of the home page in the breadcrumbs: the parameter when the page set one, else the site's label for the
+    /// request's language, else the configured name, else <c>Home</c>.
+    /// </summary>
+    private void ResolveBreadcrumbHomeText()
+    {
+        if (_explicitParameters.Contains(nameof(BreadcrumbHomeText)) && !string.IsNullOrWhiteSpace(BreadcrumbHomeText))
+        {
+            return;
+        }
+
+        var culture = RequestCultureName() is { } name ? CultureInfo.GetCultureInfo(name) : CultureInfo.CurrentUICulture;
+        BreadcrumbHomeText = SeoText.FirstNonBlank(
+            Services.GetService<IBreadcrumbHomeText>()?.For(culture),
+            SeoOptions?.Value.BreadcrumbHomeText,
+            DefaultBreadcrumbHomeText)!;
+    }
+
+    /// <summary>
     /// Applies default values from injected SeoMetadataOptions if parameters are not explicitly set.
     /// </summary>
     private void ApplyDefaultsFromOptions()
@@ -751,8 +780,6 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     private void ApplyRenderingDefaults(SeoMetadataOptions options)
     {
-        BreadcrumbHomeText = string.IsNullOrWhiteSpace(BreadcrumbHomeText) ? options.BreadcrumbHomeText : BreadcrumbHomeText;
-
         // Apply default settings if not explicitly overridden
         DefaultImageWidth ??= options.DefaultImageWidth;
         DefaultImageHeight ??= options.DefaultImageHeight;
@@ -881,8 +908,10 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
             BuildContentOpenGraphMetadata();
         }
 
-        _ogImageWidth = DefaultImageWidth ?? RecommendedImageWidth;
-        _ogImageHeight = DefaultImageHeight ?? RecommendedImageHeight;
+        // A size is declared only when it is known: the default image's configured size. An item's own image has
+        // no known size, and a declared size that is wrong (a 800x400 image said to be 1200x630) misleads previews.
+        _ogImageWidth = _ogImageIsDefault ? DefaultImageWidth : null;
+        _ogImageHeight = _ogImageIsDefault ? DefaultImageHeight : null;
     }
 
     private void BuildCollectionOpenGraphMetadata(IReadOnlyList<ContentItem> contentItems)
@@ -890,7 +919,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _ogTitle = SeoText.TruncateTitle(CollectionTitle ?? _metaTitle, 60);
         _ogDescription = SeoText.TruncateDescription(CollectionDescription ?? _metaDescription, 200);
         // The list's own image, then its first item's, then the site-wide default (issue 291).
-        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(_pageImageUrl, contentItems.FirstOrDefault()?.FeaturedImageUrl, DefaultImageUrl));
+        var itemImage = string.IsNullOrWhiteSpace(_pageImageUrl) ? contentItems[0].FeaturedImageUrl : null;
+        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(_pageImageUrl, itemImage, DefaultImageUrl));
+        _ogImageIsDefault = string.IsNullOrWhiteSpace(itemImage) && _ogImage is not null;
         _ogType = "website";
         _ogImageAlt = CollectionTitle ?? _siteName;
     }
@@ -900,7 +931,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         var seo = Content?.Metadata?.SeoProperties;
         _ogTitle = SeoText.TruncateTitle(SeoText.FirstNonBlank(seo?.OgTitle, Content?.Title, CodePageTitle, _metaTitle), 60);
         _ogDescription = SeoText.TruncateDescription(SeoText.FirstNonBlank(seo?.OgDescription, CodePageDescription, _metaDescription), 200);
-        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(seo?.OgImageUrl, seo?.Image, Content?.FeaturedImageUrl, CodePageImageUrl, DefaultImageUrl));
+        var ownImage = SeoText.FirstNonBlank(seo?.OgImageUrl, seo?.Image, Content?.FeaturedImageUrl, CodePageImageUrl);
+        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(ownImage, DefaultImageUrl));
+        _ogImageIsDefault = ownImage is null && _ogImage is not null;
         _ogType = SeoText.FirstNonBlank(seo?.OgType, DetermineOgType());
         _ogImageAlt = SeoText.FirstNonBlank(Content?.Title, CodePageTitle, _siteName);
     }
@@ -1022,7 +1055,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     private string? BuildCanonicalUrl()
     {
-        var declared = Content is null ? CodePageCanonicalUrl() : Content.Metadata?.SeoProperties?.Canonical;
+        var declared = SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Canonical, PassedCanonicalUrl());
         var canonical = !string.IsNullOrWhiteSpace(declared) ? declared : _currentUrl;
 
         // og:url and the structured data url must agree with the canonical URL.
@@ -1072,13 +1105,12 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     }
 
     /// <summary>
-    /// The canonical address <see cref="CanonicalPath"/> names for a page that is not a content item: an absolute http(s)
-    /// address as it is, a path on the site after the site address. Anything else is ignored with a logged warning, so
-    /// the current address stays canonical.
+    /// The canonical address <see cref="CanonicalPath"/> names: an absolute http(s) address as it is, a path on the site
+    /// after the site address. Anything else is ignored with a logged warning, so the current address stays canonical.
     /// </summary>
-    private string? CodePageCanonicalUrl()
+    private string? PassedCanonicalUrl()
     {
-        if (!_isCodePage || string.IsNullOrWhiteSpace(CanonicalPath))
+        if (string.IsNullOrWhiteSpace(CanonicalPath))
             return null;
 
         if (Uri.TryCreate(CanonicalPath, UriKind.Absolute, out var absolute)

@@ -71,11 +71,12 @@ Options (`OsirionSiteOptions`)
   main content`), `Menu` (`Main navigation`), `MenuToggle` (`Toggle navigation menu`), `SwitchToDarkTheme` and
   `SwitchToLightTheme` (`Switch to dark mode`, `Switch to light mode`), `Search` (`Search`, the field's label and the
   button's visible text), `SubmitSearch` (`Submit search`, the button's name; keep the words of `Search` in it),
-  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement`, `Language` (`Language`, the
-  language picker's name), `ToggleSubmenu` (`Toggle {0} submenu`, a menu entry's submenu toggle, with `{0}` for the
-  entry's text) and `CookieConsent`, the cookie banner's texts: `Title`, `Message`, `AcceptButton`, `DeclineButton`,
-  `CustomizeButton`, `SavePreferencesButton`, `CustomizePanelTitle`, `PolicyLinkText`, `Required` and `Categories`,
-  each category's `Name` and `Description` by its ID (`necessary`, `analytics`, `marketing`, `preferences`). A
+  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement`, `Home` (the name of the home page in the
+  structured data breadcrumbs; empty by default, `Osirion:Seo:BreadcrumbHomeText` and then `Home` apply), `Language`
+  (`Language`, the language picker's name), `ToggleSubmenu` (`Toggle {0} submenu`, a menu entry's submenu toggle, with
+  `{0}` for the entry's text) and `CookieConsent`, the cookie banner's texts: `Title`, `Message`, `AcceptButton`,
+  `DeclineButton`, `CustomizeButton`, `SavePreferencesButton`, `CustomizePanelTitle`, `PolicyLinkText`, `Required` and
+  `Categories`, each category's `Name` and `Description` by its ID (`necessary`, `analytics`, `marketing`, `preferences`). A
   `CookieConsent` text left out keeps the banner's English default. Set them in a `Locales` entry's `Labels` for each
   language; a derived version gets them transliterated
 - `LanguagePicker`: `None` (default), `Header`, `Footer` or `Both`. `Header` puts a compact `OsirionLanguagePicker`

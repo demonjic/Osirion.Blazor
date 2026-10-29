@@ -175,6 +175,16 @@ public abstract partial class OsirionContentPageBase : OsirionComponentBase
     [Parameter]
     public List<string>? AlternateLanguageUrls { get; set; }
 
+    /// <summary>
+    /// The canonical address of the page, a path on the site (<c>/blog/post</c>) or an absolute http(s) address, passed
+    /// to <c>SeoMetadataRenderer.CanonicalPath</c>: a post shown under another language's prefix names its canonical
+    /// address with it. The item's front matter <c>canonical</c> comes first; when both are empty the current address
+    /// is canonical. Read by <c>ArticlePage</c>, <c>DocumentPage</c>, <c>HomePage</c>, <c>AboutPage</c> and
+    /// <c>ContactPage</c>.
+    /// </summary>
+    [Parameter]
+    public string? CanonicalPath { get; set; }
+
     #endregion
 
     #region Loading and Fetching

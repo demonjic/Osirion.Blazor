@@ -257,6 +257,26 @@ public class DerivedSiteLocalesTests
             .ShouldContain("Osirion:Site:Locales:sr-Latn is not a culture of Osirion:Localization, so no address serves the derived version.");
     }
 
+    // The breadcrumbs of the structured data name the home page with the label of the request's version, the derived
+    // version included, and fall back to the SEO options (null) when the site sets none.
+    [Fact]
+    public void BreadcrumbHomeText_ReadsTheLabelOfEachVersion()
+    {
+        var values = new Dictionary<string, string?>(Site)
+        {
+            ["Osirion:Site:Locales:sr:Labels:Home"] = "Почетна",
+        };
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(values).Build();
+        var services = HostServices.Create(configuration);
+        services.AddOsirion(configuration);
+
+        var homeText = services.BuildServiceProvider().GetRequiredService<Cms.Web.Options.IBreadcrumbHomeText>();
+
+        homeText.For(CultureInfo.GetCultureInfo("sr")).ShouldBe("Почетна");
+        homeText.For(CultureInfo.GetCultureInfo("sr-Latn")).ShouldBe("Početna");
+        homeText.For(CultureInfo.GetCultureInfo("en")).ShouldBeNull();
+    }
+
     private static OsirionSiteOptions Build(Dictionary<string, string?> values)
     {
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(values).Build();

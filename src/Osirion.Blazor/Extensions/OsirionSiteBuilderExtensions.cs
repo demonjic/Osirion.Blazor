@@ -61,6 +61,9 @@ public static class OsirionSiteBuilderExtensions
         services.AddOsirionTransliteration();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<OsirionSiteOptions>, DerivedSiteLocales>());
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<OsirionSiteOptions>, DerivedSiteLocalesValidator>());
+
+        // The breadcrumbs of the structured data name the home page with the site's label for the request's language
+        services.TryAddSingleton<Cms.Web.Options.IBreadcrumbHomeText, SiteBreadcrumbHomeText>();
         return services.AddOptions<OsirionSiteOptions>().ValidateOnStart();
     }
 }
