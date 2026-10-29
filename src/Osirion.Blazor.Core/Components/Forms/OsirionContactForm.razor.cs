@@ -327,7 +327,9 @@ public partial class OsirionContactForm : OsirionComponentBase
                     if (emailServiceFactory != null)
                     {
                         var emailService = emailServiceFactory.CreateEmailService();
-                        var result = await emailService.SendEmailAsync(FormModel);
+                        var result = await emailService.SendEmailAsync(
+                            FormModel,
+                            CascadedHttpContext?.RequestAborted ?? CancellationToken.None);
 
                         if (result.IsSuccess)
                         {
