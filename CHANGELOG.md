@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.0] - 2026-10-29
+
 ### Added
 - Osirion.Blazor.Core: the contact forms speak another language. `OsirionContactForm` takes `NameLabel`, `EmailLabel`, `SubjectLabel` and `MessageLabel`, and `ValidationTexts`, a `ContactFormValidationTexts` with every validation message of the standard and additional fields as a composite format string (`{0}` a limit or a field's label), checked when the form renders so a broken string throws an `ArgumentException` naming its property. The rules stay the attributes of `ContactFormModel`; the form checks the standard fields itself instead of `DataAnnotationsValidator`, so it can word them, with the same messages by default. Both `OsirionContactForm` and `OsirionStaticContactForm` take `ContactInfoAddressLabel`, `ContactInfoPhoneLabel`, `ContactInfoEmailLabel` and `ContactInfoWebsiteLabel` for their contact information. Every default is the English text the forms showed before, and the markup without the new parameters is unchanged
 

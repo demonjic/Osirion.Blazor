@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Navigation</PackageId>
-		<Version>4.3.0</Version>
+		<Version>4.4.0</Version>
 		<Description>Navigation module for Osirion.Blazor - Provides enhanced navigation and scroll components.</Description>
 		<PackageTags>blazor;components;navigation;scroll;enhanced;osirion</PackageTags>
 	</PropertyGroup>

@@ -5,7 +5,7 @@
 	     compiled only after `dotnet new` copies them. -->
 	<PropertyGroup>
 		<PackageId>Osirion.Blazor.Templates</PackageId>
-		<Version>4.3.0</Version>
+		<Version>4.4.0</Version>
 		<Description>Project templates for Osirion.Blazor, served with static server-side rendering: `dotnet new osirion-blog` for a Markdown blog, `dotnet new osirion-docs` for a documentation site and `dotnet new osirion-site` for a product site.</Description>
 		<PackageTags>blazor;templates;dotnet-new;blog;markdown;static-ssr;osirion</PackageTags>
 		<PackageType>Template</PackageType>
