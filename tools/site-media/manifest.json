@@ -1633,6 +1633,20 @@
       "shots": []
     },
     {
+      "file": "docs/content-blocks.md",
+      "path": "/docs/content-blocks",
+      "section": "Guides",
+      "title": "Content blocks",
+      "card": {
+        "key": "og/docs-content-blocks.jpg",
+        "url": "https://media.getosirion.com/og/docs-content-blocks.jpg",
+        "heading": "Pages composed from front matter blocks",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/docs-content-blocks.jpg",
+      "shots": []
+    },
+    {
       "file": "docs/deployment.md",
       "path": "/docs/deployment",
       "section": "Guides",
