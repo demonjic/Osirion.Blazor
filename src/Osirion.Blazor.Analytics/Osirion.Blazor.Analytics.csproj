@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Analytics</PackageId>
-		<Version>4.2.0</Version>
+		<Version>4.3.0</Version>
 		<Description>Analytics module for Osirion.Blazor - Provides analytics tracking with provider pattern.</Description>
 		<PackageTags>blazor;components;analytics;clarity;matomo;tracking;osirion</PackageTags>
 	</PropertyGroup>
