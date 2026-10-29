@@ -99,9 +99,27 @@ internal static class SeoText
         return host.StartsWith("www.", StringComparison.OrdinalIgnoreCase) ? host[4..] : host;
     }
 
-    /// <summary>Converts an ISO locale (<c>en-US</c>) to the Open Graph form (<c>en_US</c>), defaulting to <c>en_US</c>.</summary>
-    internal static string ToOpenGraphLocale(string? locale) =>
-        string.IsNullOrWhiteSpace(locale) ? "en_US" : locale.Replace('-', '_');
+    /// <summary>
+    /// Converts a BCP 47 language tag to the Open Graph form, language and territory: <c>en-US</c> to <c>en_US</c>,
+    /// <c>sr-Latn-RS</c> to <c>sr_RS</c>. Open Graph has no place for a script subtag, so it is left out; a tag without a
+    /// territory stays the bare language. Without a tag the locale is <c>en_US</c>.
+    /// </summary>
+    internal static string ToOpenGraphLocale(string? locale)
+    {
+        if (string.IsNullOrWhiteSpace(locale))
+        {
+            return "en_US";
+        }
+
+        var subtags = locale.Trim().Replace('_', '-').Split('-', StringSplitOptions.RemoveEmptyEntries);
+        var language = subtags[0].ToLowerInvariant();
+        var territory = subtags.Skip(1).FirstOrDefault(IsTerritory);
+        return territory is null ? language : $"{language}_{territory.ToUpperInvariant()}";
+    }
+
+    // A region subtag: two letters (RS) or three digits (419); a script subtag (Latn) has four letters.
+    private static bool IsTerritory(string subtag) =>
+        (subtag.Length == 2 && subtag.All(char.IsAsciiLetter)) || (subtag.Length == 3 && subtag.All(char.IsAsciiDigit));
 
     /// <summary>Formats a slug-case path segment as Title Case words.</summary>
     internal static string FormatBreadcrumbSegment(string segmentName)

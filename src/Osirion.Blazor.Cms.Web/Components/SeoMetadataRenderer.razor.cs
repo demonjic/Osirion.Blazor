@@ -111,6 +111,15 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     public string? CollectionDescription { get; set; }
 
     /// <summary>
+    /// Gets or sets the language of a list page, as a BCP 47 tag such as <c>de</c> or <c>sr-Latn-RS</c>: the
+    /// <c>og:locale</c>, the language meta tags and the language of the structured data. A page with
+    /// <see cref="Content"/> takes its language from the item and ignores this. Without either, the page counts as
+    /// English.
+    /// </summary>
+    [Parameter]
+    public string? Locale { get; set; }
+
+    /// <summary>
     /// Gets or sets the site name written after the title and as <c>og:site_name</c>. When empty, the configured
     /// <c>SiteName</c> applies, then <see cref="OrganizationName"/>, then the host name of the site address.
     /// </summary>
@@ -407,8 +416,8 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _currentUrl = siteUrl is null
             ? ResolvePageUrl()
             : _baseUrl + "/" + navigationManager.ToBaseRelativePath(ResolvePageUrl());
-        _locale = SeoText.ToOpenGraphLocale(SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Lang, Content?.Locale));
-        _languageCode = Content?.Locale ?? "en";
+        _locale = SeoText.ToOpenGraphLocale(SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Lang, Content?.Locale, Locale));
+        _languageCode = Content?.Locale ?? Locale ?? "en";
         _alternateLinks = ParseAlternateLanguageUrls();
 
         // Build all metadata
