@@ -7,7 +7,7 @@ permalink: /components/cards
 description: The card components in Osirion.Blazor.Core (feature, testimonial, subscription, metric and author cards) and when to use each.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-cards.jpg'
 categories:
 - Components
@@ -49,7 +49,7 @@ seo_properties:
 
 # Cards
 
-Osirion.Blazor.Core has five card components. All of them render complete HTML under static SSR and live in the
+Osirion.Blazor.Core has five card components and a grid to lay them out. All of them render complete HTML under static SSR and live in the
 `Osirion.Blazor.Components` namespace.
 
 | Component | Use it for |
@@ -59,6 +59,7 @@ Osirion.Blazor.Core has five card components. All of them render complete HTML u
 | [OsirionSubscriptionCard](/components/subscription-card) | A newsletter signup form that posts without script, with validation and topic choices. |
 | [OsirionAuthorCard](/components/author-card) | An author's avatar or initials, name, role, bio and profile links. Available from 4.0. |
 | [OsirionMetricCard](/components/metric-card) | One figure with a label and description, optionally counting up when it scrolls into view. |
+| [OsirionCardGrid](/components/card-grid) | Cards in up to four equal columns that collapse on narrow screens. Available from 4.3. |
 
 ```razor
 @using Osirion.Blazor.Components

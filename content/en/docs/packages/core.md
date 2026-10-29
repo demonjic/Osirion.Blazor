@@ -89,7 +89,7 @@ adapter for your CSS framework; see [OsirionStyles](/components/osirion-styles).
 | --- | --- |
 | [Layout](/components/layout) | [`OsirionPageLayout`](/components/page-layout) (header, body and footer slots, sticky footer, and from 4.0 a skip link to the main content), `OsirionFooter`, `OsirionStickySidebar`, `OsirionBackgroundPattern`, `OsirionPageLoading`. |
 | [Content](/components/content) | [`OsirionArticleMetdata`](/components/article-metadata) (author, date, read time). From 4.0: [callouts](/components/callout), [tabs](/components/tabs), [accordion and FAQ](/components/accordion-and-faq), [responsive image](/components/responsive-image), [video embed](/components/video-embed), [reading progress](/components/reading-progress). From 4.3: [checklist](/components/checklist). |
-| [Cards](/components/cards) | Feature, testimonial, subscription and metric cards, and from 4.0 [`OsirionAuthorCard`](/components/author-card). |
+| [Cards](/components/cards) | Feature, testimonial, subscription and metric cards, and from 4.0 [`OsirionAuthorCard`](/components/author-card). From 4.3: [`OsirionCardGrid`](/components/card-grid). |
 | [Sections](/components/sections) | `HeroSection`, `OsirionBaseSection`, `OsirionContactInfoSection`, `OsirionResponsiveShowcaseSection`, `OsirionMetricGrid`, `OsirionContextCardGrid`. From 4.0: `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`. |
 | [Navigation](/components/navigation) | `OsirionBreadcrumbs` and `OsirionReadMoreLink`. Menus and scroll helpers are in the [Navigation package](/docs/packages/navigation). |
 | [Carousels](/components/sections) | `InfiniteLogoCarousel` and `OsirionTestimonialCarousel`. |

@@ -474,6 +474,20 @@
       "shots": []
     },
     {
+      "file": "components/card-grid.md",
+      "path": "/components/card-grid",
+      "section": "Components",
+      "title": "OsirionCardGrid",
+      "card": {
+        "key": "og/components-card-grid.jpg",
+        "url": "https://media.getosirion.com/og/components-card-grid.jpg",
+        "heading": "OsirionCardGrid: a responsive card grid for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-card-grid.jpg",
+      "shots": []
+    },
+    {
       "file": "components/cards.md",
       "path": "/components/cards",
       "section": "Components",
