@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.2] - 2026-10-29
+
 ### Added
 - Osirion.Blazor, Osirion.Blazor.Navigation and Osirion.Blazor.Core: the shell's last English texts can be set per language. `MenuItem.ToggleSubmenuLabel` is the submenu toggle's name with `{0}` for the item's text (default `Toggle {0} submenu`), and `OsirionCookieConsent.RequiredLabel` the mark after a required category (default `(Required)`); `OsirionCookieConsent.CreateDefaultCategories()` returns the four default categories to translate. `Osirion:Site:Labels` takes `ToggleSubmenu` and `CookieConsent` (`Title`, `Message`, `AcceptButton`, `DeclineButton`, `CustomizeButton`, `SavePreferencesButton`, `CustomizePanelTitle`, `PolicyLinkText`, `Required`, and `Categories:<id>:Name` and `Description`), which `OsirionSiteLayout` passes for the request's language version, so a `Locales` entry translates them and a derived version transliterates them; a consent text left out keeps its English default. Without the new settings the markup is as before
 ### Fixed

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Cms.Domain</PackageId>
-		<Version>4.4.1</Version>
+		<Version>4.4.2</Version>
 		<Description>Domain layer for the Osirion.Blazor CMS ecosystem, containing core entity definitions, value objects, enums, and domain services.</Description>
 		<PackageTags>blazor;components;content;cms;domain;ddd;entities;value-objects;osirion</PackageTags>
 	</PropertyGroup>
