@@ -45,6 +45,33 @@
     grid-template-columns: 1fr auto;
 }
 
+/* An icon card has no image column and no fixed size: one column, as tall as its content. */
+.osirion-feature-card-with-icon {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+}
+
+.osirion-feature-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: var(--osirion-spacing-3, 0.75rem);
+    border-radius: var(--osirion-radius-md, 0.375rem);
+    background-color: var(--osirion-background-tertiary, #f3f4f6);
+    color: var(--osirion-link-color, #2563eb);
+}
+
+    .osirion-feature-card-icon ::deep svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+.osirion-feature-card-items {
+    margin-bottom: var(--osirion-spacing-3, 0.75rem);
+}
+
 /* ================================================ */
 /* Card Size System - Proper Dimensions */
 /* ================================================ */

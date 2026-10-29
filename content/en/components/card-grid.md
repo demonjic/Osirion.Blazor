@@ -49,7 +49,7 @@ seo_properties:
 
 `OsirionCardGrid` lays cards out in equal columns: the number you ask for on wide screens, at most two on tablets and
 one on phones. It renders a plain `<div>` grid without script and takes any content, such as
-[feature cards](/components/feature-card).
+[feature cards](/components/feature-card) with icons.
 
 Package `Osirion.Blazor.Core`, namespace `Osirion.Blazor.Components`. [Source on GitHub](https://github.com/demonjic/Osirion.Blazor/blob/master/src/Osirion.Blazor.Core/Components/Cards/OsirionCardGrid.razor). Available from 4.3.
 
@@ -101,6 +101,6 @@ is `--osirion-spacing-6`; set another in `Class` or `Style`.
 
 ## Related
 
-- [Feature card](/components/feature-card)
+- [Feature card](/components/feature-card), with an `Icon` and `Items` for a grid of features
 - [Cards](/components/cards)
 - [Metric grid](/components/metric-grid), for figures
