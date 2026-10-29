@@ -191,6 +191,12 @@ answers with the item's rendered HTML (`<p>User-agent: *</p>`) under a `text/pla
 4.1.0 use the static file. `robots.txt` also does not keep a page out of search results; use `robots: noindex` in
 `seo_properties` for that.
 
+A `robots.txt` in the content folder becomes a content item at the address `robots` only when the provider's
+`SupportedExtensions` include `.txt`. From the release after 4.2.0 such a file (any `.txt`, `.json`, `.yml`, `.log` or
+`.bak` file, `ContentItem.IsRawFile`) is a raw file, not a page: content queries leave it out unless they set
+`ContentQuery.IncludeRawFiles`, so it is not listed in the sitemap, the feeds, content lists or the navigation, while the
+robots generator still finds it. Earlier releases listed it in the sitemap as a page at `/robots`.
+
 Let browsers and feed readers find the feeds from your layout, in `App.razor`:
 
 ```razor
@@ -224,6 +230,41 @@ A list page (`ContentList`, `ContentListPage`) writes the `CollectionPage` and t
 `type` when it is `BlogPosting` or `TechArticle`; add `SchemaType.BlogPosting` to the list's `SchemaTypes` to make every
 entry of a blog list a `BlogPosting`. Properties without a value are left out. In 4.2.0 and earlier every entry was a
 `BlogPosting`, the `BreadcrumbList` was not written, and empty values were written as `null`.
+
+From the release after 4.2.0, set `Osirion:Seo:EnableSiteSchemas` to describe the site itself once:
+
+```json
+{
+  "Osirion": {
+    "Seo": {
+      "SiteUrl": "https://example.com",
+      "SiteName": "Example Docs",
+      "OrganizationName": "Example Inc.",
+      "SiteLogoUrl": "/images/logo.png",
+      "EnableSiteSchemas": true,
+      "SameAs": [ "https://social.example/example" ],
+      "SearchUrlTemplate": "/search?q={search_term_string}"
+    }
+  }
+}
+```
+
+The home page (`/`, or a culture's root such as `/sr` with [locale routing](/docs/locale-routing)) then writes a
+`WebSite` with the `@id` `https://example.com/#website` (its address, name, description, language and, with
+`SearchUrlTemplate`, a `SearchAction`) and an `Organization` with the `@id` `https://example.com/#organization` (its
+name, address, logo and the `SameAs` profiles). Every page names them by `@id`: its `publisher` is
+`{"@id": "https://example.com/#organization"}`, and a `WebPage`, `ContactPage`, `AboutPage`, `CollectionPage` or
+`ProfilePage` is `isPartOf` the web site. On the home page the page's own `WebSite` and `Organization` types are left
+out, so neither is written twice, while its `WebPage` stays. Without the option the structured data is as before.
+
+## Keep a page out of the index
+
+A content page sets `robots` in `seo_properties`. A page written in Razor passes `Robots` to `SeoMetadataRenderer`, for
+example `Robots="noindex, follow"` on a thank-you page that links on. It takes the directives search engines document
+(`noindex`, `nofollow`, `noarchive`, `nosnippet`, `max-snippet:50`, `max-image-preview:large`, `unavailable_after:`
+with an ISO 8601 date and the others listed on the
+[SeoMetadataRenderer page](/components/seo-metadata-renderer)); any other value keeps the default and logs a warning.
+`AllowSearchIndexing="false"` still writes `noindex, nofollow`, and front matter `robots` comes before `Robots`.
 
 ## Leave the referrer policy to the server
 
