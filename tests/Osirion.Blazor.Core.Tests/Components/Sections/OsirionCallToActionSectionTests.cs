@@ -18,7 +18,21 @@ public class OsirionCallToActionSectionTests : OsirionComponentTestBase
         { "Start", "  " },
         { "Start", "javascript:alert(1)" },
         { "Start", "//evil.example" },
+        { "Start", "vbscript:msgbox(1)" },
+        { "Start", "data:text/html,hi" },
     };
+
+    [Theory]
+    [InlineData("tel:+381111222333")]
+    [InlineData("#pricing")]
+    public void OsirionCallToActionSection_TelephoneOrFragmentUrl_RendersTheButton(string url)
+    {
+        var cut = RenderStatic<OsirionCallToActionSection>(p => p
+            .Add(c => c.PrimaryButtonText, "Call")
+            .Add(c => c.PrimaryButtonUrl, url));
+
+        cut.Find("a.osirion-call-to-action-button-primary").GetAttribute("href").ShouldBe(url);
+    }
 
     [Fact]
     public void OsirionCallToActionSection_AllParameters_RenderALabelledSectionWithHeadingTextContentAndButtons()

@@ -25,7 +25,7 @@ Usage
 ```
 
 Notes
-- A button URL must be a path starting with a single `/` (not `//` or `/\`), or an absolute http, https or mailto
+- A button URL must be a path starting with a single `/` (not `//` or `/\`), or an absolute http, https, mailto or tel
   address. Any other URL, such as `javascript:` or a protocol-relative `//host`, leaves that button out.
 - The buttons get `GetPrimaryButtonClass()` and `GetSecondaryButtonClass()` (`btn btn-primary` and
   `btn btn-secondary` under Bootstrap) plus `osirion-call-to-action-button` and a `-primary` or `-secondary` hook.

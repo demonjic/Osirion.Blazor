@@ -119,9 +119,6 @@ one of these types renders nothing and logs a warning that names the type, unles
 A card's `icon` and `items`, a hero's `highlights` and `aside: { type: record }`, and the `variant` and `eyebrow` of
 every block are read and validated the same way and render once their components support them.
 
-The call to action section shows a button only for a site path, an `http:`, `https:` or `mailto:` address, so a `tel:`
-or `#fragment` action of a `cta` block is not shown; use it in a `hero` instead.
-
 ## FAQ structured data
 
 The first `faq` block of a page writes FAQPage structured data with the plain text of its answers; later `faq` blocks

@@ -251,7 +251,7 @@ public sealed class OsirionSiteOptions
         {
             // The address goes into the button's href, where a javascript: or data: URL would run. The layout skips such a
             // button too, but failing here tells the site why it is missing.
-            errors.Add($"{key}:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.");
+            errors.Add($"{key}:CallToAction:Href must be a path on the site (starting with /), a fragment (#section) or an http, https, mailto or tel address.");
         }
     }
 

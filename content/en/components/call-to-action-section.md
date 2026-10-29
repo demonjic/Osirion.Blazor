@@ -92,7 +92,7 @@ The heading is an `h2`, which fits a section under the page's `h1`. Inside a sec
 | `Title` | `string?` | `null` | The heading, rendered at `HeadingLevel`; it also names the section for screen readers. With an empty value no heading is rendered and the section has no accessible name. |
 | `Description` | `string?` | `null` | The short text under the heading, as a paragraph; nothing is rendered when it is empty. |
 | `PrimaryButtonText` | `string?` | `null` | The label of the primary button. The button is rendered only with a label and a safe `PrimaryButtonUrl`. |
-| `PrimaryButtonUrl` | `string?` | `null` | Where the primary button goes: a path on the site or an http, https or mailto address. Any other address, such as `javascript:`, leaves the button out. |
+| `PrimaryButtonUrl` | `string?` | `null` | Where the primary button goes: a path on the site or an http, https, mailto or tel address. Any other address, such as `javascript:`, leaves the button out. |
 | `SecondaryButtonText` | `string?` | `null` | The label of the secondary button, rendered after the primary one. The button is rendered only with a label and a safe `SecondaryButtonUrl`. |
 | `SecondaryButtonUrl` | `string?` | `null` | Where the secondary button goes, under the same rules as `PrimaryButtonUrl`. |
 | `HeadingLevel` | `int` | `2` | The level of the heading, `1` to `6` (`h1` to `h6`). It defaults to `2`, a section under the page's own `h1`. A value outside the range is moved to the nearest level. The heading keeps its look at every level. |

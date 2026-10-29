@@ -123,7 +123,7 @@ its own `<h1>`, add `HeadingLevel="2"`:
 | `IconUrl` | `string?` | `null` | The address of an image used as the icon, when `Icon` is not set. |
 | `IconAlt` | `string` | `"Not Found"` | The alternative text of the `IconUrl` image. |
 | `PrimaryButtonText` | `string?` | `"Go to Homepage"` | The text of the primary button, a link to `PrimaryButtonUrl`. Null or empty hides the button. |
-| `PrimaryButtonUrl` | `string` | `"/"` | The address of the primary button. An address that is not a local path or an http, https or mailto URL leaves the button out. |
+| `PrimaryButtonUrl` | `string` | `"/"` | The address of the primary button. An address that is not a local path or an http, https, mailto or tel URL leaves the button out. |
 | `SecondaryButtonText` | `string?` | `null` | The text of the outlined secondary button, a link to `SecondaryButtonUrl`. Null or empty, the default, hides it. |
 | `SecondaryButtonUrl` | `string` | `"/"` | The address of the secondary button. An unsafe address leaves the button out. |
 | `Actions` | `RenderFragment?` | `null` | More buttons or links, rendered after the two buttons. |
@@ -151,7 +151,7 @@ Unmatched attributes are written to the root `<div>`. A `ContentNotFoundSuggesti
 ## Behavior
 
 - The component renders plain HTML and needs no script.
-- All text is HTML-encoded. A button or suggestion address must be a local path or an http, https or mailto URL. Any other
+- All text is HTML-encoded. A button or suggestion address must be a local path or an http, https, mailto or tel URL. Any other
   address, such as `javascript:`, leaves the button out and renders the suggestion text without a link.
 - `Title` is an `<h1>`, so use the component as the main content of the page, not inside a page that already has
   one.

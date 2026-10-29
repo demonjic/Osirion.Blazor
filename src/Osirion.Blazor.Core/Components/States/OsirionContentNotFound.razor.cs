@@ -74,7 +74,7 @@ public partial class OsirionContentNotFound
     public string? PrimaryButtonText { get; set; } = "Go to Homepage";
 
     /// <summary>
-    /// Gets or sets the address of the primary button. An address that is not a local path or an http, https or mailto URL leaves the button out.
+    /// Gets or sets the address of the primary button. An address that is not a local path or an http, https, mailto or tel URL leaves the button out.
     /// </summary>
     [Parameter]
     public string PrimaryButtonUrl { get; set; } = "/";
