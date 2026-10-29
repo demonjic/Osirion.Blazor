@@ -1,0 +1,54 @@
+@namespace Osirion.Blazor.Components
+@inherits OsirionComponentBase
+
+@if (HasTitle || HasItems)
+{
+    <div class="@GetChecklistClass()" style="@Style" @attributes="Attributes">
+        @if (HasTitle)
+        {
+            @switch (TitleLevel)
+            {
+                case 1:
+                    <h1 id="@_headingId" class="osirion-checklist-title">@Title</h1>
+                    break;
+                case 2:
+                    <h2 id="@_headingId" class="osirion-checklist-title">@Title</h2>
+                    break;
+                case 4:
+                    <h4 id="@_headingId" class="osirion-checklist-title">@Title</h4>
+                    break;
+                case 5:
+                    <h5 id="@_headingId" class="osirion-checklist-title">@Title</h5>
+                    break;
+                case 6:
+                    <h6 id="@_headingId" class="osirion-checklist-title">@Title</h6>
+                    break;
+                default:
+                    <h3 id="@_headingId" class="osirion-checklist-title">@Title</h3>
+                    break;
+            }
+        }
+
+        @if (HasItems)
+        {
+            @* role="list" keeps the list semantics that some browsers drop from a list styled with list-style: none. *@
+            <ul class="osirion-checklist-list" role="list" aria-labelledby="@(HasTitle ? _headingId : null)">
+                @foreach (var item in Items)
+                {
+                    <li class="osirion-checklist-item">
+                        <svg class="osirion-checklist-mark" aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="16" height="16">
+                            <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="osirion-checklist-text">
+                            <span class="osirion-checklist-item-title">@item.Title</span>
+                            @if (!string.IsNullOrWhiteSpace(item.Description))
+                            {
+                                <span class="osirion-checklist-item-description">@item.Description</span>
+                            }
+                        </span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+}

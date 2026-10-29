@@ -502,6 +502,20 @@
       "shots": []
     },
     {
+      "file": "components/checklist.md",
+      "path": "/components/checklist",
+      "section": "Components",
+      "title": "OsirionChecklist",
+      "card": {
+        "key": "og/components-checklist.jpg",
+        "url": "https://media.getosirion.com/og/components-checklist.jpg",
+        "heading": "OsirionChecklist: a check mark list for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-checklist.jpg",
+      "shots": []
+    },
+    {
       "file": "components/clarity-tracker.md",
       "path": "/components/clarity-tracker",
       "section": "Components",

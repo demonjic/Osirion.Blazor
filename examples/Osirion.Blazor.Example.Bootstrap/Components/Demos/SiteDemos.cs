@@ -24,6 +24,7 @@ internal static class SiteDemos
         Add<MenuDemo>(demos, "menu", "A menu with a submenu");
         Add<ArticleMetadataDemo>(demos, "article-metadata", "Article metadata");
         Add<CalloutDemo>(demos, "callout", "Callouts");
+        Add<ChecklistDemo>(demos, "checklist", "A checklist");
         Add<AccordionFaqDemo>(demos, "accordion-and-faq", "An accordion and an FAQ");
         Add<ResponsiveImageDemo>(demos, "responsive-image", "A responsive image");
         Add<VideoEmbedDemo>(demos, "video-embed", "A video embed");
