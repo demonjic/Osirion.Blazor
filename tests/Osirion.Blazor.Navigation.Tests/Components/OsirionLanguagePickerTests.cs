@@ -1,5 +1,7 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Osirion.Blazor.Core.Extensions;
 using Osirion.Blazor.Core.Localization;
@@ -100,6 +102,72 @@ public class OsirionLanguagePickerTests : OsirionComponentTestBase
         var nav = cut.Find("nav");
         nav.GetAttribute("aria-label").ShouldBe("Jezik");
         nav.ClassList.ShouldBe(["osirion-language-picker", "site-languages"]);
+    }
+
+    [Fact]
+    public void Picker_Compact_IsADisclosureNamedByTheCurrentLanguage()
+    {
+        AddCultures();
+        Navigate("/sr/contact");
+
+        var cut = Render<OsirionLanguagePicker>(parameters => parameters.Add(p => p.Compact, true));
+
+        var nav = cut.Find("nav");
+        nav.ClassList.ShouldBe(["osirion-language-picker", "osirion-language-picker-compact"]);
+        nav.GetAttribute("aria-label").ShouldBe("Language");
+        var summary = cut.Find("nav > details.osirion-language-picker-disclosure > summary.osirion-language-picker-summary > span");
+        summary.TextContent.ShouldBe("Srpski");
+        summary.GetAttribute("lang").ShouldBe("sr-Latn");
+        cut.Find("details").HasAttribute("open").ShouldBeFalse();
+        cut.FindAll("details > ul.osirion-language-picker-list > li > a").Select(link => link.GetAttribute("href"))
+            .ShouldBe(["/contact", "/sr/contact", "/de/contact"]);
+        cut.FindAll("script").ShouldBeEmpty();
+    }
+
+    // Guards the default: the row of links renders as before, without a disclosure.
+    [Fact]
+    public void Picker_NotCompact_HasNoDisclosure()
+    {
+        AddCultures();
+        Navigate("/contact");
+
+        var cut = Render<OsirionLanguagePicker>();
+
+        cut.FindAll("details").ShouldBeEmpty();
+        cut.Find("nav > ul.osirion-language-picker-list").ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Picker_ReExecutedStatusPage_UsesTheAddressTheVisitorAskedFor()
+    {
+        AddCultures();
+        Navigate("/not-found");
+        var context = new DefaultHttpContext();
+        context.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
+        {
+            OriginalPath = "/sr/missing",
+            OriginalQueryString = "?q=1",
+            OriginalPathBase = string.Empty,
+        });
+
+        var cut = Render<OsirionLanguagePicker>(parameters => parameters.AddCascadingValue(context));
+
+        cut.Find("a[aria-current]").GetAttribute("hreflang").ShouldBe("sr-Latn");
+        cut.FindAll("a").Select(link => link.GetAttribute("href")).ShouldBe(["/missing?q=1", "/sr/missing?q=1", "/de/missing?q=1"]);
+    }
+
+    [Fact]
+    public void Picker_ReExecutedErrorPage_UsesThePathThatFailed()
+    {
+        AddCultures();
+        Navigate("/error");
+        var context = new DefaultHttpContext();
+        context.Features.Set<IExceptionHandlerPathFeature>(new ExceptionHandlerFeature { Path = "/de/blog", Error = new InvalidOperationException() });
+
+        var cut = Render<OsirionLanguagePicker>(parameters => parameters.AddCascadingValue(context));
+
+        cut.Find("a[aria-current]").GetAttribute("hreflang").ShouldBe("de");
+        cut.FindAll("a").Select(link => link.GetAttribute("href")).ShouldBe(["/blog", "/sr/blog", "/de/blog"]);
     }
 
     private void AddCultures() => Services.AddOsirionLocalization(options =>
