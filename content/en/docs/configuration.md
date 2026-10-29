@@ -115,8 +115,9 @@ opens in the same tab. Below 1200px the button stays in the bar after the menu t
 footer column as well, so the footer does not repeat the address. Leave the key out for no button. It arrives in the
 release after 4.2.0.
 
-`Osirion:Site:Labels` sets the shell's own texts, such as the skip link, the menu's name and the theme toggle, in the
-language of the site; each defaults to the English text. `Osirion:Site:Locales` holds what each language version says
+`Osirion:Site:Labels` sets the shell's own texts, such as the skip link, the menu's name, the theme toggle, the name
+of a submenu's toggle (`ToggleSubmenu`, with `{0}` for the entry's text) and the cookie banner's texts
+(`CookieConsent`), in the language of the site; each defaults to the English text. `Osirion:Site:Locales` holds what each language version says
 differently, keyed by culture name (`"en"`, `"sr-Latn-RS"`), and the layout picks the entry of the request's UI
 culture, which `app.UseRequestLocalization()` sets. The
 [OsirionSiteLayout reference](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md)

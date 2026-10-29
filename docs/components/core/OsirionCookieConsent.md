@@ -9,7 +9,11 @@ Key parameters
 - ShowDeclineButton, ShowCustomizeButton, ShowCustomizationPanel
 - CustomizePanelTitle
 - PolicyLink, PolicyLinkText
-- Categories: IReadOnlyList<CookieCategory> (defaults: necessary, analytics, marketing, preferences)
+- RequiredLabel: the mark after a required category's name (default: `"(Required)"`)
+- Categories: IReadOnlyList<CookieCategory> (defaults: necessary, analytics, marketing, preferences).
+  `OsirionCookieConsent.CreateDefaultCategories()` returns new instances of the defaults, to translate their names and
+  descriptions while keeping the IDs the consent records
+- In `OsirionSiteLayout`, every text comes from `Osirion:Site:Labels:CookieConsent` of the request's language version
 - Position: bottom or top
 - ConsentExpiryDays (default 365, posted with the form; the endpoint accepts 1 to 3650)
 - ConsentEndpoint (server endpoint to persist preferences)

@@ -71,8 +71,13 @@ Options (`OsirionSiteOptions`)
   main content`), `Menu` (`Main navigation`), `MenuToggle` (`Toggle navigation menu`), `SwitchToDarkTheme` and
   `SwitchToLightTheme` (`Switch to dark mode`, `Switch to light mode`), `Search` (`Search`, the field's label and the
   button's visible text), `SubmitSearch` (`Submit search`, the button's name; keep the words of `Search` in it),
-  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement` and `Language` (`Language`, the
-  language picker's name)
+  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement`, `Language` (`Language`, the
+  language picker's name), `ToggleSubmenu` (`Toggle {0} submenu`, a menu entry's submenu toggle, with `{0}` for the
+  entry's text) and `CookieConsent`, the cookie banner's texts: `Title`, `Message`, `AcceptButton`, `DeclineButton`,
+  `CustomizeButton`, `SavePreferencesButton`, `CustomizePanelTitle`, `PolicyLinkText`, `Required` and `Categories`,
+  each category's `Name` and `Description` by its ID (`necessary`, `analytics`, `marketing`, `preferences`). A
+  `CookieConsent` text left out keeps the banner's English default. Set them in a `Locales` entry's `Labels` for each
+  language; a derived version gets them transliterated
 - `LanguagePicker`: `None` (default), `Header`, `Footer` or `Both`. `Header` puts a compact `OsirionLanguagePicker`
   (a `details` disclosure that names the current language and opens the list, no script) among the menu's actions,
   after the theme toggle, so five language names do not wrap the menu; `Footer` puts a row of language links below

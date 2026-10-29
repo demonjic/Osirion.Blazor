@@ -177,6 +177,7 @@ attributes go on the item's wrapper element.
 | `IsActive` | `bool` | `false` | Whether the item is forced into the active state, with the `aria-current="page"` attribute and the active style, whatever the current URL is. |
 | `Disabled` | `bool` | `false` | Whether the item is disabled: it renders no `href`, sets `aria-disabled` and ignores `OnClick`. |
 | `HasSubmenu` | `bool` | `false` | Whether `ChildContent` is rendered as a submenu behind a disclosure toggle. |
+| `ToggleSubmenuLabel` | `string` | `"Toggle {0} submenu"` | The accessible name of the submenu's toggle, with `{0}` where the item's `Text` goes. Defaults to `Toggle {0} submenu`; set it in the page's language, for example `Otvori podmeni {0}`, so the name matches the language of the page (WCAG 3.1.2). |
 | `ChildContent` | `RenderFragment?` | `null` | The submenu content: menu items, or groups and other parts for a mega submenu. It is rendered only when `HasSubmenu` is on. |
 | `SubmenuAside` | `RenderFragment?` | `null` | Optional aside content for mega submenus, rendered as a dedicated right-hand column. Typically a `MenuPanel` or `MenuImageCard`. Only used when `SubmenuVariant` is Mega. |
 | `SubmenuVariant` | `SubmenuVariant` | `SubmenuVariant.Regular` | The submenu presentation: `Regular` for a list or `Mega` for a grid of groups. |

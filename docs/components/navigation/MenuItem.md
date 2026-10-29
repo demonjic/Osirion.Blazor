@@ -22,6 +22,8 @@ Key parameters
 - Target: how to open the link, for example `_blank`; not rendered when the item has no `href`
 - OnClick: `EventCallback<MouseEventArgs>` invoked when the link is clicked and the item is not disabled
 - HasSubmenu: renders the submenu container and its toggle (default `false`)
+- ToggleSubmenuLabel: the toggle's accessible name, with `{0}` for `Text` (default: `"Toggle {0} submenu"`). Set it in
+  the page's language, so the name matches it (WCAG 3.1.2); `OsirionSiteLayout` passes `Osirion:Site:Labels:ToggleSubmenu`
 - ChildContent: the submenu content (`MenuItem`, `MenuGroup`, `MenuCallToAction` and so on)
 - SubmenuVariant: `SubmenuVariant.Regular` (default, a compact vertical list) or `SubmenuVariant.Mega` (grouped content
   in a responsive grid)
