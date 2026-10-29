@@ -5,7 +5,7 @@ permalink: /components/seo-metadata-renderer
 description: "Write the page title, meta description, canonical URL, robots, Open Graph, Twitter Card and JSON-LD tags for a content item or a list of items."
 author: "Osirion Team"
 date: 2025-01-26
-last_modified: 2026-10-24
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-seo-metadata-renderer.jpg'
 categories:
 - Components
@@ -70,7 +70,37 @@ Place it inside `<HeadContent>`, and keep `<HeadOutlet />` in your `App.razor`:
 }
 ```
 
-Render it only when you have content: with neither `Content` nor `ContentItems` it writes only an empty title.
+Render it only when you have content: with neither `Content` nor `ContentItems` (nor a `Title`, below) it writes only
+an empty title.
+
+### A page that is not a content item
+
+A page written in Razor, such as a contact page, gets the same head from `Title`, `Description`, `ImageUrl` and
+`CanonicalPath`:
+
+```razor
+@page "/contact"
+@page "/sr/contact"
+@using Osirion.Blazor.Cms.Web.Components
+
+<HeadContent>
+    <SeoMetadataRenderer Title="Contact"
+                         Description="Write to the team and get an answer within two working days."
+                         ImageUrl="/images/contact.png"
+                         SchemaTypes="@(new[] { SchemaType.ContactPage })" />
+</HeadContent>
+```
+
+It writes the `<title>` (`Contact | {site name}`), the description, the canonical URL, Open Graph (`og:type`
+`website`) and Twitter tags, a schema.org `WebPage` (or the `ContactPage` or `AboutPage` that `SchemaTypes` or
+`FallbackSchemaType` names) and, on a site with [locale routing](/docs/locale-routing), the `hreflang` links. It writes
+no author, dates or article tags, because the page names none. Blazor renders only the last `HeadContent` of a page, so
+put every head tag of the page in this one renderer instead of adding a second `HeadContent`. The page parameters are
+ignored when `Content` or `ContentItems` is set.
+
+The parameters are flat, like `CollectionTitle` and `CollectionDescription` of a list page, rather than a page model:
+the component already reads one parameter per value, and a site that sets them from resource strings or `@code` needs
+no extra type.
 
 Site-wide defaults come from `SeoMetadataOptions`, either in code:
 
@@ -136,7 +166,7 @@ effect.
 | `DefaultImageHeight` | `int?` | `null` | The height written as `og:image:height`, in pixels. When not set, the configured height applies, then `630`. |
 | `OrganizationName` | `string?` | `null` | The publisher name in structured data. It is also the site name when no site name is set. |
 | `ApplicationCategory` | `string` | `"DeveloperApplication"` | The `applicationCategory` of the `SchemaType.SoftwareApplication` schema, one of the app types search engines support, such as `DeveloperApplication` or `BusinessApplication`. |
-| `AlternateLanguageUrls` | `List<string>?` | `null` | The `hreflang` links of other language versions, each entry a language code and an address joined by a vertical bar, such as `de\|https://example.com/de/page`. Malformed entries are skipped with a logged warning. |
+| `AlternateLanguageUrls` | `List<string>?` | `null` | The `hreflang` links of other language versions, each entry a language code and an address joined by a vertical bar, such as `de\|https://example.com/de/page`. Malformed entries are skipped with a logged warning. When it is `null` on a site with locale routing (`IOsirionLocalePaths`), the links are written for the page instead: a content item links its published, indexable translations (the items with its `ContentId`), and any other page links its address in every configured culture, each with the culture name, then `x-default` with the default culture's address; nothing is written for fewer than two versions. A list passed here, even an empty one, always wins. |
 | `PrevPageUrl` | `string?` | `null` | The address written as `rel="prev"`. Nothing is written when empty. |
 | `NextPageUrl` | `string?` | `null` | The address written as `rel="next"`. Nothing is written when empty. |
 | `BreadcrumbHomeText` | `string` | `"Home"` | The name of the first `BreadcrumbList` entry. When empty, the configured value applies. |
@@ -146,6 +176,10 @@ effect.
 | `EnableGeneratedFaq` | `bool` | `false` | Whether FAQ structured data and answer meta tags are built from the title and description (requires `EnableAeoOptimization`). Off by default because the question is derived, not authored. When not set, the configured value applies, then `false`; a value set on the page wins over the configured one in both directions. |
 | `ReferrerPolicy` | `string?` | `null` | The referrer policy written as `<meta name="referrer">`, such as `strict-origin`. When empty, the configured `SeoMetadataOptions.ReferrerPolicy` applies; when that is empty too, no tag is written, so the site's `Referrer-Policy` response header (or the browser default, `strict-origin-when-cross-origin`) applies. A referrer meta tag replaces the header's policy for the whole document. A value that is not one of the policy tokens of the Referrer Policy specification writes nothing. |
 | `FallbackSchemaType` | `SchemaType?` | `null` | The schema type of a content page when nothing else names one: `SchemaTypes`, the configured `DefaultSchemaTypes` and the front matter `type` all come first. When not set, `WebPage` applies. `ArticlePage` sets it to `SchemaType.Article`. |
+| `Title` | `string?` | `null` | The title of a page that is not a content item, such as a contact page written in Razor. With a title and neither `Content` nor `ContentItems`, the component writes the whole head for that page: the page title as `{Title} \| {site name}`, the description, the canonical URL, Open Graph and Twitter tags (`og:type``website`), a schema.org `WebPage` (or the `ContactPage` or `AboutPage` that `SchemaTypes` or `FallbackSchemaType` names) and the `hreflang` links. Ignored when `Content` or `ContentItems` is set. |
+| `Description` | `string?` | `null` | The description of a page that is not a content item: the meta description (cut to 160 characters), `og:description` (cut to 200) and the description of its structured data. Read only with `Title`. |
+| `ImageUrl` | `string?` | `null` | The social image of a page that is not a content item (`og:image` and `twitter:image`), absolute or relative to the site address. When empty, `DefaultImageUrl` applies. Read only with `Title`. |
+| `CanonicalPath` | `string?` | `null` | The canonical address of a page that is not a content item, as a path on the site such as `/contact`, made absolute with the site address, or an absolute `http` or `https` address. On a localized page pass the localized path (`/sr/contact`), for example from `IOsirionLocalePaths.LocalizeForCurrentCulture`. When empty, the current address is the canonical one, as on every other page. The `hreflang` links are built from it. Read only with `Title`. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -229,6 +263,18 @@ Relative image URLs become absolute with the site's base URL.
   `EnableGeoOptimization`, `EnableAeoOptimization` and `GenerateMultipleSchemas` come from the options unless the
   page sets them as parameters, `true` or `false`. `BreadcrumbHomeText` applies when the parameter is empty. `DefaultImageWidth` and
   `DefaultImageHeight` are nullable: the option applies when the parameter is not set, and an explicit `1200` or `630` stands.
+- **Language versions.** On a site with [locale routing](/docs/locale-routing) (`IOsirionLocalePaths` registered), a
+  page that does not pass `AlternateLanguageUrls` gets its `hreflang` links written for it, each named by the culture
+  name (`en`, `sr-Latn`), then `x-default` with the default culture's address. A content item links its own canonical
+  address and each published translation (an item with the same `ContentId`, the localization id) whose locale is a
+  configured culture, at `/{url}` with that culture's prefix; a culture without a translation, and a translation whose
+  `robots` holds `noindex`, is not linked. The translations are read from the content providers after the other tags;
+  a provider that has the content cached answers at once, so the head is complete in the first render, and a failed
+  read writes no links and logs a warning. Any other page (a list page or a page with `Title`) links its address,
+  `CanonicalPath` when it is a path on the site, in every configured culture, keeping the canonical query parameters.
+  Nothing is written for fewer than two versions. On such a site a page without `Locale` (and a content item without a
+  locale) takes its language from the address's prefix. `AlternateLanguageUrls` always wins, and an empty list writes
+  no links.
 - **Public address.** `SiteUrl` (for example `https://example.com`) makes the canonical URL, `og:url` and the
   addresses in structured data use the site's address with the page's path, whatever host served the request: a
   proxy, a preview host or a second domain. Only an absolute `http` or `https` address is used; otherwise they follow
