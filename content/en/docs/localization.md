@@ -158,8 +158,10 @@ attributes. Left as written:
 - the slug, the address, the author, the dates, the images, `canonical` and JSON-LD.
 
 A link to one of the site's own pages that starts with the source locale moves under the derived locale:
-`/sr/blog/hello` becomes `/sr-Latn/blog/hello`, written with `Locale` exactly as configured, so give `Locale` the letter
-case your routes use. A link without a locale segment (`/blog/hello`) stays as it is.
+`/sr/blog/hello` becomes `/sr-latn/blog/hello`. With [locale routing](/docs/locale-routing) registered and the derived
+locale among its cultures, the link takes that culture's prefix, and when the source is the default culture a link
+without a prefix (`/blog/hello`) moves too. Without it, the prefix is the derived locale in lower case, the prefix
+`Osirion:Localization` gives a culture by default, and a link without a locale segment stays as it is.
 
 **Read only.** A derived item has no file and no markdown source of its own (`OriginalMarkdown` is empty: search reads
 the rendered content, and a source in the other script must never be written back under the derived locale). The
@@ -172,6 +174,66 @@ navigation for the derived locale from its pages or from the source locale's fol
 `Nj` and `Dž` otherwise. To add another, implement `ITextTransliterator` (a `Name` and `Transliterate(string)`) and
 register it with `services.AddSingleton<ITextTransliterator, MyTransliterator>()`; one registered after the built-in
 under the same name replaces it.
+
+### Derive the shell and the resource strings too
+
+Content is derived per provider; the site's shell and its resource strings are derived from `Osirion:Site:Locales`.
+An entry that names `DerivedFrom` and `Transliteration` is the source culture's version (its entry over the site's
+values) with every text transliterated: the name, the menu, the call to action, the announcement, the footer, the
+legal and social link texts, the labels and the copyright line. Links to the source culture's pages move by the rule
+above; other addresses stay. A key the derived entry writes itself wins, so `"Name": "Primer d.o.o."` keeps that name.
+Call `builder.Services.AddOsirionDerivedResourceLocalization()` once, after `AddLocalization`, and an
+`IStringLocalizer` answers a derived culture with the source culture's string transliterated (placeholders such as
+`{0}` stay as written), unless the resource has its own value for it (a `.sr-Latn.resx` entry). A site that does not
+call it is not changed.
+
+A site in English (the default, without a prefix), Serbian in Cyrillic, Serbian in Latin, Croatian and German keeps
+the three settings in agreement like this:
+
+```json
+{
+  "Osirion": {
+    "Localization": {
+      "DefaultCulture": "en",
+      "Cultures": [
+        { "Name": "en" },
+        { "Name": "sr" },
+        { "Name": "sr-Latn" },
+        { "Name": "hr" },
+        { "Name": "de" }
+      ]
+    },
+    "Site": {
+      "Name": "Example",
+      "Locales": {
+        "sr": { "Name": "Пример", "HomeUrl": "/sr", "Menu": [ { "Text": "Контакт", "Href": "/sr/kontakt" } ] },
+        "sr-Latn": { "DerivedFrom": "sr", "Transliteration": "serbian-cyrillic-to-latin" },
+        "hr": { "Name": "Primjer", "HomeUrl": "/hr" },
+        "de": { "Name": "Beispiel", "HomeUrl": "/de" }
+      }
+    },
+    "Cms": {
+      "Web": {
+        "FileSystem": {
+          "BasePath": "content",
+          "EnableLocalization": true,
+          "DefaultLocale": "en",
+          "SupportedLocales": [ "en", "sr", "hr", "de" ],
+          "DerivedLocales": [
+            { "Locale": "sr-Latn", "From": "sr", "Transliteration": "serbian-cyrillic-to-latin" }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+`sr-Latn` gets the prefix `sr-latn` (its name in lower case), the content folder `sr-Latn` is recognised in any letter
+case, and every derived link is written with that prefix. Startup fails, naming the key, when a derived entry's source
+is not a culture, is the entry's own culture, has neither an entry nor a route, or is itself derived (no chains or
+cycles), when the transliterator is not registered, and, with `Osirion:Localization` registered, when the derived
+culture is not one of its cultures.
 
 ## Route by language
 

@@ -77,7 +77,8 @@ Options (`OsirionSiteOptions`)
   `FooterDescription`, `FooterSections`, `SocialLinks`, `LegalLinks`, `Owner`, `OwnerUrl`, `Copyright`, `SocialTitle`
   and `Labels`. A value it sets replaces the site's as a whole (a `Menu` is the whole menu; `Labels` are all the
   labels, English for any it leaves out), and a value it leaves out is the site's. Whether search, the theme toggle,
-  the cookie banner and the scroll-to-top button are shown is the same for every version
+  the cookie banner and the scroll-to-top button are shown is the same for every version. An entry may instead be
+  derived from another culture by transliteration: `DerivedFrom` and `Transliteration`, see below
 
 Language versions
 ```json
@@ -118,6 +119,22 @@ does a problem in a value a locale sets, named under `Osirion:Site:Locales:<cult
 against the footer sections that version shows. Options set another
 way, for example with `Services.Configure<OsirionSiteOptions>`, skip that check; the layout then renders no call to
 action for such a value.
+
+Derived versions
+```json
+"Locales": {
+  "sr": { "Name": "Пример", "HomeUrl": "/sr", "Menu": [ { "Text": "Контакт", "Href": "/sr/kontakt" } ] },
+  "sr-Latn": { "DerivedFrom": "sr", "Transliteration": "serbian-cyrillic-to-latin", "Name": "Primer d.o.o." }
+}
+```
+`sr-Latn` is the `sr` version (its entry over the site's values) with every text transliterated, the copyright line
+as markup, and its links to `sr` pages moved under the `sr-Latn` prefix (`/sr/kontakt` becomes `/sr-latn/kontakt`,
+or the prefix `Osirion:Localization` configures); other addresses stay. A key the entry writes itself wins, so the
+name above is `Primer d.o.o.`. Startup fails, naming the key, for a `DerivedFrom` that is not a culture, is the entry's
+own culture, has neither an entry nor a route in `Osirion:Localization`, or is itself derived, for a `Transliteration`
+that is missing or not registered, and, with `Osirion:Localization` registered, for a derived culture it does not
+serve. `builder.Services.AddOsirionDerivedResourceLocalization()` derives the version's `IStringLocalizer` strings the
+same way (see the localization guide, `content/en/docs/localization.md`).
 
 Parameters, when you wrap it in your own layout
 ```razor

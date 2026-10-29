@@ -205,6 +205,10 @@ using System.Text.Unicode;
 builder.Services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
 ```
 
+A site written in Serbian Cyrillic can also serve a Latin version without writing it twice: list `sr-Latn` here (its
+prefix is `sr-latn`) and derive its content, shell and resource strings from `sr`, as
+[Localization](/docs/localization#serve-a-second-script-without-a-second-file) shows.
+
 ## Check that it works
 
 Run the site and request a few addresses, for example with `curl -I`:
