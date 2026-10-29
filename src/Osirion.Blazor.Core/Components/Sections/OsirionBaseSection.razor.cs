@@ -36,6 +36,22 @@ public partial class OsirionBaseSection
     public RenderFragment? TitleContent { get; set; }
 
     /// <summary>
+    /// A short label above the heading, such as <c>Features</c> or <c>How it works</c>, as plain text in a paragraph
+    /// with the class <c>osirion-section-eyebrow</c>. Shown only together with a title.
+    /// </summary>
+    [Parameter]
+    public string? Eyebrow { get; set; }
+
+    /// <summary>
+    /// The band behind the section: <c>Default</c> (the page's background), <c>Tinted</c>
+    /// (<c>--osirion-background-secondary</c>) or <c>Dark</c>, which gives the section the dark theme's tokens through
+    /// <c>data-theme</c> (<c>data-bs-theme</c> under Bootstrap) so its text, cards and buttons turn dark with it. An
+    /// explicit <see cref="OsirionComponentBase.Theme"/> and <see cref="BackgroundColor"/> still win.
+    /// </summary>
+    [Parameter]
+    public SectionVariant Variant { get; set; } = SectionVariant.Default;
+
+    /// <summary>
     /// The paragraph under the heading. Written as raw HTML without sanitizing, so pass only text you control. Shown
     /// only together with a title, and ignored when <see cref="DescriptionContent"/> is set.
     /// </summary>
@@ -140,6 +156,12 @@ public partial class OsirionBaseSection
             classes.Add("osirion-section-divider");
         }
 
+        // The default band adds no class, so a section without a variant keeps its markup.
+        if (Variant != SectionVariant.Default)
+        {
+            classes.Add(Variant == SectionVariant.Tinted ? "osirion-section-variant-tinted" : "osirion-section-variant-dark");
+        }
+
         // Add custom class if provided
         if (!string.IsNullOrWhiteSpace(Class))
         {
@@ -168,6 +190,17 @@ public partial class OsirionBaseSection
             CssFramework.Radzen => "rz-container",
             _ => "osirion-container"
         };
+    }
+
+    /// <summary>
+    /// The value of a theme attribute for the dark band: <c>dark</c> for the attribute the configured CSS framework
+    /// reads, and <see langword="null"/> (no attribute) otherwise. An explicit <see cref="OsirionComponentBase.Theme"/>
+    /// is written by the base class instead, so it wins over the band.
+    /// </summary>
+    private string? GetDarkBandTheme(string attributeName)
+    {
+        var isDarkBand = Variant == SectionVariant.Dark && Theme == ThemeMode.System;
+        return isDarkBand && attributeName == ThemeAttributeName ? "dark" : null;
     }
 
     /// <summary>

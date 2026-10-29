@@ -1,0 +1,61 @@
+@namespace Osirion.Blazor.Components
+@inherits OsirionComponentBase
+
+@if (HasContent)
+{
+    @* A figure: a self-contained sample whose footnote, when set, is its caption. *@
+    <figure class="@GetRecordCardClass()" style="@Style" @attributes="Attributes">
+        @if (HasTitle || HasStatus)
+        {
+            <div class="osirion-record-card-header">
+                @if (HasTitle)
+                {
+                    @switch (TitleLevel)
+                    {
+                        case 1:
+                            <h1 class="osirion-record-card-title">@Title</h1>
+                            break;
+                        case 2:
+                            <h2 class="osirion-record-card-title">@Title</h2>
+                            break;
+                        case 4:
+                            <h4 class="osirion-record-card-title">@Title</h4>
+                            break;
+                        case 5:
+                            <h5 class="osirion-record-card-title">@Title</h5>
+                            break;
+                        case 6:
+                            <h6 class="osirion-record-card-title">@Title</h6>
+                            break;
+                        default:
+                            <h3 class="osirion-record-card-title">@Title</h3>
+                            break;
+                    }
+                }
+
+                @if (HasStatus)
+                {
+                    <span class="osirion-record-card-status osirion-record-card-status-@GetToneName()"><span class="osirion-record-card-status-mark" aria-hidden="true"></span>@Status</span>
+                }
+            </div>
+        }
+
+        @if (HasRows)
+        {
+            <dl class="osirion-record-card-rows">
+                @foreach (var row in Rows)
+                {
+                    <div class="osirion-record-card-row">
+                        <dt class="osirion-record-card-label">@row.Label</dt>
+                        <dd class="osirion-record-card-value">@row.Value</dd>
+                    </div>
+                }
+            </dl>
+        }
+
+        @if (HasFootnote)
+        {
+            <figcaption class="osirion-record-card-footnote">@Footnote</figcaption>
+        }
+    </figure>
+}

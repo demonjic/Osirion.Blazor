@@ -20,6 +20,7 @@ The `OsirionBaseSection` component is a flexible, framework-agnostic base sectio
 - `TitleContent`: Custom title content (overrides Title when provided)
 - `Description`: Section description text (optional)
 - `DescriptionContent`: Custom description content (overrides Description when provided)
+- `Eyebrow`: a short plain-text label above the title (`osirion-section-eyebrow`), shown only with a title (from 4.3)
 
 ### Layout Parameters
 - `ContainerClass`: Custom container CSS class (defaults to framework-specific container)
@@ -36,6 +37,10 @@ The `OsirionBaseSection` component is a flexible, framework-agnostic base sectio
 
 ### Visual Parameters
 - `HasDivider`: Whether the section has a divider/shadow effect (default: false)
+- `Variant`: the band, `SectionVariant.Default`, `Tinted` (`--osirion-background-secondary`) or `Dark`, which writes
+  `data-theme="dark"` (`data-bs-theme` under Bootstrap) on the section so everything inside takes the dark theme's
+  tokens; an explicit `Theme` and `BackgroundColor` still win (from 4.3). With neither `Eyebrow` nor `Variant` the
+  markup is unchanged.
 
 ## Usage Examples
 

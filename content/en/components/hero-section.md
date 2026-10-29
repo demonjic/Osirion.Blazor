@@ -7,7 +7,7 @@ permalink: /components/hero-section
 description: HeroSection renders a page header with a title, subtitle, buttons, article metadata and a side image, background image or pattern.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-hero-section.jpg'
 categories:
 - Components
@@ -96,6 +96,25 @@ An article header with the image behind the text and the author, date and readin
              MinHeight="40vh" />
 ```
 
+A product page header: a short label above the title (`Eyebrow`), three phrases behind check marks under the summary
+(`Highlights`), and the screenshot in a browser-like frame (`FrameImage`). Available from 4.3.
+
+```demo
+hero-section-product
+```
+
+```razor
+<HeroSection Eyebrow="Component library"
+             Title="Build the site, not the parts"
+             Summary="Server-rendered Blazor components for content sites."
+             Highlights="@(["Complete HTML before any script", "Light and dark themes"])"
+             ImageUrl="/images/screenshot.png"
+             ImageAlt="The dashboard with three open orders"
+             FrameImage="true"
+             PrimaryButtonText="Read the docs"
+             PrimaryButtonUrl="/docs" />
+```
+
 ## Parameters
 
 <!-- osirion:parameters HeroSection -->
@@ -108,6 +127,9 @@ An article header with the image behind the text and the author, date and readin
 | `SubtitleContent` | `RenderFragment?` | `null` | Your own markup in place of `Subtitle`. |
 | `Summary` | `string?` | `null` | A longer paragraph under the subtitle. Ignored when `SummaryContent` is set. |
 | `SummaryContent` | `RenderFragment?` | `null` | Your own markup in place of `Summary`. |
+| `Eyebrow` | `string?` | `null` | A short label above the title, such as `New` or the product's category, as plain text in a paragraph with the class `osirion-hero-eyebrow`. |
+| `Highlights` | `IReadOnlyList<string>?` | `null` | Short phrases shown under the summary, each behind a check mark, as an `OsirionChecklist` inside a `div` with the class `osirion-hero-highlights`. Empty phrases are left out. |
+| `FrameImage` | `bool` | `false` | Whether the side image sits in a subtle browser-like frame (a bar with three dots above it, a border and a shadow), for a product screenshot. Has no effect on a background image. |
 | `ImageUrl` | `string?` | `null` | The image, shown beside the text or, with `UseBackgroundImage`, behind it. As a background it is CSS-escaped before it is written to the inline style. |
 | `ImageAlt` | `string?` | `null` | The side image's alternative text; when it is not set, `Title` is used, then `Hero image`. Pass an empty string for a decorative image. A background image has no alternative text. |
 | `UseBackgroundImage` | `bool` | `false` | Whether `ImageUrl` is the section's background image instead of a side image. |
@@ -160,13 +182,20 @@ Unmatched attributes are written to the `<section>`.
   Up to 4.2.0 the secondary button had the outlined primary classes.
 - A background image has no alternative text, so use it for decoration only. The side image has `ImageAlt`.
 - A background pattern is drawn unless `UseBackgroundImage` is on.
+- `Eyebrow` is a paragraph before the title, plain text and HTML-encoded. `Highlights` render as an
+  [OsirionChecklist](/components/checklist) after the summary and before the buttons; empty phrases are left out, and
+  each check mark is hidden from assistive technology. `FrameImage` adds a decorative bar with three dots above the
+  side image (`aria-hidden="true"`), so the image keeps its own alternative text. With none of the three set, the
+  hero renders the markup it rendered before they existed.
 
 ## Styling
 
 The `<section>` has `osirion-hero-section`, `osirion-hero-variant-{hero|jumbotron|minimal}` and
 `osirion-hero-align-{left|center|right}`, plus `osirion-hero-with-background` and `osirion-hero-with-overlay`, or
 `osirion-hero-with-side-image`, depending on the image. Inside are `osirion-hero-title`, `osirion-hero-subtitle`,
-`osirion-hero-summary`, `osirion-hero-buttons`, `osirion-hero-additional` and `osirion-hero-image-container`. Both
+`osirion-hero-summary`, `osirion-hero-buttons`, `osirion-hero-additional` and `osirion-hero-image-container`, and
+from 4.3 `osirion-hero-eyebrow`, `osirion-hero-highlights` (around the checklist), `osirion-hero-image-framed` (on
+the image container) and `osirion-hero-image-frame-bar`. Both
 buttons carry `osirion-hero-button`; the primary button adds `osirion-hero-button-primary` and the secondary button
 `osirion-hero-button-secondary`. Up to 4.2.0 the secondary button carried `osirion-hero-button-primary` too, so a
 rule written for both buttons through that class should select `osirion-hero-button` instead.
@@ -180,7 +209,9 @@ through `Style`:
 ```
 
 Colors come from `--osirion-background-primary` and `--osirion-text-primary`, the divider from
-`--osirion-color-primary-600`.
+`--osirion-color-primary-600`. The eyebrow uses `--osirion-link-color` (white over the overlay). The frame has a
+1px `--osirion-border-color` border, the `--osirion-shadow-xl` shadow and a bar in `--osirion-background-tertiary`;
+inside it the image keeps its proportions and does not zoom on hover.
 
 ## Related
 

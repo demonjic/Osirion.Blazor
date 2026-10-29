@@ -1,0 +1,19 @@
+@using Osirion.Blazor.Components
+@using Osirion.Blazor.Core.Models
+
+<OsirionRecordCard Title="Order A-1042"
+                   Status="Approved"
+                   StatusTone="RecordStatusTone.Positive"
+                   Rows="rows"
+                   Footnote="Sample data"
+                   Style="max-width: 28rem" />
+
+@code {
+    private static readonly RecordCardRow[] rows =
+    [
+        new("Customer", "Example Ltd"),
+        new("Amount", "1,250.00"),
+        new("Checked by", "Automatic rules"),
+        new("Decided", "In 2 seconds"),
+    ];
+}

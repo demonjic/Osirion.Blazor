@@ -15,6 +15,8 @@ internal static class SiteDemos
     {
         Add<InstallTabsDemo>(demos, "install-tabs", "Install command tabs");
         Add<FeatureCardDemo>(demos, "feature-card", "A feature card");
+        Add<CardGridDemo>(demos, "card-grid", "Feature cards in a card grid");
+        Add<RecordCardDemo>(demos, "record-card", "A sample record");
         Add<TestimonialCardDemo>(demos, "testimonial-card", "A testimonial card");
         Add<SubscriptionCardDemo>(demos, "subscription-card", "A subscription card");
         Add<AuthorCardDemo>(demos, "author-card", "An author card");
@@ -24,6 +26,7 @@ internal static class SiteDemos
         Add<MenuDemo>(demos, "menu", "A menu with a submenu");
         Add<ArticleMetadataDemo>(demos, "article-metadata", "Article metadata");
         Add<CalloutDemo>(demos, "callout", "Callouts");
+        Add<ChecklistDemo>(demos, "checklist", "A checklist");
         Add<AccordionFaqDemo>(demos, "accordion-and-faq", "An accordion and an FAQ");
         Add<ResponsiveImageDemo>(demos, "responsive-image", "A responsive image");
         Add<VideoEmbedDemo>(demos, "video-embed", "A video embed");
@@ -32,11 +35,14 @@ internal static class SiteDemos
         Add<HtmlRendererDemo>(demos, "html-renderer", "Sanitized HTML with code");
         Add<ContentDemoDemo>(demos, "content-demo", "A registered demo");
         Add<HeroSectionDemo>(demos, "hero-section", "A hero section");
+        Add<HeroSectionProductDemo>(demos, "hero-section-product", "A hero with an eyebrow, highlights and a framed image");
         Add<BaseSectionDemo>(demos, "base-section", "A base section");
+        Add<BaseSectionBandsDemo>(demos, "base-section-bands", "Tinted and dark bands");
         Add<ContactInfoSectionDemo>(demos, "contact-info-section", "A contact info section");
         Add<PricingTableDemo>(demos, "pricing-table", "A pricing table and feature comparison");
         Add<StepsDemo>(demos, "steps", "Numbered steps");
         Add<CallToActionSectionDemo>(demos, "call-to-action-section", "A closing call to action");
+        Add<SplitSectionDemo>(demos, "split-section", "Copy beside a sample record");
         Add<MetricGridDemo>(demos, "metric-grid", "A metric grid");
         Add<ContextCardGridDemo>(demos, "context-card-grid", "A context card grid");
         Add<InfiniteLogoCarouselDemo>(demos, "infinite-logo-carousel", "A logo carousel");

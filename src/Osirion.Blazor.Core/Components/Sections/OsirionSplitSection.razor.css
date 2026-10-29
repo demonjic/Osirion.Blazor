@@ -1,0 +1,37 @@
+/* Stacked on narrow screens: the aside follows the copy. */
+.osirion-split-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--osirion-spacing-8, 2rem);
+    align-items: center;
+}
+
+@media (min-width: 768px) {
+    .osirion-split-section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas: "content aside";
+        gap: var(--osirion-spacing-12, 3rem);
+    }
+
+    .osirion-split-section-aside-start {
+        grid-template-areas: "aside content";
+    }
+
+    .osirion-split-section-content {
+        grid-area: content;
+    }
+
+    .osirion-split-section-aside {
+        grid-area: aside;
+    }
+
+    /* With one slot filled, it spans both columns instead of leaving the other one empty. */
+    .osirion-split-section > :only-child {
+        grid-column: 1 / -1;
+    }
+}
+
+.osirion-split-section-content,
+.osirion-split-section-aside {
+    min-width: 0;
+}

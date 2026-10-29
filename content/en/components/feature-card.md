@@ -7,7 +7,7 @@ permalink: /components/feature-card
 description: OsirionFeatureCard renders an image, a title, a description and optional links in one card. Parameters, behavior and styling.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-feature-card.jpg'
 categories:
 - Components
@@ -92,6 +92,20 @@ A teaser that links to an article, with the image on top and category links unde
 }
 ```
 
+From 4.3 a card takes a decorative `Icon` and a list of short `Items`. Without an image, the icon takes the place of
+the image placeholder, and the card's height follows its content, which suits a row of features in an
+[OsirionCardGrid](/components/card-grid):
+
+```razor
+<OsirionFeatureCard Title="Fast pages"
+                    Description="HTML on the first request."
+                    Items="@(["No client script", "Cache friendly"])">
+    <Icon>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+    </Icon>
+</OsirionFeatureCard>
+```
+
 ## Parameters
 
 <!-- osirion:parameters OsirionFeatureCard -->
@@ -102,6 +116,8 @@ A teaser that links to an article, with the image on top and category links unde
 | `Description` | `string?` | `null` | The text under the title. |
 | `ShowDescription` | `bool` | `true` | Whether `Description` is shown. |
 | `ChildContent` | `RenderFragment?` | `null` | Extra content between the description and the links. |
+| `Icon` | `RenderFragment?` | `null` | A small decorative icon above the title, such as an `svg`, in a `div` with the class `osirion-feature-card-icon` and `aria-hidden="true"`, so put no meaning in it that the title does not carry. Without an `ImageUrl`, the icon takes the place of the image placeholder: the card has a single column and its height follows its content. |
+| `Items` | `IReadOnlyList<string>?` | `null` | Short phrases under the description, each behind a check mark, as an `OsirionChecklist` inside a `div` with the class `osirion-feature-card-items`. Empty phrases are left out. |
 | `Url` | `string?` | `null` | The link around the image, and the read more link's target when `ReadMoreHref` is not set. |
 | `ImageUrl` | `string?` | `null` | The image source. Without it the card shows a placeholder icon. |
 | `ImageAlt` | `string?` | `null` | The image's alternative text; when it is not set, `Title` is used, then `Feature image`. |
@@ -144,6 +160,12 @@ and a constructor `PillowButton(text, href, color)`. Unmatched attributes are pa
   content for `Left`, below it for `Right`.
 - Text is HTML-encoded. URLs (`Url`, `ReadMoreHref`, `PillowButton.Href`) are written as given, so pass values your
   application controls.
+- `Icon` is wrapped in a `div` with `aria-hidden="true"`, so the title must say what the icon shows. With an `Icon`
+  and no `ImageUrl` the card renders no image column, no placeholder and no image link, and takes
+  `osirion-feature-card-with-icon` in place of the image position class.
+- `Items` render as an [OsirionChecklist](/components/checklist) after the description and before `ChildContent`;
+  empty phrases are left out.
+- With neither `Icon` nor `Items`, the card renders the markup it rendered before they existed.
 
 ## Styling
 
@@ -153,6 +175,10 @@ The root element carries `osirion-feature-card` plus one class per setting, for 
 The card reads the theme tokens `--osirion-card-background`, `--osirion-border-color`, `--osirion-action-primary`,
 `--osirion-action-secondary` and `--osirion-heading-color`, and `--osirion-card-border-width` (default `2px`) for the
 border, so a framework adapter or your own `:root` values restyle it.
+
+The icon sits in a 3rem `osirion-feature-card-icon` tile in `--osirion-background-tertiary`, drawn in
+`--osirion-link-color`, and an `svg` inside it is sized to 1.5rem. The items are wrapped in
+`osirion-feature-card-items`.
 
 ## Related
 

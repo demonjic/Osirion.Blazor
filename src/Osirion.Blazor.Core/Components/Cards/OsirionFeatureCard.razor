@@ -26,6 +26,12 @@
     /// </summary>
     private void RenderImageBlock(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
     {
+        // An icon card has no image column: the icon takes the place of the image placeholder.
+        if (IsIconCard())
+        {
+            return;
+        }
+
         if (!string.IsNullOrWhiteSpace(Url))
     {
             <a href="@Url" class="osirion-feature-card-image-link">
@@ -80,8 +86,18 @@
     private void RenderContentBlock(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
     {
         <div class="osirion-feature-card-content">
+            @if (Icon is not null)
+            {
+                <div class="osirion-feature-card-icon" aria-hidden="true">@Icon</div>
+            }
             @RenderTitle()
             @RenderDescription()
+            @if (HasItems())
+            {
+                <div class="osirion-feature-card-items">
+                    <OsirionChecklist Items="@_checklistItems" />
+                </div>
+            }
 
             @RenderChildContent()
 

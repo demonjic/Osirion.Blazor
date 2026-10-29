@@ -16,6 +16,17 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Band variants. The dark band carries data-theme="dark" (data-bs-theme under Bootstrap), so the tokens below already
+   hold the dark theme's values there, and everything inside the band follows them. */
+.osirion-section-variant-tinted {
+    background-color: var(--osirion-background-secondary, #f9fafb);
+}
+
+.osirion-section-variant-dark {
+    background-color: var(--osirion-background-primary, #111827);
+    color: var(--osirion-text-primary, #f3f4f6);
+}
+
 /* Section with background image */
 .osirion-section-with-background {
     color: white;
@@ -76,6 +87,22 @@
 
 .osirion-section-header-justify {
     text-align: justify;
+}
+
+/* Eyebrow: the short label above the title */
+.osirion-section-eyebrow {
+    margin: 0 0 var(--osirion-spacing-2, 0.5rem);
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    font-weight: var(--osirion-font-weight-semibold, 600);
+    line-height: var(--osirion-line-height-normal, 1.5);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--osirion-link-color, #2563eb);
+}
+
+/* Over a background image the text is white, and so is the eyebrow. */
+.osirion-section-with-background .osirion-section-eyebrow {
+    color: inherit;
 }
 
 /* Title styles */

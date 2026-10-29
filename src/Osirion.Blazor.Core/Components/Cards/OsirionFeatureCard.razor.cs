@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Components;
+using Osirion.Blazor.Core.Models;
+using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Components;
 
@@ -34,6 +36,22 @@ public partial class OsirionFeatureCard : OsirionComponentBase
     /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// A small decorative icon above the title, such as an <c>svg</c>, in a <c>div</c> with the class
+    /// <c>osirion-feature-card-icon</c> and <c>aria-hidden="true"</c>, so put no meaning in it that the title does not
+    /// carry. Without an <see cref="ImageUrl"/>, the icon takes the place of the image placeholder: the card has a
+    /// single column and its height follows its content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Icon { get; set; }
+
+    /// <summary>
+    /// Short phrases under the description, each behind a check mark, as an <see cref="OsirionChecklist"/> inside a
+    /// <c>div</c> with the class <c>osirion-feature-card-items</c>. Empty phrases are left out.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<string>? Items { get; set; }
 
     #endregion
 
@@ -178,6 +196,16 @@ public partial class OsirionFeatureCard : OsirionComponentBase
 
     #endregion
 
+    // The phrases of Items as checklist items, without the empty ones; built when the parameters are set.
+    private IReadOnlyList<ChecklistItem> _checklistItems = [];
+
+    /// <inheritdoc/>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _checklistItems = ChecklistPhrases.ToItems(Items);
+    }
+
     #region CSS Class Generation
 
     /// <summary>
@@ -189,7 +217,7 @@ public partial class OsirionFeatureCard : OsirionComponentBase
         var classes = new List<string>
     {
             "osirion-feature-card",
-            GetImagePositionClass(),
+            IsIconCard() ? "osirion-feature-card-with-icon" : GetImagePositionClass(),
             GetCardSizeClass(),
             GetContentAlignmentClass(),
             GetContentFontSizeClass()
@@ -406,6 +434,16 @@ public partial class OsirionFeatureCard : OsirionComponentBase
     /// </summary>
     /// <returns>True if image should be displayed.</returns>
     private bool HasImage() => !string.IsNullOrWhiteSpace(ImageUrl);
+
+    /// <summary>
+    /// Whether the card shows its icon instead of an image column: an icon is set and there is no image.
+    /// </summary>
+    private bool IsIconCard() => Icon is not null && !HasImage();
+
+    /// <summary>
+    /// Whether the card has any item phrases to show.
+    /// </summary>
+    private bool HasItems() => _checklistItems.Count > 0;
 
     /// <summary>
     /// Validates if pillow buttons should be displayed.

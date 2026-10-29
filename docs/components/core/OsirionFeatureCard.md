@@ -11,6 +11,9 @@ Key parameters
 - BorderTiming, BorderColor; ShadowTiming, ShadowColor; TransformTiming
 - ShowReadMoreLink, ReadMoreText, ReadMoreHref, ReadMoreStretched
 - ShowPillowButtons, PillowButtons
+- Icon (from 4.3): a decorative `RenderFragment` above the title, in `osirion-feature-card-icon` with `aria-hidden`;
+  without an ImageUrl it replaces the image column and the card takes `osirion-feature-card-with-icon`
+- Items (from 4.3): short phrases rendered as an `OsirionChecklist` after the description (`osirion-feature-card-items`)
 
 Notes
 - Emits osirion-feature-card plus many BEM modifiers for size/effects
