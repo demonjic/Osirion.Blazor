@@ -283,6 +283,88 @@ public class SeoMetadataRendererLanguageVersionsTests : CmsWebComponentTestBase
         cut.FindAll("link").ShouldBeEmpty();
     }
 
+    // A derived locale (Serbian Latin transliterated from Cyrillic) is a translation like any other: the derived item
+    // links its source and the other translations, and its source links it.
+    [Fact]
+    public void SeoMetadataRenderer_DerivedLocale_LinksTheDerivedItemAndItsSource()
+    {
+        Services.AddOsirionLocalization(localization =>
+        {
+            localization.DefaultCulture = "en";
+            localization.Cultures.Add(new LocalizationCulture { Name = "sr-Cyrl", Prefix = "sr" });
+            localization.Cultures.Add(new LocalizationCulture { Name = "sr-Latn", Prefix = "lat" });
+        });
+        Navigation.NavigateTo($"{Origin}/lat/blog/post");
+        var english = Article("Post", "blog/post", "en", "post");
+        var cyrillic = Article("Objava", "blog/post", "sr", "post");
+        var latin = cyrillic.DeriveForLocale("sr-Latn-Objava", "sr-Latn", "sr-Latn/blog/post.md");
+        latin.IsDerived.ShouldBeTrue();
+        _manager.GetContentByQueryAsync(Arg.Any<ContentQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new List<ContentItem> { english, cyrillic, latin });
+
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p.Add(c => c.Content, latin));
+
+        Alternates(cut).ShouldBe([
+            ("en", $"{Origin}/blog/post"),
+            ("sr-Cyrl", $"{Origin}/sr/blog/post"),
+            ("sr-Latn", $"{Origin}/lat/blog/post"),
+            ("x-default", $"{Origin}/blog/post"),
+        ]);
+        cut.Find("meta[name='language']").GetAttribute("content").ShouldBe("sr-Latn");
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_ContentItemInACultureTheSiteDoesNotHave_WritesNoLinksAndReadsNoTranslations()
+    {
+        UseLocalization();
+
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p.Add(c => c.Content, Article("Article", "blog/post", "fr", "post")));
+
+        Alternates(cut).ShouldBeEmpty();
+        _manager.ReceivedCalls().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_ProviderAnswersNull_WritesNoLinks()
+    {
+        UseLocalization();
+        _manager.GetContentByQueryAsync(Arg.Any<ContentQuery>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<ContentItem>>(null!));
+
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p.Add(c => c.Content, Article("Post", "blog/post", "en", "post")));
+
+        Alternates(cut).ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_CodePageWithGeneratedFaq_AsksTheTitleAndAnswersWithTheDescription()
+    {
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p
+            .Add(c => c.Title, "How to reach the team?")
+            .Add(c => c.Description, "Write to the team through the form.")
+            .Add(c => c.EnableGeneratedFaq, true));
+
+        cut.Find("meta[name='answers-to']").GetAttribute("content").ShouldBe("How to reach the team?");
+        cut.Find("meta[name='entity-summary']").GetAttribute("content").ShouldBe("Write to the team through the form.");
+        var faq = cut.FindAll("script[type='application/ld+json']")
+            .Select(script => JsonNode.Parse(script.TextContent)!)
+            .Single(schema => schema["@type"]!.GetValue<string>() == "FAQPage");
+        faq["mainEntity"]![0]!["acceptedAnswer"]!["text"]!.GetValue<string>().ShouldBe("Write to the team through the form.");
+    }
+
+    [Theory]
+    [InlineData(SchemaType.AboutPage, "AboutPage")]
+    [InlineData(SchemaType.Article, "WebPage")]
+    public void SeoMetadataRenderer_CodePageFallbackSchemaType_UsedOnlyWhenItIsAWebPageType(SchemaType fallback, string expected)
+    {
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p
+            .Add(c => c.Title, "About")
+            .Add(c => c.FallbackSchemaType, fallback));
+
+        JsonNode.Parse(cut.Find("script[type='application/ld+json']").TextContent)!["@type"]!.GetValue<string>().ShouldBe(expected);
+        cut.Find("meta[property='og:type']").GetAttribute("content").ShouldBe("website");
+    }
+
     private void UseLocalization() =>
         Services.AddOsirionLocalization(localization =>
         {

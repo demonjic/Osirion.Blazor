@@ -152,16 +152,72 @@ public class SitemapLanguageVersionsTests
             "</urlset>"));
     }
 
+    // A derived locale (Serbian Latin transliterated from Cyrillic) is a translation like any other: the derived item
+    // is listed at its own culture's address and shares the alternates of its source.
+    [Fact]
+    public async Task Sitemap_DerivedLocale_IsListedInItsCultureAndLinkedWithItsSource()
+    {
+        var english = Item("blog/post", "en", "post");
+        var cyrillic = Item("blog/post", "sr", "post");
+        var latin = cyrillic.DeriveForLocale("sr-Latn/blog/post", "sr-Latn", "sr-Latn/blog/post.md");
+        latin.IsDerived.ShouldBeTrue();
+        Returns(english, cyrillic, latin);
+
+        var body = await InvokeAsync(new OsirionFeedOptions { SiteUrl = "https://example.com" }, localized: true, configure: SerbianScripts);
+
+        var urls = XDocument.Parse(body).Root!.Elements(Sitemap + "url").ToList();
+        urls.Select(Location).ShouldBe([
+            "https://example.com/blog/post",
+            "https://example.com/sr/blog/post",
+            "https://example.com/lat/blog/post",
+        ]);
+        (string, string)[] versions =
+        [
+            ("en", "https://example.com/blog/post"),
+            ("sr-Cyrl", "https://example.com/sr/blog/post"),
+            ("sr-Latn", "https://example.com/lat/blog/post"),
+            ("x-default", "https://example.com/blog/post"),
+        ];
+        foreach (var url in urls)
+        {
+            Alternates(url).ShouldBe(versions);
+        }
+    }
+
+    [Fact]
+    public async Task Sitemap_Localized_ItemWithoutLocalizationIdKeepsItsLastModifiedAndHasNoAlternates()
+    {
+        var page = Item("about", "sr", "about");
+        page.SetContentId(string.Empty);
+        page.LastModified = new DateTime(2026, 10, 1, 12, 0, 0, DateTimeKind.Utc);
+        Returns(page);
+
+        var body = await InvokeAsync(new OsirionFeedOptions { SiteUrl = "https://example.com" }, localized: true);
+
+        var url = XDocument.Parse(body).Root!.Elements(Sitemap + "url").Single();
+        Location(url).ShouldBe("https://example.com/sr/about");
+        url.Element(Sitemap + "lastmod")!.Value.ShouldBe("2026-10-01T12:00:00Z");
+        Alternates(url).ShouldBeEmpty();
+    }
+
+    private static void SerbianScripts(OsirionLocalizationOptions localization)
+    {
+        localization.DefaultCulture = "en";
+        localization.Cultures.Add(new LocalizationCulture { Name = "sr-Cyrl", Prefix = "sr" });
+        localization.Cultures.Add(new LocalizationCulture { Name = "sr-Latn", Prefix = "lat" });
+    }
+
     private void Returns(params ContentItem[] items) =>
         _manager.GetContentByQueryAsync(Arg.Any<ContentQuery>(), Arg.Any<CancellationToken>()).Returns(items.ToList());
 
-    private async Task<string> InvokeAsync(OsirionFeedOptions options, bool localized, bool withFrench = false)
+    private async Task<string> InvokeAsync(
+        OsirionFeedOptions options, bool localized, bool withFrench = false, Action<OsirionLocalizationOptions>? configure = null)
     {
         var services = new ServiceCollection();
         services.AddSingleton(_manager);
         if (localized)
         {
-            services.AddOsirionLocalization(localization =>
+            services.AddOsirionLocalization(configure ?? (localization =>
             {
                 localization.DefaultCulture = "en";
                 localization.Cultures.Add(new LocalizationCulture { Name = "sr-Latn", Prefix = "sr" });
@@ -169,7 +225,7 @@ public class SitemapLanguageVersionsTests
                 {
                     localization.Cultures.Add(new LocalizationCulture { Name = "fr" });
                 }
-            });
+            }));
         }
 
         var context = new DefaultHttpContext { RequestServices = services.BuildServiceProvider() };
