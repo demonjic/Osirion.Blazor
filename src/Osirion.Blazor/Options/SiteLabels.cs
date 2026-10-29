@@ -64,4 +64,16 @@ public sealed class SiteLabels
     /// <c>Početna</c>. When empty, <c>Osirion:Seo:BreadcrumbHomeText</c> applies, then <c>Home</c>.
     /// </summary>
     public string? Home { get; set; }
+
+    /// <summary>
+    /// Gets or sets the accessible name of a menu entry's submenu toggle, with <c>{0}</c> where the entry's text goes.
+    /// Defaults to <c>Toggle {0} submenu</c>.
+    /// </summary>
+    public string ToggleSubmenu { get; set; } = Navigation.Components.MenuItem.DefaultToggleSubmenuLabel;
+
+    /// <summary>
+    /// Gets or sets the cookie consent banner's texts (<see cref="OsirionSiteOptions.ShowCookieConsent"/>). Null, the
+    /// default, keeps the banner's English texts.
+    /// </summary>
+    public SiteCookieConsentLabels? CookieConsent { get; set; }
 }

@@ -131,6 +131,7 @@ A banner with your own text and categories:
 | `ShowCustomizeButton` | `bool` | `true` | Whether the customize button is shown. |
 | `ShowCustomizationPanel` | `bool` | `true` | Whether the category checkboxes are shown once the visitor chose to customize. When it is `false`, the customize button reloads the page without any choices. |
 | `CustomizePanelTitle` | `string` | `"Cookie Preferences"` | The heading (`h4`) of the category panel. |
+| `RequiredLabel` | `string` | `"(Required)"` | The mark after the name of a required category. Defaults to `(Required)`. |
 | `PolicyLink` | `string?` | `null` | The address of your privacy or cookie policy, shown as a link after the message. Null or empty, the default, shows no link. |
 | `PolicyLinkText` | `string` | `"Learn more"` | The text of the policy link. |
 | `Icon` | `RenderFragment?` | `null` | The markup shown beside the text. Null, the default, shows no icon. |

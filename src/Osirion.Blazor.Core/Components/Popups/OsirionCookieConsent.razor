@@ -83,7 +83,7 @@
                                                 @category.Name
                                                 @if (category.IsRequired)
                                                 {
-                                                    <span class="osirion-cookie-consent-required"> (Required)</span>
+                                                    <span class="osirion-cookie-consent-required">@(" " + RequiredLabel)</span>
                                                 }
                                             </span>
                                             <p class="osirion-cookie-consent-category-description">@category.Description</p>

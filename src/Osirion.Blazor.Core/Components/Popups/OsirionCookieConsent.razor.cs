@@ -75,6 +75,12 @@ public partial class OsirionCookieConsent
     public string CustomizePanelTitle { get; set; } = "Cookie Preferences";
 
     /// <summary>
+    /// Gets or sets the mark after the name of a required category. Defaults to <c>(Required)</c>.
+    /// </summary>
+    [Parameter]
+    public string RequiredLabel { get; set; } = "(Required)";
+
+    /// <summary>
     /// Gets or sets the address of your privacy or cookie policy, shown as a link after the message. Null or empty, the
     /// default, shows no link.
     /// </summary>
@@ -246,8 +252,13 @@ public partial class OsirionCookieConsent
     }
 
     /// <summary>
-    /// Gets default cookie categories
+    /// Creates the default categories: <c>necessary</c> (required), <c>analytics</c>, <c>marketing</c> and
+    /// <c>preferences</c>, with English names and descriptions. A site that translates them starts from these, so the
+    /// IDs the consent records stay the same.
     /// </summary>
+    /// <returns>New instances, which the caller may change.</returns>
+    public static IReadOnlyList<CookieCategory> CreateDefaultCategories() => GetDefaultCategories();
+
     private static IReadOnlyList<CookieCategory> GetDefaultCategories()
     {
         return new[]

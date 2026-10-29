@@ -92,6 +92,9 @@ public partial class OsirionSiteLayout
 
     private string CallToActionClass => $"{ButtonClasses.Primary(ThemingOptions.Value.Framework)} osirion-site-call-to-action";
 
+    // Only the texts a version sets are passed, so the banner keeps its English default for every other one.
+    private Dictionary<string, object>? CookieConsentTexts => SiteCookieConsentTexts.For(Site.Labels.CookieConsent);
+
     // The banner records consent where the trackers look for it, so Osirion:Analytics:Consent:Evaluation moves both.
     private ConsentEvaluation CookieConsentEvaluation => AnalyticsConsent.Value.Evaluation;
 

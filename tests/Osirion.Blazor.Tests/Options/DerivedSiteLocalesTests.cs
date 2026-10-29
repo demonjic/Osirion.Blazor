@@ -70,10 +70,19 @@ public class DerivedSiteLocalesTests
     [Fact]
     public void ForCulture_DerivedVersion_TransliteratesEveryLabel()
     {
-        var labels = new SiteLabels();
-        foreach (var property in typeof(SiteLabels).GetProperties())
+        var cookieConsent = new SiteCookieConsentLabels
+        {
+            Categories = { ["analytics"] = new SiteCookieCategoryLabels { Name = "Аналитика", Description = "Опис" } },
+        };
+        var labels = new SiteLabels { CookieConsent = cookieConsent };
+        foreach (var property in TextProperties<SiteLabels>())
         {
             property.SetValue(labels, "Ознака " + property.Name);
+        }
+
+        foreach (var property in TextProperties<SiteCookieConsentLabels>())
+        {
+            property.SetValue(cookieConsent, "Ознака " + property.Name);
         }
 
         var services = HostServices.Create();
@@ -86,11 +95,26 @@ public class DerivedSiteLocalesTests
         var latin = services.BuildServiceProvider().GetRequiredService<IOptions<OsirionSiteOptions>>().Value
             .ForCulture(CultureInfo.GetCultureInfo("sr-Latn"));
 
-        foreach (var property in typeof(SiteLabels).GetProperties())
+        foreach (var property in TextProperties<SiteLabels>())
         {
             property.GetValue(latin.Labels).ShouldBe("Oznaka " + property.Name, property.Name);
         }
+
+        foreach (var property in TextProperties<SiteCookieConsentLabels>())
+        {
+            property.GetValue(latin.Labels.CookieConsent).ShouldBe("Oznaka " + property.Name, property.Name);
+        }
+
+        latin.Labels.CookieConsent!.Categories["analytics"].Name.ShouldBe("Analitika");
+        latin.Labels.CookieConsent.Categories["analytics"].Description.ShouldBe("Opis");
+
+        // Every label is a text or one of the groups checked above, so a new kind of label needs a decision here too.
+        typeof(SiteLabels).GetProperties().Where(property => property.PropertyType != typeof(string)).Select(property => property.Name)
+            .ShouldBe([nameof(SiteLabels.CookieConsent)]);
     }
+
+    private static IEnumerable<System.Reflection.PropertyInfo> TextProperties<T>() =>
+        typeof(T).GetProperties().Where(property => property.PropertyType == typeof(string));
 
     [Fact]
     public void ForCulture_DerivedVersion_MovesPageLinksAndKeepsOtherAddresses()
