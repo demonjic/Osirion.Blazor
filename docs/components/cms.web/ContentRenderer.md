@@ -2,6 +2,9 @@
 
 Renders content item HTML using the OsirionHtmlRenderer component. This is a low-level component that focuses purely on content rendering without additional metadata or navigation features.
 
+An item with content blocks (`blocks:` in its front matter) renders them with `OsirionContentBlocks` instead of its
+body, followed by the body only when the front matter has `body: after`. An item without blocks renders as before.
+
 ## Basic Usage
 
 ```razor

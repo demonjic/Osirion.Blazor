@@ -1,0 +1,66 @@
+/* The blocks are rendered by child components, so their styles reach them through ::deep. */
+
+::deep .osirion-content-block-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--osirion-spacing-6, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 768px) {
+    ::deep .osirion-content-block-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    ::deep .osirion-content-block-card-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    ::deep .osirion-content-block-card-grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+::deep .osirion-content-block-image {
+    margin: var(--osirion-spacing-8, 2rem) auto;
+    max-width: 72rem;
+    padding: 0 var(--osirion-spacing-4, 1rem);
+}
+
+::deep .osirion-content-block-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--osirion-radius-md, 0.5rem);
+}
+
+::deep .osirion-content-block-image figcaption {
+    margin-top: var(--osirion-spacing-2, 0.5rem);
+    color: var(--osirion-text-secondary);
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+}
+
+::deep .osirion-content-block-markdown {
+    margin: var(--osirion-spacing-8, 2rem) auto;
+    max-width: 72rem;
+    padding: 0 var(--osirion-spacing-4, 1rem);
+}
+
+::deep .osirion-content-block-problem {
+    margin: var(--osirion-spacing-4, 1rem);
+    padding: var(--osirion-spacing-4, 1rem);
+    border: 2px dashed #b42318;
+    border-radius: var(--osirion-radius-md, 0.5rem);
+    color: #b42318;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+::deep .osirion-content-block-problem-title {
+    margin: 0 0 var(--osirion-spacing-2, 0.5rem);
+    font-weight: 700;
+}

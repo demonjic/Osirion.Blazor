@@ -16,15 +16,22 @@ public class ContentBlockTextTests
     {
         var hero = new HeroBlock
         {
-            Type = "hero", Id = "top", Variant = ContentBlockVariant.Dark, Eyebrow = "e", Title = "t", Description = "d",
-            Subtitle = "s", Highlights = ["h"],
+            Type = "hero",
+            Id = "top",
+            Variant = ContentBlockVariant.Dark,
+            Eyebrow = "e",
+            Title = "t",
+            Description = "d",
+            Subtitle = "s",
+            Highlights = ["h"],
             PrimaryAction = new ContentBlockAction("go", "/go"),
             Image = new ContentBlockImage("/a.png", "alt"),
             Aside = new RecordBlock { Type = "record", Status = "st", Tone = ContentBlockTone.Danger, Rows = [new RecordBlockRow("l", "v")], Caption = "c" },
         };
         var cards = new CardsBlock
         {
-            Type = "cards", Columns = 4,
+            Type = "cards",
+            Columns = 4,
             Items = [new CardsBlockItem { Title = "t", Description = "d", Icon = "icon", Url = "/u", LinkText = "lt", Items = ["i"] }],
         };
         var component = new ComponentBlock { Type = "component", Name = "tour", Parameters = new Dictionary<string, string> { ["a"] = "b" } };

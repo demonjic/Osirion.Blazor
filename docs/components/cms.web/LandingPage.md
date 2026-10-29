@@ -8,6 +8,10 @@ is loaded from the default content provider by `ContentPath`. Without an item, t
 `HeroSubtitle`. It works for pages that are not a blog, a document or a home page; `HomePage` is the one for the site
 root.
 
+An item with content blocks (`blocks:` in its front matter, see the content blocks guide at `/docs/content-blocks`)
+renders its blocks with `OsirionContentBlocks` in place of the hero and the body section, followed by the body only with
+`body: after`. The features, testimonials, custom content, `ChildContent` and call to action still follow.
+
 Key parameters
 Used by the page:
 - ContentPath: `string?`, the path of the content item, loaded with `GetItemByPathAsync` on the default provider when
