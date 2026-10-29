@@ -85,6 +85,24 @@ public class ContentBlockTextTests
         hero.Title.ShouldBe("t");
     }
 
+    [Theory]
+    [InlineData("see `code` here", "SEE `code` HERE")]
+    [InlineData("read [the docs](/docs/путь \"title\") now", "READ [THE DOCS](/docs/путь \"title\") NOW")]
+    [InlineData("![a plant](/images/погон.png)", "![A PLANT](/images/погон.png)")]
+    [InlineData("visit https://example.com/путь today", "VISIT https://example.com/путь TODAY")]
+    [InlineData("a <span translate=\"no\">b</span> c", "A <span translate=\"no\">B</span> C")]
+    [InlineData("text\n\n```\nкод\n```\n", "TEXT\n\n```\nкод\n```\n")]
+    [InlineData("*bold* and **strong**", "*BOLD* AND **STRONG**")]
+    [InlineData("1. first\n2. second", "1. FIRST\n2. SECOND")]
+    public void Map_MarkdownValue_ChangesOnlyItsProse(string markdown, string expected)
+    {
+        var set = new ContentBlockSet([new MarkdownBlock { Type = "markdown", Markdown = markdown }], ContentBodyPlacement.Omitted);
+
+        var mapped = ContentBlockText.Map(set, Upper);
+
+        mapped.Blocks[0].ShouldBeOfType<MarkdownBlock>().Markdown.ShouldBe(expected);
+    }
+
     [Fact]
     public void ContentItem_CloneAndSetBlocks_CarryTheBlocks()
     {

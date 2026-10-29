@@ -9,8 +9,8 @@ namespace Osirion.Blazor.Cms.Domain.ContentBlocks;
 /// answers, statuses, link and action texts, image alternatives and <c>markdown</c>. Left as written: <c>type</c>,
 /// <c>id</c>, <c>variant</c>, <c>tone</c>, <c>columns</c>, <c>icon</c>, <c>name</c>, every <c>url</c> and <c>src</c>,
 /// a component's <c>parameters</c>, and the values of a <see cref="CustomContentBlock"/>, whose meaning only the
-/// site's renderer knows. Markdown is changed as a whole, so the text of a code span and a link destination written
-/// in the change's source script change too.
+/// site's renderer knows. Inside a value, only the prose changes, as <c>HtmlTransliteration</c> treats rendered HTML:
+/// code spans, code blocks, raw HTML, autolinks and link destinations stay as written.
 /// </remarks>
 public static class ContentBlockText
 {
@@ -23,7 +23,9 @@ public static class ContentBlockText
         ArgumentNullException.ThrowIfNull(blocks);
         ArgumentNullException.ThrowIfNull(map);
 
-        return blocks with { Blocks = blocks.Blocks.Select(block => MapBlock(block, map)).ToList() };
+        // Every value is plain text or Markdown, so only its prose changes: code, raw HTML and link destinations stay.
+        string Prose(string text) => MarkdownProse.Map(text, map);
+        return blocks with { Blocks = blocks.Blocks.Select(block => MapBlock(block, Prose)).ToList() };
     }
 
     private static ContentBlock MapBlock(ContentBlock block, Func<string, string> map)

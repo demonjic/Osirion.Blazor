@@ -181,5 +181,6 @@ without that parameter are an error.
 A [derived locale](/docs/localization) transliterates the text of an item's blocks with the rest of the item: titles,
 descriptions, eyebrows, subtitles, highlights, item texts, labels, values, captions, statuses, questions, answers,
 button and link texts, `alt` and `markdown`. `type`, `id`, `variant`, `tone`, `columns`, `icon`, `name`, every `url` and
-`src`, a component's `parameters` and the keys of a custom block stay as written. Links are localized when the page
+`src`, a component's `parameters` and the keys of a custom block stay as written. Inside a value only the prose changes, as in
+the item's HTML: code spans, code blocks, raw HTML, bare addresses and link destinations stay as written. Links are localized when the page
 renders, so they are not moved when the item is derived.

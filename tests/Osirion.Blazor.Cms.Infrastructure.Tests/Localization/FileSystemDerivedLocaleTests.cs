@@ -75,6 +75,8 @@ public sealed class FileSystemDerivedLocaleTests : IDisposable
               - type: component
                 name: obilazak
                 parameters: { naslov: "Ћирилица" }
+              - type: markdown
+                markdown: "Види [страну](/sr/страна) и `код`."
 
             """, "Тело.\n");
         var provider = CreateProvider();
@@ -96,6 +98,7 @@ public sealed class FileSystemDerivedLocaleTests : IDisposable
         var component = derived.Blocks[3].ShouldBeOfType<ComponentBlock>();
         component.Name.ShouldBe("obilazak");
         component.Parameters["naslov"].ShouldBe("Ћирилица");
+        derived.Blocks[4].ShouldBeOfType<MarkdownBlock>().Markdown.ShouldBe("Vidi [stranu](/sr/страна) i `код`.");
         source.Blocks[0].ShouldBeOfType<HeroBlock>().Title.ShouldBe("Свака одлука");
     }
 
