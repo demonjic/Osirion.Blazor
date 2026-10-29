@@ -7,7 +7,7 @@ namespace Osirion.Blazor.Core.Models;
 /// <param name="Label">The bold text of the row, such as <c>Working hours:</c>. Plain text; it is encoded.</param>
 /// <param name="Text">The text under the label, or the text of the link when <paramref name="Href"/> is set. Plain
 /// text; it is encoded.</param>
-/// <param name="Href">The link target. Written only when it is a path on the site or an absolute http, https or mailto
+/// <param name="Href">The link target. Written only when it is a path on the site or an absolute http, https, mailto or tel
 /// address (<c>SafeLink.IsSafe</c>); anything else leaves <paramref name="Text"/> as plain text. An absolute http or
 /// https address opens in a new tab.</param>
 /// <param name="Icon">The icon drawn beside the row.</param>

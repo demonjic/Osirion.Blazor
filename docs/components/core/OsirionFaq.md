@@ -12,7 +12,9 @@ Key parameters
 - OsirionAccordionItem: `Title` (required), `Open` (default false), `ChildContent`, `Class`; works inside an
   accordion or on its own
 - OsirionFaq: `Items` (`IReadOnlyList<FaqItem>`, a `FaqItem(Question, Answer)` record in `Osirion.Blazor.Core.Models`),
-  `IncludeStructuredData` (default true), `AllowMultiple` (default true), `Class`
+  `IncludeStructuredData` (default true), `AllowMultiple` (default true), `AnswerTemplate`
+  (`RenderFragment<FaqItem>?`: renders each answer in place of the plain-text paragraph, for formatted answers such as
+  sanitized Markdown; the structured data still uses `FaqItem.Answer`, so give it the plain text), `Class`
 
 Usage
 ```razor
@@ -28,7 +30,8 @@ Usage
 ```
 
 Notes
-- Answers are plain text; line breaks in the text are kept (`white-space: pre-line`).
+- Answers are plain text; line breaks in the text are kept (`white-space: pre-line`). `AnswerTemplate` renders them
+  another way; markup it writes is not sanitized by the component, so sanitize content before it reaches the template.
 - The JSON-LD is built with System.Text.Json and its default encoder, which escapes `<`, `>` and `&`, so a question or
   answer cannot end the script element. Text that cannot be written as JSON (half of a surrogate pair) leaves out the
   structured data and still renders the questions.

@@ -111,7 +111,7 @@ there with `rel="author"`.
 | `Bio` | `string?` | `null` | A short biography, shown as plain text. |
 | `AvatarUrl` | `string?` | `null` | The avatar image. Without one, the author's initials are shown. The image is decorative (the name is next to it), so it has an empty `alt`. |
 | `ProfileUrl` | `string?` | `null` | The author's page, for example the listing of their articles. The name links to it with `rel="author"`. |
-| `Links` | `IReadOnlyList<AuthorLink>?` | `null` | Links such as the author's site or social profiles, rendered with `rel="me"`. A link with an empty label, or with an address that is not a site path or an http, https or mailto address, is left out. |
+| `Links` | `IReadOnlyList<AuthorLink>?` | `null` | Links such as the author's site or social profiles, rendered with `rel="me"`. A link with an empty label, or with an address that is not a site path or an http, https, mailto or tel address, is left out. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |

@@ -124,6 +124,21 @@ public class FrontMatter : ValueObject
     /// <summary>Gets or sets SEO metadata.</summary>
     public SeoMetadata SeoProperties { get; set; } = new SeoMetadata();
 
+    /// <summary>
+    /// Gets or sets the page's content blocks (<c>blocks</c>) as YamlDotNet reads them: a list of maps, untyped, so a
+    /// block YamlDotNet could not map to a class still loads and <c>ContentBlockParser</c> reports what is wrong with
+    /// it, naming the file and the block. <see langword="null"/> when the front matter has no <c>blocks</c>.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public object? Blocks { get; set; }
+
+    /// <summary>
+    /// Gets or sets where the Markdown body renders on a page with <see cref="Blocks"/> (<c>body</c>): <c>after</c>
+    /// renders it after the blocks; without the key only the blocks render.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public string? Body { get; set; }
+
     // Private constructor to enforce creation through factory method
     /// <summary>Performs the FrontMatter operation.</summary>
     public FrontMatter() { }
@@ -413,6 +428,9 @@ public class FrontMatter : ValueObject
             Tags = new List<string>(Tags),
             CustomFields = new Dictionary<string, object>(CustomFields),
             SeoProperties = SeoProperties?.Clone() ?? new SeoMetadata(),
+            // The raw YAML of the blocks is only read, never changed, so the clone shares it
+            Blocks = Blocks,
+            Body = Body,
         };
     }
 

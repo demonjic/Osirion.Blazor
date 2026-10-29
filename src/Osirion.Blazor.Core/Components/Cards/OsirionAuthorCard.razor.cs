@@ -38,7 +38,7 @@ public partial class OsirionAuthorCard
 
     /// <summary>
     /// Gets or sets links such as the author's site or social profiles, rendered with <c>rel="me"</c>. A link with an
-    /// empty label, or with an address that is not a site path or an http, https or mailto address, is left out.
+    /// empty label, or with an address that is not a site path or an http, https, mailto or tel address, is left out.
     /// </summary>
     [Parameter]
     public IReadOnlyList<AuthorLink>? Links { get; set; }

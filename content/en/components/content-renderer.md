@@ -90,7 +90,7 @@ the Markdown body starts with, and the page keeps a single `h1`:
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Item` | `ContentItem?` | `null` | The item whose `Content` (HTML) is rendered, sanitized, with code highlighting. Only the empty wrapper renders when the item or its content is null. The component loads nothing, so get the item from the content provider first. |
+| `Item` | `ContentItem?` | `null` | The item to render. Its `Content` (HTML) is rendered sanitized, with code highlighting. An item with content blocks renders them with `OsirionContentBlocks` instead, followed by its `Content` only when its front matter has `body: after`. Only the empty wrapper renders when the item or its content is null. The component loads nothing, so get the item from the content provider first. |
 | `OmitLeadingTitle` | `bool` | `false` | Whether to leave out the content's opening top-level heading (a Markdown `# Title` line). Set it when the page already shows the item's title as its heading, so the title appears once and the page has a single `h1`. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Cms.Domain.ContentBlocks;
 using Osirion.Blazor.Cms.Domain.Exceptions;
 using Osirion.Blazor.Cms.Domain.Repositories;
 using Osirion.Blazor.Cms.Infrastructure.DependencyInjection;
@@ -48,6 +49,57 @@ public sealed class FileSystemDerivedLocaleTests : IDisposable
         derived.Path.ShouldBe("sr-Latn/blog/prvi.md");
         derived.Content.ShouldContain("Dobro došli na <a href=\"/sr-latn/blog\">blog</a>.");
         derived.Content.ShouldContain("<code>код");
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_CyrillicPageWithBlocks_HasALatinTwinWithTransliteratedBlocks()
+    {
+        Write("sr/pocetna.md", "Почетна", """
+            body: after
+            blocks:
+              - type: hero
+                id: vrh
+                variant: dark
+                eyebrow: "Систем"
+                title: "Свака одлука"
+                subtitle: "Приступ и присуство"
+                highlights: ["Брзо"]
+                primary_action: { text: "Закажите", url: "/kontakt" }
+                image: { src: "/slike/a.png", alt: "Погон" }
+              - type: cards
+                columns: 2
+                items:
+                  - { title: "Правила", description: "Опис", icon: shield, url: "/platforma", link_text: "Више", items: ["Ставка"] }
+              - type: faq
+                items: [{ question: "Зашто?", answer: "Зато **што**." }]
+              - type: component
+                name: obilazak
+                parameters: { naslov: "Ћирилица" }
+              - type: markdown
+                markdown: "Види [страну](/sr/страна) и `код`."
+
+            """, "Тело.\n");
+        var provider = CreateProvider();
+
+        var items = await provider.GetAllItemsAsync();
+
+        var source = items.Single(item => item.Locale == "sr");
+        var derived = items.Single(item => item.Locale == "sr-Latn");
+        derived.BodyPlacement.ShouldBe(ContentBodyPlacement.AfterBlocks);
+        var hero = derived.Blocks[0].ShouldBeOfType<HeroBlock>();
+        (hero.Id, hero.Variant, hero.Eyebrow, hero.Title, hero.Subtitle).ShouldBe(("vrh", ContentBlockVariant.Dark, "Sistem", "Svaka odluka", "Pristup i prisustvo"));
+        hero.Highlights.ShouldBe(["Brzo"]);
+        hero.PrimaryAction.ShouldBe(new ContentBlockAction("Zakažite", "/kontakt"));
+        hero.Image.ShouldBe(new ContentBlockImage("/slike/a.png", "Pogon"));
+        var card = derived.Blocks[1].ShouldBeOfType<CardsBlock>().Items.ShouldHaveSingleItem();
+        (card.Title, card.Description, card.Icon, card.Url, card.LinkText).ShouldBe(("Pravila", "Opis", "shield", "/platforma", "Više"));
+        card.Items.ShouldBe(["Stavka"]);
+        derived.Blocks[2].ShouldBeOfType<FaqBlock>().Items.ShouldBe([new FaqBlockItem("Zašto?", "Zato **što**.")]);
+        var component = derived.Blocks[3].ShouldBeOfType<ComponentBlock>();
+        component.Name.ShouldBe("obilazak");
+        component.Parameters["naslov"].ShouldBe("Ћирилица");
+        derived.Blocks[4].ShouldBeOfType<MarkdownBlock>().Markdown.ShouldBe("Vidi [stranu](/sr/страна) i `код`.");
+        source.Blocks[0].ShouldBeOfType<HeroBlock>().Title.ShouldBe("Свака одлука");
     }
 
     [Fact]

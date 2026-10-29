@@ -1,4 +1,5 @@
 using Osirion.Blazor.Cms.Domain.Common;
+using Osirion.Blazor.Cms.Domain.ContentBlocks;
 using Osirion.Blazor.Cms.Domain.Enums;
 using Osirion.Blazor.Cms.Domain.Events;
 using Osirion.Blazor.Cms.Domain.Exceptions;
@@ -117,6 +118,27 @@ public class ContentItem : DomainEntity<string>
     public IReadOnlyList<string> Categories => _categories.AsReadOnly();
     /// <summary>Gets or sets the parsed front matter.</summary>
     public FrontMatter? Metadata { get; set; }
+
+    /// <summary>
+    /// Gets the blocks the item renders as its page, read from the front matter's <c>blocks</c> by
+    /// <see cref="ContentBlockParser"/>; empty when the front matter has none, and then the item renders as before.
+    /// </summary>
+    public IReadOnlyList<ContentBlock> Blocks { get; private set; } = [];
+
+    /// <summary>Gets whether the Markdown body renders after the <see cref="Blocks"/> (<c>body: after</c>).</summary>
+    public ContentBodyPlacement BodyPlacement { get; private set; }
+
+    /// <summary>Gets whether the item has <see cref="Blocks"/>.</summary>
+    public bool HasBlocks => Blocks.Count > 0;
+
+    /// <summary>Sets the item's blocks and where its body renders.</summary>
+    /// <param name="blocks">The blocks read from the front matter.</param>
+    public void SetBlocks(ContentBlockSet blocks)
+    {
+        ArgumentNullException.ThrowIfNull(blocks);
+        Blocks = blocks.Blocks;
+        BodyPlacement = blocks.Body;
+    }
 
     // Value objects
     //public SeoMetadata Seo { get; set; } = new SeoMetadata();
@@ -528,6 +550,8 @@ public class ContentItem : DomainEntity<string>
             ProviderSpecificId = ProviderSpecificId,
             OrderIndex = OrderIndex,
             DerivedFromLocale = DerivedFromLocale,
+            Blocks = Blocks,
+            BodyPlacement = BodyPlacement,
             _directory = _directory,
             Metadata = Metadata?.Clone()
         };

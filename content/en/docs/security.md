@@ -95,7 +95,7 @@ Links and image addresses can come from content or configuration, so components 
 | --- | --- |
 | Sanitized HTML (rendered Markdown) | Relative URLs, `http`, `https`, `mailto`, `tel` |
 | `Menu`, `MenuItem`, `MenuGroup` footer, `MenuPanelLink`, `MenuImageCard`, `MenuCallToAction` and the brand link | Relative URLs, `http`, `https`, `mailto`, `tel`; any other scheme renders no `href` |
-| `OsirionAuthorCard` (avatar, profile and link addresses), `OsirionPricingTable` (button address) and `OsirionCallToActionSection` (button addresses) | A path on the site, or an absolute `http`, `https` or `mailto` address |
+| `OsirionAuthorCard` (avatar, profile and link addresses), `OsirionPricingTable` (button address) and `OsirionCallToActionSection` (button addresses) | A path on the site, a fragment of the page (`#section`), or an absolute `http`, `https`, `mailto` or `tel` address (`tel:` and fragments from the release after 4.2.0) |
 
 A path on the site starts with one `/` and is not protocol-relative (`//host`). The check behind the last row is
 `SafeLink.IsSafe` in `Osirion.Blazor.Core.Utils`; it is internal up to 4.2.0 and public in the release after 4.2.0, for

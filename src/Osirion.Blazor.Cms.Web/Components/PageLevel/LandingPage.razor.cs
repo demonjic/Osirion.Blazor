@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 #endif
 using Microsoft.Extensions.Logging;
+using Osirion.Blazor.Cms.Domain.ContentBlocks;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Services;
 using Osirion.Blazor.Cms.Web.Components;
@@ -43,10 +44,15 @@ public partial class LandingPage
 
     /// <summary>
     /// The item that makes the page: its title and description are the hero's, its featured image the hero's image
-    /// and its body follows the hero. Without an item the page shows what the other parameters give it.
+    /// and its body follows the hero. Without an item the page shows what the other parameters give it. An item with
+    /// content blocks (<c>blocks:</c>) renders its blocks in place of the hero, followed by its body only with
+    /// <c>body: after</c>; the features, testimonials, custom content and call to action still follow.
     /// </summary>
     [Parameter]
     public ContentItem? Content { get; set; }
+
+    // An item written as blocks replaces the hero and shows its body only with body: after.
+    private bool ShowsBody => Content is not { HasBlocks: true } || Content.BodyPlacement == ContentBodyPlacement.AfterBlocks;
 
     /// <summary>
     /// Whether to show a hero with the title, the description, the image and up to two buttons.

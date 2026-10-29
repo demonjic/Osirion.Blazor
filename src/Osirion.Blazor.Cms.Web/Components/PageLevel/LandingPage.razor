@@ -22,7 +22,12 @@
             <SeoMetadataRenderer Content="Content" />
         </HeadContent>
 
-        @if (ShowHero)
+        @if (Content is { HasBlocks: true } blocksItem)
+        {
+            @* A page written as blocks brings its own hero and sections *@
+            <OsirionContentBlocks Blocks="@blocksItem.Blocks" SourcePath="@blocksItem.Path" />
+        }
+        else if (ShowHero)
         {
             <HeroSection Title="@(Content?.Title ?? HeroTitle)"
                          Subtitle="@(Content?.Description ?? HeroSubtitle)"
@@ -37,7 +42,7 @@
                          MinHeight="@HeroHeight" />
         }
 
-        @if (Content is not null)
+        @if (Content is not null && ShowsBody)
         {
             <ContentSection Content="@(ShowHero ? ContentHeadings.WithoutLeadingTitle(Content.Content) : Content.Content)"
                             Width="@ContentWidth"

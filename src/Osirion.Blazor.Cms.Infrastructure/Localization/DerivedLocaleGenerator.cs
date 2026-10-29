@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Cms.Domain.ContentBlocks;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.ValueObjects;
@@ -24,6 +25,8 @@ namespace Osirion.Blazor.Cms.Infrastructure.Localization;
 /// <para>
 /// The title, description, categories, tags, series and the front matter's SEO and social titles and descriptions
 /// are transliterated, and so is the rendered content (see the rules on the content's HTML in the localization docs).
+/// The text of the item's content blocks is transliterated by <see cref="ContentBlockText.Map"/>; their links stay
+/// as written, because the blocks localize site-relative links for the page's culture when they render.
 /// The slug, the URL, the author, the dates, images and every other value stay as they are.
 /// </para>
 /// </remarks>
@@ -136,6 +139,7 @@ public sealed class DerivedLocaleGenerator
                 source.Metadata?.Permalink ?? string.Empty, path, source.Slug, enableLocalization: true, supportedLocales, contentPath));
             TransliterateText(derived, source, transliterator);
             derived.SetContent(HtmlTransliteration.Transform(source.Content, transliterator, derivedLocale.From, derivedLocale.Locale, _localePaths));
+            derived.SetBlocks(ContentBlockText.Map(new ContentBlockSet(source.Blocks, source.BodyPlacement), transliterator.Transliterate));
 
             // The setters above move the date of the last change; the content changed when its source did
             derived.LastModified = source.LastModified;

@@ -39,6 +39,11 @@ Notes
   rendered as an `OsirionChecklist` under the summary (`osirion-hero-highlights`, empty phrases left out); and
   `FrameImage`, which puts the side image in a browser-like frame (`osirion-hero-image-framed` and a decorative
   `osirion-hero-image-frame-bar` with `aria-hidden`). With none of them set, the markup is unchanged.
+- `Aside`, a `RenderFragment` shown beside the copy instead of the side image (`osirion-hero-aside`, and
+  `osirion-hero-with-aside` on the section): on the right from 768px, below the copy on narrower screens. When `Aside`
+  and `ImageUrl` are both set, the aside wins: the side image and `FrameImage` are not shown. A background image
+  (`UseBackgroundImage`) still shows and keeps one column, so the aside sits below the copy. Unset, the markup is
+  unchanged.
 - The buttons take the framework's large primary and secondary classes (`ButtonClasses.Primary` and
   `ButtonClasses.Secondary`, the same as `OsirionCallToActionSection`). Both carry `osirion-hero-button`, plus
   `osirion-hero-button-primary` or `osirion-hero-button-secondary`. Up to 4.2.0 the secondary button had the outlined

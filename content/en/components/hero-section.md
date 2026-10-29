@@ -130,6 +130,7 @@ hero-section-product
 | `Eyebrow` | `string?` | `null` | A short label above the title, such as `New` or the product's category, as plain text in a paragraph with the class `osirion-hero-eyebrow`. |
 | `Highlights` | `IReadOnlyList<string>?` | `null` | Short phrases shown under the summary, each behind a check mark, as an `OsirionChecklist` inside a `div` with the class `osirion-hero-highlights`. Empty phrases are left out. |
 | `FrameImage` | `bool` | `false` | Whether the side image sits in a subtle browser-like frame (a bar with three dots above it, a border and a shadow), for a product screenshot. Has no effect on a background image. |
+| `Aside` | `RenderFragment?` | `null` | Content shown beside the copy instead of the side image, such as a sample record or a short checklist, in a `div` with the class `osirion-hero-aside`: on the right on wide screens and below the copy on narrow ones. When it is set, the side image (and `FrameImage`) is not shown; a background image still is, and keeps the section in one column, so the aside sits below the copy. |
 | `ImageUrl` | `string?` | `null` | The image, shown beside the text or, with `UseBackgroundImage`, behind it. As a background it is CSS-escaped before it is written to the inline style. |
 | `ImageAlt` | `string?` | `null` | The side image's alternative text; when it is not set, `Title` is used, then `Hero image`. Pass an empty string for a decorative image. A background image has no alternative text. |
 | `UseBackgroundImage` | `bool` | `false` | Whether `ImageUrl` is the section's background image instead of a side image. |
@@ -187,6 +188,9 @@ Unmatched attributes are written to the `<section>`.
   each check mark is hidden from assistive technology. `FrameImage` adds a decorative bar with three dots above the
   side image (`aria-hidden="true"`), so the image keeps its own alternative text. With none of the three set, the
   hero renders the markup it rendered before they existed.
+- `Aside` shows content of your own beside the copy instead of the side image, such as a sample record: on the right
+  from 768px and below the copy on narrower screens. When `Aside` and `ImageUrl` are both set, the aside wins and the
+  side image and `FrameImage` are not shown; a background image still shows, and the aside sits below the copy.
 
 ## Styling
 

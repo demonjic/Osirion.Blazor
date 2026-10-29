@@ -99,7 +99,7 @@ become enums in 5.0.
 | --- | --- | --- | --- |
 | `ContentPath` | `string?` | `null` | The source path of the item to load from the default provider while `Content` is not set. When nothing is found, the page shows `NotFoundText` and signals 404. |
 | `ShowUnpublished` | `bool` | `false` | Whether to show an item that is not published (`published: false` in its front matter) when the component loads it by `ContentPath`. Off by default: a draft then renders the not-found state and signals 404, as a missing item does. Turn it on only for previews you protect yourself; lists, the sitemap and feeds leave drafts out either way. An item you pass in is shown whatever its status. |
-| `Content` | `ContentItem?` | `null` | The item that makes the page: its title and description are the hero's, its featured image the hero's image and its body follows the hero. Without an item the page shows what the other parameters give it. |
+| `Content` | `ContentItem?` | `null` | The item that makes the page: its title and description are the hero's, its featured image the hero's image and its body follows the hero. Without an item the page shows what the other parameters give it. An item with content blocks (`blocks:`) renders its blocks in place of the hero, followed by its body only with `body: after`; the features, testimonials, custom content and call to action still follow. |
 | `ShowHero` | `bool` | `true` | Whether to show a hero with the title, the description, the image and up to two buttons. |
 | `HeroTitle` | `string?` | `null` | The hero's title when there is no `Content`. The item's title wins when both are set. |
 | `HeroSubtitle` | `string?` | `null` | The hero's subtitle when there is no `Content`, or when the item has no description. |

@@ -89,7 +89,13 @@
             </div>
 
             <!-- Side Image Column (when not using background) -->
-            @if (!UseBackgroundImage && !string.IsNullOrWhiteSpace(ImageUrl))
+            @if (Aside is not null)
+            {
+                <div class="osirion-hero-aside">
+                    @Aside
+                </div>
+            }
+            else if (!UseBackgroundImage && !string.IsNullOrWhiteSpace(ImageUrl))
             {
                 <div class="@GetImageContainerClass()">
                     @if (FrameImage)

@@ -1,0 +1,12 @@
+@namespace Osirion.Blazor.Cms.Web.Components
+@inherits OsirionComponentBase
+
+@if (Blocks.Count > 0 && _context is { } context)
+{
+    <div class="@CombineCssClasses("osirion-content-blocks")" style="@Style" @attributes="Attributes">
+        @foreach (var block in Blocks)
+        {
+            @context.RenderBlock(block)
+        }
+    </div>
+}

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Osirion.Blazor.Cms.Domain.ContentBlocks;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Enums;
 using Osirion.Blazor.Cms.Domain.Exceptions;
@@ -523,6 +524,8 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
                 : await MarkdownProcessor.RenderToHtmlAsync(result.Content, sanitizeHtml: true);
 
             contentItem.Metadata = result.FrontMatter;
+            // A block that breaks the contract throws, so the item is left out like a file with broken YAML
+            contentItem.SetBlocks(ContentBlockParser.Parse(result.FrontMatter, contentItem.Path));
             // Keep the source next to the sanitized HTML so a save writes the original markdown back,
             // not a conversion of the sanitized HTML (SetContent alone resets the source to null)
             contentItem.SetContent(html, result.Content);

@@ -84,6 +84,8 @@ is the creation time of the file and every other value takes its default.
 | `series_order` | integer | none | The page's position in its series, starting at 1. |
 | `permalink` | string | none | The address the page is served at, such as `/docs/deploy`; slashes at the ends are optional, no language folder is added, and placeholders such as `:year` are not expanded. An `_index.md` uses it as its folder's address. Arrives in the release after 4.1.0; 4.1.0 reads it but does not change the page's address. |
 | `layout` | string | none | Stored on the item as `Metadata.Layout`. No library component picks a template from it; your own code can. |
+| `blocks` | list of maps | none | Renders the page as content blocks (hero, sections, steps, cards, FAQ, call to action) instead of its body. A file whose blocks break a rule does not load. See [Content blocks](/docs/content-blocks). Arrives in the release after 4.2.0. |
+| `body` | `after` | none | On a page with `blocks`, renders the Markdown body after the blocks. Without it only the blocks render. |
 | `custom_fields` | map | empty | Your own values. See [Keep your own values in custom_fields](#keep-your-own-values-in-custom_fields). |
 | `seo_properties` | map | see [seo_properties](#control-search-and-social-tags-with-seo_properties) | Search and social overrides. |
 

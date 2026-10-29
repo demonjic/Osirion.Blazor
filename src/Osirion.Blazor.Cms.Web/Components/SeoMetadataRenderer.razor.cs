@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Cms.Domain.ContentBlocks;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Repositories;
 using Osirion.Blazor.Cms.Domain.Services;
@@ -1362,11 +1363,14 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     /// <summary>
     /// Adds a schema.org FAQPage built from the generated questions. Only runs when
-    /// <see cref="EnableGeneratedFaq"/> is on, because the questions are derived from titles, not authored.
+    /// <see cref="EnableGeneratedFaq"/> is on, because the questions are derived from titles, not authored. A page
+    /// with a <c>faq</c> content block gets none: the block writes the FAQPage from its authored questions, and a page
+    /// has one FAQPage.
     /// </summary>
     private void AddGeneratedFaqSchema()
     {
-        if (!EnableAeoOptimization || !EnableGeneratedFaq || _structuredAnswers is not { Count: > 0 })
+        if (!EnableAeoOptimization || !EnableGeneratedFaq || _structuredAnswers is not { Count: > 0 }
+            || Content?.Blocks.OfType<FaqBlock>().Any() == true)
         {
             return;
         }

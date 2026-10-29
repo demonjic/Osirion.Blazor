@@ -1,10 +1,18 @@
 ﻿@inherits OsirionComponentBase
 
-<div class="@GetContentViewClass()">
-    <div class="osirion-content-body">
-        @if (Item?.Content is not null)
-        {
-            <OsirionHtmlRenderer HtmlContent="@(OmitLeadingTitle ? ContentHeadings.WithoutLeadingTitle(Item.Content) : Item.Content)" />
-        }
+@if (Item is { HasBlocks: true } blocksItem)
+{
+    <OsirionContentBlocks Blocks="@blocksItem.Blocks" SourcePath="@blocksItem.Path" />
+}
+
+@if (ShowsBody)
+{
+    <div class="@GetContentViewClass()">
+        <div class="osirion-content-body">
+            @if (Item?.Content is not null)
+            {
+                <OsirionHtmlRenderer HtmlContent="@(OmitLeadingTitle ? ContentHeadings.WithoutLeadingTitle(Item.Content) : Item.Content)" />
+            }
+        </div>
     </div>
-</div>
+}

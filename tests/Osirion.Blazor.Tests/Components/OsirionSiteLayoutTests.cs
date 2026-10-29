@@ -17,7 +17,7 @@ namespace Osirion.Blazor.Tests.Components;
 public class OsirionSiteLayoutTests : BunitContext
 {
     private const string UnsafeCallToActionHref =
-        "Osirion:Site:CallToAction:Href must be a path on the site (starting with /) or an http, https or mailto address.";
+        "Osirion:Site:CallToAction:Href must be a path on the site (starting with /), a fragment (#section) or an http, https, mailto or tel address.";
 
     private static readonly Dictionary<string, string?> Site = new()
     {

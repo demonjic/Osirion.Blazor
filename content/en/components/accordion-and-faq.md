@@ -146,6 +146,7 @@ it.
 | --- | --- | --- | --- |
 | `Items` | `IReadOnlyList<FaqItem>` | `[]` | The questions and answers, in the order they are shown. Answers are plain text: markup in an answer is shown as text, and line breaks are kept. Renders nothing when empty. |
 | `IncludeStructuredData` | `bool` | `true` | Whether FAQPage structured data (JSON-LD) is written after the questions. Turn it off when the page already describes these questions in its own structured data, and use one FAQPage per page. |
+| `AnswerTemplate` | `RenderFragment<FaqItem>?` | `null` | How each answer renders, in place of the plain-text paragraph, for answers with formatting such as rendered Markdown. The structured data still describes the answer with `FaqItem.Answer`, so give it the answer's plain text. Markup the template writes is not sanitized here; sanitize content before passing it. |
 | `AllowMultiple` | `bool` | `true` | Whether several answers can be open at once. When `false`, opening one answer closes the others, in browsers that support exclusive `details` elements. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |

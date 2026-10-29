@@ -31,7 +31,7 @@ public partial class OsirionCallToActionSection
     public string? PrimaryButtonText { get; set; }
 
     /// <summary>
-    /// Where the primary button goes: a path on the site or an http, https or mailto address. Any other address, such
+    /// Where the primary button goes: a path on the site or an http, https, mailto or tel address. Any other address, such
     /// as <c>javascript:</c>, leaves the button out.
     /// </summary>
     [Parameter]

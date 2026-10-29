@@ -321,7 +321,8 @@ when none is registered, so content is never written unsanitized.
 you render yourself:
 
 ```razor
-@* true for a path on the site or an absolute http, https or mailto address; false for javascript:, data: and //host *@
+@* true for a path on the site, a fragment (#section) or an absolute http, https, mailto or tel address;
+   false for javascript:, vbscript:, data: and //host *@
 @if (SafeLink.IsSafe(profileUrl))
 {
     <a href="@profileUrl">Profile</a>
