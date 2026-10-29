@@ -7,7 +7,7 @@ permalink: /docs/seo
 description: "What Osirion.Blazor writes for search engines (metadata, canonical URLs, structured data, sitemap, feeds, redirects) and what your site must still do."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-24
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/docs-seo.jpg'
 categories:
 - Documentation
@@ -50,7 +50,7 @@ HTML.
 | Output | Written by | Notes |
 | --- | --- | --- |
 | `<title>`, meta description, robots, canonical, Open Graph, Twitter Card, JSON-LD | [`SeoMetadataRenderer`](/components/seo-metadata-renderer) | `ArticlePage`, `DocumentPage`, `ContentList` and the other page components already render it |
-| `hreflang` links | `SeoMetadataRenderer` | Only from the `AlternateLanguageUrls` you pass; see [Localization](/docs/localization) |
+| `hreflang` links | `SeoMetadataRenderer` | From the `AlternateLanguageUrls` you pass; with [locale routing](/docs/locale-routing) (the release after 4.2.0), written for every page that passes none, and in the sitemap |
 | `/sitemap.xml`, `/feed.xml` (RSS 2.0), `/atom.xml` | `MapOsirionFeeds` | From published content; available since 4.0 |
 | 301 redirects from old addresses | `UseOsirionRedirects` | From `redirect_from` front matter; available since 4.0 |
 | `/robots.txt` | `UseOsirionRobotsGenerator`, optional | See [Serve a sitemap, feeds and robots.txt](#serve-a-sitemap-feeds-and-robots.txt); a static file works in every release |
@@ -97,6 +97,19 @@ seo_properties:
 `seo_properties.title` replaces the title in the `<title>` only. The [front matter reference](/docs/front-matter)
 lists every override. The library never cuts the `<title>`; search engines shorten a title link themselves, so keep it
 short enough to read.
+
+A page written in Razor, such as a contact page, has no front matter. From the release after 4.2.0 it passes its
+values to the same renderer, which writes the whole head (title, description, canonical, Open Graph, Twitter, a
+`WebPage` in JSON-LD and the `hreflang` links):
+
+```razor
+<HeadContent>
+    <SeoMetadataRenderer Title="Contact" Description="Write to the team." CanonicalPath="/contact" />
+</HeadContent>
+```
+
+Blazor renders only the last `HeadContent` of a page, so keep every head tag of the page in that one renderer. See
+[SeoMetadataRenderer](/components/seo-metadata-renderer#a-page-that-is-not-a-content-item).
 
 ## Declare the public address
 
@@ -156,7 +169,10 @@ What the sitemap holds: `AdditionalSitemapUrls`, then every published content it
 index), each with `lastmod` from `last_modified`, or from `date` when that is missing. An item whose
 `seo_properties.robots` contains `noindex` is left out, and so are drafts. It lists every item the provider loaded,
 including each folder's `_index.md`, whether or not your site routes that address, so set `ContentUrlFormatter` when a
-page lives elsewhere, as a home page at `/` does. The feeds carry descriptions, not article bodies. See
+page lives elsewhere, as a home page at `/` does. On a site with [locale routing](/docs/locale-routing) (the release
+after 4.2.0) each `AdditionalSitemapUrls` path is listed in every culture, each item at its address in its own culture,
+and every address carries its language versions as `xhtml:link` alternates with an `x-default`. The feeds carry
+descriptions, not article bodies. See
 [Feeds and sitemap](/components/feeds-and-sitemap) for the document formats.
 
 For `robots.txt`, put a plain file at `wwwroot/robots.txt` and point it at the sitemap:
@@ -246,7 +262,8 @@ is an RSS `channel` with your newest items. The last request should answer `301`
 - [ ] `wwwroot/robots.txt` exists and names the sitemap.
 - [ ] Pages you moved have `redirect_from`, and `UseOsirionRedirects` runs before the page endpoints.
 - [ ] Draft pages have `published: false`; pages that must stay out of search have `robots: noindex`.
-- [ ] A multilingual site passes `AlternateLanguageUrls` and uses language-aware addresses.
+- [ ] A multilingual site uses [locale routing](/docs/locale-routing), or passes `AlternateLanguageUrls` and uses
+  language-aware addresses.
 - [ ] The sitemap address is submitted in your search engine's webmaster tools: the library does not do it.
 - [ ] Each page renders its content in the server's HTML (static server-side rendering), not after a script runs.
 

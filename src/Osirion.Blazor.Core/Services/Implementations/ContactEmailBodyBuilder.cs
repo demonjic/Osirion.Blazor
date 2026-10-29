@@ -27,6 +27,7 @@ internal static class ContactEmailBodyBuilder
         body.AppendLine("<div style='border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9;'>");
         body.AppendLine(WebUtility.HtmlEncode(contactForm.Message).Replace("\n", "<br>"));
         body.AppendLine("</div>");
+        AppendAdditionalFields(body, contactForm.AdditionalFieldValues);
 
         if (contactForm.SubscribeToUpdates)
         {
@@ -37,5 +38,24 @@ internal static class ContactEmailBodyBuilder
         body.AppendLine("</body></html>");
 
         return body.ToString();
+    }
+
+    // The answers to the form's additional fields, in definition order, each labelled; unanswered fields are left out,
+    // and a form without additional fields adds nothing. Labels and answers are encoded like every other value.
+    private static void AppendAdditionalFields(StringBuilder body, IReadOnlyList<ContactFormFieldValue> answers)
+    {
+        var answered = answers.Where(answer => answer.Text.Length > 0).ToList();
+        if (answered.Count == 0)
+        {
+            return;
+        }
+
+        body.AppendLine("<h3>Additional details</h3>");
+        foreach (var answer in answered)
+        {
+            var label = WebUtility.HtmlEncode(answer.Label);
+            var text = WebUtility.HtmlEncode(answer.Text).Replace("\n", "<br>", StringComparison.Ordinal);
+            body.AppendLine($"<p><strong>{label}:</strong> {text}</p>");
+        }
     }
 }

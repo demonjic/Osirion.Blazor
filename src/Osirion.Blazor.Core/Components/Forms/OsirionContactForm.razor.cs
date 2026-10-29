@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Osirion.Blazor.Core.Models;
@@ -99,6 +100,20 @@ public partial class OsirionContactForm : OsirionComponentBase
     /// </summary>
     [Parameter]
     public bool ShowRequiredIndicators { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets fields the site adds after the message, in list order, such as a company size or a budget on a quote
+    /// form: at most <see cref="ContactFormField.MaxFields"/>, each with a unique, safe <see cref="ContactFormField.Name"/>.
+    /// They render with native <c>required</c>, <c>maxlength</c>, <c>min</c> and <c>max</c>, and the server checks the
+    /// submitted values against their definitions before anything is sent: a value that is missing, too long, out of
+    /// range, not one of the options or not an email address shows a message under its field, and the answers together
+    /// may hold at most <see cref="ContactFormField.MaxTotalLength"/> characters. Values posted under any other name are
+    /// ignored. The answers reach <see cref="OnSubmit"/> and the email, in definition order, as
+    /// <see cref="ContactFormModel.AdditionalFieldValues"/>. Null or empty, the default, renders the form as before.
+    /// </summary>
+    /// <exception cref="ArgumentException">A definition is invalid, repeats a name, or there are too many.</exception>
+    [Parameter]
+    public IReadOnlyList<ContactFormField>? AdditionalFields { get; set; }
 
     #endregion
 
@@ -237,6 +252,18 @@ public partial class OsirionContactForm : OsirionComponentBase
         {
             FormModel.AgreeToPrivacyPolicy = true;
         }
+
+        _fields = ContactFormFieldRules.Checked(AdditionalFields);
+
+        // The context EditForm would create from Model, made here so the additional fields can join its validation.
+        if (!ReferenceEquals(_editContext?.Model, FormModel))
+        {
+            _editContext = new EditContext(FormModel);
+            _fieldMessages = new ValidationMessageStore(_editContext);
+            _editContext.OnValidationRequested += (_, _) => ValidateAdditionalFields();
+        }
+
+        ReadPostedFieldValues();
     }
 
     [SupplyParameterFromQuery]
@@ -254,6 +281,21 @@ public partial class OsirionContactForm : OsirionComponentBase
 
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
+
+    // Set under static rendering only: the request whose form post holds the additional fields' values.
+    [CascadingParameter]
+    private HttpContext? CascadedHttpContext { get; set; }
+
+    private IReadOnlyList<ContactFormField> _fields = [];
+
+    // What each additional field holds, by name: read from the form post, or kept from the inputs' change events.
+    private readonly Dictionary<string, IReadOnlyList<string>> _fieldInput = new(StringComparer.Ordinal);
+
+    private EditContext? _editContext;
+
+    private ValidationMessageStore? _fieldMessages;
+
+    private bool _postedValuesRead;
 
     private ContactFormSubmissionResult? SubmissionResult =>
         SubmissionResultValue.HasValue && Enum.IsDefined(typeof(ContactFormSubmissionResult), SubmissionResultValue.Value)
@@ -285,7 +327,9 @@ public partial class OsirionContactForm : OsirionComponentBase
                     if (emailServiceFactory != null)
                     {
                         var emailService = emailServiceFactory.CreateEmailService();
-                        var result = await emailService.SendEmailAsync(FormModel);
+                        var result = await emailService.SendEmailAsync(
+                            FormModel,
+                            CascadedHttpContext?.RequestAborted ?? CancellationToken.None);
 
                         if (result.IsSuccess)
                         {
@@ -331,6 +375,138 @@ public partial class OsirionContactForm : OsirionComponentBase
     {
         var uri = NavigationManager.GetUriWithQueryParameter("SubmissionResultValue", (int)result);
         NavigationManager.NavigateTo(uri, forceLoad: true);
+    }
+
+    #endregion
+
+    #region Additional Fields
+
+    // The validation message of the answers' total length, which belongs to no single field.
+    private FieldIdentifier TotalLengthField => new(FormModel, nameof(ContactFormModel.AdditionalFieldValues));
+
+    private string? TotalLengthError => FirstMessage(TotalLengthField);
+
+    // Under static rendering a submission arrives as a new request, so the values are read from this form's post. The
+    // _handler entry names the form that was posted; a post of another form on the page leaves the fields empty.
+    private void ReadPostedFieldValues()
+    {
+        if (_postedValuesRead || _fields.Count == 0 || CascadedHttpContext?.Request is not { } request
+            || !HttpMethods.IsPost(request.Method) || !request.HasFormContentType)
+        {
+            return;
+        }
+
+        _postedValuesRead = true;
+        var form = request.Form;
+        if (form["_handler"] != Id)
+        {
+            return;
+        }
+
+        // Only the defined names are read; anything else in the post is ignored.
+        foreach (var field in _fields)
+        {
+            _fieldInput[field.Name] = [.. form[ContactFormFieldRules.InputName(field)].OfType<string>()];
+        }
+    }
+
+    private IReadOnlyList<string> SubmittedValues(ContactFormField field) =>
+        _fieldInput.TryGetValue(field.Name, out var values) ? values : [];
+
+    private void ValidateAdditionalFields()
+    {
+        _fieldMessages!.Clear();
+        FormModel.AdditionalFieldValues = [];
+        if (_fields.Count == 0)
+        {
+            return;
+        }
+
+        var answers = new List<ContactFormFieldValue>(_fields.Count);
+        var valid = true;
+        foreach (var field in _fields)
+        {
+            if (ContactFormFieldRules.Validate(field, SubmittedValues(field), out var answer) is { } error)
+            {
+                _fieldMessages.Add(FieldFor(field), error);
+                valid = false;
+            }
+
+            answers.Add(answer);
+        }
+
+        if (valid && answers.Sum(answer => answer.Values.Sum(value => value.Length)) > ContactFormField.MaxTotalLength)
+        {
+            _fieldMessages.Add(TotalLengthField,
+                $"The answers to the additional questions cannot exceed {ContactFormField.MaxTotalLength} characters together.");
+            valid = false;
+        }
+
+        if (valid)
+        {
+            FormModel.AdditionalFieldValues = answers;
+        }
+    }
+
+    // Interactive rendering only: the inputs' change events keep the values, and a changed field is checked again, as
+    // DataAnnotationsValidator checks a standard field.
+    private void SetFieldValue(ContactFormField field, object? value)
+    {
+        _fieldInput[field.Name] = value is string text ? [text] : [];
+        RevalidateField(field);
+    }
+
+    private void SetOptionChosen(ContactFormField field, string optionValue, object? value)
+    {
+        var chosen = SubmittedValues(field).Where(existing => existing != optionValue);
+        _fieldInput[field.Name] = value is true ? [.. chosen, optionValue] : [.. chosen];
+        RevalidateField(field);
+    }
+
+    private void RevalidateField(ContactFormField field)
+    {
+        var identifier = FieldFor(field);
+        _fieldMessages!.Clear(identifier);
+        if (ContactFormFieldRules.Validate(field, SubmittedValues(field), out _) is { } error)
+        {
+            _fieldMessages.Add(identifier, error);
+        }
+
+        _editContext!.NotifyValidationStateChanged();
+    }
+
+    private FieldIdentifier FieldFor(ContactFormField field) => new(FormModel, ContactFormFieldRules.InputName(field));
+
+    private string? FieldError(ContactFormField field) => FirstMessage(FieldFor(field));
+
+    private string? FirstMessage(FieldIdentifier identifier) =>
+        _editContext?.GetValidationMessages(identifier).FirstOrDefault();
+
+    private string FieldValue(ContactFormField field) => SubmittedValues(field).FirstOrDefault() ?? string.Empty;
+
+    private bool IsChosen(ContactFormField field, ContactFormFieldOption option) => SubmittedValues(field).Contains(option.Value);
+
+    private string FieldInputId(ContactFormField field) => $"contact-field-{field.Name}-{Id}";
+
+    private string FieldHelpId(ContactFormField field) => $"field-{field.Name}-help-{Id}";
+
+    private string FieldErrorId(ContactFormField field) => $"field-{field.Name}-error-{Id}";
+
+    // The hint and the message, whichever are shown, so assistive technology reads both with the field.
+    private string? FieldDescribedBy(ContactFormField field, string? error)
+    {
+        var ids = new List<string>(2);
+        if (!string.IsNullOrWhiteSpace(field.HelpText))
+        {
+            ids.Add(FieldHelpId(field));
+        }
+
+        if (error is not null)
+        {
+            ids.Add(FieldErrorId(field));
+        }
+
+        return ids.Count == 0 ? null : string.Join(' ', ids);
     }
 
     #endregion

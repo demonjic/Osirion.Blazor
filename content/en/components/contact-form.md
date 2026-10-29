@@ -7,7 +7,7 @@ permalink: /components/contact-form
 description: A contact form that validates on the server, blocks simple bots with a honeypot and sends mail through SMTP, SendGrid or Infobip, without script.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-contact-form.jpg'
 categories:
 - Components
@@ -169,6 +169,50 @@ Without the `Osirion.Blazor` meta-package, `services.AddOsirionEmailServices(con
 visitor's address is set as Reply-To, so you can answer directly. SendGrid and Infobip calls time out after 30
 seconds.
 
+## Additional fields
+
+`AdditionalFields` turns the form into a qualification or quote form without a form of your own: up to 20
+`ContactFormField` definitions, rendered in list order after the message and before the privacy checkbox. Each has a
+`Name` (a letter, then up to 49 letters, digits, underscores or hyphens, unique in the form), a `Label`, a `Type`
+(`Text`, `MultilineText`, `Number`, `Email`, `Phone`, `Select`, `Radio` or `Checkboxes`), `Required`, `MaxLength`,
+`Min` and `Max` for numbers, `Options` for the three choice types (a `ContactFormFieldOption` with a `Value` and an
+optional `Label`), and an optional `Placeholder` and `HelpText`.
+
+```razor
+<OsirionContactForm Id="quote"
+                    FormTitle="Request a quote"
+                    UseBuiltInEmailService="true"
+                    AdditionalFields="@questions" />
+
+@code {
+    private static readonly ContactFormField[] questions =
+    [
+        new() { Name = "company", Label = "Company", Required = true },
+        new() { Name = "team_size", Label = "Team size", Type = ContactFormFieldType.Select, Required = true,
+                Placeholder = "Choose one", Options = [new("1-10", "1 to 10"), new("11-50", "11 to 50"), new("51+")] },
+        new() { Name = "services", Label = "What do you need?", Type = ContactFormFieldType.Checkboxes, Required = true,
+                Options = [new("design", "Design"), new("build", "Build"), new("support", "Support")] },
+        new() { Name = "budget", Label = "Budget in euros", Type = ContactFormFieldType.Number, Min = 1000,
+                HelpText = "A rough figure is enough." }
+    ];
+}
+```
+
+The inputs carry the native `required`, `maxlength` (200 for text, 2,000 for multi-line text, 254 for email and 40 for
+phone and number unless `MaxLength` says otherwise), `min` and `max`, so the browser helps first. The server then
+checks every submitted value against its definition before anything is sent, together with the standard fields: a
+required field is answered (at least one box for `Checkboxes`), a value is within its length and on one line (except
+`MultilineText`), a number parses and lies between `Min` and `Max`, an email address is valid, a phone number holds
+only digits, spaces and `+ ( ) - . /`, and a choice is one of the option values. All answers together may hold at most
+10,000 characters. A failure shows its message under the field, linked with `aria-describedby`, and the values the
+visitor entered stay in the fields. Values posted under names you did not define are ignored.
+
+The answers reach `OnSubmit` as `ContactFormModel.AdditionalFieldValues`, one `ContactFormFieldValue` per definition
+in definition order, with the field's `Name` and `Label`, the submitted `Values` and the `Text` a person reads (the
+option labels for choices). The built-in email lists the answered ones under "Additional details", each labelled and
+HTML-encoded; they never reach a mail header. The form throws an `ArgumentException` naming the field for a definition
+it cannot render safely, such as a name with a space, a name used twice or a choice field without options.
+
 ## Parameters
 
 <!-- osirion:parameters OsirionContactForm -->
@@ -188,6 +232,7 @@ seconds.
 | `ShowResetButton` | `bool` | `false` | Whether a reset button, which clears the fields in the browser, is shown next to the submit button. |
 | `ResetButtonText` | `string` | `"Reset"` | The text of the reset button. |
 | `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field and of the privacy checkbox. |
+| `AdditionalFields` | `IReadOnlyList<ContactFormField>?` | `null` | Fields the site adds after the message, in list order, such as a company size or a budget on a quote form: at most `ContactFormField.MaxFields`, each with a unique, safe `ContactFormField.Name`. They render with native `required`, `maxlength`, `min` and `max`, and the server checks the submitted values against their definitions before anything is sent: a value that is missing, too long, out of range, not one of the options or not an email address shows a message under its field, and the answers together may hold at most `ContactFormField.MaxTotalLength` characters. Values posted under any other name are ignored. The answers reach `OnSubmit` and the email, in definition order, as `ContactFormModel.AdditionalFieldValues`. Null or empty, the default, renders the form as before. |
 | `PrivacyPolicyText` | `string?` | `"I agree to the <a href="/privacy-policy" target="_blank">privacy policy</a>"` | The label of the privacy checkbox, rendered as raw HTML, so pass only text you wrote. The default text links to `/privacy-policy`. The checkbox is left out when the value is null or empty, and the form then submits without it: `ContactFormModel.AgreeToPrivacyPolicy` is set to true so the model validates, which means it records no consent and must not be stored as consent. |
 | `ShowSubscribeOption` | `bool` | `true` | Whether the newsletter checkbox is shown. Its value reaches your code as `ContactFormModel.SubscribeToUpdates`. |
 | `SubscribeText` | `string` | `"I would like to receive updates and newsletters"` | The label of the newsletter checkbox. |
@@ -210,7 +255,8 @@ seconds.
 <!-- /osirion:parameters -->
 
 `ContactFormModel`, which `OnSubmit` receives, has `Name`, `Email`, `Subject`, `Message`, `AgreeToPrivacyPolicy`,
-`SubscribeToUpdates` and the honeypot field `Website`.
+`SubscribeToUpdates`, the honeypot field `Website`, and `AdditionalFieldValues`, the answers to
+[additional fields](#additional-fields).
 
 ## Behavior
 
@@ -228,7 +274,9 @@ seconds.
 - **Both delivery paths.** With `UseBuiltInEmailService="true"`, `OnSubmit` is called only after the email was sent,
   so you can also log or store the message.
 - **Accessibility.** Every field has a `label`, and each input points to its validation message with
-  `aria-describedby`. Status icons are hidden from assistive technology; the message text carries the meaning.
+  `aria-describedby`. Status icons are hidden from assistive technology; the message text carries the meaning. An
+  additional field with radio buttons or checkboxes is a `fieldset` named by its `legend`; an additional field points
+  to its `HelpText` and, when invalid, to its message, and carries `aria-invalid="true"`.
 
 > [!WARNING]
 > `PrivacyPolicyText` is rendered as raw HTML. Use only text you wrote; never pass visitor or CMS input.

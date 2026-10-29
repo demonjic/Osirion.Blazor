@@ -4,7 +4,7 @@ title: Feeds and Sitemap
 description: "Serve /sitemap.xml, an RSS feed at /feed.xml and an Atom feed at /atom.xml from your published content with MapOsirionFeeds and OsirionFeedOptions."
 author: Dejan Demonjić
 date: 2026-10-11
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-feeds-and-sitemap.jpg'
 categories:
 - Components
@@ -106,6 +106,17 @@ the application at startup instead of producing broken feeds.
   time, then the item's creation date: its `date` front matter, or for a file the file's creation time. Set
   `last_modified` when dates must survive a fresh checkout or a new deployment. Items whose `seo_properties.robots` contains `noindex` are left out, and duplicate URLs are written
   once. The sitemap covers all content; `FeedDirectory` and `FeedLocale` do not apply to it.
+- **Language versions.** On a site with [locale routing](/docs/locale-routing) (`IOsirionLocalePaths` registered),
+  the sitemap follows Google's format for localized versions: `urlset` declares
+  `xmlns:xhtml="http://www.w3.org/1999/xhtml"`, and a `url` with other language versions lists every version,
+  itself included, as `<xhtml:link rel="alternate" hreflang="sr-Latn" href="..."/>` (the culture name), then
+  `x-default` with the default culture's address. Each `AdditionalSitemapUrls` path is listed once per configured
+  culture, at the address `IOsirionLocalePaths.Localize` gives it (`/contact` and `/sr/contact`); an absolute URL
+  there is listed once, without alternates. Each content item is listed at its address in its own culture (the `sr`
+  item at `/sr/blog/post`), and the items with the same `ContentId` (the localization id) in configured cultures are
+  each other's alternates; a culture without a translation, and a translation whose `robots` holds `noindex`, is not
+  linked, and a single version gets no alternates. An item whose locale is not a configured culture keeps its address
+  and gets no alternates. Without locale routing the sitemap is unchanged.
 - **RSS.** Each item has its title, link, a permalink `guid`, `pubDate` from the creation date (`date`) and the
   `description` front matter. The channel carries an `atom:link rel="self"` pointing to `/feed.xml`.
 - **Atom.** Each entry has an id (its URL), title, link, `published` (the creation date), `updated` (the last-modified

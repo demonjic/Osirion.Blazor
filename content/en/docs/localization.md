@@ -325,6 +325,12 @@ Google's rules for these tags: each address must be fully qualified (`https://..
 list itself and all the others, or the tags are ignored. The page above builds its list from the translations, which
 include the page itself, and adds an `x-default` entry for the default language.
 
+On a site with [locale routing](/docs/locale-routing), the release after 4.2.0 writes these links for you: leave
+`AlternateLanguageUrls` unset and the renderer links the item's published translations in the configured cultures, at
+`/{url}` with each culture's prefix, then `x-default`. Pages that are not content items get their address in every
+culture. A list you pass, even an empty one, still wins. The
+[SeoMetadataRenderer reference](/components/seo-metadata-renderer) has the details.
+
 ## Put every language in the sitemap and feeds
 
 The sitemap writes each address once, so translations that share an address appear only once. Build language-aware
@@ -340,8 +346,10 @@ app.MapOsirionFeeds(feeds =>
 });
 ```
 
-The sitemap carries no `hreflang` annotations; the links in the page head are what the library supports. The feed
-paths are fixed, so there is one RSS and one Atom feed: `FeedLocale` limits them to one language, and leaving it empty
+Without locale routing the sitemap carries no `hreflang` annotations. With [locale routing](/docs/locale-routing)
+(from the release after 4.2.0) it lists each item at its address in its own culture, each `AdditionalSitemapUrls` path in
+every culture, and the language versions of each address as `xhtml:link` alternates with an `x-default`, so the
+formatter above is no longer needed; see [Feeds and sitemap](/components/feeds-and-sitemap). The feed paths are fixed, so there is one RSS and one Atom feed: `FeedLocale` limits them to one language, and leaving it empty
 lists every language together.
 
 ## Check that it works
@@ -364,8 +372,8 @@ same locale show up once in the list above, the first of them, and the provider 
 
 - **`lang` is required in 4.1.0** (see [Write `lang` in every translation](#write-lang-in-every-translation)): `DefaultLocale` does not apply to a file that has front matter. The release
   after 4.1.0 reads a missing `lang` from the folder or `DefaultLocale`.
-- **Addresses carry no language.** Translations share one `Url`, so routes, sitemap and redirect addresses need the
-  formatters above.
+- **Addresses carry no language.** Translations share one `Url`, so routes and redirect addresses need the formatters
+  above, and so does the sitemap on a site without locale routing.
 - **`LocalizedContentView` links each translation to its own `Url`**, which is the same address for translations at
   the same path, so pass `TranslationUrlFormatter` to give each language its route.
   Its category and tag links start with the current locale, and its previous and next links use the source path by

@@ -27,6 +27,9 @@ Key parameters
 - `NameLabel`, `EmailLabel`, `CompanyLabel`, `MessageLabel`, `SubmitButtonText`, `SubmittingText`
 - `SuccessMessage`, `FieldsErrorMessage`, `CheckErrorMessage`, `CheckPendingMessage`, `ErrorMessage`
 - `PrivacyNote`: plain text under the form, encoded
+- `AdditionalFields`: up to 20 `ContactFormField` definitions rendered after the message, the same definitions as
+  `OsirionContactForm` takes; their inputs are named `field.{Name}` and sent under `fields` (see the wire contract).
+  An invalid definition throws an `ArgumentException`
 - `NoScriptContent`: what visitors without script see, rendered inside a `<noscript>` that carries no CSS isolation
   attribute
 
@@ -44,8 +47,14 @@ Usage
 Wire contract
 - Request: `POST` to `Endpoint`, `Content-Type: application/json`, body
   `{"name", "email", "company" (only with ShowCompanyField), "subject" (only with ShowSubjectField), "message",
-  "website", "token"}`. `website` is the
+  "fields" (only with AdditionalFields), "website", "token"}`. `website` is the
   honeypot (empty for people), `token` the Turnstile response (empty without a site key).
+- `fields` is an object keyed by each `ContactFormField.Name`: a string per field (empty when unanswered), an array of
+  the checked option values for `Checkboxes`. Example: `{"team_size": "11-50", "services": ["design"], "budget": ""}`.
+  The browser applies native constraint validation only (`required`, `maxlength`, `min`, `max`, the email type; a
+  required checkbox group is not checked), so the endpoint must validate every value again against the same
+  definitions, cap all answers at 10,000 characters and ignore names it did not define. The getosirion.com page has a
+  checking function for the Worker outline.
 - Answer: `{"ok": true}`, or `{"ok": false, "error": "fields" | "check" | "failed"}`. `fields` shows
   `FieldsErrorMessage`, `check` shows `CheckErrorMessage`; any other answer, a body that is not JSON or no answer
   shows `ErrorMessage`.
