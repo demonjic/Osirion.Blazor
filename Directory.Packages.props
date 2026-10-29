@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Test packages">
-    <PackageVersion Include="bUnit" Version="2.11.3" />
+    <PackageVersion Include="bUnit" Version="2.12.5" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(Net10MicrosoftVersion)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
