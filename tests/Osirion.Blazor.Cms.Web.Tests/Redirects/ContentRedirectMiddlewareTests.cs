@@ -31,6 +31,23 @@ public class ContentRedirectMiddlewareTests
             .Returns(new List<ContentItem> { moved, live, shadowing });
     }
 
+    // Fails before the fix: the fragment was escaped into the path (Location: /platform%23predict).
+    [Theory]
+    [InlineData("/platform#predict", "", "/platform#predict")]
+    [InlineData("/platform#predict", "?utm=mail", "/platform?utm=mail#predict")]
+    [InlineData("/platform?tab=2#predict", "?utm=mail", "/platform?tab=2#predict")]
+    [InlineData("/platform?tab=2", "", "/platform?tab=2")]
+    [InlineData("/plat form#a", "", "/plat%20form#a")]
+    public async Task FixedRedirect_TargetWithQueryOrFragment_KeepsThemAsWritten(string target, string query, string location)
+    {
+        var options = new OsirionRedirectOptions();
+        options.Redirects["/modules/vera"] = target;
+
+        var (context, _) = await InvokeAsync(options, "/modules/vera", query);
+
+        context.Response.Headers.Location.ToString().ShouldBe(location);
+    }
+
     [Fact]
     public async Task RedirectFrom_OldUrl_RedirectsPermanentlyToTheCurrentUrlKeepingTheQuery()
     {

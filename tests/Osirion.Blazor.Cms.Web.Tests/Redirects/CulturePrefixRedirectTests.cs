@@ -46,6 +46,19 @@ public class CulturePrefixRedirectTests
         context.Response.Headers.Location.ToString().ShouldBe("https://shop.example.org/");
     }
 
+    [Theory]
+    [InlineData("/sr/modules/vera", "/sr/platform#predict")]
+    [InlineData("/modules/vera", "/platform#predict")]
+    public async Task FixedRedirect_TargetWithAFragment_KeepsItUnderThePrefix(string path, string location)
+    {
+        var options = Options(applyUnderPrefixes: true);
+        options.Redirects["/modules/vera"] = "/platform#predict";
+
+        var (context, _) = await InvokeAsync(options, path);
+
+        context.Response.Headers.Location.ToString().ShouldBe(location);
+    }
+
     [Fact]
     public async Task FixedRedirect_UnderAPrefix_KeepsThePathBaseAndQuery()
     {
