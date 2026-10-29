@@ -38,7 +38,7 @@ public abstract partial class OsirionContentPageBase
     /// <summary>
     /// The SEO parameters of this page that <c>SeoMetadataRenderer</c> shares, as a splat for the renderer's markup
     /// (<c>@attributes="SeoRendererParameters"</c>): the handles, the site description, the default image and its size,
-    /// and each of the indexing and optimization switches the page was given. A parameter the page was not given is left
+    /// the canonical path, and each of the indexing and optimization switches the page was given. A parameter the page was not given is left
     /// out, so the renderer applies the site-wide configuration for it.
     /// </summary>
     protected IReadOnlyDictionary<string, object> SeoRendererParameters
@@ -51,6 +51,7 @@ public abstract partial class OsirionContentPageBase
             AddWhenSet(parameters, nameof(TwitterCreator), TwitterCreator);
             AddWhenSet(parameters, nameof(FacebookAppId), FacebookAppId);
             AddWhenSet(parameters, nameof(DefaultImageUrl), DefaultImageUrl);
+            AddWhenSet(parameters, nameof(CanonicalPath), CanonicalPath);
             parameters[nameof(DefaultImageWidth)] = DefaultImageWidth;
             parameters[nameof(DefaultImageHeight)] = DefaultImageHeight;
             AddSwitch(parameters, nameof(AllowAiDiscovery), AllowAiDiscovery);

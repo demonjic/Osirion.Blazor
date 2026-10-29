@@ -80,7 +80,7 @@ internal static class ContentSchemas
             ["url"] = context.CurrentUrl,
             ["datePublished"] = ContentUrls.FormatUtc(content.PublishDate),
             ["dateModified"] = content.LastModified is { } lastModified ? ContentUrls.FormatUtc(lastModified) : null,
-            ["author"] = Person(content.Author),
+            ["author"] = Author(content.Author, url: null),
             ["publisher"] = Organization(context.SiteName)
         };
     }
@@ -280,7 +280,7 @@ internal static class ContentSchemas
             ["name"] = content.Title,
             ["description"] = content.Description,
             ["image"] = context.NormalizeImageUrl(content.FeaturedImageUrl),
-            ["author"] = Person(content.Author),
+            ["author"] = Author(content.Author, url: null),
             ["datePublished"] = ContentUrls.FormatUtc(content.PublishDate),
             ["prepTime"] = "PT30M",
             ["cookTime"] = "PT1H",
@@ -338,7 +338,7 @@ internal static class ContentSchemas
             ["contentUrl"] = context.CurrentUrl,
             ["embedUrl"] = context.CurrentUrl,
             ["duration"] = "PT1M",
-            ["author"] = Person(content.Author),
+            ["author"] = Author(content.Author, url: null),
             ["publisher"] = new Dictionary<string, object?>
             {
                 ["@type"] = "Organization",
@@ -386,7 +386,7 @@ internal static class ContentSchemas
                 ["@type"] = "Thing",
                 ["name"] = content.Title
             },
-            ["author"] = Person(content.Author),
+            ["author"] = Author(content.Author, url: null),
             ["datePublished"] = ContentUrls.FormatUtc(content.PublishDate),
             ["reviewBody"] = content.Description,
             ["reviewRating"] = new Dictionary<string, object?>
@@ -458,10 +458,16 @@ internal static class ContentSchemas
         ["name"] = name
     };
 
-    // A url only when the site names a page for the author: Google asks for "a link to a web page that uniquely
-    // identifies the author", and an address guessed from the name answers 404.
-    internal static Dictionary<string, object?> Author(string name, string? url)
+    // No author for an item without one: a Person with an empty name is invalid structured data. A url only when the
+    // site names a page for the author: Google asks for "a link to a web page that uniquely identifies the author",
+    // and an address guessed from the name answers 404.
+    internal static Dictionary<string, object?>? Author(string? name, string? url)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return null;
+        }
+
         var author = Person(name);
         if (url is not null)
         {

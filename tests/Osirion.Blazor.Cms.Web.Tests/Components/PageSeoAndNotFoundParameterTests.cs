@@ -46,6 +46,21 @@ public class PageSeoAndNotFoundParameterTests : CmsPageComponentTestBase
         });
     }
 
+    // Fails before the fix: ArticlePage had no CanonicalPath, so a post shown under another language's prefix could not
+    // name its canonical address.
+    [Fact]
+    public void ArticlePage_CanonicalPath_NamesTheCanonicalAddress()
+    {
+        var head = Render<HeadOutlet>();
+        ReturnItem(Doc("one"));
+
+        RenderStatic<ArticlePage>(p => p
+            .Add(c => c.ItemSlug, "one")
+            .Add(c => c.CanonicalPath, "/blog/one"));
+
+        head.WaitForAssertion(() => head.Markup.ShouldContain("rel=\"canonical\" href=\"http://localhost/blog/one\""));
+    }
+
     // Fails before the fix: AllowAiTraining and the other switches were never passed on.
     [Fact]
     public void ArticlePage_AllowAiTrainingFalse_OptsOutOfTraining()

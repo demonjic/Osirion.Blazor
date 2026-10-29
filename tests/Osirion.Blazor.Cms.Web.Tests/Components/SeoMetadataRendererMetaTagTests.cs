@@ -54,8 +54,9 @@ public class SeoMetadataRendererMetaTagTests : CmsWebComponentTestBase
         Property(cut, "og:image").ShouldBe("http://localhost/images/cover.png");
         Property(cut, "og:image:secure_url").ShouldBe("http://localhost/images/cover.png");
         Property(cut, "og:image:alt").ShouldBe("Guide to testing Blazor");
-        Property(cut, "og:image:width").ShouldBe("1200");
-        Property(cut, "og:image:height").ShouldBe("630");
+        // The item's own image has no known size, so none is declared.
+        cut.FindAll("meta[property='og:image:width']").ShouldBeEmpty();
+        cut.FindAll("meta[property='og:image:height']").ShouldBeEmpty();
         Property(cut, "article:modified_time").ShouldBe("2020-02-03T04:05:06Z");
         Property(cut, "article:author").ShouldBe("Jane Doe");
         Property(cut, "article:section").ShouldBe("Guides");
@@ -200,8 +201,10 @@ public class SeoMetadataRendererMetaTagTests : CmsWebComponentTestBase
     public void SeoMetadataRenderer_SeoOptions_FillTheParametersThatAreNotSet()
     {
         Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(CreateOptions()));
+        var item = SeoTestContent.Article();
+        item.FeaturedImageUrl = null;
 
-        var cut = RenderPage(p => p.Add(c => c.Content, SeoTestContent.Article()));
+        var cut = RenderPage(p => p.Add(c => c.Content, item));
 
         Property(cut, "og:site_name").ShouldBe("Opt Site");
         Property(cut, "og:image:width").ShouldBe("800");
@@ -220,9 +223,11 @@ public class SeoMetadataRendererMetaTagTests : CmsWebComponentTestBase
     public void SeoMetadataRenderer_SeoOptions_DoNotReplaceExplicitParameters()
     {
         Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(CreateOptions()));
+        var item = SeoTestContent.Article();
+        item.FeaturedImageUrl = null;
 
         var cut = RenderPage(p => p
-            .Add(c => c.Content, SeoTestContent.Article())
+            .Add(c => c.Content, item)
             .Add(c => c.SiteNameOverride, "Mine")
             .Add(c => c.BreadcrumbHomeText, " ")
             .Add(c => c.DefaultImageWidth, 640)

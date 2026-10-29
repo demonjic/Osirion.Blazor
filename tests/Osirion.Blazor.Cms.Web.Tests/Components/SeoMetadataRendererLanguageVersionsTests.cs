@@ -242,8 +242,8 @@ public class SeoMetadataRendererLanguageVersionsTests : CmsWebComponentTestBase
         cut.Find("link[rel='canonical']").GetAttribute("href").ShouldBe(expected);
     }
 
-    // Guard test: the page parameters belong to pages that are not content items, so a content page that passes them
-    // renders exactly what it renders without them.
+    // Guard test: the code page parameters (title, description, image) belong to pages that are not content items, so
+    // a content page that passes them renders exactly what it renders without them.
     [Fact]
     public void SeoMetadataRenderer_ContentPageWithPageParameters_RendersAsWithoutThem()
     {
@@ -255,10 +255,35 @@ public class SeoMetadataRendererLanguageVersionsTests : CmsWebComponentTestBase
             .Add(c => c.Content, item)
             .Add(c => c.Title, "Other")
             .Add(c => c.Description, "Other description")
-            .Add(c => c.ImageUrl, "/other.png")
-            .Add(c => c.CanonicalPath, "/other")).Markup;
+            .Add(c => c.ImageUrl, "/other.png")).Markup;
 
         with.ShouldBe(without);
+    }
+
+    // Fails before the fix: CanonicalPath was read only on a code page, so a post shown under another language's
+    // prefix could not name its canonical address.
+    [Fact]
+    public void SeoMetadataRenderer_ContentPageCanonicalPath_NamesTheCanonicalAddress()
+    {
+        Navigation.NavigateTo($"{Origin}/sr/blog/post");
+
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p
+            .Add(c => c.Content, Article("Post", "blog/post", "en", "post"))
+            .Add(c => c.CanonicalPath, "/blog/post"));
+
+        cut.Find("link[rel='canonical']").GetAttribute("href").ShouldBe($"{Origin}/blog/post");
+        cut.Find("meta[property='og:url']").GetAttribute("content").ShouldBe($"{Origin}/blog/post");
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_FrontMatterCanonical_WinsOverCanonicalPath()
+    {
+        var item = Article("Post", "blog/post", "en", "post");
+        item.Metadata!.SeoProperties!.Canonical = "https://example.com/original";
+
+        var cut = RenderStatic<SeoMetadataRenderer>(p => p.Add(c => c.Content, item).Add(c => c.CanonicalPath, "/blog/post"));
+
+        cut.Find("link[rel='canonical']").GetAttribute("href").ShouldBe("https://example.com/original");
     }
 
     // Guard test: without locale routing a content page writes no hreflang link and never reads its translations.

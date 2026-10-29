@@ -58,4 +58,10 @@ public sealed class SiteLabels
     /// Defaults to <c>Language</c>.
     /// </summary>
     public string Language { get; set; } = "Language";
+
+    /// <summary>
+    /// Gets or sets the name of the home page as the first entry of the breadcrumbs in structured data, for example
+    /// <c>Početna</c>. When empty, <c>Osirion:Seo:BreadcrumbHomeText</c> applies, then <c>Home</c>.
+    /// </summary>
+    public string? Home { get; set; }
 }

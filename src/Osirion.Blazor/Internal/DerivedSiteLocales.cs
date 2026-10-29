@@ -194,6 +194,7 @@ internal sealed class DerivedSiteLocales : IPostConfigureOptions<OsirionSiteOpti
             Announcement = Text(labels.Announcement),
             DismissAnnouncement = Text(labels.DismissAnnouncement),
             Language = Text(labels.Language),
+            Home = OptionalText(labels.Home),
         };
     }
 }

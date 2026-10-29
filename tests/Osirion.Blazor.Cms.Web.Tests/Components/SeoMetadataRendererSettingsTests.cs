@@ -99,11 +99,11 @@ public class SeoMetadataRendererSettingsTests : CmsWebComponentTestBase
     public void SeoMetadataRenderer_ExplicitDefaultImageSize_WinsOverTheConfiguredSize()
     {
         Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(
-            new SeoMetadataOptions { DefaultImageWidth = 800, DefaultImageHeight = 400 }));
+            new SeoMetadataOptions { DefaultImageUrl = "/default.png", DefaultImageWidth = 800, DefaultImageHeight = 400 }));
 
         var cut = RenderPage(p => p
             .Add(c => c.DefaultImageWidth, 1200)
-            .Add(c => c.DefaultImageHeight, 630));
+            .Add(c => c.DefaultImageHeight, 630), ItemWithoutImage());
 
         Property(cut, "og:image:width").ShouldBe("1200");
         Property(cut, "og:image:height").ShouldBe("630");
@@ -113,21 +113,64 @@ public class SeoMetadataRendererSettingsTests : CmsWebComponentTestBase
     public void SeoMetadataRenderer_NoDefaultImageSize_UsesTheConfiguredSize()
     {
         Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(
-            new SeoMetadataOptions { DefaultImageWidth = 800, DefaultImageHeight = 400 }));
+            new SeoMetadataOptions { DefaultImageUrl = "/default.png", DefaultImageWidth = 800, DefaultImageHeight = 400 }));
 
-        var cut = RenderPage(_ => { });
+        var cut = RenderPage(_ => { }, ItemWithoutImage());
 
         Property(cut, "og:image:width").ShouldBe("800");
         Property(cut, "og:image:height").ShouldBe("400");
     }
 
+    // The default image takes the size of the options, 1200 by 630 unless the site sets another.
     [Fact]
-    public void SeoMetadataRenderer_NoOptionsAndNoDefaultImageSize_WritesTheRecommendedSize()
+    public void SeoMetadataRenderer_DefaultImageWithoutAConfiguredSize_TakesTheOptionsDefaultSize()
     {
-        var cut = RenderPage(_ => { });
+        var cut = RenderPage(p => p.Add(c => c.DefaultImageUrl, "/default.png"), ItemWithoutImage());
 
+        Property(cut, "og:image").ShouldBe("http://localhost/default.png");
         Property(cut, "og:image:width").ShouldBe("1200");
         Property(cut, "og:image:height").ShouldBe("630");
+    }
+
+    // Fails before the fix: 1200 by 630 was declared for any image, so a 800 by 400 placeholder was said to be
+    // 1200 by 630. An item's own image has no known size, so none is declared.
+    [Fact]
+    public void SeoMetadataRenderer_ItemImage_DeclaresNoSizeEvenWithAConfiguredOne()
+    {
+        Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(
+            new SeoMetadataOptions { DefaultImageUrl = "/default.png", DefaultImageWidth = 1200, DefaultImageHeight = 630 }));
+
+        var cut = RenderPage(_ => { });
+
+        Property(cut, "og:image").ShouldBe("http://localhost/images/cover.png");
+        cut.FindAll("meta[property='og:image:width']").ShouldBeEmpty();
+        cut.FindAll("meta[property='og:image:height']").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void SeoMetadataRenderer_ListWithItsOwnImage_DeclaresTheDefaultSizeAndAnItemImageNone()
+    {
+        Services.GetRequiredService<NavigationManager>().NavigateTo(SeoTestContent.PageUrl);
+
+        var withPageImage = RenderStatic<SeoMetadataRenderer>(builder => builder
+            .Add(c => c.ContentItems, [SeoTestContent.Article()])
+            .Add(c => c.DefaultImageUrl, "/list.png")
+            .Add(c => c.DefaultImageWidth, 1000)
+            .Add(c => c.DefaultImageHeight, 500));
+        var withItemImage = RenderStatic<SeoMetadataRenderer>(builder => builder
+            .Add(c => c.ContentItems, [SeoTestContent.Article()])
+            .Add(c => c.DefaultImageWidth, 1000)
+            .Add(c => c.DefaultImageHeight, 500));
+
+        Property(withPageImage, "og:image:width").ShouldBe("1000");
+        withItemImage.FindAll("meta[property='og:image:width']").ShouldBeEmpty();
+    }
+
+    private static Osirion.Blazor.Cms.Domain.Entities.ContentItem ItemWithoutImage()
+    {
+        var item = SeoTestContent.Article();
+        item.FeaturedImageUrl = null;
+        return item;
     }
 
     // Fails before the fix: the page value was combined with the option using |=, so false could not win.
