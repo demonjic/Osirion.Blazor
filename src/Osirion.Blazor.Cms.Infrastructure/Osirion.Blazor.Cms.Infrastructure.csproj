@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Cms.Infrastructure</PackageId>
-		<Version>4.2.0</Version>
+		<Version>4.3.0</Version>
 		<Description>Infrastructure layer for the Osirion.Blazor CMS ecosystem, implementing repositories, external service integrations, and infrastructure concerns.</Description>
 		<PackageTags>blazor;components;content;cms;infrastructure;github;filesystem;osirion</PackageTags>
 	</PropertyGroup>

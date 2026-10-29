@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Theming</PackageId>
-		<Version>4.2.0</Version>
+		<Version>4.3.0</Version>
 		<Description>Theming module for Osirion.Blazor - Provides theme management and CSS framework integration.</Description>
 		<PackageTags>blazor;components;theming;css;framework;bootstrap;fluentui;mudblazor;radzen;osirion</PackageTags>
 	</PropertyGroup>

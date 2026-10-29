@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Cms.Application</PackageId>
-		<Version>4.2.0</Version>
+		<Version>4.3.0</Version>
 		<Description>Application layer for the Osirion.Blazor CMS ecosystem, implementing core business logic, use cases, and application services for content management.</Description>
 		<PackageTags>blazor;components;content;cms;application;services;dtos;validators;osirion</PackageTags>
 	</PropertyGroup>
