@@ -1342,6 +1342,20 @@
       "shots": []
     },
     {
+      "file": "components/split-section.md",
+      "path": "/components/split-section",
+      "section": "Components",
+      "title": "OsirionSplitSection",
+      "card": {
+        "key": "og/components-split-section.jpg",
+        "url": "https://media.getosirion.com/og/components-split-section.jpg",
+        "heading": "OsirionSplitSection: copy beside an aside for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-split-section.jpg",
+      "shots": []
+    },
+    {
       "file": "components/static-contact-form.md",
       "path": "/components/static-contact-form",
       "section": "Components",

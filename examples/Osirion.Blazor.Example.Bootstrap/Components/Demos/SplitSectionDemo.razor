@@ -1,0 +1,30 @@
+@using Osirion.Blazor.Components
+@using Osirion.Blazor.Core.Models
+
+<OsirionSplitSection>
+    <Content>
+        <p>Each request is checked against your rules, and every decision keeps the reasons behind it.</p>
+        <OsirionChecklist Items="points" />
+    </Content>
+    <Aside>
+        <OsirionRecordCard Title="Ticket 7781"
+                           Status="On hold"
+                           StatusTone="RecordStatusTone.Warning"
+                           Rows="rows"
+                           Footnote="Sample data" />
+    </Aside>
+</OsirionSplitSection>
+
+@code {
+    private static readonly ChecklistItem[] points =
+    [
+        new("Rules you can read"),
+        new("A reason for every decision"),
+    ];
+
+    private static readonly RecordCardRow[] rows =
+    [
+        new("Requested by", "Support team"),
+        new("Waiting for", "A second review"),
+    ];
+}

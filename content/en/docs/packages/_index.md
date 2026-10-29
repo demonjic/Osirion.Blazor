@@ -77,7 +77,8 @@ Package `Osirion.Blazor.Core`, namespace `Osirion.Blazor.Components`. Building b
   `OsirionBackgroundPattern`.
 - [Sections](/components/sections): `HeroSection`, `OsirionBaseSection`, `OsirionContactInfoSection`,
   `OsirionResponsiveShowcaseSection`, `OsirionContextCardGrid`, `OsirionMetricGrid`. From 4.0:
-  `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`.
+  `OsirionPricingTable`, `OsirionFeatureComparison`, `OsirionSteps`. From 4.3: `OsirionCallToActionSection`,
+  `OsirionSplitSection`.
 - [Cards](/components/cards): `OsirionFeatureCard`, `OsirionTestimonialCard`, `OsirionSubscriptionCard`,
   `OsirionMetricCard`. From 4.0: `OsirionAuthorCard`. From 4.3: `OsirionCardGrid`, `OsirionRecordCard`.
 - [Carousels](/components/sections): `InfiniteLogoCarousel`, `OsirionTestimonialCarousel`.

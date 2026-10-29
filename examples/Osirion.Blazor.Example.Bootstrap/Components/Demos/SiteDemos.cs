@@ -42,6 +42,7 @@ internal static class SiteDemos
         Add<PricingTableDemo>(demos, "pricing-table", "A pricing table and feature comparison");
         Add<StepsDemo>(demos, "steps", "Numbered steps");
         Add<CallToActionSectionDemo>(demos, "call-to-action-section", "A closing call to action");
+        Add<SplitSectionDemo>(demos, "split-section", "Copy beside a sample record");
         Add<MetricGridDemo>(demos, "metric-grid", "A metric grid");
         Add<ContextCardGridDemo>(demos, "context-card-grid", "A context card grid");
         Add<InfiniteLogoCarouselDemo>(demos, "infinite-logo-carousel", "A logo carousel");

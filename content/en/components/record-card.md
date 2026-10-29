@@ -132,4 +132,5 @@ Classes: `osirion-record-card`, `osirion-record-card-header`, `osirion-record-ca
 
 ## Related
 
+- [Split section](/components/split-section), to place a record beside the text that explains it
 - [Cards](/components/cards)

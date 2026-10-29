@@ -1,0 +1,20 @@
+@namespace Osirion.Blazor.Components
+@inherits OsirionComponentBase
+
+@* The copy always comes first in the markup, so reading and keyboard order run copy then aside on every screen; only
+   the visual column of the aside changes with AsidePosition. *@
+<div class="@GetSplitClass()" style="@Style" @attributes="Attributes">
+    @if (Content is not null)
+    {
+        <div class="osirion-split-section-content">
+            @Content
+        </div>
+    }
+
+    @if (Aside is not null)
+    {
+        <div class="osirion-split-section-aside">
+            @Aside
+        </div>
+    }
+</div>
