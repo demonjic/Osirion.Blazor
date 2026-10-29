@@ -20,4 +20,12 @@ public sealed class LocalizationCulture
     /// capital letter, for example <c>Français</c> for <c>fr</c>.
     /// </summary>
     public string? DisplayName { get; set; }
+
+    /// <summary>
+    /// Gets or sets other first path segments that reach the culture, for example <c>sr-Latn-RS</c> or <c>sr_latn</c>
+    /// for addresses a site used before. A GET or HEAD request under an alias is redirected (301) to the same address
+    /// under <see cref="Prefix"/>. Matched ignoring letter case; letters, digits, hyphens and underscores. Empty by
+    /// default.
+    /// </summary>
+    public List<string> Aliases { get; set; } = [];
 }
