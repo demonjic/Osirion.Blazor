@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Interfaces;
 using Osirion.Blazor.Cms.Domain.Interfaces.Directory;
+using Osirion.Blazor.Cms.Infrastructure.Markdown;
 using System.Globalization;
 using System.Text;
 
@@ -39,6 +40,10 @@ public class DirectoryMetadataProcessor : IDirectoryMetadataProcessor
         try
         {
             var frontmatter = _markdownProcessor.ExtractFrontMatterAndContent(metadataContent).FrontMatter;
+            if (frontmatter is not null)
+            {
+                FrontMatterKeyAliases.Apply(frontmatter, directory.Path, _logger);
+            }
 
             directory.SetMetadata(frontmatter);
             // Front matter without a title parses to an empty one, which SetName rejects and which would skip every key below

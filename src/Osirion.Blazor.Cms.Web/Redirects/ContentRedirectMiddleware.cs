@@ -69,7 +69,9 @@ internal sealed partial class ContentRedirectMiddleware
         return true;
     }
 
-    // A site path keeps the app's path base and the request's query string; an absolute URL is used as given.
+    // A site path keeps the app's path base and, unless it has its own, the request's query string; an absolute URL is
+    // used as given. Only the path is escaped: the target's query and #fragment are written as they are, after it, so
+    // /platform#predict is not sent as /platform%23predict.
     private static string BuildLocation(HttpRequest request, string target)
     {
         if (!target.StartsWith('/'))
@@ -77,10 +79,14 @@ internal sealed partial class ContentRedirectMiddleware
             return target;
         }
 
-        var location = request.PathBase.Add(new PathString(target)).ToUriComponent();
-        return request.QueryString.HasValue && !target.Contains('?', StringComparison.Ordinal)
-            ? location + request.QueryString.ToUriComponent()
-            : location;
+        var fragmentStart = target.IndexOf('#', StringComparison.Ordinal);
+        var fragment = fragmentStart >= 0 ? target[fragmentStart..] : string.Empty;
+        var pathAndQuery = fragmentStart >= 0 ? target[..fragmentStart] : target;
+        var queryStart = pathAndQuery.IndexOf('?', StringComparison.Ordinal);
+        var path = queryStart >= 0 ? pathAndQuery[..queryStart] : pathAndQuery;
+        var query = queryStart >= 0 ? pathAndQuery[queryStart..] : request.QueryString.ToUriComponent();
+
+        return request.PathBase.Add(new PathString(path)).ToUriComponent() + query + fragment;
     }
 
     private async Task<RedirectMap> GetMapAsync(HttpContext context)

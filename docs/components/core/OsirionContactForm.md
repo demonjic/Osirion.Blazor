@@ -5,14 +5,28 @@ Accessible contact form with optional contact info panel, privacy and subscripti
 
 Key parameters
 - Id (required), FormTitle, FormDescription
+- NameLabel, EmailLabel, SubjectLabel, MessageLabel (default "Name", "Email", "Subject", "Message")
 - NamePlaceholder, EmailPlaceholder, SubjectPlaceholder, MessagePlaceholder, MessageRows
+- ValidationTexts: a `ContactFormValidationTexts` with every validation message, for another language (see below)
 - SubmitButtonText, SubmittingText, ShowResetButton, ResetButtonText
 - PrivacyPolicyText (null or empty leaves the checkbox out; the form then submits without it)
 - ShowSubscribeOption, SubscribeText
-- ShowContactInformation, ContactInfoTitle, ContactInfo
+- ShowContactInformation, ContactInfoTitle, ContactInfo, and the section's labels ContactInfoAddressLabel,
+  ContactInfoPhoneLabel, ContactInfoEmailLabel, ContactInfoWebsiteLabel (default "Address:", "Phone:", "Email:",
+  "Website:")
 - SideBySideLayout (default true), UseDarkTheme
 - UseBuiltInEmailService (requires EmailServiceFactory registration)
 - AdditionalFields: up to 20 `ContactFormField` definitions rendered after the message (see below)
+
+Texts in another language
+- Every text the form shows is a parameter: the labels, placeholders, buttons, status messages, privacy and
+  subscription texts and the contact information labels. Each defaults to the English text the form always showed.
+- The validation messages are one object, `ValidationTexts`, because they are many and share their placeholders:
+  `new ContactFormValidationTexts { NameRequired = "Ime je obavezno", FieldRequired = "{0} je obavezno." }`. A
+  property left out keeps its English message. `{0}` and `{1}` are filled as each property describes (a limit, a
+  field's label); the form checks the strings when it renders and throws an `ArgumentException` naming a property
+  that is empty or uses a placeholder it is not given. The rules themselves stay the attributes of
+  `ContactFormModel`; only their wording changes.
 
 Additional fields
 - Each `ContactFormField` has `Name` (a letter, then up to 49 letters, digits, `_` or `-`; unique), `Label`, `Type`

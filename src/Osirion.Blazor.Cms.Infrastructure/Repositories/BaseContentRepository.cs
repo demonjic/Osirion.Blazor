@@ -9,6 +9,7 @@ using Osirion.Blazor.Cms.Domain.Repositories;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.ValueObjects;
 using Osirion.Blazor.Cms.Infrastructure.Localization;
+using Osirion.Blazor.Cms.Infrastructure.Markdown;
 using Osirion.Blazor.Cms.Infrastructure.Utilities;
 using System.Globalization;
 using System.Text;
@@ -321,7 +322,9 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
         {
             await EnsureCacheIsLoaded(cancellationToken);
 
-            return ItemCache.Values.FirstOrDefault(c => c.Url == url);
+            // Addresses are stored without their slashes, so "/" finds the root page and "/platform" finds "platform"
+            var address = url.Trim().Trim('/');
+            return ItemCache.Values.FirstOrDefault(c => string.Equals(c.Url.Trim('/'), address, StringComparison.Ordinal));
         }
         catch (Exception ex)
         {
@@ -522,6 +525,11 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
             var html = contentItem.IsRawFile
                 ? MarkdownProcessor.SanitizeHtml(result.Content)
                 : await MarkdownProcessor.RenderToHtmlAsync(result.Content, sanitizeHtml: true);
+
+            if (result.FrontMatter is not null)
+            {
+                FrontMatterKeyAliases.Apply(result.FrontMatter, contentItem.Path, Logger);
+            }
 
             contentItem.Metadata = result.FrontMatter;
             // A block that breaks the contract throws, so the item is left out like a file with broken YAML

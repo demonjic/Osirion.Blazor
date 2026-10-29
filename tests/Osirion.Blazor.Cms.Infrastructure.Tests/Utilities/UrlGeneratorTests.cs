@@ -189,10 +189,19 @@ public class UrlGeneratorTests
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    [InlineData("/")]
     public void GenerateUrl_WithBlankPermalink_BuildsTheAddressFromPathAndSlug(string permalink)
     {
         UrlGenerator.GenerateUrl(permalink, "blog/post.md", "post", false, null).ShouldBe("blog/post");
+    }
+
+    // permalink: "/" was ignored, so a home page could not be content; it is the site root now.
+    [Theory]
+    [InlineData("/")]
+    [InlineData("//")]
+    [InlineData(" / ")]
+    public void GenerateUrl_RootPermalink_IsTheSiteRoot(string permalink)
+    {
+        UrlGenerator.GenerateUrl(permalink, "en/home.md", "home", true, ["en", "sr"]).ShouldBe(string.Empty);
     }
 
     [Theory]

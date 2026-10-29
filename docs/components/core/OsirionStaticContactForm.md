@@ -20,7 +20,9 @@ Key parameters
 - `ContactInfo` (a `ContactInformation`), `ShowContactInformation` (default true), `ContactInfoTitle` (default
   "Contact information"): an `OsirionContactInfoSection` beside the form (below 768px, below it); `ContactInfo` is
   null by default and then no section is rendered. `ContactInformation.AdditionalItems` adds rows of your own
-  (label, text, an optional safe link, an optional icon), such as a booking link or working hours
+  (label, text, an optional safe link, an optional icon), such as a booking link or working hours.
+  `ContactInfoAddressLabel`, `ContactInfoPhoneLabel`, `ContactInfoEmailLabel` and `ContactInfoWebsiteLabel` rename
+  the section's labels (default "Address:", "Phone:", "Email:", "Website:")
 - `SideBySideLayout` (default true): the section sits beside the form; false puts it below
 - `ShowRequiredIndicators`: a `*` after the labels of name, email and message (default true); it is `aria-hidden`,
   since the inputs carry `required`

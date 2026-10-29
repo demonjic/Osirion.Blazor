@@ -179,6 +179,10 @@ app.UseOsirionRedirects(redirects =>
 
 Set `Permanent` to `false` for a 302 while you are unsure about the move.
 
+A target on the site may carry its own query string and a fragment, such as `/platform#predict`; both are sent as
+written, after the path, and the request's query string is added only when the target has none. From the release
+after 4.3.0, which no longer sends the fragment as `%23`; `ApplyUnderCulturePrefixes` keeps it too (`/sr/platform#predict`).
+
 ## Show live demos in a page
 
 A fenced code block whose language is `demo` renders a registered Razor component in its place. It needs a

@@ -410,6 +410,10 @@ The [security guide](/docs/security#write-a-content-security-policy) covers the 
 | `SideBySideLayout` | `bool` | `true` | Whether the contact information sits beside the form (`true`, the default) or below it. It only matters when the contact information is shown. Below 768px it is below the form either way. |
 | `ShowContactInformation` | `bool` | `true` | Whether the contact information section is shown when `ContactInfo` is set. |
 | `ContactInfoTitle` | `string` | `"Contact information"` | The title of the contact information section, as on `OsirionContactForm`. |
+| `ContactInfoAddressLabel` | `string` | `"Address:"` | The label of the address in the contact information section. |
+| `ContactInfoPhoneLabel` | `string` | `"Phone:"` | The label of the phone number in the contact information section. |
+| `ContactInfoEmailLabel` | `string` | `"Email:"` | The label of the email address in the contact information section. |
+| `ContactInfoWebsiteLabel` | `string` | `"Website:"` | The label of the website in the contact information section. |
 | `ContactInfo` | `ContactInformation?` | `null` | The details shown in an `OsirionContactInfoSection` beside or below the form: address, phone, email, website, a message and extra rows (`ContactInformation.AdditionalItems`). When it is `null`, which is the default, no section is rendered. |
 | `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field: name, email and message. The marker is for the eye only; assistive technology announces the fields' `required` attribute instead. |
 | `NameLabel` | `string` | `"Name"` | The label of the name field. |
@@ -437,6 +441,12 @@ Unmatched attributes, `Class`, `Style` and the `Theme` attribute go on the outer
 
 ## Behavior
 
+- **Another language.** Every text the form shows is a parameter with its English text as the default: the labels
+  (`NameLabel` and its siblings), placeholders, the button, the status messages and, from the release after 4.3.0,
+  the contact information labels (`ContactInfoAddressLabel`, `ContactInfoPhoneLabel`, `ContactInfoEmailLabel`,
+  `ContactInfoWebsiteLabel`). Fields are checked by the browser's own validation, which speaks the visitor's
+  language, and the endpoint's answers show `FieldsErrorMessage`, `CheckErrorMessage` or `ErrorMessage`, so the form
+  has no validation texts of its own to translate.
 - **Hidden until its script runs.** The endpoint takes JSON, so without script the form could send nothing. It
   renders with the `hidden` attribute and its script reveals it; visitors without script see `NoScriptContent`, so give
   them another way to reach you, such as an email link. Where scripts run, the hidden form keeps its place, invisible,

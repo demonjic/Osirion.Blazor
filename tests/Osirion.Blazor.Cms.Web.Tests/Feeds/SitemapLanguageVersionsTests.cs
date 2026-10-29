@@ -200,6 +200,32 @@ public class SitemapLanguageVersionsTests
         Alternates(url).ShouldBeEmpty();
     }
 
+    // A content page at the root (permalink: "/") is listed once per culture, at the culture's root, even when the site
+    // also lists "/" among its additional addresses.
+    [Fact]
+    public async Task Sitemap_Localized_RootPageIsListedOncePerCulture()
+    {
+        Returns(Item(string.Empty, "en", "home"), Item(string.Empty, "sr", "home"));
+        var options = new OsirionFeedOptions { SiteUrl = "https://example.com", AdditionalSitemapUrls = ["/"] };
+
+        var body = await InvokeAsync(options, localized: true);
+
+        var urls = XDocument.Parse(body).Root!.Elements(Sitemap + "url").ToList();
+        urls.Select(Location).ShouldBe(["https://example.com/", "https://example.com/sr"]);
+        Alternates(urls[1]).ShouldContain(("en", "https://example.com/"));
+    }
+
+    [Fact]
+    public async Task Sitemap_WithoutLocalization_RootPageIsListedOnce()
+    {
+        Returns(Item(string.Empty, "en", "home"));
+        var options = new OsirionFeedOptions { SiteUrl = "https://example.com", AdditionalSitemapUrls = ["/"] };
+
+        var body = await InvokeAsync(options, localized: false);
+
+        XDocument.Parse(body).Root!.Elements(Sitemap + "url").Select(Location).ShouldBe(["https://example.com/"]);
+    }
+
     private static void SerbianScripts(OsirionLocalizationOptions localization)
     {
         localization.DefaultCulture = "en";

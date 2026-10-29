@@ -232,12 +232,21 @@ it cannot render safely, such as a name with a space, a name used twice or a cho
 | `ShowResetButton` | `bool` | `false` | Whether a reset button, which clears the fields in the browser, is shown next to the submit button. |
 | `ResetButtonText` | `string` | `"Reset"` | The text of the reset button. |
 | `ShowRequiredIndicators` | `bool` | `true` | Whether a `*` follows the label of each required field and of the privacy checkbox. |
+| `NameLabel` | `string` | `"Name"` | The label of the name field. |
+| `EmailLabel` | `string` | `"Email"` | The label of the email field. |
+| `SubjectLabel` | `string` | `"Subject"` | The label of the subject field. |
+| `MessageLabel` | `string` | `"Message"` | The label of the message field. |
+| `ValidationTexts` | `ContactFormValidationTexts?` | `null` | The validation messages, for a form in another language. Null, the default, shows the English messages of `ContactFormValidationTexts.Default`. |
 | `AdditionalFields` | `IReadOnlyList<ContactFormField>?` | `null` | Fields the site adds after the message, in list order, such as a company size or a budget on a quote form: at most `ContactFormField.MaxFields`, each with a unique, safe `ContactFormField.Name`. They render with native `required`, `maxlength`, `min` and `max`, and the server checks the submitted values against their definitions before anything is sent: a value that is missing, too long, out of range, not one of the options or not an email address shows a message under its field, and the answers together may hold at most `ContactFormField.MaxTotalLength` characters. Values posted under any other name are ignored. The answers reach `OnSubmit` and the email, in definition order, as `ContactFormModel.AdditionalFieldValues`. Null or empty, the default, renders the form as before. |
 | `PrivacyPolicyText` | `string?` | `"I agree to the <a href="/privacy-policy" target="_blank">privacy policy</a>"` | The label of the privacy checkbox, rendered as raw HTML, so pass only text you wrote. The default text links to `/privacy-policy`. The checkbox is left out when the value is null or empty, and the form then submits without it: `ContactFormModel.AgreeToPrivacyPolicy` is set to true so the model validates, which means it records no consent and must not be stored as consent. |
 | `ShowSubscribeOption` | `bool` | `true` | Whether the newsletter checkbox is shown. Its value reaches your code as `ContactFormModel.SubscribeToUpdates`. |
 | `SubscribeText` | `string` | `"I would like to receive updates and newsletters"` | The label of the newsletter checkbox. |
 | `ShowContactInformation` | `bool` | `true` | Whether the contact information section is shown when `ContactInfo` is set. |
 | `ContactInfoTitle` | `string` | `"Contact information"` | The title of the contact information section. |
+| `ContactInfoAddressLabel` | `string` | `"Address:"` | The label of the address in the contact information section. |
+| `ContactInfoPhoneLabel` | `string` | `"Phone:"` | The label of the phone number in the contact information section. |
+| `ContactInfoEmailLabel` | `string` | `"Email:"` | The label of the email address in the contact information section. |
+| `ContactInfoWebsiteLabel` | `string` | `"Website:"` | The label of the website in the contact information section. |
 | `ContactInfo` | `ContactInformation?` | `null` | The address, phone, email, website and message shown beside or below the form. When it is `null`, which is the default, no contact information section is rendered; the form never invents placeholder details. |
 | `OnSubmit` | `EventCallback<ContactFormModel>` | - | The callback that receives the validated message. It runs for a submission that is valid and whose honeypot field is empty. With `UseBuiltInEmailService` it runs after the email was sent; without it, it is the only delivery. When it throws, `ErrorMessage` is shown. Without it, and without `UseBuiltInEmailService`, nothing can deliver the message, so the form reports an error. |
 | `OnReset` | `EventCallback` | - | A callback for a form reset. Not used by the current markup. |
@@ -265,6 +274,12 @@ it cannot render safely, such as a name with a space, a name used twice or a cho
   value, and the page shows the success, error or spam message. Invalid fields show their messages in place.
 - **Validation** comes from data annotations on `ContactFormModel`: a name up to 100 characters, a valid email up to
   255, a subject up to 200, a message of 10 to 5,000 characters, and a ticked privacy checkbox.
+- **Another language.** Every text is a parameter with its English text as the default: `NameLabel`,
+  `EmailLabel`, `SubjectLabel` and `MessageLabel` for the labels, the placeholders, buttons and messages, and
+  `ContactInfoAddressLabel` and its siblings for the contact information. The validation messages are one
+  `ContactFormValidationTexts` object in `ValidationTexts`, a composite format string per rule (`{0}` is a limit or a
+  field's label); a property you leave out keeps its English message, and a string with a placeholder it is not
+  given throws an `ArgumentException` naming the property when the form renders. From the release after 4.3.0.
 - **Spam.** A hidden `Website` field acts as a honeypot. When a bot fills it, nothing is sent, `OnSubmit` is not
   called and `SpamMessage` is shown.
 - **When nothing can deliver the message.** The form reports `ErrorMessage`, never success and never the spam

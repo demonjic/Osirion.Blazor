@@ -98,13 +98,15 @@ internal static partial class ContactFormFieldRules
     /// </summary>
     /// <param name="field">The definition.</param>
     /// <param name="submitted">What the form post or the inputs held for the field; empty when nothing was sent.</param>
+    /// <param name="texts">The messages to show.</param>
     /// <param name="answer">The answer, set whatever the outcome.</param>
     /// <returns>The message to show next to the field, or null when the value is valid.</returns>
-    internal static string? Validate(ContactFormField field, IReadOnlyList<string> submitted, out ContactFormFieldValue answer)
+    internal static string? Validate(
+        ContactFormField field, IReadOnlyList<string> submitted, ContactFormValidationTexts texts, out ContactFormFieldValue answer)
     {
         if (field.Type == ContactFormFieldType.Checkboxes)
         {
-            return ValidateChoices(field, submitted, out answer);
+            return ValidateChoices(field, submitted, texts, out answer);
         }
 
         var value = submitted.Count == 0 ? string.Empty : Normalize(submitted[0]);
@@ -114,15 +116,16 @@ internal static partial class ContactFormFieldRules
 
         if (value.Length == 0)
         {
-            return field.Required ? $"{field.Label} is required." : null;
+            return field.Required ? Message(texts.FieldRequired, field) : null;
         }
 
         return IsChoice(field)
-            ? option is null ? NotAnOption(field) : null
-            : ValidateText(field, value);
+            ? option is null ? Message(texts.FieldNotAnOption, field) : null
+            : ValidateText(field, value, texts);
     }
 
-    private static string? ValidateChoices(ContactFormField field, IReadOnlyList<string> submitted, out ContactFormFieldValue answer)
+    private static string? ValidateChoices(
+        ContactFormField field, IReadOnlyList<string> submitted, ContactFormValidationTexts texts, out ContactFormFieldValue answer)
     {
         var chosen = submitted.Select(Normalize).Where(value => value.Length > 0).ToHashSet(StringComparer.Ordinal);
         var options = field.Options.Where(option => chosen.Contains(option.Value)).ToList();
@@ -134,51 +137,51 @@ internal static partial class ContactFormFieldRules
 
         if (options.Count != chosen.Count)
         {
-            return NotAnOption(field);
+            return Message(texts.FieldNotAnOption, field);
         }
 
-        return field.Required && options.Count == 0 ? $"{field.Label} is required." : null;
+        return field.Required && options.Count == 0 ? Message(texts.FieldRequired, field) : null;
     }
 
-    private static string? ValidateText(ContactFormField field, string value)
+    private static string? ValidateText(ContactFormField field, string value, ContactFormValidationTexts texts)
     {
         var maxLength = MaxLength(field);
         if (value.Length > maxLength)
         {
-            return $"{field.Label} cannot exceed {maxLength} characters.";
+            return Message(texts.FieldTooLong, field, maxLength);
         }
 
         if (HasDisallowedCharacters(field, value))
         {
             return field.Type == ContactFormFieldType.MultilineText
-                ? $"{field.Label} contains characters that are not allowed."
-                : $"{field.Label} must be a single line.";
+                ? Message(texts.FieldDisallowedCharacters, field)
+                : Message(texts.FieldSingleLine, field);
         }
 
         return field.Type switch
         {
             ContactFormFieldType.Email when !new EmailAddressAttribute().IsValid(value) =>
-                $"{field.Label} must be a valid email address.",
+                Message(texts.FieldInvalidEmail, field),
             ContactFormFieldType.Phone when !PhoneCharacters().IsMatch(value) || value.Count(char.IsAsciiDigit) < 3 =>
-                $"{field.Label} must be a valid phone number.",
-            ContactFormFieldType.Number => ValidateNumber(field, value),
+                Message(texts.FieldInvalidPhone, field),
+            ContactFormFieldType.Number => ValidateNumber(field, value, texts),
             _ => null
         };
     }
 
-    private static string? ValidateNumber(ContactFormField field, string value)
+    private static string? ValidateNumber(ContactFormField field, string value, ContactFormValidationTexts texts)
     {
         if (!decimal.TryParse(value, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
         {
-            return $"{field.Label} must be a number.";
+            return Message(texts.FieldNotANumber, field);
         }
 
         if (number < field.Min)
         {
-            return $"{field.Label} must be at least {FormatNumber(field.Min)}.";
+            return Message(texts.FieldBelowMinimum, field, FormatNumber(field.Min));
         }
 
-        return number > field.Max ? $"{field.Label} must be at most {FormatNumber(field.Max)}." : null;
+        return number > field.Max ? Message(texts.FieldAboveMaximum, field, FormatNumber(field.Max)) : null;
     }
 
     // A browser posts a line break in a textarea as CRLF but counts it as one character against maxlength, so the
@@ -191,7 +194,11 @@ internal static partial class ContactFormFieldRules
             ? value.Any(c => char.IsControl(c) && c is not '\n' and not '\t')
             : value.Any(char.IsControl);
 
-    private static string NotAnOption(ContactFormField field) => $"Choose one of the listed options for {field.Label}.";
+    // The field's label is {0}; a limit, when the message has one, is {1}.
+    private static string Message(string message, ContactFormField field, object? limit = null) =>
+        limit is null
+            ? ContactFormValidationTexts.Format(message, field.Label)
+            : ContactFormValidationTexts.Format(message, field.Label, limit);
 
     private static void CheckDefinition(ContactFormField field)
     {
