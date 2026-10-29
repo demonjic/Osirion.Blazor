@@ -45,7 +45,7 @@
                     {
                         @if (item.Items.Count > 0)
                         {
-                            <MenuItem @key="item" Text="@item.Text" Description="@item.Description" HasSubmenu>
+                            <MenuItem @key="item" Text="@item.Text" Description="@item.Description" HasSubmenu ToggleSubmenuLabel="@Site.Labels.ToggleSubmenu">
                                 @foreach (var child in item.Items)
                                 {
                                     <MenuItem @key="child" Text="@child.Text" Description="@child.Description" Href="@child.Href" Match="@GetMatch(child)" />
@@ -125,7 +125,7 @@
 
 @if (Site.ShowCookieConsent)
 {
-    <OsirionCookieConsent Evaluation="@CookieConsentEvaluation" />
+    <OsirionCookieConsent @attributes="CookieConsentTexts" Evaluation="@CookieConsentEvaluation" />
 }
 
 @if (Site.ShowScrollToTop)
