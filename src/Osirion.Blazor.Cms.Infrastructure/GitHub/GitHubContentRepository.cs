@@ -7,6 +7,7 @@ using Osirion.Blazor.Cms.Domain.Interfaces.Content;
 using Osirion.Blazor.Cms.Domain.Models.GitHub;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.Repositories;
+using Osirion.Blazor.Cms.Infrastructure.Localization;
 using Osirion.Blazor.Cms.Infrastructure.Repositories;
 using Osirion.Blazor.Cms.Infrastructure.Utilities;
 using System.IO;
@@ -62,6 +63,25 @@ public class GitHubContentRepository : BaseContentRepository
         {
             _apiClient.SetAccessToken(_options.ApiToken);
         }
+    }
+
+    /// <summary>
+    /// Initializes a repository that adds the items of the provider's
+    /// <see cref="ContentProviderOptions.DerivedLocales"/> on every load.
+    /// </summary>
+    /// <exception cref="OptionsValidationException">Thrown when a derived locale breaks a rule.</exception>
+    public GitHubContentRepository(
+        IGitHubApiClientFactory apiClientFactory,
+        IMarkdownProcessor markdownProcessor,
+        IContentQueryFilter queryFilter,
+        IOptions<GitHubOptions> options,
+        IDirectoryRepository directoryRepository,
+        ILogger<GitHubContentRepository> logger,
+        DerivedLocaleGenerator derivedLocales,
+        string? providerName = null)
+        : this(apiClientFactory, markdownProcessor, queryFilter, options, directoryRepository, logger, providerName)
+    {
+        UseDerivedLocales(derivedLocales, _options);
     }
 
     private static string GetProviderId(GitHubOptions options, string? providerName)
@@ -266,6 +286,7 @@ public class GitHubContentRepository : BaseContentRepository
         if (string.IsNullOrWhiteSpace(entity.Path))
             throw new ArgumentException("Path cannot be empty", nameof(entity));
 
+        ThrowIfDerived(entity);
         LogOperation("saving", entity.Id);
 
         try
@@ -324,6 +345,7 @@ public class GitHubContentRepository : BaseContentRepository
             if (item is null)
                 throw new ContentItemNotFoundException(id, ProviderId);
 
+            ThrowIfDerived(item);
             if (string.IsNullOrWhiteSpace(item.ProviderSpecificId))
                 throw new ContentProviderException($"Content has no SHA; cannot delete", ProviderId);
 

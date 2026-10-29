@@ -51,6 +51,7 @@ public class ContentBuilder : CmsBuilderBase, IContentBuilder
         }
 
         // Register GitHub repositories
+        Services.TryAddDerivedLocales<GitHubOptions>();
         Services.AddSingleton<GitHubContentRepository>();
         Services.AddSingleton<GitHubDirectoryRepository>();
 
@@ -90,6 +91,8 @@ public class ContentBuilder : CmsBuilderBase, IContentBuilder
             // Just use configuration from appsettings
             Services.Configure<FileSystemOptions>(FileSystemConfiguration.GetSection(Configuration));
         }
+
+        Services.TryAddDerivedLocales<FileSystemOptions>();
 
         // AddFileSystemContentProvider (reached through AddCms for the legacy section) may have registered the provider
         // already. A second registration would give the registry two providers with one id.

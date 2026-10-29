@@ -49,12 +49,33 @@ public class ContentProviderOptions
     }
 
     /// <summary>
-    /// Gets the locales the provider uses: <see cref="SupportedLocales"/>, or <c>en</c> when none was configured.
-    /// A list assigned as empty stays empty, which accepts any language code shaped folder name as a locale.
+    /// Gets the locales the provider uses: <see cref="SupportedLocales"/>, or <c>en</c> when none was configured,
+    /// followed by each <see cref="DerivedLocales"/> locale the list does not name yet, so a derived locale need not be
+    /// listed twice and a folder written for it is recognised. A list assigned as empty stays empty, which accepts any
+    /// language code shaped folder name as a locale.
     /// </summary>
     /// <returns>The locales to use.</returns>
-    public List<string> GetEffectiveSupportedLocales() =>
-        _supportedLocalesAssigned || _supportedLocales.Count > 0 ? _supportedLocales : new List<string> { "en" };
+    public List<string> GetEffectiveSupportedLocales()
+    {
+        var locales = _supportedLocalesAssigned || _supportedLocales.Count > 0 ? _supportedLocales : new List<string> { "en" };
+        var missingDerivedLocales = locales.Count == 0
+            ? []
+            : DerivedLocales
+                .Select(derived => derived?.Locale)
+                .OfType<string>()
+                .Where(locale => !string.IsNullOrWhiteSpace(locale) && !locales.Contains(locale, StringComparer.OrdinalIgnoreCase))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+        return missingDerivedLocales.Count == 0 ? locales : [.. locales, .. missingDerivedLocales];
+    }
+
+    /// <summary>
+    /// Gets or sets the locales made from another locale by transliteration when content loads, for example
+    /// <c>sr-Latn</c> from <c>sr</c>. A derived locale is added to the provider's locales; listing it in
+    /// <see cref="SupportedLocales"/> too is allowed. Empty by default.
+    /// </summary>
+    public List<DerivedLocaleOptions> DerivedLocales { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the supported file extensions

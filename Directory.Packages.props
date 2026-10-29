@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
     <Net9MicrosoftVersion>9.0.21</Net9MicrosoftVersion>
-    <Net10MicrosoftVersion>10.0.13</Net10MicrosoftVersion>
+    <Net10MicrosoftVersion>10.0.14</Net10MicrosoftVersion>
   </PropertyGroup>
 
   <ItemGroup Label="Common packages">
@@ -14,7 +14,7 @@
     <PackageVersion Include="FluentValidation" Version="12.2.0" />
     <PackageVersion Include="HtmlSanitizer" Version="9.2.1039" />
     <PackageVersion Include="Markdig" Version="1.4.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.402" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.403" />
     <PackageVersion Include="Octokit" Version="14.0.0" />
     <PackageVersion Include="Scrutor" Version="7.0.0" />
     <PackageVersion Include="System.IO.Abstractions" Version="22.3.0" />
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Test packages">
-    <PackageVersion Include="bUnit" Version="2.11.3" />
+    <PackageVersion Include="bUnit" Version="2.12.5" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(Net10MicrosoftVersion)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
