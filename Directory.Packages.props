@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
-    <Net9MicrosoftVersion>10.0.14</Net9MicrosoftVersion>
+    <Net9MicrosoftVersion>9.0.21</Net9MicrosoftVersion>
     <Net10MicrosoftVersion>10.0.14</Net10MicrosoftVersion>
   </PropertyGroup>
 
