@@ -1202,6 +1202,20 @@
       "shots": []
     },
     {
+      "file": "components/record-card.md",
+      "path": "/components/record-card",
+      "section": "Components",
+      "title": "OsirionRecordCard",
+      "card": {
+        "key": "og/components-record-card.jpg",
+        "url": "https://media.getosirion.com/og/components-record-card.jpg",
+        "heading": "OsirionRecordCard: a sample record card for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-record-card.jpg",
+      "shots": []
+    },
+    {
       "file": "components/responsive-image.md",
       "path": "/components/responsive-image",
       "section": "Components",

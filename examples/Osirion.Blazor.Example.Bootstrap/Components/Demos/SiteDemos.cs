@@ -16,6 +16,7 @@ internal static class SiteDemos
         Add<InstallTabsDemo>(demos, "install-tabs", "Install command tabs");
         Add<FeatureCardDemo>(demos, "feature-card", "A feature card");
         Add<CardGridDemo>(demos, "card-grid", "Feature cards in a card grid");
+        Add<RecordCardDemo>(demos, "record-card", "A sample record");
         Add<TestimonialCardDemo>(demos, "testimonial-card", "A testimonial card");
         Add<SubscriptionCardDemo>(demos, "subscription-card", "A subscription card");
         Add<AuthorCardDemo>(demos, "author-card", "An author card");

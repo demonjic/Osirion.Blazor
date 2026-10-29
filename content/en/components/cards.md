@@ -49,7 +49,7 @@ seo_properties:
 
 # Cards
 
-Osirion.Blazor.Core has five card components and a grid to lay them out. All of them render complete HTML under static SSR and live in the
+Osirion.Blazor.Core has six card components and a grid to lay them out. All of them render complete HTML under static SSR and live in the
 `Osirion.Blazor.Components` namespace.
 
 | Component | Use it for |
@@ -59,6 +59,7 @@ Osirion.Blazor.Core has five card components and a grid to lay them out. All of 
 | [OsirionSubscriptionCard](/components/subscription-card) | A newsletter signup form that posts without script, with validation and topic choices. |
 | [OsirionAuthorCard](/components/author-card) | An author's avatar or initials, name, role, bio and profile links. Available from 4.0. |
 | [OsirionMetricCard](/components/metric-card) | One figure with a label and description, optionally counting up when it scrolls into view. |
+| [OsirionRecordCard](/components/record-card) | A framed sample record, such as an order or a ticket, with a status, labelled rows and a caption. Available from 4.3. |
 | [OsirionCardGrid](/components/card-grid) | Cards in up to four equal columns that collapse on narrow screens. Available from 4.3. |
 
 ```razor
