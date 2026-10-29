@@ -194,6 +194,25 @@ internal sealed class DerivedSiteLocales : IPostConfigureOptions<OsirionSiteOpti
             Announcement = Text(labels.Announcement),
             DismissAnnouncement = Text(labels.DismissAnnouncement),
             Language = Text(labels.Language),
+            ToggleSubmenu = Text(labels.ToggleSubmenu),
+            CookieConsent = labels.CookieConsent is { } cookieConsent ? CookieConsent(cookieConsent) : null,
+        };
+
+        private SiteCookieConsentLabels CookieConsent(SiteCookieConsentLabels labels) => new()
+        {
+            Title = OptionalText(labels.Title),
+            Message = OptionalText(labels.Message),
+            AcceptButton = OptionalText(labels.AcceptButton),
+            DeclineButton = OptionalText(labels.DeclineButton),
+            CustomizeButton = OptionalText(labels.CustomizeButton),
+            SavePreferencesButton = OptionalText(labels.SavePreferencesButton),
+            CustomizePanelTitle = OptionalText(labels.CustomizePanelTitle),
+            PolicyLinkText = OptionalText(labels.PolicyLinkText),
+            Required = OptionalText(labels.Required),
+            Categories = labels.Categories.ToDictionary(
+                category => category.Key,
+                category => new SiteCookieCategoryLabels { Name = OptionalText(category.Value.Name), Description = OptionalText(category.Value.Description) },
+                StringComparer.OrdinalIgnoreCase),
         };
     }
 }
