@@ -110,14 +110,14 @@
         <div class="osirion-content-not-found-actions">
             @if (!string.IsNullOrWhiteSpace(PrimaryButtonText) && SafeLink.IsSafe(PrimaryButtonUrl))
             {
-                <a href="@PrimaryButtonUrl" class="@BuildButtonClass(ButtonVariant.Primary, ButtonSize.Normal)" style="text-decoration: none;">
+                <a href="@PrimaryButtonUrl" class="@BuildButtonClass(ButtonVariant.Primary, ButtonSize.Normal) osirion-content-not-found-button">
                     @PrimaryButtonText
                 </a>
             }
 
             @if (!string.IsNullOrWhiteSpace(SecondaryButtonText) && SafeLink.IsSafe(SecondaryButtonUrl))
             {
-                <a href="@SecondaryButtonUrl" class="@BuildButtonClass(ButtonVariant.OutlinedSecondary, ButtonSize.Normal)" style="text-decoration: none;">
+                <a href="@SecondaryButtonUrl" class="@BuildButtonClass(ButtonVariant.OutlinedSecondary, ButtonSize.Normal) osirion-content-not-found-button">
                     @SecondaryButtonText
                 </a>
             }

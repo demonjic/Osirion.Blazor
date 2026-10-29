@@ -36,6 +36,15 @@ public class SeoMetadataTests
         Assert.Equal(string.Empty, seo.OgType);
     }
 
+    // Fails before the fix: the schema type said "Article" whether or not the front matter named one, so the renderer
+    // published every item with front matter as an Article with og:type "article".
+    [Fact]
+    public void NewInstanceAndCreate_LeaveTheSchemaTypeEmptyForTheRendererToDecide()
+    {
+        Assert.Equal(string.Empty, new SeoMetadata().Type);
+        Assert.Equal(string.Empty, SeoMetadata.Create("t", "d").Type);
+    }
+
     [Fact]
     public void Create_WithAllValues_ReturnsInstanceWithAllPropertiesSet()
     {

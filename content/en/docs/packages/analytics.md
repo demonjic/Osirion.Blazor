@@ -7,7 +7,7 @@ permalink: /docs/packages/analytics
 description: Add Clarity, GA4, Matomo, Plausible, Umami or Yandex Metrica to a Blazor site from configuration, with an optional cookie consent gate.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-packages-analytics.jpg'
 categories:
 - Components
@@ -159,6 +159,27 @@ why trackers belong in `App.razor`.
 The gate covers all six trackers. Providers with their own consent mode react to it: the
 [GA4 tracker](/components/ga4-tracker) sets Google Consent Mode, and the [Matomo tracker](/components/matomo-tracker)
 leaves out its own `requireConsent`.
+
+### Consent on a static site
+
+A site exported to static files has no request to read the cookie from: every visitor gets the same file. Set
+`Evaluation` to `Browser` and consent is evaluated in the visitor's browser instead:
+
+```json
+{ "Osirion": { "Analytics": { "Consent": { "RequireConsent": true, "Evaluation": "Browser" } } } }
+```
+
+or `RequireConsent(options => options.Evaluation = ConsentEvaluation.Browser)` (`ConsentEvaluation` is in
+`Osirion.Blazor.Components`). Every tracker then renders for every visitor with its scripts held,
+`<script type="text/plain" data-osirion-consent="analytics">`, followed by a `<script type="module">` for
+`osirion-consent.js`. That script runs the held scripts, in page order and with their text and attributes unchanged,
+once the visitor's consent includes the category; until then nothing reaches the provider. Markup a provider writes
+that is not a script is left out, because it would load before consent. The same key puts the banner of
+[`OsirionSiteLayout`](https://github.com/demonjic/Osirion.Blazor/blob/master/docs/components/OsirionSiteLayout.md) in
+browser mode, so the banner and the trackers read consent in the same place. The trackers follow `Evaluation` only
+while `RequireConsent` is on; with it off they render live for every visitor, while the layout's banner still follows
+`Evaluation` and asks for a choice nothing waits for, so turn `RequireConsent` on with it. Setup, the reopen link and
+the Content Security Policy are on the [cookie consent page](/components/cookie-consent#sites-exported-to-static-files).
 
 ### Security
 

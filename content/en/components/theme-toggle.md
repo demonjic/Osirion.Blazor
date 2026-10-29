@@ -94,6 +94,8 @@ The toggle needs theming registered: `AddOsirion`, or `AddOsirionTheming` togeth
 | --- | --- | --- | --- |
 | `Id` | `string?` | `null` | The id of the toggle button. No id is written when it is `null`, so several toggles can share a page without repeating an id; set it only when a host stylesheet or script needs to address one. |
 | `OnThemeChanged` | `EventCallback<string>` | - | A callback raised with `light` or `dark` after the visitor switches the theme. It runs only when the toggle itself is interactive (Interactive Server, WebAssembly or Auto): under Static SSR the browser switches the theme and the server is not notified, so the callback is never raised there. Listen for the `osirion-theme-update` browser event on `window` to react in every render mode. |
+| `SwitchToDarkLabel` | `string` | `"Switch to dark mode"` | What the button says while the light theme is on: its accessible name, its tooltip and its hidden text, in the language of the page. Defaults to `Switch to dark mode`. |
+| `SwitchToLightLabel` | `string` | `"Switch to light mode"` | What the button says while the dark theme is on. Defaults to `Switch to light mode`. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -134,34 +136,48 @@ describes.
 
 ### Accessibility
 
-- The button's `aria-label` and `title` state the current theme and the one a click switches to, for example "Toggle
-  theme. Currently using light mode. Click to switch to dark mode."
-- A visually hidden text (`osirion-visually-hidden`) repeats the current theme; the icons are `aria-hidden`.
-- Keyboard focus shows a 2px outline (`:focus-visible`); mouse focus does not.
+- The button is named by what it does: its `aria-label`, its `title` and a visually hidden text
+  (`osirion-visually-hidden`) are `SwitchToDarkLabel` while the light theme is on ("Switch to dark mode") and
+  `SwitchToLightLabel` while the dark theme is on ("Switch to light mode"). The icons are `aria-hidden`. Set both
+  labels in the language of the page; the script reads them from the button's `data-switch-to-dark-label` and
+  `data-switch-to-light-label`, so the name stays in that language after a switch. Before the release after 4.2.0 the
+  name was the English sentence "Toggle theme. Currently using light mode. Click to switch to dark mode."
+- Keyboard focus (`:focus-visible`) shows the focus ring every Osirion component draws: `--osirion-focus-ring-width`
+  solid `--osirion-focus-ring-color`, offset by `--osirion-focus-ring-offset`. Mouse focus does not. The ring is drawn
+  at once; the button's transitions leave the outline out, so it does not fade in from another color. Just inside it
+  the button's own 2px ring shows in `--osirion-primary-color` at full strength, so focus stays visible when a site sets
+  the token to a faint color.
 - The button is 44 by 44 pixels, 40 by 40 at 768px and below, and 36 by 36 at 576px and below.
 
 ## Styling
 
 | Class | Element |
 | --- | --- |
-| `theme-switcher` | The wrapper `div` (10px padding). |
+| `theme-switcher` | The wrapper `div`, padded by `--osirion-theme-toggle-padding` (10px). |
 | `theme-toggle-btn` | The round button. |
 | `theme-icon` | The sun or moon icon. |
 | `theme-text` | The visually hidden text. |
 
-The button takes its light and dark colors from `[data-osirion-theme]`. The focus outline and the hover ring use
+The button takes its light and dark colors from `[data-osirion-theme]`. The hover ring uses
 `--osirion-primary-color` and `--osirion-primary-color-hover`. The theme does not set these, so the fallbacks
-`#2563eb` and `#1d4ed8` apply until you define them:
+`#2563eb` and `#1d4ed8` apply until you define them. The focus ring follows the shared focus ring tokens, which the
+theme defines, so one setting restyles it together with the other components:
 
 ```css
 :root {
     --osirion-primary-color: #0b5ed7;
     --osirion-primary-color-hover: #0a58ca;
+    --osirion-focus-ring-color: #0b5ed7;
+    --osirion-focus-ring-width: 2px;
 }
 ```
 
-The component's own styles are scoped CSS, and several of them use `!important`. To restyle the button, use a
-selector that is at least as specific and add `!important` where the original has it.
+`--osirion-theme-toggle-padding` sets the wrapper's padding (10px by default). The `Menu` drawer sets it to `0` on its
+actions, so a toggle there lines up with the menu items; set it in any other container that spaces its children itself.
+
+The component's own styles are scoped CSS, and several of them use `!important` (the border and the shadow, never the
+focus outline). To restyle the button, use a selector that is at least as specific and add `!important` where the
+original has it.
 
 ## Related
 

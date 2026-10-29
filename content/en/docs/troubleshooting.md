@@ -7,7 +7,7 @@ permalink: /docs/troubleshooting
 description: "Common Osirion.Blazor problems as symptom, cause and fix: no content, a 404, missing styles, a theme toggle that does nothing, a contact form that will not submit."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-troubleshooting.jpg'
 categories:
 - Documentation
@@ -222,6 +222,10 @@ app.MapOsirionCookieConsent();
 ```
 
 If the banner returns on every page, check that the site is served over HTTPS: the consent cookie is always `Secure`.
+
+On a site exported to static files there is no endpoint to post to and no request that carries the cookie, so with the
+default the banner returns on every page and the gated trackers never run. Set `Osirion:Analytics:Consent:Evaluation`
+to `Browser`: see [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
 
 ## A GitHub webhook delivery is rejected
 

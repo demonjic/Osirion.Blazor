@@ -141,7 +141,8 @@ A fuller footer passes link data from code:
 | `RightContent` | `RenderFragment?` | `null` | Free content for the right column of the top row. |
 | `Links` | `IReadOnlyList<FooterSection>?` | `null` | The link columns: each `FooterSection` has an optional `Title` (an `h2`) and a list of `FooterLink`. |
 | `SocialLinks` | `IReadOnlyList<FooterSocialLink>?` | `null` | The social links. Each shows its `Icon`, or its `Text` when there is no icon, and always opens in a new tab; set `AriaLabel` on icon-only links. |
-| `BottomLinks` | `IReadOnlyList<FooterLink>?` | `null` | The links in the bottom row, such as privacy and terms. They sit in a `nav` labelled "Footer legal navigation". |
+| `BottomLinks` | `IReadOnlyList<FooterLink>?` | `null` | The links in the bottom row, such as privacy and terms. They sit in a `nav` named by `BottomLinksLabel`. |
+| `BottomLinksLabel` | `string` | `"Footer legal navigation"` | The accessible name of the `nav` around `BottomLinks`. Set it for another language. Defaults to `Footer legal navigation`. |
 | `ShowSocialLinks` | `bool` | `true` | Whether `SocialLinks` are shown. |
 | `SocialTitle` | `string` | `"Follow Us"` | The `h2` above the social links. An empty value hides it. |
 | `ShowDivider` | `bool` | `true` | Whether a line separates the top and bottom rows. It shows only when both rows render. |
@@ -171,14 +172,16 @@ with `Icon` and `AriaLabel`; social links always open in a new tab.
   layout already provides the `footer` landmark. Available from 4.0; in 3.x the footer nested a second `footer`.
 - **Headings.** Section titles and the social title are `h2` elements, so the outline does not skip a level after a
   page's `h1`.
-- **Legal links** are wrapped in a `nav` labelled "Footer legal navigation".
+- **Legal links** are wrapped in a `nav` named by `BottomLinksLabel`, "Footer legal navigation" by default; set it
+  in the language of the page.
 - **Top row.** It renders when at least one of `Logo`, `Links`, `SocialLinks`, `LeftContent` or `RightContent` is set.
   `SocialLinks` count only while `ShowSocialLinks` is on, so switching them off leaves no empty row. `Description` alone
   does not make it render.
 - **Copyright year.** The default line uses the server's current year each time the component renders, so a static
   export shows the year of the export.
 - **Small screens.** Below 768 pixels the top row stacks into one column: the links, the left content, then the
-  right content. With a `Logo`, the logo and description come first.
+  right content. With a `Logo`, the logo and description come first. The bottom row stacks too, centered unless
+  `--osirion-footer-bottom-align` says otherwise (see Styling).
 - **Social links without text.** When a link has only an icon, set `AriaLabel` so screen reader users hear where it
   goes.
 - **Printing.** The footer is hidden when the page is printed.
@@ -196,6 +199,21 @@ The outer element has `osirion-footer`, `osirion-footer-{Variant}` and `osirion-
 Colors come from the theme tokens `--osirion-background-primary`, `--osirion-text-primary`,
 `--osirion-text-secondary`, `--osirion-border-color` and `--osirion-action-primary`, so the CSS framework adapters
 recolor the footer. With `Theme` set to `Light` or `Dark`, the footer overrides those tokens on itself.
+
+Keyboard focus on the links and social links draws the shared focus ring, `--osirion-focus-ring-width` solid
+`--osirion-focus-ring-color`, offset by `--osirion-focus-ring-offset`. The ring shows at once: the social links'
+hover transition names its properties, so the outline does not fade in from the text color.
+
+Below 768 pixels the bottom row (the copyright line and the legal links) is stacked and centered.
+`--osirion-footer-bottom-align` moves it: `start`, `center` (the default) or `end`. The row spans the footer, and the
+copyright line and the links share one inline padding, so `start` and `end` put both on the same edge. Set it on the
+footer or any ancestor:
+
+```css
+.osirion-footer {
+    --osirion-footer-bottom-align: start;
+}
+```
 
 A fixed footer (`Docked="true"` with `DockingMode="fixed"`) covers the end of the page. Give your main content a
 bottom padding equal to the footer's height in your own stylesheet; the component's scoped stylesheet does not reach

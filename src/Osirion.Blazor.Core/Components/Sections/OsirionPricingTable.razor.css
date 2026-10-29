@@ -52,6 +52,14 @@
     color: var(--osirion-text-primary, #111827);
 }
 
+/* With PlanHeadingLevel the name is a heading; drop the heading margin, font and line height a CSS framework sets,
+   so it looks like the paragraph, which inherits them from the plan. */
+:is(h1, h2, h3, h4, h5, h6).osirion-pricing-name {
+    margin: 0;
+    font-family: inherit;
+    line-height: inherit;
+}
+
 .osirion-pricing-price {
     display: flex;
     flex-wrap: wrap;

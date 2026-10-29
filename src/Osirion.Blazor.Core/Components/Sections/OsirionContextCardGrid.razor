@@ -6,7 +6,27 @@
         <div class="osirion-context-card-grid-heading">
             @if (HasTitle)
             {
-                <h2 id="@EffectiveHeadingId">@Title</h2>
+                @switch (TitleLevel)
+                {
+                    case 1:
+                        <h1 id="@EffectiveHeadingId">@Title</h1>
+                        break;
+                    case 3:
+                        <h3 id="@EffectiveHeadingId">@Title</h3>
+                        break;
+                    case 4:
+                        <h4 id="@EffectiveHeadingId">@Title</h4>
+                        break;
+                    case 5:
+                        <h5 id="@EffectiveHeadingId">@Title</h5>
+                        break;
+                    case 6:
+                        <h6 id="@EffectiveHeadingId">@Title</h6>
+                        break;
+                    default:
+                        <h2 id="@EffectiveHeadingId">@Title</h2>
+                        break;
+                }
             }
             @if (!string.IsNullOrWhiteSpace(Description))
             {
@@ -20,7 +40,24 @@
                 @foreach (var item in Items)
                 {
                     <article class="osirion-context-card-grid-item osirion-context-card-grid-item-@item.Accent">
-                        <h3>@item.Label</h3>
+                        @switch (LabelLevel)
+                        {
+                            case 2:
+                                <h2>@item.Label</h2>
+                                break;
+                            case 4:
+                                <h4>@item.Label</h4>
+                                break;
+                            case 5:
+                                <h5>@item.Label</h5>
+                                break;
+                            case 6:
+                                <h6>@item.Label</h6>
+                                break;
+                            default:
+                                <h3>@item.Label</h3>
+                                break;
+                        }
                         <p>@item.Description</p>
                     </article>
                 }

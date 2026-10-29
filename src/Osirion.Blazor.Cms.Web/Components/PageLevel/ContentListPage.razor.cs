@@ -96,6 +96,15 @@ public partial class ContentListPage
     public RenderFragment<ContentItem>? ItemTemplate { get; set; }
 
     /// <summary>
+    /// Gets or sets the page's header, shown above the list instead of the title and description, for example the
+    /// title with a strip of series links under it. It must render the page's <c>h1</c>. <see cref="Title"/> and
+    /// <see cref="Description"/> still name the page in its head metadata. When <see langword="null"/>, the heading
+    /// is shown as before.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? HeaderContent { get; set; }
+
+    /// <summary>
     /// Gets or sets the URL of the RSS feed, for example <c>/feed.xml</c> from <c>MapOsirionFeeds</c>. When set, the
     /// page links the feed in its head for feed readers and below the list for people.
     /// </summary>

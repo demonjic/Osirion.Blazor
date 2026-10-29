@@ -5,6 +5,8 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Osirion.Blazor.Core.Configuration;
 using Osirion.Blazor.Core.Extensions;
 using Osirion.Blazor.Core.Services;
 
@@ -86,7 +88,8 @@ public partial class OsirionHtmlRenderer
 
     /// <summary>
     /// Gets or sets the base address Prism is loaded from, for hosts that serve it themselves (for example
-    /// <c>/lib/prism/1.29.0/</c>). When empty, the pinned cdnjs release is used and every file is verified with its
+    /// <c>/lib/prism/1.29.0/</c>). When empty, <see cref="PrismOptions.BaseUrl"/> applies (set with
+    /// <c>AddOsirionPrism</c>), and without that the pinned cdnjs release is used and every file is verified with its
     /// Subresource Integrity hash. Files from a custom address load without an integrity check.
     /// </summary>
     /// <remarks>
@@ -139,10 +142,19 @@ public partial class OsirionHtmlRenderer
     // sanitization, so content cannot forge a marker.
     private readonly string _demoMarker = "<!--osirion-demo-" + Guid.NewGuid().ToString("N") + "-";
 
+    /// <summary>
+    /// The base address Prism loads from: the <see cref="PrismBaseUrl"/> parameter, else the site's
+    /// <see cref="PrismOptions.BaseUrl"/>; empty for the pinned cdnjs release.
+    /// </summary>
+    private string? _prismBaseUrl;
+
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        _prismBaseUrl = string.IsNullOrWhiteSpace(PrismBaseUrl)
+            ? ServiceProvider.GetService<IOptions<PrismOptions>>()?.Value.BaseUrl
+            : PrismBaseUrl;
         ProcessHtmlContent();
     }
 
@@ -464,7 +476,9 @@ public partial class OsirionHtmlRenderer
     {
         var classes = new List<string> { "osirion-html-renderer osirion-content" };
 
-        if (UseAccessibleTheme && HasCodeBlocks)
+        // The theme's rules in osirion-html-renderer.css follow this class. Without highlighting Prism never gives the
+        // pre its dark background, so the theme's light code text would sit on the page's own background.
+        if (UseAccessibleTheme && HasCodeBlocks && EnableSyntaxHighlighting)
         {
             classes.Add("osirion-wcag-theme");
         }
@@ -478,18 +492,18 @@ public partial class OsirionHtmlRenderer
     }
 
     /// <summary>
-    /// Gets the address of a Prism file: the pinned cdnjs release, or <see cref="PrismBaseUrl"/> when it is set.
+    /// Gets the address of a Prism file: the pinned cdnjs release, or the custom base address when one is set.
     /// </summary>
-    private string PrismUrl(string relativePath) => string.IsNullOrWhiteSpace(PrismBaseUrl)
+    private string PrismUrl(string relativePath) => string.IsNullOrWhiteSpace(_prismBaseUrl)
         ? PrismCdnAssets.BaseUrl + relativePath
-        : PrismBaseUrl.TrimEnd('/') + "/" + relativePath;
+        : _prismBaseUrl.TrimEnd('/') + "/" + relativePath;
 
     /// <summary>
     /// Gets the Subresource Integrity hash of a pinned Prism file, or <see langword="null"/> when the file comes
-    /// from a custom <see cref="PrismBaseUrl"/> (the host owns that source) or is not part of the pinned release.
+    /// from a custom base address (the host owns that source) or is not part of the pinned release.
     /// </summary>
     private string? PrismIntegrity(string relativePath) =>
-        string.IsNullOrWhiteSpace(PrismBaseUrl) && PrismCdnAssets.TryGetIntegrity(relativePath, out var integrity)
+        string.IsNullOrWhiteSpace(_prismBaseUrl) && PrismCdnAssets.TryGetIntegrity(relativePath, out var integrity)
             ? integrity
             : null;
 
@@ -501,7 +515,7 @@ public partial class OsirionHtmlRenderer
     /// </summary>
     private List<Dictionary<string, object?>> GetPrismScripts()
     {
-        var usesPinnedRelease = string.IsNullOrWhiteSpace(PrismBaseUrl);
+        var usesPinnedRelease = string.IsNullOrWhiteSpace(_prismBaseUrl);
         var relativePaths = new List<string> { "prism.min.js" };
 
         // Without a custom source, a language that is not part of the pinned release is skipped instead of
@@ -525,120 +539,5 @@ public partial class OsirionHtmlRenderer
                 ["required"] = path == "prism.min.js"
             })
             .ToList();
-    }
-
-    /// <summary>
-    /// Get the accessible theme CSS
-    /// </summary>
-    private string GetAccessibleThemeCss()
-    {
-        return @"
-            /* WCAG AAA Compliant Prism Theme */
-            code[class*=""language-""],
-            pre[class*=""language-""] {
-                color: #f8f8f2;
-                background: none;
-                text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-                font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-                font-size: 1em;
-                text-align: left;
-                white-space: pre;
-                word-spacing: normal;
-                word-break: normal;
-                word-wrap: normal;
-                line-height: 1.5;
-                tab-size: 4;
-                hyphens: none;
-            }
-
-            pre[class*=""language-""] {
-                padding: 1em;
-                margin: 0.5em 0;
-                overflow: auto;
-                border-radius: 0.3em;
-                background: #1e1e1e;
-            }
-
-            :not(pre) > code[class*=""language-""] {
-                padding: 0.1em 0.3em;
-                border-radius: 0.3em;
-                white-space: normal;
-                background: #1e1e1e;
-            }
-
-            .token.comment,
-            .token.prolog,
-            .token.doctype,
-            .token.cdata {
-                color: #8b949e;
-            }
-
-            .token.punctuation {
-                color: #f8f8f2;
-            }
-
-            .token.namespace {
-                opacity: 0.9;
-            }
-
-            .token.property,
-            .token.tag,
-            .token.constant,
-            .token.symbol,
-            .token.deleted {
-                color: #ff79c6;
-            }
-
-            .token.boolean,
-            .token.number {
-                color: #bd93f9;
-            }
-
-            .token.selector,
-            .token.attr-name,
-            .token.string,
-            .token.char,
-            .token.builtin,
-            .token.inserted {
-                color: #50fa7b;
-            }
-
-            .token.operator,
-            .token.entity,
-            .token.url,
-            .language-css .token.string,
-            .style .token.string,
-            .token.variable {
-                color: #f8f8f2;
-            }
-
-            .token.atrule,
-            .token.attr-value,
-            .token.function,
-            .token.class-name {
-                color: #f1fa8c;
-            }
-
-            .token.keyword {
-                color: #8be9fd;
-            }
-
-            .token.regex,
-            .token.important {
-                color: #ffb86c;
-            }
-
-            .token.important,
-            .token.bold {
-                font-weight: bold;
-            }
-
-            .token.italic {
-                font-style: italic;
-            }
-
-            .token.entity {
-                cursor: help;
-            }";
     }
 }

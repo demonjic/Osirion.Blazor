@@ -206,4 +206,17 @@ public class SeoMetadataFormTests : AdminComponentTestContext
         options[0].TextContent.ShouldContain("Default");
         cut.Find("#robots").GetAttribute("value").ShouldBe(string.Empty);
     }
+
+    [Fact]
+    public void SeoMetadataForm_EmptySchemaType_OffersADefaultOption()
+    {
+        // Fails before the fix: the select had no empty option, so an empty schema type showed "Article" and could
+        // not be chosen again once a type was picked.
+        var cut = RenderForm(SeoMetadata.Create("t", "d"));
+
+        var options = cut.FindAll("#schemaType option");
+        options[0].GetAttribute("value").ShouldBe(string.Empty);
+        options[0].TextContent.ShouldContain("Default");
+        cut.Find("#schemaType").GetAttribute("value").ShouldBe(string.Empty);
+    }
 }

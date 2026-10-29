@@ -1,0 +1,51 @@
+/*
+ * OsirionLanguagePicker Component Styles
+ * A row of plain links to the current page in each language (SSR compatible, no script).
+ * Colors come from the --osirion-* tokens, so the picker follows the theme and the menu it sits in.
+ */
+
+.osirion-language-picker-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--osirion-language-picker-gap, var(--osirion-spacing-1, 0.25rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.osirion-language-picker-link {
+    display: inline-block;
+    padding: var(--osirion-spacing-1, 0.25rem) var(--osirion-spacing-2, 0.5rem);
+    color: var(--osirion-language-picker-color, var(--osirion-menu-color, var(--osirion-text-secondary, #374151)));
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    font-weight: var(--osirion-font-weight-medium, 500);
+    line-height: 1.5;
+    text-decoration: none;
+    border-radius: var(--osirion-radius-sm, 0.25rem);
+    transition: color var(--osirion-transition-duration-150, 150ms) ease, background-color var(--osirion-transition-duration-150, 150ms) ease;
+}
+
+.osirion-language-picker-link:hover {
+    color: var(--osirion-language-picker-hover-color, var(--osirion-link-hover-color, var(--osirion-text-primary, #111827)));
+    background-color: var(--osirion-menu-hover-background, var(--osirion-background-hover, rgba(15, 23, 42, 0.06)));
+}
+
+.osirion-language-picker-link:focus-visible {
+    outline: var(--osirion-focus-ring-width, 3px) solid var(--osirion-focus-ring-color, #2563eb);
+    outline-offset: var(--osirion-focus-ring-offset, 2px);
+}
+
+/* The current language is told apart by weight and an underline, not by color alone. */
+.osirion-language-picker-link[aria-current="true"] {
+    color: var(--osirion-language-picker-active-color, var(--osirion-menu-accent, var(--osirion-link-color, var(--osirion-action-primary, #2563eb))));
+    font-weight: var(--osirion-font-weight-semibold, 600);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .osirion-language-picker-link {
+        transition: none;
+    }
+}

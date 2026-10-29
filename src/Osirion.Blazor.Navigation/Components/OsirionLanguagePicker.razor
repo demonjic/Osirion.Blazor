@@ -1,0 +1,20 @@
+@namespace Osirion.Blazor.Navigation.Components
+@inherits OsirionComponentBase
+
+@if (_links.Count > 1)
+{
+    <nav class="@CombineCssClasses("osirion-language-picker")" aria-label="@AriaLabel" style="@Style" @attributes="Attributes">
+        <ul class="osirion-language-picker-list">
+            @foreach (var link in _links)
+            {
+                <li class="osirion-language-picker-item" @key="link.Name">
+                    <a class="osirion-language-picker-link"
+                       href="@link.Href"
+                       hreflang="@link.Name"
+                       lang="@link.Name"
+                       aria-current="@(link.IsCurrent ? "true" : null)">@link.DisplayName</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

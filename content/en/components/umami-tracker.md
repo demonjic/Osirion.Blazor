@@ -7,7 +7,7 @@ permalink: /components/umami-tracker
 description: UmamiTracker writes the Umami script tag, configured through data attributes, into the page head from configuration.
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-umami-tracker.jpg'
 categories:
 - Components
@@ -151,11 +151,16 @@ The consent gate of the package is off by default. Turn it on with `RequireConse
 closed: with the gate on and no `HttpContext`, for example inside a component that already runs interactively, the
 tracker renders nothing. That is why trackers belong in `App.razor`.
 
+On a site exported to static files, set `Evaluation` to `Browser` (`Osirion:Analytics:Consent:Evaluation`).
+The tracker then renders for every visitor the script it would write after consent, held as `type="text/plain"`,
+and `osirion-consent.js` runs it once the visitor accepted the category; until then no request reaches Umami.
+See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
+
 Umami sets no cookies. Whether you still ask for consent is your decision; the gate covers this tracker like the others and, when on, holds the script back until the visitor consented.
 
 ## Content Security Policy
 
-This tracker writes only an external script tag with no inline script, so it needs no inline allowance. Allow the host of `ScriptUrl` (`https://cloud.umami.is` by default) for `script-src`, and, if you set `HostUrl`, its host as well. The code only writes `HostUrl` as an attribute, and the script decides where it sends data, so take the addresses it contacts from Umami's documentation.
+This tracker writes only an external script tag with no inline script, so it needs no inline allowance. Allow the host of `ScriptUrl` (`https://cloud.umami.is` by default) for `script-src`, and, if you set `HostUrl`, its host as well. The code only writes `HostUrl` as an attribute, and the script decides where it sends data, so take the addresses it contacts from Umami's documentation. With consent evaluated in the browser the tag is held and started by `osirion-consent.js`, a file from your own site, so the policy stays the same.
 
 ## Behavior
 

@@ -8,13 +8,21 @@
     padding: 0 1rem;
 }
 
+/* One property aligns both the text and its 52rem-wide lines: start, center or end. The box stays centered and its
+   children fill it, so a site rule that sets text-align or a narrower max-width on this class works as it used to. */
 .osirion-context-card-grid-heading {
-    max-width: 52rem;
+    display: grid;
+    justify-items: var(--osirion-context-card-grid-heading-align, center);
     margin: 0 auto 2.5rem;
-    text-align: center;
+    text-align: var(--osirion-context-card-grid-heading-align, center);
 }
 
-.osirion-context-card-grid-heading h2 {
+.osirion-context-card-grid-heading > * {
+    width: 100%;
+    max-width: 52rem;
+}
+
+.osirion-context-card-grid-heading > :is(h1, h2, h3, h4, h5, h6) {
     margin: 0 0 0.75rem;
     color: var(--osirion-context-card-grid-heading-color, var(--osirion-text-primary, #111827));
     font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -43,9 +51,11 @@
     box-shadow: var(--osirion-context-card-grid-card-shadow, 0 0.5rem 1.5rem rgba(0, 0, 0, 0.06));
 }
 
-.osirion-context-card-grid-item h3 {
+/* The label takes the card's text color, not the accent: an accent that reads on a white card fails 4.5:1 on a dark
+   one, while a site that changes the card background already sets the text color with it. */
+.osirion-context-card-grid-item > :is(h1, h2, h3, h4, h5, h6) {
     margin: 0 0 0.65rem;
-    color: var(--osirion-context-card-grid-accent, #176b45);
+    color: var(--osirion-context-card-grid-item-heading-color, var(--osirion-context-card-grid-item-color, #555));
     font-size: 1rem;
     font-weight: 700;
 }
@@ -57,15 +67,10 @@
 }
 
 .osirion-context-card-grid-item-blue { border-top-color: #2563a9; }
-.osirion-context-card-grid-item-blue h3 { color: #2563a9; }
 .osirion-context-card-grid-item-purple { border-top-color: #7040a5; }
-.osirion-context-card-grid-item-purple h3 { color: #7040a5; }
 .osirion-context-card-grid-item-indigo { border-top-color: #4f46a5; }
-.osirion-context-card-grid-item-indigo h3 { color: #4f46a5; }
 .osirion-context-card-grid-item-teal { border-top-color: #0d766f; }
-.osirion-context-card-grid-item-teal h3 { color: #0d766f; }
 .osirion-context-card-grid-item-amber { border-top-color: #9a6700; }
-.osirion-context-card-grid-item-amber h3 { color: #9a6700; }
 
 @media (min-width: 768px) {
     .osirion-context-card-grid-container {

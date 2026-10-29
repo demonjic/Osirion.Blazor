@@ -155,7 +155,7 @@ of the lookup parameters.
 | `ItemUrlFormatter` | `Func<ContentItem, string>?` | `null` | Builds the links of the other parts of a series from the item. Passed on by `ArticlePage` to its series navigation; no other page reads it. |
 | `Locale` | `string?` | `"en"` | The locale of the content the page looks up (`en` by default): the item found with `ItemPath`, `ItemUrl` or `ItemSlug`, and the related items, must have it. Used by `ArticlePage`, `AboutPage`, `ContactPage` and `ContentListPage`. `HomePage` and `DocumentPage` show the item you pass as `Content`; `HomePage` lists the featured and recent items of this locale. |
 | `Query` | `ContentQuery?` | `null` | A complete content query that finds the item in place of `ItemPath`, `ItemUrl`, `ItemSlug`, `Locale` and `DirectoryName`; the first match is shown. Used by `ArticlePage`, `AboutPage` and `ContactPage`. Changing it alone does not make a displayed page load again. |
-| `SchemaTypes` | `SchemaType[]?` | `null` | The schema.org types written as the page's structured data, passed to `SeoMetadataRenderer`. When it is null, `AboutPage` uses `AboutPage`, `ContactPage` uses `ContactPage`, `DocumentPage` uses `TechArticle` and the other pages leave the choice to the renderer. `DocumentPage` also takes the first value as the article's microdata type. |
+| `SchemaTypes` | `SchemaType[]?` | `null` | The schema.org types written as the page's structured data, passed to `SeoMetadataRenderer`. When it is null, `AboutPage` uses `AboutPage`, `ContactPage` uses `ContactPage`, `DocumentPage` uses `TechArticle` and the other pages leave the choice to the renderer; `ArticlePage` then writes `Article` when neither the configured `DefaultSchemaTypes` nor the front matter `type` names one. `DocumentPage` also takes the first value as the article's microdata type. |
 | `GenerateMultipleSchemas` | `bool` | `true` | Whether to write more than one structured data type when it applies, for example the main type and a breadcrumb list. Used by `ArticlePage`, `HomePage`, `AboutPage`, `ContactPage` and `DocumentPage`. |
 | `WebsiteName` | `string?` | `null` | The site name that structured data and titles use, passed to `SeoMetadataRenderer` as `SiteNameOverride`. Used by every page component except `LandingPage`; `ContentListPage` passes it to its list. |
 | `SiteDescription` | `string?` | `null` | The site description, passed to `SeoMetadataRenderer`, which uses it as the feed description when the feed options set none. Without it the value of `AddOsirionSeoMetadata` or the `Osirion:Seo` section applies. |
@@ -234,6 +234,8 @@ of the lookup parameters.
   inside a `<time>` element; `LastUpdatedText` sets the label in front of it.
 - **Table of contents.** `ShowTableOfContents` builds it from the headings between `TocMinLevel` and `TocMaxLevel`
   and places it above the body. `TocShowNumbers="false"` drops the `1.` and `1.2` numbers in front of its entries.
+  When no heading falls between `TocMinLevel` and `TocMaxLevel`, the box and its title are hidden, because
+  `TableOfContents` renders nothing.
 - **Edit link.** The link to the source of the page appears only when `EditUrlFormatter` returns an address. It opens
   in a new tab with `rel="noopener"`.
 - **Pager.** The previous and next links appear with `ShowNavigationLinks` when at least one neighbor exists.

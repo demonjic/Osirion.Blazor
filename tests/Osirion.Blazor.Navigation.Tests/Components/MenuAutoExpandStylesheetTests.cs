@@ -16,6 +16,16 @@ public partial class MenuAutoExpandStylesheetTests
         css.ShouldContain(".osirion-menu-vertical.osirion-menu-auto-expand.osirion-menu-item-wrapper-active.osirion-menu-item-has-submenu>.osirion-submenu-mega{display:flex;");
     }
 
+    // Fails before the fix: the default stacking order of a sticky menu was written as style="z-index: 1000;" on every
+    // page; it now comes from this rule, so a Content Security Policy has no inline style to allow for it.
+    [Fact]
+    public void StickyMenu_DefaultZIndex_ComesFromTheStylesheet()
+    {
+        var css = Squash(File.ReadAllText(MenuBrandLogoTests.StylesheetPath("Menu.razor.css")));
+
+        css.ShouldContain(".osirion-menu-sticky{position:sticky!important;top:0;width:100%;z-index:1000;}");
+    }
+
     private static string Squash(string css) => WhitespaceRun().Replace(CssComment().Replace(css, string.Empty), string.Empty);
 
     [GeneratedRegex(@"/\*.*?\*/", RegexOptions.Singleline)]

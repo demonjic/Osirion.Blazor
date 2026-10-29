@@ -63,6 +63,8 @@ internal static class PaletteBuilder
         new("input-text", "input-background", textContrast),
         new("border-color-focus", "background-primary", NonTextContrast),
         new("focus-ring-color", "background-primary", NonTextContrast),
+        new("focus-ring-color", "background-secondary", NonTextContrast),
+        new("focus-ring-color", "background-tertiary", NonTextContrast),
         .. CodeContrastPairs(textContrast),
     ];
 
@@ -156,7 +158,8 @@ internal static class PaletteBuilder
         tokens.Set("menu-active-background", navActiveBackground);
         tokens.Set("menu-accent", tokens.Readable("menu-accent", link, HarderBackground(link, background, surface, navActiveBackground), target));
 
-        tokens.Set("focus-ring-color", focus);
+        // The ring is drawn on the page and on the surfaces of cards and panels, so it is held to the hardest of them.
+        tokens.Set("focus-ring-color", tokens.Readable("focus-ring-color", focus, HarderBackground(focus, background, surface, surfaceAlt), NonTextContrast));
         var inputBackground = spec.InputBackground is null ? background : Color(spec.InputBackground);
         tokens.Set("input-background", inputBackground);
         tokens.Set("input-border", Color(spec.BorderStrong));

@@ -7,6 +7,8 @@ Parameters
 - `ContactInfo` (ContactInfoModel) — Model containing Address, Phone, Email, Website and optional Message.
 - `Title` (string) — Optional title shown above the contact information.
 - `AddressLabel`, `PhoneLabel`, `EmailLabel`, `WebsiteLabel` — Optional labels for each field.
+- `ContactInformation.AdditionalItems` (`ContactInfoItem`: `Label`, `Text`, optional `Href` and `Icon`): extra rows after the
+  website row, such as a booking link or working hours. Empty by default, which changes nothing.
 
 Example
 -------

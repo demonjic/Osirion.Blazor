@@ -11,6 +11,18 @@ Structured data
 - `SchemaType.TechArticle`, `SoftwareApplication` (with `ApplicationCategory`, default `DeveloperApplication`),
   `ProfilePage` (the author as `mainEntity`, tags that are absolute links as `sameAs`), `AboutPage` (the site's
   organization as `mainEntity`) and `ContactPage` describe whole pages.
+- Without `SchemaTypes`, configured `DefaultSchemaTypes` or a front matter `type`, a page is a `WebPage` with
+  `og:type` `website`; `FallbackSchemaType` changes that last step (`ArticlePage` passes `Article`).
+- On a list page (`ContentItems`), `SchemaTypes` writes a `CollectionPage` and a `BreadcrumbList` when it lists
+  them, and each item is an `Article`, or its front matter `type` when that is `BlogPosting` or `TechArticle`, or the
+  first of those article types that `SchemaTypes` names. Empty values are left out instead of written as `null`.
+
+## Referrer policy
+
+- No `referrer` meta tag by default: a referrer meta tag replaces the policy of the `Referrer-Policy` response
+  header, so the server's header (or the browser default, `strict-origin-when-cross-origin`) applies.
+- `ReferrerPolicy` (parameter, or `SeoMetadataOptions.ReferrerPolicy`) writes the tag. Only the policy tokens of the
+  Referrer Policy specification are written; any other value writes nothing and logs a warning.
 
 ## Canonical URL, FAQ data and mobile tags
 

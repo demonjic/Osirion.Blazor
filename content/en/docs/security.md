@@ -7,7 +7,7 @@ permalink: /docs/security
 description: "How Osirion.Blazor sanitizes content and URLs, which components take raw HTML, what a Content Security Policy must allow, the cookies it sets and how to keep secrets out of source."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/docs-security.jpg'
 categories:
 - Documentation
@@ -95,11 +95,13 @@ Links and image addresses can come from content or configuration, so components 
 | --- | --- |
 | Sanitized HTML (rendered Markdown) | Relative URLs, `http`, `https`, `mailto`, `tel` |
 | `Menu`, `MenuItem`, `MenuGroup` footer, `MenuPanelLink`, `MenuImageCard`, `MenuCallToAction` and the brand link | Relative URLs, `http`, `https`, `mailto`, `tel`; any other scheme renders no `href` |
-| `OsirionAuthorCard` (avatar, profile and link addresses) and `OsirionPricingTable` (button address) | A path on the site, or an absolute `http`, `https` or `mailto` address |
+| `OsirionAuthorCard` (avatar, profile and link addresses), `OsirionPricingTable` (button address) and `OsirionCallToActionSection` (button addresses) | A path on the site, or an absolute `http`, `https` or `mailto` address |
 
-A path on the site starts with one `/` and is not protocol-relative (`//host`). The internal check behind the last row
-is called `SafeLink`. `InfiniteLogoCarousel` applies the same check in the release after 4.1.0; in 4.1.0 it writes any
-`Url` into `href`, so pass it only addresses you control.
+A path on the site starts with one `/` and is not protocol-relative (`//host`). The check behind the last row is
+`SafeLink.IsSafe` in `Osirion.Blazor.Core.Utils`; it is internal up to 4.2.0 and public in the release after 4.2.0, for
+links you render yourself. `InfiniteLogoCarousel` applies the same check in the release after 4.1.0; in 4.1.0 it writes
+any `Url` into `href`, so pass it only addresses you control. The `OsirionSiteLayout` call to action, which arrives in
+the release after 4.2.0, applies it when the application starts and again when the layout renders.
 
 `HeroSection` and `OsirionBaseSection` escape the image address before they write it into a CSS `url()`, so a front
 matter `featured_image` cannot add style rules.
@@ -134,12 +136,25 @@ site that uses them still needs `'unsafe-inline'` or must leave them out. The ta
 | `ThemeToggle` | Nothing inline: a click listener in `theme-toggle.js` does the work, and the page needs `OsirionStyles` as well |
 | `ThemePicker` | Nothing inline: no inline script and no event handler attribute |
 | `ScrollToTop`, `EnhancedNavigation` | One inline script each |
-| `OsirionHtmlRenderer` | An inline `style` element for the accessible code theme (`UseAccessibleTheme`) and an inline `onclick` on the Copy button; Prism from `cdnjs.cloudflare.com`, or from `PrismBaseUrl` when you serve it yourself |
-| `OsirionFooter` | An inline `style` element |
+| `OsirionHtmlRenderer` | An inline `onclick` on the Copy button (`EnableCopyButton`). The accessible code theme (`UseAccessibleTheme`) is part of `css/osirion-html-renderer.min.css`, a file from your own origin, in the release after 4.2.0, and an inline `style` element up to 4.2.0; Prism from `cdnjs.cloudflare.com`, or from your own site with `AddOsirionPrism` (see [Content Security Policy](/components/html-renderer#content-security-policy)) |
+| `OsirionFooter` | Nothing inline in the release after 4.2.0; up to 4.2.0, an inline `style` element and a `style` attribute on the brand |
 | Components with a `Style` parameter | `style-src` that allows inline style attributes |
 | Analytics: GA4, Clarity, Matomo, Plausible, Yandex Metrica | An inline script, and the provider's own script host |
 | Analytics: Umami | An external script tag only |
 | Matomo and Yandex Metrica with `AutoTrackPageViews` | An external script from your own site, `/_content/Osirion.Blazor.Analytics/js/osirion-analytics.js` |
+| `OsirionCookieConsent` and the trackers with consent evaluated in the browser (`Evaluation` `Browser`) | Nothing inline for the consent itself: `osirion-consent.js` is a file from your own origin and uses no event handler attribute or `eval`. The trackers keep their needs above: the held inline snippet runs with its text unchanged, so its hash allows it |
+
+A site exported to static files cannot send a new nonce with every response, so allow the inline tracker snippets by
+hash: `'sha256-...'` of each snippet's text in `script-src`, next to `'self'` and the provider hosts. The text depends
+on the tracker's settings and on the library version, so recompute the hashes when either changes; the browser console
+names the expected hash of a blocked script. With the hashes in place, the trackers that run after consent are
+allowed and an injected inline script is still blocked. That holds for a policy of hosts and hashes, not for one with
+`'strict-dynamic'`: there the trust in `osirion-consent.js` passes to every script it starts, and it starts every held
+script (`type="text/plain"` with `data-osirion-consent`) anywhere on the page once the visitor's answer includes its
+category, which for `necessary` is every answer. A held script that an HTML injection puts on the page then runs,
+where the same script injected directly is blocked. The sanitizer removes script elements from content, so this needs
+an injection elsewhere, such as raw HTML from a parameter; with `'strict-dynamic'`, treat keeping such markup out of
+the page as the defense. See [Sites exported to static files](/components/cookie-consent#sites-exported-to-static-files).
 
 The practical policy for 4.1.0 allows inline script and style from your own origin, and adds the hosts of the services
 you use:
@@ -182,7 +197,51 @@ app.Use(async (context, next) =>
 ```
 
 The nonce does not cover inline `style` attributes: a component with a `Style` parameter, or one that writes a `style`
-attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-inline'` without a nonce.
+attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-inline'` without a nonce, or the hash of
+each attribute value with `'unsafe-hashes'`, as below.
+
+### Inline style attributes
+
+In the release after 4.2.0, the defaults of `OsirionHtmlRenderer`, `OsirionFooter`, `Menu`, `HeroSection`,
+`OsirionCookieConsent`, `OsirionContentNotFound`, `OsirionTestimonialCard` and `OsirionReadMoreLink` write no `style`
+attribute and no `style` element: the sticky `Menu`'s `z-index`, `HeroSection`'s `min-height: 60vh`, the
+`OsirionFooter` rules, the Customize button of `OsirionCookieConsent`, the buttons of `OsirionContentNotFound`, the
+read more link of `OsirionTestimonialCard` and the accessible code theme of `OsirionHtmlRenderer` moved into
+stylesheets, and `OsirionReadMoreLink` no longer writes an empty `style=""`. Other components still write a `style`
+attribute with their defaults; they are listed below the table. What the components on a typical page leave is
+fixed text, so a site exported to static files can allow each value by its hash. A hash of a `style` attribute needs
+`'unsafe-hashes'` next to it; it allows only that exact value, not any other inline style:
+
+| Source | Attribute value | Hash |
+| --- | --- | --- |
+| BlazorJSComponents, which loads the library's scripts: one `bl-script` element per script | `display: none; !important` | `'sha256-EXrMEQM0mPkgnkB6KboseHKD5Hs/aDUfUef9LAWu4uA='` |
+| Markdown table column alignment, the one inline style the sanitizer keeps | `text-align: left` | `'sha256-6l+tpow5lGPV0MHWZlDv8nD7HrL77FGFldqQ7zc5gxY='` |
+| | `text-align: center` | `'sha256-Y9v1MZrln1N8aPBY5lmpxYKwFkcp/nyBMMEnn7WFjuw='` |
+| | `text-align: right` | `'sha256-i0JPB0qmRu5AViJTxOIzqXnfGoiWFw+oNAm4uJd7ZQk='` |
+| `ScrollToTop`, which also needs an inline script | `display: none;` | `'sha256-biLFinpqYMtWHmXfkA1BPeCY0/fNt46SAZ+BBk5YUog='` |
+
+BlazorJSComponents is a third-party package; its attribute only hides the element and the page looks the same when
+the browser blocks it, so leaving the hash out costs one console report per page and nothing else. A typical page of
+the library, with a policy that also serves Prism from your own site
+([`AddOsirionPrism`](/components/html-renderer#content-security-policy)):
+
+```text
+style-src 'self' 'unsafe-hashes' 'sha256-EXrMEQM0mPkgnkB6KboseHKD5Hs/aDUfUef9LAWu4uA=';
+```
+
+Add the three alignment hashes when your Markdown has aligned table columns. These components write a `style`
+attribute even with their default parameters, because the value carries custom properties that the component works
+out from its parameters and items: `OsirionImageGallery` (columns and gap), `InfiniteLogoCarousel` (speed and logo
+sizes), `OsirionTestimonialCarousel` (speed and card sizes), `OsirionResponsiveShowcaseSection` (the viewport size)
+and the feature list of `LandingPage` (its column count). On a page that uses one, allow the exact value by its hash
+with `'unsafe-hashes'`, or use `style-src-attr 'unsafe-inline'`. Values that you pass in parameters are written
+inline as given, so they are yours to allow or to move into your stylesheet: `Style` on any component,
+`HeroSection`'s `MinHeight` other than `60vh`, `BackgroundColor`, `TextColor` and a background `ImageUrl`, the
+background settings of `OsirionBaseSection`, a `Menu` `StickyZIndex` other than 1000 or a `Menu` with a `Style`,
+`OsirionStickySidebar`'s `TopOffset`, the non-default sizes of the components above, and the call to action color of
+`LandingPage`. When the browser blocks one, its console names the hash it expected. `OsirionStyles` writes `CustomVariables` and the
+configured variables in `style` elements, which take the `Nonce`; on a static export, where no nonce is possible, the
+element's text is fixed by your configuration, so its hash (without `'unsafe-hashes'`) allows it.
 
 ## Know which cookies the library sets
 
@@ -190,7 +249,7 @@ attribute, still needs `style-src-attr 'unsafe-inline'` or `style-src 'unsafe-in
 | --- | --- | --- |
 | `osirion-preferred-theme` | `ThemeService` on the server; `ThemeToggle` in the browser | Path `/`, one year, `SameSite=Lax`, not `HttpOnly` (the page script reads and replaces it). `Secure` from the server; the toggle's script adds `Secure` on HTTPS pages |
 | `osirion-preferred-palette` | `ThemeService` on the server; `ThemePicker` in the browser | Path `/`, one year, `SameSite=Lax`, not `HttpOnly`. `Secure` from the server; the picker's script adds `Secure` on HTTPS pages |
-| `osirion_cookie_consent` | The cookie consent endpoint (`MapOsirionCookieConsent`) | Path `/`, `HttpOnly`, `Secure`, `SameSite=Lax`. Lifetime comes from `ConsentExpiryDays` (default 365) |
+| `osirion_cookie_consent` | The cookie consent endpoint (`MapOsirionCookieConsent`); with consent evaluated in the browser, `osirion-consent.js` | Path `/`, `HttpOnly`, `Secure`, `SameSite=Lax` from the endpoint. From the script: path `/`, `SameSite=Lax`, `Secure` on HTTPS pages, not `HttpOnly` (script writes and reads it), same value format. Lifetime comes from `ConsentExpiryDays` (default 365) |
 | `osirion_announcement_<id>` | The announcement endpoint (`MapOsirionAnnouncements`) | Path `/`, `HttpOnly`, `Secure`, `SameSite=Lax`, essential. 30 days unless the form posts 1 to 365 |
 
 The theme and palette cookies hold a short name such as `dark`, no personal data. Every cookie the server sets is
@@ -272,7 +331,10 @@ configure forwarded headers, and then every visitor shares one limit.
 
 - A post that contains `<script>alert(1)</script>` in its Markdown shows the text or nothing, and no script runs.
 - `curl -s -D - -o /dev/null https://your-site/` shows your `Content-Security-Policy` header. A `HEAD` request (`curl -I`) answers 405 on a page, so read the headers of a `GET`.
-- In the browser's cookie view, `osirion_cookie_consent` shows `HttpOnly`, `Secure` and `Lax` after you accept the banner.
+- In the browser's cookie view, `osirion_cookie_consent` shows `HttpOnly`, `Secure` and `Lax` after you accept the banner
+  (with consent evaluated in the browser: `Lax`, `Secure` on HTTPS, and not `HttpOnly`).
+- With consent evaluated in the browser, the browser's network panel shows no request to a tracker host before you
+  answer the banner, and none after Decline.
 - `git grep -n -e ghp_ -e github_pat_` finds no GitHub token in your repository.
 - The sixth rapid post of the contact form from one address gets status 429.
 

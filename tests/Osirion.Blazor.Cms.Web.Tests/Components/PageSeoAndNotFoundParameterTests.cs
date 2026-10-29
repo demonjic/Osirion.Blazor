@@ -5,6 +5,7 @@ using NSubstitute;
 using Osirion.Blazor.Cms.Components;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Repositories;
+using Osirion.Blazor.Cms.Domain.ValueObjects;
 using Osirion.Blazor.Cms.Web.Components;
 using Osirion.Blazor.Cms.Web.Options;
 using Osirion.Blazor.Cms.Web.Tests.Base;
@@ -99,6 +100,44 @@ public class PageSeoAndNotFoundParameterTests : CmsPageComponentTestBase
             .Add(c => c.AllowAiTraining, true));
 
         head.WaitForAssertion(() => head.Markup.ShouldContain("name=\"ai-training\" content=\"allow\""));
+    }
+
+    // Fails before the fix for an item without front matter (a WebPage). With front matter it guards that an article
+    // stays an Article once SeoMetadata.Type no longer defaults to "Article".
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ArticlePage_ItemWithoutAType_IsPublishedAsAnArticle(bool withFrontMatter)
+    {
+        var head = Render<HeadOutlet>();
+        var item = Doc("one");
+        item.Metadata = withFrontMatter ? new FrontMatter() : null;
+        ReturnItem(item);
+
+        RenderStatic<ArticlePage>(p => p.Add(c => c.ItemSlug, "one"));
+
+        head.WaitForAssertion(() =>
+        {
+            head.Markup.ShouldContain("property=\"og:type\" content=\"article\"");
+            head.Markup.ShouldContain("\"@type\": \"Article\"");
+        });
+    }
+
+    // A front matter type still decides on an article page.
+    [Fact]
+    public void ArticlePage_ItemWithAFrontMatterType_KeepsIt()
+    {
+        var head = Render<HeadOutlet>();
+        var item = Doc("one");
+        item.Metadata = new FrontMatter
+        {
+            SeoProperties = new SeoMetadata { Type = "BlogPosting" }
+        };
+        ReturnItem(item);
+
+        RenderStatic<ArticlePage>(p => p.Add(c => c.ItemSlug, "one"));
+
+        head.WaitForAssertion(() => head.Markup.ShouldContain("\"@type\": \"BlogPosting\""));
     }
 
     // Fails before the fix: the home page did not pass TwitterSite on.

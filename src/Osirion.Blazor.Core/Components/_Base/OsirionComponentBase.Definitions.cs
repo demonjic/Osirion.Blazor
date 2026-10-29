@@ -1,6 +1,7 @@
 using System.Collections.Frozen;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Components;
 
@@ -41,32 +42,12 @@ public abstract partial class OsirionComponentBase : ComponentBase
     /// <summary>
     /// Gets the CSS class for a primary button
     /// </summary>
-    protected virtual string GetPrimaryButtonClass()
-    {
-        return Framework switch
-        {
-            CssFramework.Bootstrap => "btn btn-primary",
-            CssFramework.FluentUI => "osirion-button osirion-button-primary",
-            CssFramework.MudBlazor => "mud-button mud-button-filled mud-button-filled-primary",
-            CssFramework.Radzen => "rz-button rz-button-primary",
-            _ => "osirion-button osirion-button-primary"
-        };
-    }
+    protected virtual string GetPrimaryButtonClass() => ButtonClasses.Primary(Framework);
 
     /// <summary>
     /// Gets the CSS class for a secondary button
     /// </summary>
-    protected virtual string GetSecondaryButtonClass()
-    {
-        return Framework switch
-        {
-            CssFramework.Bootstrap => "btn btn-secondary",
-            CssFramework.FluentUI => "osirion-button osirion-button-secondary",
-            CssFramework.MudBlazor => "mud-button mud-button-filled mud-button-filled-secondary",
-            CssFramework.Radzen => "rz-button rz-button-secondary",
-            _ => "osirion-button osirion-button-secondary"
-        };
-    }
+    protected virtual string GetSecondaryButtonClass() => ButtonClasses.Secondary(Framework);
 
     /// <summary>
     /// Gets the CSS class for an outlined primary button

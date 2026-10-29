@@ -21,9 +21,10 @@
     --osirion-primary-color: #60a5fa !important;
 }
 
-/* Theme Switcher Component base styles (framework agnostic) */
+/* Theme Switcher Component base styles (framework agnostic). A container that spaces its children itself sets
+   --osirion-theme-toggle-padding (the menu's drawer sets 0, so the toggle lines up with the menu items). */
 .theme-switcher {
-    padding: 10px;
+    padding: var(--osirion-theme-toggle-padding, 10px);
 }
 
 .theme-toggle-btn {
@@ -33,14 +34,15 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Named properties, not "all": an animated outline would start from the unfocused one (in the text color) before
+       it reached the focus ring. */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-width: 1px;
     position: relative;
     border: 1px solid transparent !important;
-    outline: none !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -53,22 +55,26 @@
     cursor: pointer !important;
 }
 
-    /* Remove all focus outlines and borders */
+    /* Keep the framework's focus border and shadow off the button */
     .theme-toggle-btn:focus,
     .theme-toggle-btn:focus-visible,
     .theme-toggle-btn:active:focus,
     .theme-toggle-btn:active,
     .theme-toggle-btn.focus,
     .theme-toggle-btn:focus:not(:focus-visible) {
-        outline: none !important;
         border: 1px solid transparent !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     }
 
-    /* Only show focus outline for keyboard navigation (accessibility) */
+    .theme-toggle-btn:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    /* Keyboard focus shows the focus ring every component draws, from the --osirion-focus-ring-* tokens. Scoped CSS
+       adds an attribute to this selector, which already outranks a framework's button focus rule without !important. */
     .theme-toggle-btn:focus-visible {
-        outline: 2px solid var(--osirion-primary-color, #2563eb) !important;
-        outline-offset: 3px !important;
+        outline: var(--osirion-focus-ring-width, 2px) solid var(--osirion-focus-ring-color, var(--osirion-primary-color, #2563eb));
+        outline-offset: var(--osirion-focus-ring-offset, 3px);
     }
 
     .theme-toggle-btn::before {
@@ -87,6 +93,12 @@
 
     .theme-toggle-btn:hover::before {
         opacity: 0.7;
+    }
+
+    /* The token ring may be faint (the default light token is half transparent), so keyboard focus also shows the
+       button's own 2px ring in the primary color at full strength, just inside the token ring. */
+    .theme-toggle-btn:focus-visible::before {
+        opacity: 1;
     }
 
     .theme-toggle-btn:hover {
@@ -255,8 +267,8 @@
     }
 
     .theme-toggle-btn:focus-visible {
-        outline: 3px solid var(--osirion-primary-color, #2563eb);
-        outline-offset: 2px;
+        outline: var(--osirion-focus-ring-width, 3px) solid var(--osirion-focus-ring-color, var(--osirion-primary-color, #2563eb));
+        outline-offset: var(--osirion-focus-ring-offset, 2px);
     }
 }
 

@@ -42,7 +42,7 @@ public class ShippedStylesheetTests
         var css = File.ReadAllText(CoreCss("osirion-html-renderer.min.css"));
         var iconRules = System.Text.RegularExpressions.Regex.Matches(css, @"([^{}]*)::after\{content:")
             .Select(match => match.Groups[1].Value)
-            .Where(selector => selector.Contains(".osirion-html-renderer a", StringComparison.Ordinal))
+            .Where(selector => selector.Contains(".osirion-html-renderer :where(a", StringComparison.Ordinal))
             .ToList();
 
         // Assert
@@ -125,7 +125,7 @@ public class ShippedStylesheetTests
         var css = System.Text.RegularExpressions.Regex.Replace(File.ReadAllText(CoreCss(file)), @"\s+", " ");
         var linkSelectors = System.Text.RegularExpressions.Regex.Matches(
                 css,
-                @"\.osirion-html-renderer a(?:::?[\w-]+(?:\((?:[^()]|\([^()]*\))*\))?)+")
+                LinkSelectorPattern)
             .Select(match => match.Value)
             .ToList();
 
@@ -133,6 +133,62 @@ public class ShippedStylesheetTests
         linkSelectors.Count.ShouldBe(15);
         linkSelectors.ShouldAllBe(selector => selector.Contains(":not(.osirion-content-demo-preview a)", StringComparison.Ordinal));
     }
+
+    // Fails before the fix: the text link selector weighed two classes and seven elements, so a site theme rule such as
+    // ".prose a" lost to it and could restyle content links only with !important.
+    [Theory]
+    [InlineData("osirion-html-renderer.css")]
+    [InlineData("osirion-html-renderer.min.css")]
+    public void HtmlRenderer_TextLinkRules_WeighOneClassSoSiteThemesCanRestyleThem(string file)
+    {
+        // Act
+        var css = System.Text.RegularExpressions.Regex.Replace(File.ReadAllText(CoreCss(file)), @"\s+", " ");
+
+        // Assert: the link part sits in :where(), so only the renderer class counts
+        System.Text.RegularExpressions.Regex.IsMatch(css, @"\.osirion-html-renderer a[:\s{]").ShouldBeFalse();
+        System.Text.RegularExpressions.Regex.Matches(css, LinkSelectorPattern).Count.ShouldBeGreaterThan(0);
+    }
+
+    // Fails before the fix: printing drew a black box around every link with five !important declarations, which also
+    // overrode any print rule of the site, and hid where an external link led.
+    [Theory]
+    [InlineData("osirion-html-renderer.css")]
+    [InlineData("osirion-html-renderer.min.css")]
+    public void HtmlRenderer_PrintRules_UseNoImportantAndPrintExternalAddresses(string file)
+    {
+        // Act
+        var css = Squash(File.ReadAllText(CoreCss(file)));
+        var printBlocks = System.Text.RegularExpressions.Regex.Matches(css, @"@mediaprint\{(?:[^{}]|\{[^{}]*\})*\}")
+            .Select(match => match.Value)
+            .ToList();
+        var linkPrint = printBlocks.Single(block => block.Contains(":where(a", StringComparison.Ordinal));
+
+        // Assert: no !important and no box; the external address follows the link, after the screen rules
+        printBlocks.ShouldAllBe(block => !block.Contains("!important", StringComparison.Ordinal));
+        linkPrint.ShouldNotContain("border");
+        linkPrint.ShouldContain("content:\"(\"attr(href)\")\"");
+        css.IndexOf(linkPrint, StringComparison.Ordinal).ShouldBeGreaterThan(css.LastIndexOf("::after{content:\"\"", StringComparison.Ordinal));
+        css.EndsWith(linkPrint, StringComparison.Ordinal).ShouldBeTrue();
+    }
+
+    // The accessible code theme is part of the renderer's stylesheet, in place of the inline style element it wrote.
+    // :where() keeps each rule at the specificity it had there, so the palettes' code rules still outrank it.
+    [Theory]
+    [InlineData("osirion-html-renderer.css")]
+    [InlineData("osirion-html-renderer.min.css")]
+    public void HtmlRenderer_AccessibleCodeTheme_IsInTheStylesheetUnderTheThemeClass(string file)
+    {
+        // Act
+        var css = Squash(File.ReadAllText(CoreCss(file)));
+
+        // Assert
+        css.ShouldContain(":where(.osirion-wcag-theme)pre[class*=");
+        css.ShouldContain(":where(.osirion-wcag-theme).token.keyword{color:#8be9fd");
+        css.ShouldContain(":where(.osirion-wcag-theme).token.comment,:where(.osirion-wcag-theme).token.prolog,:where(.osirion-wcag-theme).token.doctype,:where(.osirion-wcag-theme).token.cdata{color:#8b949e");
+    }
+
+    /// <summary>A content link selector: the link part inside :where(), with its :is() and :not() arguments.</summary>
+    private const string LinkSelectorPattern = @"\.osirion-html-renderer :where\(a(?:::?[\w-]+(?:\((?:[^()]|\([^()]*\))*\))?)+\)";
 
     // Fails before the fix: two seconds after a copy the script set the label to "Copy code to clipboard", so a screen
     // reader lost the language the markup gave it ("Copy C# code to clipboard").
@@ -171,6 +227,51 @@ public class ShippedStylesheetTests
         // Assert: the wrapper the component renders, or content reached through ::deep
         selectors.ShouldNotBeEmpty();
         selectors.ShouldAllBe(selector => selector == ".osirion-html-renderer" || selector.Contains("::deep", StringComparison.Ordinal));
+    }
+
+    // Fails before the fix: the social link animated every property ("transition: all"), its outline among them, so
+    // for the first 0.2 seconds of keyboard focus the ring grew out of the unfocused outline (3px in the text color)
+    // instead of showing the focus ring tokens.
+    [Fact]
+    public void Footer_Transitions_LeaveTheFocusRingOut()
+    {
+        // Act
+        var css = Squash(File.ReadAllText(ComponentCss("Layout", "OsirionFooter.razor.css")));
+        var transitions = System.Text.RegularExpressions.Regex.Matches(css, @"transition:([^;}]*)")
+            .Select(match => match.Groups[1].Value)
+            .ToList();
+
+        // Assert
+        transitions.ShouldNotBeEmpty();
+        transitions.ShouldAllBe(value => !value.StartsWith("all", StringComparison.Ordinal) && !value.Contains(",all", StringComparison.Ordinal) && !value.Contains("outline", StringComparison.Ordinal));
+    }
+
+    // Fails before the fix: below 768px the bottom row was centered with no way for a site to change it.
+    [Fact]
+    public void Footer_BottomRowOnPhones_AlignsFromTheBottomAlignProperty()
+    {
+        // Act
+        var css = Squash(File.ReadAllText(ComponentCss("Layout", "OsirionFooter.razor.css")));
+        var phones = css[css.IndexOf("@media(max-width:767.98px){", StringComparison.Ordinal)..];
+
+        // Assert: centered stays the default
+        phones.ShouldContain(".osirion-footer-bottom-content{flex-direction:column;align-items:var(--osirion-footer-bottom-align,center);text-align:var(--osirion-footer-bottom-align,center);}");
+        phones.ShouldContain(".osirion-footer-bottom-links{justify-content:var(--osirion-footer-bottom-align,center);");
+    }
+
+    // Fails before the fix: on phones the bottom row shrank to its content and stayed centered (the container centers
+    // its children), so start and end only moved the text inside a centered box; and the legal links, a sibling of the
+    // padded copyright, touched the screen edge. Measured in Edge at 375px.
+    [Fact]
+    public void Footer_BottomRowOnPhones_SpansTheFooterWithTheLinksPaddedLikeTheCopyright()
+    {
+        // Act
+        var css = Squash(File.ReadAllText(ComponentCss("Layout", "OsirionFooter.razor.css")));
+        var phones = css[css.IndexOf("@media(max-width:767.98px){", StringComparison.Ordinal)..];
+
+        // Assert
+        phones.ShouldContain(".osirion-footer-bottom{justify-self:stretch;}");
+        phones.ShouldContain(".osirion-footer-bottom-links{justify-content:var(--osirion-footer-bottom-align,center);padding:0var(--osirion-spacing-4,1rem);}");
     }
 
     private static string Squash(string css) => System.Text.RegularExpressions.Regex.Replace(

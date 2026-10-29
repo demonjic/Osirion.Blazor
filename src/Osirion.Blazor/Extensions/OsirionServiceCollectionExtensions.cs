@@ -7,6 +7,7 @@ using Osirion.Blazor.Navigation.Options;
 using Osirion.Blazor.Options;
 using Osirion.Blazor.Core.Configuration;
 using Osirion.Blazor.Core.Extensions;
+using Osirion.Blazor.Core.Localization;
 
 namespace Osirion.Blazor.Extensions;
 
@@ -102,6 +103,12 @@ public static class OsirionServiceCollectionExtensions
             if (configuration.GetSection(OsirionSiteOptions.Section).Exists())
             {
                 builder.UseSite(configuration);
+            }
+
+            // The site's language versions, served by app.UseOsirionLocalization()
+            if (configuration.GetSection(OsirionLocalizationOptions.Section).Exists())
+            {
+                builder.UseLocalization(configuration);
             }
         });
     }

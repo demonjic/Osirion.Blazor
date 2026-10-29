@@ -128,6 +128,24 @@ public class CookieConsentHandlerConsentDataTests
         consent.Categories["analytics"].ShouldBeTrue();
     }
 
+    // What osirion-consent.js writes for Save Preferences with Analytics ticked: escaped as the endpoint escapes, with
+    // the time in the shape Date.toISOString gives (milliseconds only).
+    [Fact]
+    public void GetConsentData_CookieWrittenByTheConsentScript_IsRead()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Headers.Cookie = ConsentCookieName + "=%7B%22Version%22%3A%221.0%22%2C%22ConsentDate%22%3A"
+            + "%222026-10-23T17%3A37%3A25.558Z%22%2C%22ConsentType%22%3A%22save-preferences%22%2C%22Categories%22%3A"
+            + "%7B%22necessary%22%3Atrue%2C%22analytics%22%3Atrue%7D%7D";
+
+        var consent = CookieConsentHandler.GetConsentData(context).ShouldNotBeNull();
+
+        consent.ConsentType.ShouldBe("save-preferences");
+        consent.ConsentDate.ShouldBe(new DateTime(2026, 10, 23, 17, 37, 25, 558, DateTimeKind.Utc));
+        CookieConsentHandler.IsCategoryConsented(context, "analytics").ShouldBeTrue();
+        CookieConsentHandler.IsCategoryConsented(context, "marketing").ShouldBeFalse();
+    }
+
     [Theory]
     [InlineData("analytics", true)]
     [InlineData("marketing", false)]

@@ -1,0 +1,59 @@
+/* OsirionCallToActionSection - Osirion.Blazor.Core */
+
+/* A panel on the secondary background. The border keeps it visible where a palette gives both backgrounds the same
+   color, and the theme tests hold the primary and secondary text to 4.5:1 on this background. */
+.osirion-call-to-action-section {
+    box-sizing: border-box;
+    padding: var(--osirion-spacing-12, 3rem) var(--osirion-spacing-6, 1.5rem);
+    border: 1px solid var(--osirion-border-color, #e5e7eb);
+    border-radius: var(--osirion-radius-lg, 0.5rem);
+    background-color: var(--osirion-background-secondary, #f9fafb);
+    color: var(--osirion-text-primary, #111827);
+    text-align: center;
+}
+
+    /* Whatever comes first sits right under the padding, whichever parts are set. */
+    .osirion-call-to-action-section > :first-child {
+        margin-top: 0;
+    }
+
+/* The same look at every heading level, so HeadingLevel only changes the outline. */
+.osirion-call-to-action-title {
+    margin: 0 auto;
+    max-width: 40rem;
+    font-size: var(--osirion-font-size-3xl, 1.875rem);
+    font-weight: var(--osirion-font-weight-bold, 700);
+    line-height: var(--osirion-line-height-tight, 1.25);
+    color: var(--osirion-text-primary, #111827);
+}
+
+.osirion-call-to-action-description {
+    margin: var(--osirion-spacing-3, 0.75rem) auto 0;
+    max-width: 65ch;
+    font-size: var(--osirion-font-size-lg, 1.125rem);
+    line-height: var(--osirion-line-height-relaxed, 1.625);
+    color: var(--osirion-text-secondary, #4b5563);
+}
+
+.osirion-call-to-action-content {
+    margin: var(--osirion-spacing-4, 1rem) auto 0;
+    max-width: 65ch;
+}
+
+.osirion-call-to-action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--osirion-spacing-3, 0.75rem);
+    margin-top: var(--osirion-spacing-6, 1.5rem);
+}
+
+@media (max-width: 640px) {
+    .osirion-call-to-action-section {
+        padding: var(--osirion-spacing-8, 2rem) var(--osirion-spacing-4, 1rem);
+    }
+
+    .osirion-call-to-action-title {
+        font-size: var(--osirion-font-size-2xl, 1.5rem);
+    }
+}

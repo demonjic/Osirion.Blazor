@@ -120,6 +120,42 @@ The plans and rows are data types from `Osirion.Blazor.Core.Models`:
 A cell is a `ComparisonCell`. A `bool` converts to a check mark (`true`) or a dash (`false`), and a `string` to text,
 so rows can mix both. `ComparisonCell.Yes` and `ComparisonCell.No` are the same marks written out.
 
+### Plans quoted on request
+
+Leave `Price` out for a plan you quote on request: the card shows its name, description, features and button
+without a price. `PlanHeadingLevel` makes each plan's name a heading, so screen reader users can move from plan to
+plan by heading; pick the level under the section's own heading:
+
+```razor
+<h2>Plans</h2>
+
+<OsirionPricingTable Plans="@plans" PlanHeadingLevel="3" />
+
+@code {
+    private readonly PricingPlan[] plans =
+    [
+        new()
+        {
+            Name = "Team",
+            Price = "$29",
+            Period = "per month",
+            CallToActionText = "Start a trial",
+            CallToActionUrl = "/signup?plan=team"
+        },
+        new()
+        {
+            Name = "Enterprise",
+            Description = "Priced for your sites and support.",
+            CallToActionText = "Ask for a quote",
+            CallToActionUrl = "/contact"
+        },
+    ];
+}
+```
+
+Neither plan is `Highlighted` here, so the cards are equal and both buttons are primary buttons. Mark one plan
+`Highlighted` and it keeps the primary button while the others get the secondary one.
+
 ## Parameters
 
 ### OsirionPricingTable
@@ -129,6 +165,7 @@ so rows can mix both. `ComparisonCell.Yes` and `ComparisonCell.No` are the same 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Plans` | `IReadOnlyList<PricingPlan>` | `[]` | The plans, in the order they are shown. Required; with no plans nothing is rendered. |
+| `PlanHeadingLevel` | `int?` | `null` | The level of the heading that holds each plan's name, `1` to `6` (`h1` to `h6`), so the plans can be reached with a screen reader's heading navigation. Pick the level under the section's own heading, such as `3` under an `h2`. A value outside the range is moved to the nearest level, and the name keeps its look at every level. Null, the default, writes the name as a paragraph. |
 | `Theme` | `ThemeMode` | `ThemeMode.System` | The component's color mode. `Light` or `Dark` writes it to `data-theme` (`data-bs-theme` under Bootstrap) on the root element; `System` writes nothing. |
 | `Class` | `string?` | `null` | Extra CSS classes for the component's root element. |
 | `Style` | `string?` | `null` | An inline style for the component's root element. |
@@ -140,13 +177,13 @@ so rows can mix both. `ComparisonCell.Yes` and `ComparisonCell.No` are the same 
 | Property | Type | Description |
 | --- | --- | --- |
 | `Name` | `string` | The plan's name. Required. |
-| `Price` | `string` | The price as shown, with its currency, such as `$29` or `Free`. Required. |
+| `Price` | `string` | The price as shown, with its currency, such as `$29` or `Free`. Empty by default; a plan without a price, such as one quoted on request, shows neither the amount nor the `Period`. |
 | `Period` | `string?` | What the price covers, such as `per month`. |
 | `Description` | `string?` | One line on who the plan is for. |
 | `Features` | `IReadOnlyList<string>` | Features listed under the price. Empty by default. |
 | `CallToActionText` | `string?` | Label of the plan's button. |
 | `CallToActionUrl` | `string?` | Where the button goes. |
-| `Highlighted` | `bool` | Marks the recommended plan: a colored border and the primary button. |
+| `Highlighted` | `bool` | Marks the recommended plan: a colored border and the primary button, while the other plans get the secondary button. When no plan is highlighted, every plan gets the primary button. |
 | `Badge` | `string?` | A short label on the plan's top border, such as `Most popular`. |
 
 ### OsirionFeatureComparison
@@ -178,12 +215,17 @@ Both components write unmatched attributes to their root element.
 - Both render plain HTML and need no script.
 - The pricing table is a `<ul>` with `role="list"`, so screen readers still announce it as a list of plans after
   its bullets are removed.
+- Each plan's name is a paragraph unless `PlanHeadingLevel` is set; then it is an `h1` to `h6` with the same look,
+  and a level outside 1 to 6 moves to the nearest one. The plan's badge then follows the heading in the markup, so
+  a screen reader that jumps to the heading reads the badge with its plan; it is still drawn on the top border.
+- A plan whose `Price` is empty or white space has no price line: neither the amount nor the period is rendered.
 - A plan's button is rendered only when it has `CallToActionText` and a safe `CallToActionUrl`: a path starting
   with `/` (not `//` or `/\`), or an `http`, `https` or `mailto` address. Anything else, such as a `javascript:` URL or a relative path
   without the leading slash, leaves the button out.
 - Each button's accessible name includes the plan, for example "Start a trial: Team", so a list of buttons with the
   same text stays distinguishable. The highlighted plan gets the CSS framework's primary button class, the others
-  the secondary one.
+  the secondary one. With no highlighted plan, every plan is equal and gets the primary class, so a table of plans
+  quoted on request still offers a primary action.
 - The comparison is a real `<table>` with a caption, column headers for the plans and row headers for the features.
   Check marks and dashes are drawn in CSS and hidden from screen readers, which read `IncludedText` or
   `NotIncludedText` instead.

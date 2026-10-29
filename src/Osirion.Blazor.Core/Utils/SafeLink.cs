@@ -3,7 +3,7 @@ namespace Osirion.Blazor.Core.Utils;
 /// <summary>
 /// Decides whether a URL that may come from content can be written into an <c>href</c> or <c>src</c>.
 /// </summary>
-internal static class SafeLink
+public static class SafeLink
 {
     /// <summary>
     /// Gets whether <paramref name="url"/> is a path on the site (see <see cref="LocalUrl.IsLocalPath"/>) or an

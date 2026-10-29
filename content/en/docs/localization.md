@@ -7,7 +7,7 @@ permalink: /docs/localization
 description: "Serve a site in more than one language with Osirion.Blazor: language folders, translations, locale routes, hreflang links, and what does not work yet."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-18
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/docs-localization.jpg'
 categories:
 - Documentation
@@ -105,6 +105,73 @@ the folders of one language. On 4.1.0, write `lang` in every file, the default l
 Translations are paired by an id the provider builds from the path without the language folder and the extension, so
 `en/blog/hello.md` and `sr/blog/hello.md` belong together even when their slugs differ. Files at different paths, such as
 `en/blog/hello.md` and `sr/blog/zdravo.md`, pair only if you give both the same `id` in front matter.
+
+## Serve a second script without a second file
+
+Serbian is written in Cyrillic and in Latin script. A site can write each page once, in Cyrillic under `sr/`, and let
+the provider serve the same content in Latin as `sr-Latn`: a derived locale, made by transliteration when content
+loads. Add `DerivedLocales` next to `SupportedLocales`, for the local folder provider or any GitHub provider
+(`Osirion:Cms:Web:GitHub:<Name>`):
+
+```json
+{
+  "Osirion": {
+    "Cms": {
+      "Web": {
+        "FileSystem": {
+          "BasePath": "content",
+          "EnableLocalization": true,
+          "DefaultLocale": "sr",
+          "SupportedLocales": [ "sr", "en" ],
+          "DerivedLocales": [
+            { "Locale": "sr-Latn", "From": "sr", "Transliteration": "serbian-cyrillic-to-latin" }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+`From` is a locale the content is written in, so list it in `SupportedLocales`. The derived locale is added to the
+provider's locales for you; listing it there as well changes nothing. Startup fails, naming the key (for example
+`DerivedLocales[0].From`), when `EnableLocalization` is off, when `Locale` or `From` is not a culture name or they are
+the same, when `From` is not in `SupportedLocales` or is itself derived, when no transliterator has the name, and when a
+locale is derived twice.
+
+**What is derived.** Every `From` item without an item of the same localization id in the derived locale gets one. A
+real file always wins: write `sr-latn/blog/hello.md` (the folder name in any letter case) and the provider serves that
+file instead. The derived item keeps the localization id, the slug and the address (`blog/hello`), takes the derived
+locale and the path a file of that locale would have (`sr-Latn/blog/hello.md`), and has `IsDerived` set, with the
+source locale in `DerivedFromLocale`. It shows up in lists, tag and category pages of `sr-Latn`, in
+`GetContentTranslationsAsync`, and `GetLocalizationInfoAsync` reports `sr-Latn` once it has published items.
+
+**What is transliterated.** The title, description, categories, tags, series and the front matter's SEO and social
+titles and descriptions. In the rendered HTML, the text and the `alt`, `title`, `aria-label` and `placeholder`
+attributes. Left as written:
+
+- everything inside `code`, `pre`, `kbd`, `samp`, `script`, `style` and any element with `translate="no"`, so wrap a
+  brand name in `<span translate="no">` to keep it in Cyrillic;
+- a link's text that is its own address (an autolink);
+- every `href` and `src` that is absolute, protocol-relative, `mailto:` or `tel:`, a fragment, a relative path, or a
+  file (`/sr/feed.xml`, images);
+- the slug, the address, the author, the dates, the images, `canonical` and JSON-LD.
+
+A link to one of the site's own pages that starts with the source locale moves under the derived locale:
+`/sr/blog/hello` becomes `/sr-Latn/blog/hello`, written with `Locale` exactly as configured, so give `Locale` the letter
+case your routes use. A link without a locale segment (`/blog/hello`) stays as it is.
+
+**Read only.** A derived item has no file and no markdown source of its own (`OriginalMarkdown` is empty: search reads
+the rendered content, and a source in the other script must never be written back under the derived locale). The
+repositories refuse to save or delete it, and the admin, which edits files, never lists it. To change it, change the
+Cyrillic file, or add a file for the derived locale, which then wins.
+
+Folders are not derived: a folder's `_index.md` is, as a page, but the directory tree of `sr-Latn` is empty, so build
+navigation for the derived locale from its pages or from the source locale's folders. The built-in transliterator is
+`serbian-cyrillic-to-latin`, which writes Љ, Њ and Џ as `LJ`, `NJ` and `DŽ` in a word written in capitals and as `Lj`,
+`Nj` and `Dž` otherwise. To add another, implement `ITextTransliterator` (a `Name` and `Transliterate(string)`) and
+register it with `services.AddSingleton<ITextTransliterator, MyTransliterator>()`; one registered after the built-in
+under the same name replaces it.
 
 ## Route by language
 
@@ -247,6 +314,8 @@ same locale show up once in the list above, the first of them, and the provider 
 
 ## Next steps
 
+- [Locale routing](/docs/locale-routing): set the culture of each request from its URL prefix, with canonical
+  redirects, localized links and a language picker
 - [SEO](/docs/seo): canonical addresses, the sitemap and feeds
 - [Front matter reference](/docs/front-matter): `lang` and `id`
 - [SeoMetadataRenderer](/components/seo-metadata-renderer): the `AlternateLanguageUrls` parameter

@@ -113,6 +113,23 @@ public class ContentListPageTests : CmsWebComponentTestBase
     }
 
     [Fact]
+    public void ContentListPage_HeaderContent_ReplacesTheListHeadingAboveTheList()
+    {
+        ReturnItems(Post("first-post", "First post"));
+
+        var cut = RenderStatic<ContentListPage>(p => p
+            .Add(c => c.Directory, "blog")
+            .Add(c => c.HeaderContent, "<h1>Writing</h1><nav class=\"series\" aria-label=\"Series\"><a href=\"/series/a\">A</a></nav>"));
+
+        var header = cut.Find(".osirion-content-list-page-main > header.osirion-content-list-page-header");
+        header.QuerySelector("nav.series")!.TextContent.ShouldBe("A");
+        header.NextElementSibling!.ClassList.ShouldContain("osirion-content-list");
+        cut.FindAll("h1").ShouldHaveSingleItem().TextContent.ShouldBe("Writing");
+        cut.FindAll(".osirion-content-list-header").ShouldBeEmpty();
+        cut.FindAll(".osirion-featured-post").ShouldHaveSingleItem();
+    }
+
+    [Fact]
     public void ContentListPage_WithoutItemTemplate_KeepsTheCards()
     {
         ReturnItems(Post("first-post", "First post"));

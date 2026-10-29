@@ -6,10 +6,17 @@ namespace Osirion.Blazor.Components;
 public partial class OsirionContextCardGrid : OsirionComponentBase
 {
     /// <summary>
-    /// The section's heading, rendered as an <c>h2</c>; with an empty value no heading is rendered and the section
-    /// has no <c>aria-labelledby</c>.
+    /// The section's heading, rendered at <see cref="HeadingLevel"/>; with an empty value no heading is rendered and
+    /// the section has no <c>aria-labelledby</c>.
     /// </summary>
     [Parameter] public string Title { get; set; } = "Context by category";
+
+    /// <summary>
+    /// The level of the section's heading, <c>1</c> to <c>6</c> (<c>h1</c> to <c>h6</c>). It defaults to <c>2</c>, a
+    /// section under the page's own <c>h1</c>. Each card's label is a heading one level below, up to <c>h6</c>. A value
+    /// outside the range is moved to the nearest level, and the headings keep their look at every level.
+    /// </summary>
+    [Parameter] public int HeadingLevel { get; set; } = 2;
 
     /// <summary>
     /// Supporting text under the heading; nothing is rendered when it is empty.
@@ -48,6 +55,10 @@ public partial class OsirionContextCardGrid : OsirionComponentBase
     private string EffectiveHeadingId => string.IsNullOrWhiteSpace(HeadingId) ? _generatedHeadingId : HeadingId;
 
     private bool HasTitle => !string.IsNullOrWhiteSpace(Title);
+
+    private int TitleLevel => Math.Clamp(HeadingLevel, 1, 6);
+
+    private int LabelLevel => Math.Min(TitleLevel + 1, 6);
 
     /// <summary>Describes a card label, detail, and optional accent.</summary>
     public record ContextCardItem(string Label, string Description, string Accent = "green");

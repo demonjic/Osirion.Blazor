@@ -102,7 +102,8 @@ have a `/search` page that passes the `q` query to `ContentList`.
 | `QueryParameterName` | `string` | `"q"` | The name of the query string parameter that carries the search text, which is also the name of the input. Defaults to `q`. |
 | `SearchQuery` | `string` | `""` | The text shown in the field, usually the query of the results page, so it stays in the field after a search. |
 | `Placeholder` | `string` | `"Search content..."` | The placeholder of the field. It is a hint only: the field's accessible name is `Label`. |
-| `SearchButtonText` | `string` | `"Search"` | The visible text of the submit button. The button's accessible name stays `Submit search`. |
+| `SearchButtonText` | `string` | `"Search"` | The visible text of the submit button. The button's accessible name is `SubmitLabel`. |
+| `SubmitLabel` | `string` | `"Submit search"` | The accessible name of the submit button. Set it for another language, and keep the words of `SearchButtonText` in it, so a reader who names the button by what it shows reaches it. Defaults to `Submit search`. |
 | `Title` | `string?` | `null` | The heading above the form, rendered as an `h2`. No heading when `null`. |
 | `Label` | `string` | `"Search"` | The text of the field's visually hidden label, which is its accessible name. Set it for another language. |
 | `Id` | `string?` | `null` | The `id` of the input, which the label points to. Without it, the id is derived from `ActionUrl` and `QueryParameterName`, so it is the same on every render and in every process. Set it when one page holds two boxes with the same settings. |
@@ -122,9 +123,10 @@ are captured but not rendered.
   items where any word appears, ignoring case, in the title, description, rendered HTML, categories or tags. It is
   a substring match over the loaded content, not a ranked full-text index.
 - The field is named by a visually hidden `label` whose text is `Label`, "Search" by default, and `Placeholder` is
-  only a hint. The button is announced as "Submit search"; its visible text is hidden from screen readers. That
-  button name is a fixed English text, so on other languages set `Label`, `Placeholder` and `SearchButtonText` and
-  expect the button name to stay "Submit search".
+  only a hint. The button is announced as `SubmitLabel`, "Submit search" by default; its visible text,
+  `SearchButtonText`, is hidden from screen readers. On another language set `Label`, `Placeholder`,
+  `SearchButtonText` and `SubmitLabel`, and keep the words of the visible text in the button's name. Before the
+  release after 4.2.0 the button's name was always "Submit search".
 - The input's `id` is `Id` when you set it, otherwise `search-input-` and a number derived from `ActionUrl` and
   `QueryParameterName`. It is the same on every render and in every process, so a prerendered and an interactive box
   agree. Two boxes with the same settings on one page need different `Id` values.

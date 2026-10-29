@@ -5,8 +5,9 @@ using Osirion.Blazor.Components;
 namespace Osirion.Blazor.Navigation.Components;
 
 /// <summary>
-/// Renders a site menu: a <c>nav</c> with an optional brand link, your items and an optional actions slot. Submenus and
-/// the mobile drawer open with CSS only, from visually hidden checkboxes, so it works under static SSR without script.
+/// Renders a site menu: a <c>nav</c> with an optional brand link, your items, an optional actions slot and optional
+/// pinned actions that stay in the bar. Submenus and the mobile drawer open with CSS only, from visually hidden
+/// checkboxes, so it works under static SSR without script.
 /// </summary>
 public partial class Menu
 {
@@ -49,10 +50,19 @@ public partial class Menu
     /// <summary>
     /// Gets or sets content shown at the end of the bar, after the menu items: a search box, a theme toggle or a
     /// call to action button. A horizontal menu aligns it to the trailing edge; a collapsed menu shows it at the
-    /// bottom of its drawer.
+    /// bottom of its drawer. Put content that must stay visible when the menu collapses in <see cref="PinnedActions"/>.
     /// </summary>
     [Parameter]
     public RenderFragment? Actions { get; set; }
+
+    /// <summary>
+    /// Gets or sets content that stays in the bar at every width, for example the site's main call to action. A
+    /// horizontal menu shows it after <see cref="Actions"/>; below the collapse breakpoint it stays in the bar, drawn
+    /// after the toggle, instead of moving into the drawer. It renders once, after the drawer in keyboard order. Keep
+    /// it short: on a phone it shares the bar with the brand and the toggle.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? PinnedActions { get; set; }
 
     /// <summary>
     /// Gets or sets whether a horizontal menu stays at the top of the page while it scrolls. It has no effect on a
@@ -62,10 +72,15 @@ public partial class Menu
     public bool Sticky { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the <c>z-index</c> written to the container's inline style while the menu is sticky.
+    /// Gets or sets the container's <c>z-index</c> while the menu is sticky. The default, 1000, comes from the
+    /// stylesheet; another value, or any <see cref="OsirionComponentBase.Style"/>, is written to the container's inline
+    /// style, after <c>Style</c>, so it wins over a <c>z-index</c> there.
     /// </summary>
     [Parameter]
-    public int StickyZIndex { get; set; } = 1000;
+    public int StickyZIndex { get; set; } = DefaultStickyZIndex;
+
+    /// <summary>The sticky z-index the stylesheet sets on <c>.osirion-menu-sticky</c>.</summary>
+    private const int DefaultStickyZIndex = 1000;
 
     /// <summary>
     /// Gets or sets the layout: <c>Horizontal</c>, a bar with dropdown submenus, or <c>Vertical</c>, a stack whose
@@ -159,6 +174,11 @@ public partial class Menu
     private string NavId => $"{MenuId}-nav";
 
     /// <summary>
+    /// Gets the identifier of the items and actions that collapse into the drawer, which the mobile toggle controls.
+    /// </summary>
+    private string DrawerId => $"{MenuId}-drawer";
+
+    /// <summary>
     /// Gets the component theme for the data attribute.
     /// Returns the component's specific theme if set, otherwise null to use global theme.
     /// </summary>
@@ -208,6 +228,10 @@ public partial class Menu
                 _ => "osirion-menu-collapse-mobile"
             });
 
+        // Lets the collapsed bar draw the toggle before the pinned actions, the order the keyboard reaches them.
+        if (PinnedActions is not null)
+            classes.Add("osirion-menu-has-pinned-actions");
+
         if (Sticky && Orientation == MenuOrientation.Horizontal)
             classes.Add("osirion-menu-sticky");
 
@@ -225,7 +249,9 @@ public partial class Menu
         if (!string.IsNullOrWhiteSpace(Style))
             styles.Add(WithTrailingSemicolon(Style));
 
-        if (Sticky && Orientation == MenuOrientation.Horizontal)
+        // The default z-index is in the stylesheet, so a sticky menu needs no inline style (which a Content Security
+        // Policy without 'unsafe-inline' blocks); it is written only to win over a Style or to change the value.
+        if (Sticky && Orientation == MenuOrientation.Horizontal && (styles.Count > 0 || StickyZIndex != DefaultStickyZIndex))
             styles.Add($"z-index: {StickyZIndex};");
 
         if (styles.Count > 0)

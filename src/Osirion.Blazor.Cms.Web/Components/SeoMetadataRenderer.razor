@@ -246,8 +246,11 @@
 
     private void RenderResourceHintAndStructuredDataTags(RenderTreeBuilder __builder)
     {
-    <!-- ===== Security Headers ===== -->
-    <meta name="referrer" content="no-referrer-when-downgrade" />
+    @* Only when configured: a referrer meta tag replaces the policy of the Referrer-Policy response header. *@
+    @if (_referrerPolicy is not null)
+    {
+        <meta name="referrer" content="@_referrerPolicy" />
+    }
 
     <!-- ===== Schema.org JSON-LD Structured Data ===== -->
     @if (!string.IsNullOrWhiteSpace(_jsonLdContent))

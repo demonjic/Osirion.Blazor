@@ -60,6 +60,14 @@ public partial class ArticlePage
     public RenderFragment<ContentItem>? HeaderContent { get; set; }
 
     /// <summary>
+    /// Gets or sets content shown after the article and its sidebar, outside the article column, for example a
+    /// closing call to action or related links. Unlike <see cref="CustomFooterContent"/>, which ends the article
+    /// itself, it is your own markup, written as you give it. Nothing is rendered when <see langword="null"/>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<ContentItem>? FooterContent { get; set; }
+
+    /// <summary>
     /// Content shown at the end of the sidebar, in a section of its own. It needs <see cref="ShowSidebar"/>.
     /// </summary>
     [Parameter]

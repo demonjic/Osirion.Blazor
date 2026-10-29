@@ -4,10 +4,10 @@ order: 1
 layout: docs
 title: Forms and feedback
 permalink: /components/forms-and-feedback
-description: The contact form, the cookie and announcement banners, and the not-found state from Osirion.Blazor.Core. All of them post or render on the server under static SSR.
+description: The contact forms, the cookie and announcement banners, and the not-found state from Osirion.Blazor.Core. All but OsirionStaticContactForm post or render on the server under static SSR.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-23
 featured_image: 'https://media.getosirion.com/og/components-forms-and-feedback.jpg'
 categories:
 - Components
@@ -53,16 +53,19 @@ seo_properties:
 
 These components take input from a visitor or tell them something about the page: the contact form, the cookie and
 announcement banners, and the state shown when there is nothing to show. All of them live in the
-`Osirion.Blazor.Components` namespace of the Osirion.Blazor.Core package and work under static SSR without script.
+`Osirion.Blazor.Components` namespace of the Osirion.Blazor.Core package and work under static SSR without script,
+except `OsirionStaticContactForm`, which sends its message with a script.
 
 ## Contact form
 
 `OsirionContactForm` is built on Blazor's `EditForm`, so it posts as a plain HTML form under static SSR, validates
-with data annotations on the server, and needs no script.
+with data annotations on the server, and needs no script. A site published as static files has no server to post to;
+`OsirionStaticContactForm` sends the message as JSON to an endpoint you provide instead, such as a Cloudflare Worker.
 
 | Component | What it does |
 | --- | --- |
 | [OsirionContactForm](/components/contact-form) | Name, email, subject and message fields with a privacy checkbox, a honeypot spam check and delivery through SMTP, SendGrid or Infobip, or through your own `OnSubmit` callback. |
+| [OsirionStaticContactForm](/components/static-contact-form) | Name, email, optional company and message fields for a static site: posts JSON to your endpoint with a Cloudflare Turnstile token and a honeypot field, and shows the answer. Needs script. |
 
 ### Quick start
 

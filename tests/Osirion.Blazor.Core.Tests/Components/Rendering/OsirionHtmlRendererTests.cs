@@ -162,6 +162,37 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
         theme.GetAttribute("crossorigin").ShouldBe("anonymous");
     }
 
+    // Fails before the fix: the accessible code theme was an inline <style> element, which a Content Security Policy
+    // without 'unsafe-inline' in style-src blocks, leaving code blocks unstyled. It is now in the renderer's stylesheet.
+    [Fact]
+    public void OsirionHtmlRenderer_AccessibleTheme_WritesNoInlineStyleAndNeedsNoOtherStylesheet()
+    {
+        Services.AddJSComponents();
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-js\">x</code></pre>"));
+
+        // Only BlazorJSComponents' own bl-script elements carry a style attribute (see the security guide)
+        cut.FindAll("style").ShouldBeEmpty();
+        cut.FindAll("[style]").ShouldAllBe(element => element.LocalName == "bl-script");
+        cut.Find("article").ClassList.ShouldContain("osirion-wcag-theme");
+        cut.FindAll("link[rel=stylesheet]").Select(link => link.GetAttribute("href"))
+            .ShouldBe(["_content/Osirion.Blazor.Core/css/osirion-html-renderer.min.css"]);
+    }
+
+    // Fails before the fix: the accessible theme's rules in the stylesheet follow the article class, which was also
+    // added with highlighting off. Prism then never gives the pre its dark background, so the theme's near-white
+    // code text landed on the site's light page.
+    [Fact]
+    public void OsirionHtmlRenderer_SyntaxHighlightingDisabled_DoesNotApplyTheAccessibleTheme()
+    {
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-cs\">x</code></pre>")
+            .Add(p => p.EnableSyntaxHighlighting, false));
+
+        cut.Find("article").ClassList.ShouldNotContain("osirion-wcag-theme");
+    }
+
     [Fact]
     public void OsirionHtmlRenderer_CustomPrismBaseUrl_LoadsFromTheHostWithoutIntegrity()
     {
@@ -175,6 +206,58 @@ public class OsirionHtmlRendererTests : OsirionComponentTestBase
         var theme = cut.Find("link[href*='prism-okaidia']");
         theme.GetAttribute("href").ShouldBe("/lib/prism/themes/prism-okaidia.min.css");
         theme.HasAttribute("integrity").ShouldBeFalse();
+    }
+
+    // Fails before the fix: only the PrismBaseUrl parameter chose the source, so a renderer inside ContentView or
+    // ArticlePage, which do not expose it, always loaded Prism from cdnjs.
+    [Fact]
+    public void OsirionHtmlRenderer_ConfiguredPrismBaseUrl_LoadsEveryPrismFileFromTheSite()
+    {
+        Services.AddJSComponents();
+        Services.AddOsirionPrism(options => options.BaseUrl = "/lib/prism/1.29.0/");
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-python\">x</code></pre>")
+            .Add(p => p.UseAccessibleTheme, false)
+            .Add(p => p.ShowLineNumbers, true));
+
+        cut.Find("link[href*='prism-okaidia']").GetAttribute("href").ShouldBe("/lib/prism/1.29.0/themes/prism-okaidia.min.css");
+        cut.Find("link[href*='prism-line-numbers']").GetAttribute("href").ShouldBe("/lib/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css");
+        cut.Markup.ShouldContain("/lib/prism/1.29.0/prism.min.js");
+        cut.Markup.ShouldContain("/lib/prism/1.29.0/components/prism-python.min.js");
+        cut.Markup.ShouldContain("/lib/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js");
+        cut.Markup.ShouldNotContain("cdnjs.cloudflare.com");
+        cut.Markup.ShouldNotContain("sha512-");
+    }
+
+    [Fact]
+    public void OsirionHtmlRenderer_PrismBaseUrlParameter_WinsOverTheConfiguredOne()
+    {
+        Services.AddJSComponents();
+        Services.AddOsirionPrism(options => options.BaseUrl = "/lib/prism/1.29.0/");
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-js\">x</code></pre>")
+            .Add(p => p.UseAccessibleTheme, false)
+            .Add(p => p.PrismBaseUrl, "/vendor/prism/"));
+
+        cut.Find("link[href*='prism-okaidia']").GetAttribute("href").ShouldBe("/vendor/prism/themes/prism-okaidia.min.css");
+        cut.Markup.ShouldNotContain("/lib/prism/1.29.0/");
+    }
+
+    [Fact]
+    public void OsirionHtmlRenderer_PrismOptionsWithoutBaseUrl_LoadThePinnedCdnReleaseWithIntegrity()
+    {
+        Services.AddJSComponents();
+        Services.AddOsirionPrism(_ => { });
+
+        var cut = RenderStatic<OsirionHtmlRenderer>(parameters => parameters
+            .Add(p => p.HtmlContent, "<pre><code class=\"language-js\">x</code></pre>")
+            .Add(p => p.UseAccessibleTheme, false));
+
+        var theme = cut.Find("link[href*='prism-okaidia']");
+        theme.GetAttribute("href").ShouldBe("https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css");
+        theme.GetAttribute("integrity").ShouldStartWith("sha512-");
     }
 
     [Fact]

@@ -63,9 +63,10 @@ public class SeoMetadata : ValueObject
     public string JsonLd { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets the schema.org type
+    /// Gets the schema.org type from the front matter <c>type</c>. Empty by default, so the renderer uses the page's
+    /// schema types, then its fallback type, then <c>WebPage</c>.
     /// </summary>
-    public string Type { get; set; } = "Article";
+    public string Type { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the Twitter card type
@@ -120,7 +121,7 @@ public class SeoMetadata : ValueObject
             OgImageUrl = ogImageUrl ?? string.Empty,
             OgType = ogType ?? string.Empty,
             JsonLd = jsonLd ?? string.Empty,
-            Type = schemaType ?? "Article",
+            Type = schemaType ?? string.Empty,
             TwitterCard = twitterCard ?? "summary_large_image",
             TwitterTitle = twitterTitle ?? metaTitle,
             TwitterDescription = twitterDescription ?? metaDescription,

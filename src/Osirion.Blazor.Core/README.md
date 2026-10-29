@@ -316,6 +316,18 @@ when none is registered, so content is never written unsanitized.
 `JsonLdNormalizer.TryNormalize` makes author-supplied JSON-LD safe to place inside a
 `<script type="application/ld+json">` element by re-serializing it with `<`, `>` and `&` escaped.
 
+`SafeLink.IsSafe` in `Osirion.Blazor.Core.Utils` is the check components such as `OsirionAuthorCard` and
+`OsirionPricingTable` apply before they write a link from content or configuration into an `href` or `src`, for links
+you render yourself:
+
+```razor
+@* true for a path on the site or an absolute http, https or mailto address; false for javascript:, data: and //host *@
+@if (SafeLink.IsSafe(profileUrl))
+{
+    <a href="@profileUrl">Profile</a>
+}
+```
+
 ## Base Component Features
 
 `OsirionComponentBase` provides:
@@ -417,6 +429,10 @@ The core components integrate seamlessly with popular CSS frameworks:
 - Radzen
 
 Components adapt their styling to the framework set in `ThemingOptions.Framework` (`CssFramework.None`, `Bootstrap`, `FluentUI`, `MudBlazor` or `Radzen`).
+
+Markup outside `OsirionComponentBase`, such as a layout that inherits `LayoutComponentBase`, gets the same primary
+button classes from `ButtonClasses.Primary(framework)` in `Osirion.Blazor.Core.Utils`, for example `btn btn-primary`
+under Bootstrap, and the secondary ones from `ButtonClasses.Secondary(framework)`, for example `btn btn-secondary`.
 
 ## Accessibility
 

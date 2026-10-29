@@ -28,7 +28,7 @@
         "heading": "Blog",
         "theme": "dark"
       },
-      "featured_image_now": "https://media.getosirion.com/og/blog-blog.jpg",
+      "featured_image_now": "https://media.getosirion.com/og/blog.jpg",
       "shots": []
     },
     {
@@ -443,6 +443,20 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/components-breadcrumbs.jpg",
+      "shots": []
+    },
+    {
+      "file": "components/call-to-action-section.md",
+      "path": "/components/call-to-action-section",
+      "section": "Components",
+      "title": "OsirionCallToActionSection",
+      "card": {
+        "key": "og/components-call-to-action-section.jpg",
+        "url": "https://media.getosirion.com/og/components-call-to-action-section.jpg",
+        "heading": "OsirionCallToActionSection: a closing call to action for Blazor",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-call-to-action-section.jpg",
       "shots": []
     },
     {
@@ -1286,6 +1300,20 @@
       "shots": []
     },
     {
+      "file": "components/static-contact-form.md",
+      "path": "/components/static-contact-form",
+      "section": "Components",
+      "title": "OsirionStaticContactForm",
+      "card": {
+        "key": "og/components-static-contact-form.jpg",
+        "url": "https://media.getosirion.com/og/components-static-contact-form.jpg",
+        "heading": "OsirionStaticContactForm: contact form for static Blazor sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/components-static-contact-form.jpg",
+      "shots": []
+    },
+    {
       "file": "components/steps.md",
       "path": "/components/steps",
       "section": "Components",
@@ -1602,6 +1630,20 @@
         "theme": "dark"
       },
       "featured_image_now": "https://media.getosirion.com/og/docs-installation.jpg",
+      "shots": []
+    },
+    {
+      "file": "docs/locale-routing.md",
+      "path": "/docs/locale-routing",
+      "section": "Guides",
+      "title": "Locale routing",
+      "card": {
+        "key": "og/docs-locale-routing.jpg",
+        "url": "https://media.getosirion.com/og/docs-locale-routing.jpg",
+        "heading": "Locale routing for Osirion.Blazor sites",
+        "theme": "dark"
+      },
+      "featured_image_now": "https://media.getosirion.com/og/docs-locale-routing.jpg",
       "shots": []
     },
     {

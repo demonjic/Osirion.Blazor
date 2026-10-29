@@ -1,0 +1,139 @@
+/* OsirionStaticContactForm: the fields in one column, then the button with its status beside it. With contact
+   information, the form and the information sit in two columns, and in one below 768px. */
+
+.osirion-static-contact-form-title {
+    margin: 0 0 var(--osirion-spacing-2, 0.5rem);
+    font-size: var(--osirion-font-size-2xl, 1.5rem);
+    font-weight: var(--osirion-font-weight-bold, 700);
+    line-height: 1.2;
+}
+
+.osirion-static-contact-form-description {
+    margin: 0 0 var(--osirion-spacing-6, 1.5rem);
+    color: var(--osirion-text-secondary, inherit);
+    line-height: 1.5;
+}
+
+.osirion-static-contact-form-side-by-side,
+.osirion-static-contact-form-stacked {
+    display: grid;
+    gap: var(--osirion-spacing-8, 2rem);
+    align-items: start;
+}
+
+/* minmax(0, ...) lets the form column shrink below the width of its widest field. */
+.osirion-static-contact-form-side-by-side {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+}
+
+.osirion-static-contact-form-stacked {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* ::deep, because the panel is another component: its root does not carry this component's scope attribute. */
+.osirion-static-contact-form ::deep .osirion-static-contact-form-panel {
+    --osirion-contact-text: var(--osirion-text-primary, inherit);
+    --osirion-contact-text-muted: var(--osirion-text-secondary, inherit);
+    padding: var(--osirion-spacing-6, 1.5rem);
+    background-color: var(--osirion-background-secondary, transparent);
+    border-radius: var(--osirion-radius-lg, 0.5rem);
+}
+
+@media (max-width: 768px) {
+    .osirion-static-contact-form-side-by-side {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.osirion-static-contact-form-form {
+    position: relative;
+    display: grid;
+    gap: var(--osirion-spacing-5, 1.25rem);
+}
+
+/* The form stays hidden until its script runs; without this the grid display would show it. */
+.osirion-static-contact-form-form[hidden] {
+    display: none;
+}
+
+/* Where scripts run, the hidden form keeps its place, invisible and out of the accessibility tree, so revealing it
+   moves nothing below it. Without script it stays out of the layout, and NoScriptContent shows instead. */
+@media (scripting: enabled) {
+    .osirion-static-contact-form-form[hidden] {
+        display: grid;
+        visibility: hidden;
+    }
+}
+
+.osirion-static-contact-form-field {
+    display: grid;
+    gap: var(--osirion-spacing-2, 0.5rem);
+}
+
+/* Only the framework-neutral classes are styled here: under Bootstrap the fields carry form-control, and the other
+   adapters style these classes with stronger selectors. :where keeps this rule as weak as one class. */
+:where(.osirion-input, .osirion-textarea) {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--osirion-spacing-2, 0.5rem) var(--osirion-spacing-3, 0.75rem);
+    font: inherit;
+    color: var(--osirion-input-text, var(--osirion-text-primary, inherit));
+    background-color: var(--osirion-input-background, var(--osirion-background-primary, #ffffff));
+    border: 1px solid var(--osirion-input-border, var(--osirion-border-color, #d1d5db));
+    border-radius: var(--osirion-input-radius, var(--osirion-radius-md, 0.375rem));
+}
+
+:where(.osirion-input, .osirion-textarea):focus-visible {
+    border-color: var(--osirion-input-focus-border, var(--osirion-action-primary, #2563eb));
+    outline: var(--osirion-focus-ring-width, 3px) solid var(--osirion-focus-ring-color, rgba(59, 130, 246, 0.5));
+    outline-offset: var(--osirion-focus-ring-offset, 2px);
+}
+
+/* For the eye only: the inputs carry the required attribute, which assistive technology announces. */
+.osirion-static-contact-form-required {
+    margin-inline-start: var(--osirion-spacing-1, 0.25rem);
+    color: var(--osirion-status-danger-text, inherit);
+}
+
+.osirion-static-contact-form-field textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+/* A field people never see: out of the layout and clipped, but still in the form, where a bot finds it. */
+.osirion-static-contact-form-trap {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* The widget's own height, held before it loads so the button does not move. */
+.osirion-static-contact-form-turnstile {
+    min-height: 65px;
+}
+
+.osirion-static-contact-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--osirion-spacing-3, 0.75rem) var(--osirion-spacing-5, 1.25rem);
+}
+
+.osirion-static-contact-form-status,
+.osirion-static-contact-form-privacy {
+    margin: 0;
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    color: var(--osirion-text-secondary, inherit);
+}
+
+.osirion-static-contact-form-status[data-state="success"] {
+    font-weight: var(--osirion-font-weight-semibold, 600);
+    color: var(--osirion-status-success-text, inherit);
+}
+
+.osirion-static-contact-form-status:is([data-state="fields"], [data-state="check"], [data-state="failed"]) {
+    color: var(--osirion-status-danger-text, inherit);
+}

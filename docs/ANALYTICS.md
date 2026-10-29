@@ -209,17 +209,29 @@ builder.Services.AddOsirionAnalytics(analytics => {
 
 ## Integration with Privacy Modules
 
-Osirion.Blazor.Analytics can integrate with privacy consent modules to provide GDPR-compliant analytics:
+Trackers can wait for the visitor's consent, as recorded by `OsirionCookieConsent`. Turn the gate on with
+`RequireConsent()` (or `Osirion:Analytics:Consent:RequireConsent`):
 
 ```csharp
-builder.Services.AddOsirionAnalytics(analytics => {
-    analytics.AddMatomo(options => {
-        options.RequireConsent = true;
-    });
-});
-
-builder.Services.AddOsirionPrivacy();
+builder.Services.AddOsirionAnalytics(analytics => analytics
+    .AddMatomo(options => { options.SiteId = "1"; options.TrackerUrl = "https://analytics.example.com/"; })
+    .RequireConsent());
 ```
+
+By default consent is read from the consent cookie on the server, and a tracker renders nothing until the visitor
+accepted the `analytics` category. A site exported to static files has no request to read it from, so evaluate consent
+in the browser instead:
+
+```csharp
+builder.Services.AddOsirionAnalytics(analytics => analytics
+    .AddGA4(options => options.MeasurementId = "G-XXXXXXXXXX")
+    .RequireConsent(options => options.Evaluation = ConsentEvaluation.Browser));
+```
+
+or `"Osirion": { "Analytics": { "Consent": { "RequireConsent": true, "Evaluation": "Browser" } } }`. Each tracker then
+renders its scripts held (`type="text/plain"`, with `data-osirion-consent="analytics"`) and `osirion-consent.js`, from
+Osirion.Blazor.Core, runs them after consent; `OsirionSiteLayout` renders its banner in the same mode. See
+`docs/components/core/CookieConsent.md` (static hosting) for the banner, the reopen link and the Content Security Policy.
 
 ## SSR Considerations
 

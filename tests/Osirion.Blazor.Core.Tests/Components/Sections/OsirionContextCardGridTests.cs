@@ -100,4 +100,69 @@ public class OsirionContextCardGridTests : OsirionComponentTestBase
         articles[1].ClassList.ShouldContain("osirion-context-card-grid-item-blue");
         articles[1].QuerySelector("h3")!.TextContent.ShouldBe("Asia");
     }
+
+    // Fails before the fix: the heading was always an h2 and the card labels always h3, so a grid under a page's h2
+    // broke the heading outline.
+    [Theory]
+    [InlineData(1, "h1", "h2")]
+    [InlineData(2, "h2", "h3")]
+    [InlineData(3, "h3", "h4")]
+    [InlineData(4, "h4", "h5")]
+    [InlineData(5, "h5", "h6")]
+    [InlineData(6, "h6", "h6")]
+    public void ContextCardGrid_HeadingLevel_SetsTheHeadingAndPutsTheCardLabelsOneLevelBelow(int level, string heading, string label)
+    {
+        var cut = RenderGrid(p => p
+            .Add(c => c.HeadingLevel, level)
+            .Add(c => c.Items, [new ContextCardItem("Europe", "EU rules")]));
+
+        var title = cut.Find($".osirion-context-card-grid-heading > {heading}");
+        title.TextContent.ShouldBe("Context by category");
+        cut.Find("section").GetAttribute("aria-labelledby").ShouldBe(title.Id);
+        cut.Find($"article.osirion-context-card-grid-item > {label}").TextContent.ShouldBe("Europe");
+        cut.FindAll("h1, h2, h3, h4, h5, h6").Count.ShouldBe(2);
+    }
+
+    [Theory]
+    [InlineData(0, "h1", "h2")]
+    [InlineData(-3, "h1", "h2")]
+    [InlineData(7, "h6", "h6")]
+    [InlineData(int.MaxValue, "h6", "h6")]
+    public void ContextCardGrid_HeadingLevelOutsideTheRange_IsMovedToTheNearestLevel(int level, string heading, string label)
+    {
+        var cut = RenderGrid(p => p
+            .Add(c => c.HeadingLevel, level)
+            .Add(c => c.Items, [new ContextCardItem("Europe", "EU rules")]));
+
+        cut.Find($".osirion-context-card-grid-heading > {heading}").TextContent.ShouldBe("Context by category");
+        cut.Find($"article.osirion-context-card-grid-item > {label}").TextContent.ShouldBe("Europe");
+    }
+
+    // Guard: without HeadingLevel the grid keeps the markup it had before the parameter existed.
+    [Fact]
+    public void ContextCardGrid_DefaultHeadingLevel_KeepsTheMarkup()
+    {
+        var cut = RenderGrid(p => p
+            .Add(c => c.HeadingId, "roles-heading")
+            .Add(c => c.Description, "Where it applies")
+            .Add(c => c.Items, [new ContextCardItem("Finance", "Cost variance", "blue")]));
+
+        cut.MarkupMatches(
+            """
+            <section class="osirion-context-card-grid " aria-labelledby="roles-heading">
+              <div class="osirion-context-card-grid-container container">
+                <div class="osirion-context-card-grid-heading">
+                  <h2 id="roles-heading">Context by category</h2>
+                  <p>Where it applies</p>
+                </div>
+                <div class="osirion-context-card-grid-items">
+                  <article class="osirion-context-card-grid-item osirion-context-card-grid-item-blue">
+                    <h3>Finance</h3>
+                    <p>Cost variance</p>
+                  </article>
+                </div>
+              </div>
+            </section>
+            """);
+    }
 }

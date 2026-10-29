@@ -117,10 +117,36 @@ public partial class OsirionCookieConsent
 
     /// <summary>
     /// Gets or sets the consent expiry in days. The value is posted with the form and applied to the consent cookie by
-    /// the consent endpoint, which accepts 1 to 3650 days and uses 365 for anything else.
+    /// the consent endpoint, which accepts 1 to 3650 days and uses 365 for anything else. With
+    /// <see cref="ConsentEvaluation.Browser"/> the consent script applies the same rule.
     /// </summary>
     [Parameter]
     public int ConsentExpiryDays { get; set; } = 365;
+
+    /// <summary>
+    /// Gets or sets where the visitor's choice is read and recorded. <c>Server</c>, the default, shows the banner when the
+    /// request has no consent cookie and posts the choice to <see cref="ConsentEndpoint"/>. <c>Browser</c> renders the
+    /// banner hidden on every page, without a form, and a script shows it, writes the same cookie and runs the tracker
+    /// scripts held for the categories the visitor accepted: use it for a site exported to static files. In
+    /// <c>OsirionSiteLayout</c> it follows <c>Osirion:Analytics:Consent:Evaluation</c>.
+    /// </summary>
+    [Parameter]
+    public ConsentEvaluation Evaluation { get; set; } = ConsentEvaluation.Server;
+
+    private bool EvaluatedInBrowser => Evaluation == ConsentEvaluation.Browser;
+
+    // On the server the buttons submit the form; in the browser the consent script handles their clicks.
+    private string ButtonType => EvaluatedInBrowser ? "button" : "submit";
+
+    // In the browser there is no page to reload into, so Customize is offered only with a panel for it to open.
+    private bool ShowCustomizeChoice => ShowCustomizeButton && (!EvaluatedInBrowser || ShowCustomizationPanel);
+
+    // The server renders the panel for a visitor who chose to customize; the browser gets it on every page, hidden.
+    private bool RenderCustomizationPanel => ShowCustomizationPanel && (IsCustomizing || EvaluatedInBrowser);
+
+    private string? CustomizeExpanded => EvaluatedInBrowser ? "false" : null;
+
+    private int BrowserExpiryDays => CookieConsentHandler.GetExpiryDays(ConsentExpiryDays);
 
     /// <summary>
     /// Gets or sets whether the banner should be shown
@@ -154,7 +180,12 @@ public partial class OsirionCookieConsent
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        CheckConsentStatus();
+
+        // In the browser the banner is the same for every visitor, so nothing is read from the request.
+        if (!EvaluatedInBrowser)
+        {
+            CheckConsentStatus();
+        }
     }
 
     /// <summary>

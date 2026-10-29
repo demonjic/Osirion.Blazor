@@ -42,6 +42,18 @@ public class OsirionCookieConsentContentTests : BunitContext
         cut.Find(".osirion-cookie-consent").ClassName.ShouldBe("osirion-cookie-consent osirion-cookie-consent-bottom");
     }
 
+    // Fails before the fix: the Customize button carried style="color:inherit; border-color:inherit;", which a Content
+    // Security Policy without 'unsafe-inline' in style-src blocks. A class in the component's stylesheet sets them now.
+    [Fact]
+    public void OsirionCookieConsent_CustomizeButton_TakesItsColorsFromAClassInsteadOfAStyleAttribute()
+    {
+        var cut = RenderOnPage(parameters => { });
+
+        var customize = cut.Find("button[value=customize]");
+        customize.HasAttribute("style").ShouldBeFalse();
+        customize.ClassList.ShouldContain("osirion-cookie-consent-customize-button");
+    }
+
     [Fact]
     public void OsirionCookieConsent_CustomText_RendersItOnTheBannerAndButtons()
     {

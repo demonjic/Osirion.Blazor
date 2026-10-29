@@ -15,7 +15,7 @@
 
                         @if (Logo is not null || Description is not null)
                         {
-                            <div class="osirion-footer-brand" style="bottom: 0;">
+                            <div class="osirion-footer-brand">
                                 @if (Logo is not null)
                                 {
                                     <div class="osirion-footer-logo">
@@ -129,7 +129,7 @@
 
                 @if (BottomLinks?.Any() == true)
                 {
-                    <nav class="osirion-footer-bottom-links" aria-label="Footer legal navigation">
+                    <nav class="osirion-footer-bottom-links" aria-label="@BottomLinksLabel">
                         @foreach (var link in BottomLinks)
                         {
                             <a href="@link.Href" class="osirion-footer-bottom-link">
@@ -160,12 +160,3 @@ else
 {
     <footer class="@GetFooterClass()" style="@Style" data-osirion-component-theme="@GetComponentTheme()" @attributes="Attributes">@content</footer>
 }
-
-<style>
-    .osirion-footer-bottom-links {
-        display: flex;
-        margin-top: var(--osirion-spacing-2, .5rem);
-        gap: var(--osirion-spacing-4, 1rem);
-        flex-wrap: wrap;
-    }
-</style>

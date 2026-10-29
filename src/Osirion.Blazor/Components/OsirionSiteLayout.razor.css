@@ -1,5 +1,12 @@
 /* OsirionSiteLayout - Osirion.Blazor */
 
+/* The call to action sits in the menu's pinned actions, in the bar at every width; on a phone it shares the bar with
+   the brand and the toggle, so its text stays on one line. */
+.osirion-site-call-to-action {
+    text-decoration: none;
+    white-space: nowrap;
+}
+
 .osirion-site-footer-brand {
     display: inline-flex;
     align-items: center;

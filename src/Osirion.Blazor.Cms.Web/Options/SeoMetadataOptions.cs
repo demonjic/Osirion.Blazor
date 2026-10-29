@@ -123,6 +123,15 @@ public class SeoMetadataOptions
     public string BreadcrumbHomeText { get; set; } = "Home";
 
     /// <summary>
+    /// Gets or sets the referrer policy written as <c>&lt;meta name="referrer"&gt;</c> on every page, one of the
+    /// policy tokens of the Referrer Policy specification, such as <c>strict-origin-when-cross-origin</c>. Empty by
+    /// default, so no tag is written and the site's <c>Referrer-Policy</c> response header (or the browser default,
+    /// <c>strict-origin-when-cross-origin</c>) applies: a referrer meta tag replaces the header's policy for the whole
+    /// document. A value that is not a policy token writes nothing.
+    /// </summary>
+    public string? ReferrerPolicy { get; set; }
+
+    /// <summary>
     /// Gets or sets the default schema types to generate for content pages.
     /// </summary>
     public SchemaType[]? DefaultSchemaTypes { get; set; }
