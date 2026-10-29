@@ -262,6 +262,22 @@ public class ContentNavigationRenderingTests : CmsWebComponentTestBase
         cut.FindAll(".osirion-nav-sublist a.osirion-nav-link").Select(a => a.GetAttribute("href")).ShouldBe(["/blog/archive"]);
     }
 
+    // A raw file (a notes.txt loaded because the provider reads .txt) is not a page, so the menu does not link it.
+    [Fact]
+    public void LocalizedNavigation_RawFileInADirectory_IsNotListed()
+    {
+        var blog = Directory("blog", "Blog");
+        var post = ContentItem.Create("a", "Alpha", "<p>x</p>", "blog/alpha.md", "test");
+        post.SetUrl("/blog/alpha");
+        blog.AddItem(post);
+        blog.AddItem(ContentItem.Create("n", "Notes", "notes", "blog/notes.txt", "test"));
+        ReturnDirectories(blog);
+
+        var cut = RenderStatic<LocalizedNavigation>(p => p.Add(c => c.ExpandAllDirectories, true));
+
+        cut.FindAll("a.osirion-nav-content-link").Select(a => a.GetAttribute("href")).ShouldBe(["/blog/alpha"]);
+    }
+
     [Fact]
     public void LocalizedNavigation_ExpandedDirectoryWithItemsHidden_ShowsOnlySubdirectories()
     {

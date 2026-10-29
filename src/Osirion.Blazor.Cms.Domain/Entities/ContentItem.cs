@@ -83,6 +83,21 @@ public class ContentItem : DomainEntity<string>
 
     /// <summary>Gets whether the item was made from another locale's item (see <see cref="DerivedFromLocale"/>).</summary>
     public bool IsDerived => DerivedFromLocale is not null;
+
+    /// <summary>
+    /// Gets the file extensions read as plain text instead of Markdown: <c>.txt</c>, <c>.json</c>, <c>.yml</c>,
+    /// <c>.log</c> and <c>.bak</c>. An item from such a file is a raw file (see <see cref="IsRawFile"/>).
+    /// </summary>
+    public static IReadOnlyList<string> RawFileExtensions { get; } = [".txt", ".json", ".yml", ".log", ".bak"];
+
+    /// <summary>
+    /// Gets whether the item comes from a file read as plain text, such as a <c>robots.txt</c> that a provider loads
+    /// when its <c>SupportedExtensions</c> include <c>.txt</c>. A raw file is content for code that asks for it by
+    /// address (the robots generator), not a page: content queries leave it out unless
+    /// <c>ContentQuery.IncludeRawFiles</c> is set, so it never reaches the sitemap, the feeds or a page list.
+    /// </summary>
+    public bool IsRawFile => RawFileExtensions.Any(extension => Path.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
+
     private DirectoryItem? _directory;
 
     /// <summary>

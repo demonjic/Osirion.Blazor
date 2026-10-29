@@ -51,8 +51,6 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
     private DateTime _coldRetryNotBeforeUtc = DateTime.MinValue;
     private static readonly TimeSpan ColdLoadRetryDelay = TimeSpan.FromSeconds(15);
 
-    private string[] _excludedExtensionsFromMarkdownProcessing = [".txt", ".json", ".yml", ".log", ".bak"];
-
     // Set by a repository whose provider can derive locales; null derives nothing
     private DerivedLocaleGenerator? _derivedLocaleGenerator;
     private ContentProviderOptions? _derivedLocaleOptions;
@@ -520,7 +518,7 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
         {
             var result = MarkdownProcessor.ExtractFrontMatterAndContent(markdown);
             // Files excluded from markdown rendering are stored as HTML, so they are sanitized as HTML
-            var html = IsExcludedFromMarkdownProcessing(contentItem.Path)
+            var html = contentItem.IsRawFile
                 ? MarkdownProcessor.SanitizeHtml(result.Content)
                 : await MarkdownProcessor.RenderToHtmlAsync(result.Content, sanitizeHtml: true);
 
@@ -755,10 +753,5 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
         }
 
         return escaped.ToString();
-    }
-
-    private bool IsExcludedFromMarkdownProcessing(string fileName)
-    {
-        return _excludedExtensionsFromMarkdownProcessing.Any(ext => fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
     }
 }

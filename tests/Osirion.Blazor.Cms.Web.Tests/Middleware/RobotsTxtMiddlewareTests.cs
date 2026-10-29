@@ -38,6 +38,21 @@ public class RobotsTxtMiddlewareTests
         _nextCalls.ShouldBe(0);
     }
 
+    // A robots.txt in the content folder is a raw file, which page queries leave out; the generator asks for it.
+    [Fact]
+    public async Task RobotsTxtMiddleware_AsksForRawFiles()
+    {
+        var robots = ContentItem.Create("robots", "Robots", "User-agent: *", "robots.txt", "test");
+        robots.SetOriginalMarkdown("User-agent: *\nDisallow: /drafts/");
+        _manager.GetContentByQueryAsync(Arg.Is<ContentQuery>(q => q.Url == "robots" && q.IncludeRawFiles), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<ContentItem>>([robots]));
+        var context = Request("/robots.txt");
+
+        await CreateMiddleware().InvokeAsync(context);
+
+        ReadBody(context).ShouldBe("User-agent: *\nDisallow: /drafts/");
+    }
+
     [Fact]
     public async Task RobotsTxtMiddleware_RobotsKeptAsMarkdown_WritesTheRawTextNotTheRenderedHtml()
     {
