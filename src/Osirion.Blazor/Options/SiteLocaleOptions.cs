@@ -63,4 +63,19 @@ public sealed class SiteLocaleOptions
     /// it at least one key: an empty section does not exist there, so it would leave the site's labels in place.
     /// </summary>
     public SiteLabels? Labels { get; set; }
+
+    /// <summary>
+    /// Gets or sets the culture this version is derived from by transliteration, for example <c>sr</c> for a
+    /// <c>sr-Latn</c> entry, so a site writes its Serbian shell once in Cyrillic and serves it in Latin too. The derived
+    /// version is the source culture's version (its entry over the site's values) with every text transliterated and
+    /// its links to the source culture's pages moved to this culture; each value this entry sets itself wins. Needs
+    /// <see cref="Transliteration"/>. A source that is itself derived is refused.
+    /// </summary>
+    public string? DerivedFrom { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the registered transliterator that writes a derived version's texts, for example
+    /// <c>serbian-cyrillic-to-latin</c>. Used with <see cref="DerivedFrom"/>.
+    /// </summary>
+    public string? Transliteration { get; set; }
 }

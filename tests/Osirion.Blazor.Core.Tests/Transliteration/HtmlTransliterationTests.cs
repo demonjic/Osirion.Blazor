@@ -1,14 +1,13 @@
-using Osirion.Blazor.Cms.Infrastructure.Localization;
 using Osirion.Blazor.Core.Transliteration;
 using Shouldly;
 
-namespace Osirion.Blazor.Cms.Infrastructure.Tests.Localization;
+namespace Osirion.Blazor.Core.Tests.Transliteration;
 
-public class TransliteratedHtmlTests
+public class HtmlTransliterationTests
 {
     private static readonly SerbianCyrillicToLatinTransliterator Serbian = new();
 
-    private static string Transform(string html) => TransliteratedHtml.Transform(html, Serbian, "sr", "sr-Latn");
+    private static string Transform(string html) => HtmlTransliteration.Transform(html, Serbian, "sr", "sr-Latn");
 
     [Fact]
     public void Transform_TextNodes_AreTransliteratedAndTheMarkupAroundThemIsKept()
@@ -131,12 +130,12 @@ public class TransliteratedHtmlTests
     }
 
     [Theory]
-    [InlineData("/sr", "/sr-Latn")]
-    [InlineData("/sr/", "/sr-Latn/")]
-    [InlineData("/sr/blog/prvi-post", "/sr-Latn/blog/prvi-post")]
-    [InlineData("/SR/blog", "/sr-Latn/blog")]
-    [InlineData("/sr/blog?strana=2#komentari", "/sr-Latn/blog?strana=2#komentari")]
-    [InlineData("/sr/блог", "/sr-Latn/блог")]
+    [InlineData("/sr", "/sr-latn")]
+    [InlineData("/sr/", "/sr-latn/")]
+    [InlineData("/sr/blog/prvi-post", "/sr-latn/blog/prvi-post")]
+    [InlineData("/SR/blog", "/sr-latn/blog")]
+    [InlineData("/sr/blog?strana=2#komentari", "/sr-latn/blog?strana=2#komentari")]
+    [InlineData("/sr/блог", "/sr-latn/блог")]
     public void Transform_LinkToAPageInTheSourceLocale_MovesUnderTheDerivedLocale(string href, string expected)
     {
         var html = $"<p><a href=\"{href}\">Блог</a></p>";

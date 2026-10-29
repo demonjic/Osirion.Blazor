@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Osirion.Blazor.Core.Extensions;
 using Osirion.Blazor.Internal;
 using Osirion.Blazor.Options;
 
@@ -55,6 +56,11 @@ public static class OsirionSiteBuilderExtensions
     private static OptionsBuilder<OsirionSiteOptions> AddValidatedOptions(IServiceCollection services)
     {
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<OsirionSiteOptions>, OsirionSiteOptionsValidator>());
+
+        // Derived versions (Locales entries with DerivedFrom) are filled in before the validators run
+        services.AddOsirionTransliteration();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<OsirionSiteOptions>, DerivedSiteLocales>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<OsirionSiteOptions>, DerivedSiteLocalesValidator>());
         return services.AddOptions<OsirionSiteOptions>().ValidateOnStart();
     }
 }
