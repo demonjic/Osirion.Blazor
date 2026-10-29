@@ -96,7 +96,88 @@
                 <textarea id="@FieldId("message")" name="message" rows="6" class="@GetTextAreaClass()" required
                           minlength="@MessageMinLength" maxlength="@MessageMaxLength" placeholder="@MessagePlaceholder"></textarea>
             </div>
-            @* A field people never see. A bot that fills it gives itself away; the endpoint decides what to answer. *@
+            @* data-additional-field names the key of each value in the JSON; data-multiple marks a field sent as an array. *@
+            @foreach (var definition in _fields)
+            {
+                var inputId = AdditionalFieldId(definition);
+                var helpId = AdditionalFieldHelpId(definition);
+                var inputName = ContactFormFieldRules.InputName(definition);
+                var showRequired = definition.Required && ShowRequiredIndicators;
+                if (ContactFormFieldRules.IsGroup(definition))
+                {
+                    var isRadio = definition.Type == ContactFormFieldType.Radio;
+                    <fieldset class="osirion-static-contact-form-field osirion-static-contact-form-group"
+                              data-additional-field="@definition.Name" data-multiple="@(!isRadio)" aria-describedby="@helpId">
+                        <legend class="@GetLabelClass()">
+                            @definition.Label
+                            @if (showRequired)
+                            {
+                                <span class="osirion-static-contact-form-required" aria-hidden="true">*</span>
+                            }
+                        </legend>
+                        @for (var index = 0; index < definition.Options.Count; index++)
+                        {
+                            var option = definition.Options[index];
+                            <label class="osirion-static-contact-form-option" for="@($"{inputId}-{index}")">
+                                <input id="@($"{inputId}-{index}")" type="@(isRadio ? "radio" : "checkbox")" name="@inputName"
+                                       value="@option.Value" class="@(isRadio ? GetRadioClass() : GetCheckboxClass())"
+                                       required="@(isRadio && definition.Required)" />
+                                <span>@option.DisplayLabel</span>
+                            </label>
+                        }
+                        @if (helpId is not null)
+                        {
+                            <p class="osirion-static-contact-form-help" id="@helpId">@definition.HelpText</p>
+                        }
+                    </fieldset>
+                }
+                else
+                {
+                    <div class="osirion-static-contact-form-field" data-additional-field="@definition.Name">
+                        <label for="@inputId" class="@GetLabelClass()">
+                            @definition.Label
+                            @if (showRequired)
+                            {
+                                <span class="osirion-static-contact-form-required" aria-hidden="true">*</span>
+                            }
+                        </label>
+                        @if (definition.Type == ContactFormFieldType.Select)
+                        {
+                            <select id="@inputId" name="@inputName" class="@GetSelectClass()" required="@definition.Required"
+                                    aria-describedby="@helpId">
+                                <option value="">@definition.Placeholder</option>
+                                @foreach (var option in definition.Options)
+                                {
+                                    <option value="@option.Value">@option.DisplayLabel</option>
+                                }
+                            </select>
+                        }
+                        else if (definition.Type == ContactFormFieldType.MultilineText)
+                        {
+                            <textarea id="@inputId" name="@inputName" rows="4" class="@GetTextAreaClass()" required="@definition.Required"
+                                      maxlength="@ContactFormFieldRules.MaxLength(definition)" placeholder="@definition.Placeholder"
+                                      aria-describedby="@helpId"></textarea>
+                        }
+                        else if (definition.Type == ContactFormFieldType.Number)
+                        {
+                            <input id="@inputId" name="@inputName" type="number" class="@GetInputClass()" step="any"
+                                   min="@ContactFormFieldRules.FormatNumber(definition.Min)" max="@ContactFormFieldRules.FormatNumber(definition.Max)"
+                                   required="@definition.Required" placeholder="@definition.Placeholder" aria-describedby="@helpId" />
+                        }
+                        else
+                        {
+                            <input id="@inputId" name="@inputName" type="@ContactFormFieldRules.InputType(definition)" class="@GetInputClass()"
+                                   required="@definition.Required" maxlength="@ContactFormFieldRules.MaxLength(definition)"
+                                   placeholder="@definition.Placeholder" aria-describedby="@helpId" />
+                        }
+                        @if (helpId is not null)
+                        {
+                            <p class="osirion-static-contact-form-help" id="@helpId">@definition.HelpText</p>
+                        }
+                    </div>
+                }
+            }
+            @* A definition people never see. A bot that fills it gives itself away; the endpoint decides what to answer. *@
             <div class="osirion-static-contact-form-trap" aria-hidden="true">
                 <label for="@FieldId("website")">Website</label>
                 <input id="@FieldId("website")" name="website" type="text" tabindex="-1" autocomplete="off" />
