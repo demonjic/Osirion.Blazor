@@ -39,10 +39,10 @@ public static class UrlGenerator
 
         var isIndexFile = string.Equals(path[(path.LastIndexOf('/') + 1)..], IndexFileName, StringComparison.OrdinalIgnoreCase);
 
-        var normalizedPermalink = string.IsNullOrWhiteSpace(permalink) ? string.Empty : NormalizePath(permalink.Trim());
-        if (!isIndexFile && normalizedPermalink.Length > 0)
+        // permalink: "/" normalizes to the empty address, the site root, and is used like any other permalink
+        if (!isIndexFile && !string.IsNullOrWhiteSpace(permalink))
         {
-            return normalizedPermalink;
+            return NormalizePath(permalink.Trim());
         }
 
         // Step 2: Remove the filename from the path

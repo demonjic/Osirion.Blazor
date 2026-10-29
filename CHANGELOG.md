@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Osirion.Blazor.Cms.Domain and Osirion.Blazor.Cms.Infrastructure: pages read the other names of three front matter keys, which the library already kept out of `custom_fields` but never applied: `locale` and `language` for `lang`, `localization_id` and `content_id` for `id`, and `url` for `permalink` (a leading or trailing slash optional). A page written with `url: "platform"`, `locale: "sr"` and `localization_id: "page-platform"` had a path-derived address, the default language and no translations. The first name wins when a file sets two, and a disagreement is logged as a warning naming the file and both keys. Directory metadata, which writes `locale` and `url`, now reads them back too. `permalink: "/"` (or `url: ""`) makes a page the site root, or its culture's root under a locale prefix, so a home page can be content: `GetItemByUrlAsync("/")` and a query with `Url = "/"` find it, `GetItemByUrlAsync` ignores leading and trailing slashes, and the sitemap lists the page once per culture. `permalink: ""` still keeps the path address
+
 ## [4.3.0] - 2026-10-29
 
 ### Added

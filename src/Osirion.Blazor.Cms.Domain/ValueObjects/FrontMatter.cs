@@ -139,6 +139,40 @@ public class FrontMatter : ValueObject
     [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
     public string? Body { get; set; }
 
+    /// <summary>
+    /// Gets or sets the <c>url</c> key, another name for <see cref="Permalink"/>, which directory metadata writes. The
+    /// content repositories copy it into <see cref="Permalink"/> when that is not set and then clear it.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public string? Url { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <c>locale</c> key, another name for <see cref="Lang"/>. The content repositories copy it into
+    /// <see cref="Lang"/> when that is not set and then clear it.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public string? Locale { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <c>language</c> key, another name for <see cref="Lang"/>, read after <see cref="Locale"/>.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public string? Language { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <c>localization_id</c> key, another name for <see cref="Id"/>, the id translations share. The
+    /// content repositories copy it into <see cref="Id"/> when that is not set and then clear it.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public string? LocalizationId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <c>content_id</c> key, another name for <see cref="Id"/>, read after
+    /// <see cref="LocalizationId"/>.
+    /// </summary>
+    [YamlMember(DefaultValuesHandling = DefaultValuesHandling.OmitNull)]
+    public string? ContentId { get; set; }
+
     // Private constructor to enforce creation through factory method
     /// <summary>Performs the FrontMatter operation.</summary>
     public FrontMatter() { }
@@ -430,6 +464,11 @@ public class FrontMatter : ValueObject
             SeoProperties = SeoProperties?.Clone() ?? new SeoMetadata(),
             // The raw YAML of the blocks is only read, never changed, so the clone shares it
             Blocks = Blocks,
+            Url = Url,
+            Locale = Locale,
+            Language = Language,
+            LocalizationId = LocalizationId,
+            ContentId = ContentId,
             Body = Body,
         };
     }

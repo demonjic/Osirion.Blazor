@@ -77,12 +77,12 @@ is the creation time of the file and every other value takes its default.
 | `is_featured` | boolean | `false` | Marks the page for the featured lists (`OnlyFeatured`, `FeaturedCount`). |
 | `published` | boolean | `true` | `false` keeps the page out of lists, the sitemap, feeds, redirects and the page components. |
 | `order` | integer | `0` | Position when a list sorts by order, and in documentation navigation. For an `_index.md`, the folder's position. |
-| `id` | string | none | Pairs translations: items with the same `id` are translations of each other. With localization on, a missing `id` is built from the path without the language folder. |
-| `lang` | string | the folder's locale, or `DefaultLocale` | The page's language: `og:locale`, `inLanguage`, the `Locale` filter of queries. A missing `lang` takes the locale of the page's language folder, or `DefaultLocale`; this arrives in the release after 4.1.0, and 4.1.0 reads a missing `lang` as `en`, even in a folder for another language. See the [localization guide](/docs/localization). |
+| `id` | string | none | Pairs translations: items with the same `id` are translations of each other. With localization on, a missing `id` is built from the path without the language folder. Also read as `localization_id` or `content_id`; see [Other names for three keys](#other-names-for-three-keys). |
+| `lang` | string | the folder's locale, or `DefaultLocale` | The page's language: `og:locale`, `inLanguage`, the `Locale` filter of queries. A missing `lang` takes the locale of the page's language folder, or `DefaultLocale`; this arrives in the release after 4.1.0, and 4.1.0 reads a missing `lang` as `en`, even in a folder for another language. See the [localization guide](/docs/localization). Also read as `locale` or `language`. |
 | `redirect_from` | list of strings | empty | Earlier addresses that redirect to this page, with `UseOsirionRedirects`. |
 | `series` | string | none | Pages with the same series name are listed together by `ContentSeriesNavigation`. |
 | `series_order` | integer | none | The page's position in its series, starting at 1. |
-| `permalink` | string | none | The address the page is served at, such as `/docs/deploy`; slashes at the ends are optional, no language folder is added, and placeholders such as `:year` are not expanded. An `_index.md` uses it as its folder's address. Arrives in the release after 4.1.0; 4.1.0 reads it but does not change the page's address. |
+| `permalink` | string | none | The address the page is served at, such as `/docs/deploy`; slashes at the ends are optional, no language folder is added, and placeholders such as `:year` are not expanded. An `_index.md` uses it as its folder's address. `/` makes the page the site root, or its culture's root under a locale prefix (`/sr`), from the release after 4.3.0. Also read as `url`. Arrives in the release after 4.1.0; 4.1.0 reads it but does not change the page's address. |
 | `layout` | string | none | Stored on the item as `Metadata.Layout`. No library component picks a template from it; your own code can. |
 | `blocks` | list of maps | none | Renders the page as content blocks (hero, sections, steps, cards, FAQ, call to action) instead of its body. A file whose blocks break a rule does not load. See [Content blocks](/docs/content-blocks). Arrives in the release after 4.2.0. |
 | `body` | `after` | none | On a page with `blocks`, renders the Markdown body after the blocks. Without it only the blocks render. |
@@ -95,6 +95,24 @@ with the other files.
 
 A value that contains a colon, or starts with a character YAML reads as syntax, needs quotes:
 `title: "Setup: step one"`.
+
+## Other names for three keys
+
+Directory metadata and some older content write three keys under other names. From the release after 4.3.0 pages and
+`_index.md` files read them too:
+
+| Key | Also read as | Notes |
+| --- | --- | --- |
+| `lang` | `locale`, then `language` | The page's language. |
+| `id` | `localization_id`, then `content_id` | The id translations share. |
+| `permalink` | `url` | A leading or trailing slash is optional; `url: ""` is the site root, like `permalink: "/"`. |
+
+The key in the first column wins when a file sets both; another name is read only when it is missing, in the order
+shown. When two names disagree, the file loads with the value that wins and a warning names the file and both keys.
+Saving a page from the admin writes the first column's name only.
+
+A page at the root is found by a lookup for `/` (`GetItemByUrlAsync("/")`, or a `ContentQuery` with `Url = "/"` and
+the page's `Locale` on a site with language versions). The sitemap lists it once per culture.
 
 ## Write dates the parser can read
 
