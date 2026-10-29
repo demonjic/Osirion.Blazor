@@ -247,6 +247,30 @@
     pointer-events: none;
 }
 
+/* ========== ADDITIONAL FIELD STYLES ========== */
+/* A group of radio buttons or checkboxes: a fieldset named by its legend, laid out like any other field. */
+.osirion-form-fieldset {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+}
+
+.osirion-form-fieldset > legend {
+    padding: 0;
+    margin-bottom: var(--osirion-spacing-1, 0.25rem);
+}
+
+.osirion-form-option + .osirion-form-option {
+    margin-top: var(--osirion-spacing-1, 0.25rem);
+}
+
+.osirion-form-help {
+    margin: 0;
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    line-height: 1.4;
+    color: var(--osirion-contact-text-muted);
+}
+
 /* ========== VALIDATION STYLES ========== */
 .osirion-validation-message {
     font-size: var(--osirion-font-size-sm, 0.875rem);

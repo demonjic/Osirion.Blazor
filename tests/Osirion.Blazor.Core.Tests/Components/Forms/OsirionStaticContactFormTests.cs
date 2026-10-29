@@ -554,6 +554,18 @@ public class OsirionStaticContactFormTests : OsirionComponentTestBase
         NormalizedMarkup(cut).ShouldBe(UnchangedMarkup);
     }
 
+    // A guard test: an empty list of additional fields renders the markup the form always rendered.
+    [Fact]
+    public void StaticContactForm_EmptyAdditionalFields_RendersTheMarkupItAlwaysDid()
+    {
+        var cut = RenderForm(parameters => parameters
+            .Add(p => p.ShowCompanyField, true)
+            .Add(p => p.PrivacyNote, "Note")
+            .Add(p => p.AdditionalFields, Array.Empty<ContactFormField>()));
+
+        NormalizedMarkup(cut).ShouldBe(UnchangedMarkup);
+    }
+
     // The markup without what changes from one render or build to the next: the scope attribute, the generated ids and
     // the white space between tags.
     private const string UnchangedMarkup =

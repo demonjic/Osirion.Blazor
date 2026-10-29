@@ -153,6 +153,49 @@ Best for: International businesses with omnichannel communication needs
 - `UseBuiltInEmailService`: Set to `true` to use the configured email service
 - `OnSubmit`: Optional callback for custom handling (called even when using built-in service)
 
+### Additional Fields
+
+`AdditionalFields` adds up to 20 questions of your own after the message, such as a company size or a budget on a
+quote form. The form validates each submitted value against its `ContactFormField` definition on the server before
+anything is sent, so the email only ever carries valid answers; values posted under names that are not defined are
+ignored.
+
+```razor
+<OsirionContactForm Id="quote"
+                    UseBuiltInEmailService="true"
+                    AdditionalFields="@questions" />
+
+@code {
+    private static readonly ContactFormField[] questions =
+    [
+        new() { Name = "company", Label = "Company", Required = true },
+        new() { Name = "team_size", Label = "Team size", Type = ContactFormFieldType.Select, Required = true,
+                Options = [new("1-10", "1 to 10"), new("11-50", "11 to 50"), new("51+")] },
+        new() { Name = "services", Label = "What do you need?", Type = ContactFormFieldType.Checkboxes,
+                Options = [new("design", "Design"), new("build", "Build")] }
+    ];
+}
+```
+
+Every provider (SMTP, SendGrid, Infobip) writes the answers into the same HTML body, after the message and before the
+newsletter line:
+
+```html
+<h3>Additional details</h3>
+<p><strong>Company:</strong> Example Ltd</p>
+<p><strong>Team size:</strong> 11 to 50</p>
+<p><strong>What do you need?:</strong> Design, Build</p>
+```
+
+- Answers appear in definition order, each with its field's `Label`; a choice shows the option labels, separated by
+  commas. Unanswered optional fields are left out, and a form without additional fields writes no section at all.
+- Labels and answers are HTML-encoded like every other value; line breaks of a multi-line answer become `<br>`.
+- Answers go into the body only. The subject is still built from `SubjectTemplate` and the visitor's subject, and the
+  Reply-To from the visitor's name and email, so an answer cannot add or change a mail header.
+- Your own `OnSubmit` handler, or your own `IEmailService`, reads the same answers from
+  `ContactFormModel.AdditionalFieldValues`: one `ContactFormFieldValue` (`Name`, `Label`, `Values`, `Text`) per
+  definition, in definition order.
+
 ### Status Messages
 
 The component uses query parameters to show status messages after form submission:

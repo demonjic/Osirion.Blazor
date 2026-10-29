@@ -18,7 +18,42 @@ const MESSAGES = {
     failed: 'errorMessage'
 };
 
+// Put before an additional field's name to form the name of its input, as ContactFormFieldRules.InputNamePrefix does.
+const FIELD_INPUT_PREFIX = 'field.';
+
 let turnstileLoading;
+
+// The JSON body of a send: the standard fields, then, only when the form has additional fields, their values under
+// fields, keyed by name. A field marked multiple is sent as the array of its checked values, any other as a string,
+// empty when unanswered. Exported so the shape can be checked without a browser.
+export function messageOf(data, additionalFields, token) {
+    const message = {
+        name: data.get('name'),
+        email: data.get('email'),
+        ...(data.has('company') ? { company: data.get('company') } : {}),
+        ...(data.has('subject') ? { subject: data.get('subject') } : {}),
+        message: data.get('message')
+    };
+
+    if (additionalFields.length > 0) {
+        message.fields = Object.fromEntries(additionalFields.map(({ name, multiple }) => {
+            const inputName = FIELD_INPUT_PREFIX + name;
+            return [name, multiple ? data.getAll(inputName) : data.get(inputName) ?? ''];
+        }));
+    }
+
+    message.website = data.get('website');
+    message.token = token;
+    return message;
+}
+
+// The additional fields of a form, read from the elements that carry data-additional-field.
+function additionalFieldsOf(form) {
+    return Array.from(form.querySelectorAll('[data-additional-field]'), element => ({
+        name: element.dataset.additionalField,
+        multiple: element.hasAttribute('data-multiple')
+    }));
+}
 
 // The API is recognized by its render method, not by the name: an element with the id or name "turnstile", such as a
 // heading's generated id, is also window.turnstile until the script assigns the API.
@@ -82,6 +117,7 @@ export default class extends BlazorJSComponents.Component {
         this.removeWidget();
         this.form = form;
         this.texts = form.dataset;
+        this.additionalFields = additionalFieldsOf(form);
         this.status = status;
         this.submit = submit;
         this.needsToken = Boolean(turnstile);
@@ -149,16 +185,7 @@ export default class extends BlazorJSComponents.Component {
         }
 
         const form = this.form;
-        const data = new FormData(form);
-        const body = {
-            name: data.get('name'),
-            email: data.get('email'),
-            ...(data.has('company') ? { company: data.get('company') } : {}),
-            ...(data.has('subject') ? { subject: data.get('subject') } : {}),
-            message: data.get('message'),
-            website: data.get('website'),
-            token: this.token
-        };
+        const body = messageOf(new FormData(form), this.additionalFields, this.token);
 
         // A disabled button loses focus to the page, so focus is put back afterwards unless the visitor moved it.
         const hadFocus = document.activeElement === this.submit;
