@@ -78,8 +78,8 @@ write its own heading (`LandingPage`, or a page of your own).
 | --- | --- | --- |
 | `type` | text, required | The block type, lower case words joined by hyphens |
 | `id` | text | The section's anchor, `[a-z0-9-]+`, unique in the file |
-| `variant` | `default`, `tinted`, `dark` | The band style (rendered once the band styles are in the library) |
-| `eyebrow` | text | A small label above the title (rendered once the band styles are in the library) |
+| `variant` | `default`, `tinted`, `dark` | The band style of a block rendered in a section band (`section`, `split`, `steps`, `cards`, `checklist`, `metrics`, `faq`); the others have no band |
+| `eyebrow` | text | A small label above the title of a `hero` or of a block in a section band; shown only with a title |
 | `title` | text | The block heading (`h2`, `h1` for `hero`) |
 | `description` | inline Markdown | The lead paragraph under the title |
 
@@ -100,24 +100,25 @@ Without it, links stay as written.
 
 | `type` | Keys besides the common ones | Rendered by |
 | --- | --- | --- |
-| `hero` | `subtitle`, `highlights`, `primary_action`, `secondary_action`, `image: { src, alt }`, `aside` (an `image` or a `record` block) | `HeroSection` |
+| `hero` | `subtitle`, `highlights`, `primary_action`, `secondary_action`, `image: { src, alt }`, `aside` (an `image` or a `record` block) | `HeroSection`: an `image` aside is its side image, a `record` aside its `Aside` beside the copy |
 | `section` | `markdown` | `OsirionBaseSection` |
-| `split` | `markdown`, `aside` (a `record`, `checklist`, `image`, `metrics` or `markdown` block), `aside_position: end` or `start` | coming with `OsirionSplitSection` |
+| `split` | `markdown`, `aside` (a `record`, `checklist`, `image`, `metrics` or `markdown` block), `aside_position: end` or `start` | `OsirionSplitSection`, the aside rendered by its own renderer |
 | `steps` | `items: [{ title, description }]` | `OsirionSteps` |
-| `cards` | `columns: 2, 3 or 4` (3 by default), `items: [{ title, description, icon, url, link_text, items }]` | `OsirionFeatureCard` in one grid |
-| `checklist` | `items: [{ text, description }]` | coming with `OsirionChecklist` |
+| `cards` | `columns: 2, 3 or 4` (3 by default), `items: [{ title, description, icon, url, link_text, items }]` | `OsirionFeatureCard`s in an `OsirionCardGrid`; `items` are listed on the card |
+| `checklist` | `items: [{ text, description }]` | `OsirionChecklist` |
 | `metrics` | `items: [{ value, label, description }]` | `OsirionMetricGrid` |
 | `faq` | `items: [{ question, answer }]`, `answer` in block Markdown | `OsirionFaq` |
 | `cta` | `primary_action`, `secondary_action` | `OsirionCallToActionSection` |
-| `record` | `status`, `tone` (`neutral`, `success`, `warning`, `danger`, `info`), `rows: [{ label, value }]`, `caption` | coming with `OsirionRecordCard` |
+| `record` | `status`, `tone` (`neutral`, `success`, `warning`, `danger`, `info`), `rows: [{ label, value }]`, `caption` | `OsirionRecordCard`: `caption` is its footnote; `neutral` and `info` show as neutral, `success` as positive, `warning` as warning, `danger` as negative |
 | `image` | `src`, `alt` (required; `alt: ""` for a decorative image), `caption` | a `figure` |
 | `markdown` | `markdown` | the sanitized Markdown in a plain section |
 | `component` | `name`, `parameters: { key: value }` | the site's component registered under `name` |
 
-`split`, `checklist` and `record` are read and validated today. Their components are on the way; until then a block of
-one of these types renders nothing and logs a warning that names the type, unless the site registers a renderer for it.
-A card's `icon` and `items`, a hero's `highlights` and `aside: { type: record }`, and the `variant` and `eyebrow` of
-every block are read and validated the same way and render once their components support them.
+An aside (a hero's `record`, or a split section's block) renders without the section band a top-level block has: a
+`checklist` aside shows its title as the checklist's heading, and a `metrics` aside is the grid alone.
+
+A card's `icon` is a name from the site's icon set: register each icon with `AddIcon` (below). A name that is not
+registered, or no name, shows no icon.
 
 ## FAQ structured data
 
@@ -151,6 +152,7 @@ HTML.
 builder.Services.AddOsirionContentBlocks(blocks => blocks
     .AddRenderer<PricingTableRenderer>("pricing-table")  // a new type, or a replacement for a library type
     .AddComponent<ProductTour>("product-tour")            // what type: component, name: product-tour renders
+    .AddIcon("shield", ShieldIcon)                        // what a card with icon: shield shows
     .UseFallbackRenderer<UnknownBlockRenderer>());        // every type that has no renderer
 ```
 

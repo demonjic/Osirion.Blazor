@@ -82,27 +82,23 @@ public sealed class ContentBlockContext
     /// none, or as a problem when neither exists.
     /// </summary>
     /// <param name="block">The block, at the top level or nested in another (an aside).</param>
-    public RenderFragment RenderBlock(ContentBlock block)
-    {
-        ArgumentNullException.ThrowIfNull(block);
+    public RenderFragment RenderBlock(ContentBlock block) => Render(block, isAside: false);
 
-        if (_registry.TryGetRenderer(block.Type, out var renderer))
-        {
-            return RenderComponent(renderer, block);
-        }
+    /// <summary>
+    /// Renders <paramref name="block"/> as the aside of another block, such as the record beside a hero's copy: its
+    /// renderer gets <see cref="ContentBlockRenderer.IsAside"/>, so it leaves out the band a top-level block has.
+    /// </summary>
+    /// <param name="block">The nested block.</param>
+    public RenderFragment RenderAside(ContentBlock block) => Render(block, isAside: true);
 
-        if (ContentBlockRegistry.AwaitsRenderer(block.Type))
-        {
-            return AwaitingRenderer(block);
-        }
-
-        if (block is CustomContentBlock && _registry.FallbackRenderer is { } fallback)
-        {
-            return RenderComponent(fallback, block);
-        }
-
-        return Problem(block, $"no renderer is registered for type '{block.Type}' and the site has no fallback renderer");
-    }
+    /// <summary>
+    /// Returns the icon the site registered as <paramref name="name"/> with
+    /// <see cref="ContentBlockOptions.AddIcon(string, RenderFragment)"/>, or <see langword="null"/> when the name is empty
+    /// or not registered, so the card shows no icon.
+    /// </summary>
+    /// <param name="name">The icon name from the content, for example <c>shield</c>.</param>
+    public RenderFragment? Icon(string? name) =>
+        !string.IsNullOrWhiteSpace(name) && _registry.TryGetIcon(name, out var icon) ? icon : null;
 
     /// <summary>
     /// Reports a block that cannot be rendered: logs an error once, and renders a notice in Development and nothing
@@ -122,26 +118,29 @@ public sealed class ContentBlockContext
         return Notice(message);
     }
 
-    /// <summary>
-    /// Reports a block whose renderer the library does not have yet: logs a warning once naming the type, and renders
-    /// a notice in Development and nothing otherwise.
-    /// </summary>
-    internal RenderFragment AwaitingRenderer(ContentBlock block)
+    private RenderFragment Render(ContentBlock block, bool isAside)
     {
-        var message = Describe(block, $"type '{block.Type}' has no renderer yet and renders nothing");
-        if (_loggedProblems.Add(message))
+        ArgumentNullException.ThrowIfNull(block);
+
+        if (_registry.TryGetRenderer(block.Type, out var renderer))
         {
-            ContentBlockLog.TypeAwaitingRenderer(_logger, SourcePath, Location(block), block.Type);
+            return RenderComponent(renderer, block, isAside);
         }
 
-        return Notice(message);
+        if (block is CustomContentBlock && _registry.FallbackRenderer is { } fallback)
+        {
+            return RenderComponent(fallback, block, isAside);
+        }
+
+        return Problem(block, $"no renderer is registered for type '{block.Type}' and the site has no fallback renderer");
     }
 
-    private RenderFragment RenderComponent(Type renderer, ContentBlock block) => builder =>
+    private RenderFragment RenderComponent(Type renderer, ContentBlock block, bool isAside) => builder =>
     {
         builder.OpenComponent(0, renderer);
         builder.AddComponentParameter(1, nameof(ContentBlockRenderer.Block), block);
         builder.AddComponentParameter(2, nameof(ContentBlockRenderer.Context), this);
+        builder.AddComponentParameter(3, nameof(ContentBlockRenderer.IsAside), isAside);
         builder.SetKey(block);
         builder.CloseComponent();
     };

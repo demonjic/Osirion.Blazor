@@ -7,7 +7,7 @@ namespace Osirion.Blazor.Cms.Web.ContentBlocks;
 
 /// <summary>
 /// Configures how content blocks render: a renderer per block type, the components a <c>component</c> block can name,
-/// and a fallback for block types the library does not define. Configure it with
+/// the icons cards show by name, and a fallback for block types the library does not define. Configure it with
 /// <c>AddOsirionContentBlocks</c>; it starts with the library's renderers.
 /// </summary>
 public sealed class ContentBlockOptions
@@ -16,6 +16,9 @@ public sealed class ContentBlockOptions
     {
         [ContentBlockTypes.Hero] = typeof(HeroBlockRenderer),
         [ContentBlockTypes.Section] = typeof(SectionBlockRenderer),
+        [ContentBlockTypes.Split] = typeof(SplitBlockRenderer),
+        [ContentBlockTypes.Checklist] = typeof(ChecklistBlockRenderer),
+        [ContentBlockTypes.Record] = typeof(RecordBlockRenderer),
         [ContentBlockTypes.Steps] = typeof(StepsBlockRenderer),
         [ContentBlockTypes.Cards] = typeof(CardsBlockRenderer),
         [ContentBlockTypes.Metrics] = typeof(MetricsBlockRenderer),
@@ -28,9 +31,13 @@ public sealed class ContentBlockOptions
 
     private readonly Dictionary<string, Type> _components = new(StringComparer.Ordinal);
 
+    private readonly Dictionary<string, RenderFragment> _icons = new(StringComparer.Ordinal);
+
     internal IReadOnlyDictionary<string, Type> Renderers => _renderers;
 
     internal IReadOnlyDictionary<string, Type> Components => _components;
+
+    internal IReadOnlyDictionary<string, RenderFragment> Icons => _icons;
 
     internal Type? FallbackRenderer { get; private set; }
 
@@ -61,6 +68,20 @@ public sealed class ContentBlockOptions
         where TComponent : IComponent
     {
         _components[RequireName(name, nameof(name))] = typeof(TComponent);
+        return this;
+    }
+
+    /// <summary>
+    /// Makes <paramref name="icon"/> the icon a card with <c>icon: </c><paramref name="name"/> shows, from the site's own
+    /// icon set. A card whose icon name is not registered shows no icon.
+    /// </summary>
+    /// <param name="name">The name content uses, lower case words joined by hyphens, for example <c>shield</c>.</param>
+    /// <param name="icon">The icon markup, usually an inline SVG; it is decorative, so mark it <c>aria-hidden</c>.</param>
+    /// <returns>These options, for chaining.</returns>
+    public ContentBlockOptions AddIcon(string name, RenderFragment icon)
+    {
+        ArgumentNullException.ThrowIfNull(icon);
+        _icons[RequireName(name, nameof(name))] = icon;
         return this;
     }
 

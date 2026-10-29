@@ -12,19 +12,11 @@ namespace Osirion.Blazor.Cms.Web.ContentBlocks;
 /// </summary>
 public sealed class ContentBlockRegistry
 {
-    // The renderers of these types compose components that are not in the library yet. Until they are, a block of
-    // one of these types renders nothing and is logged as a warning, unless the site registers its own renderer.
-    private static readonly HashSet<string> TypesAwaitingRenderer = new(StringComparer.Ordinal)
-    {
-        ContentBlockTypes.Split,
-        ContentBlockTypes.Checklist,
-        ContentBlockTypes.Record,
-    };
-
     private const string ParametersName = "Parameters";
 
     private readonly IReadOnlyDictionary<string, Type> _renderers;
     private readonly IReadOnlyDictionary<string, Type> _components;
+    private readonly IReadOnlyDictionary<string, RenderFragment> _icons;
 
     /// <summary>Initializes the registry from configured options.</summary>
     /// <param name="options">The options.</param>
@@ -33,10 +25,11 @@ public sealed class ContentBlockRegistry
         ArgumentNullException.ThrowIfNull(options);
         _renderers = new Dictionary<string, Type>(options.Renderers, StringComparer.Ordinal);
         _components = new Dictionary<string, Type>(options.Components, StringComparer.Ordinal);
+        _icons = new Dictionary<string, RenderFragment>(options.Icons, StringComparer.Ordinal);
         FallbackRenderer = options.FallbackRenderer;
     }
 
-    /// <summary>Gets the registry with the library's renderers, no components and no fallback.</summary>
+    /// <summary>Gets the registry with the library's renderers, no components, no icons and no fallback.</summary>
     public static ContentBlockRegistry Default { get; } = new(new ContentBlockOptions());
 
     /// <summary>Gets the renderer of block types that have none, or <see langword="null"/>.</summary>
@@ -56,8 +49,12 @@ public sealed class ContentBlockRegistry
     public bool TryGetComponent(string name, [NotNullWhen(true)] out Type? component) =>
         _components.TryGetValue(name, out component);
 
-    /// <summary>Returns whether <paramref name="type"/> is a library type whose renderer is not available yet.</summary>
-    internal static bool AwaitsRenderer(string type) => TypesAwaitingRenderer.Contains(type);
+    /// <summary>Finds the icon registered as <paramref name="name"/>.</summary>
+    /// <param name="name">The icon name a card uses.</param>
+    /// <param name="icon">The icon.</param>
+    /// <returns>Whether an icon is registered.</returns>
+    public bool TryGetIcon(string name, [NotNullWhen(true)] out RenderFragment? icon) =>
+        _icons.TryGetValue(name, out icon);
 
     /// <summary>
     /// Returns whether <paramref name="component"/> has a <c>Parameters</c> parameter that takes the block's

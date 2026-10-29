@@ -26,18 +26,27 @@ internal sealed class MetricsBlockRenderer : ContentBlockRenderer<MetricsBlock>
             _ => MetricGridColumns.Four,
         };
 
-        BlockSection.Render(builder, Model, Context, content =>
+        void Grid(RenderTreeBuilder grid)
         {
-            content.OpenComponent<OsirionMetricGrid>(0);
-            content.AddComponentParameter(1, nameof(OsirionMetricGrid.Metrics), metrics);
-            content.AddComponentParameter(2, nameof(OsirionMetricGrid.Columns), columns);
+            grid.OpenComponent<OsirionMetricGrid>(0);
+            grid.AddComponentParameter(1, nameof(OsirionMetricGrid.Metrics), metrics);
+            grid.AddComponentParameter(2, nameof(OsirionMetricGrid.Columns), columns);
             if (!string.IsNullOrWhiteSpace(Model.Title))
             {
-                content.AddComponentParameter(3, nameof(OsirionMetricGrid.AriaLabel), Context.PlainText(Model.Title));
+                grid.AddComponentParameter(3, nameof(OsirionMetricGrid.AriaLabel), Context.PlainText(Model.Title));
             }
 
-            content.CloseComponent();
-        });
+            grid.CloseComponent();
+        }
+
+        // As an aside the grid stands alone, named by the title; at the top level it sits in a section.
+        if (IsAside)
+        {
+            Grid(builder);
+            return;
+        }
+
+        BlockSection.Render(builder, Model, Context, Grid);
     }
 
     private static string? NullIfEmpty(string text) => text.Length == 0 ? null : text;

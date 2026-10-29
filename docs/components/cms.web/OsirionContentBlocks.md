@@ -26,6 +26,7 @@ Registration (optional)
 builder.Services.AddOsirionContentBlocks(blocks => blocks
     .AddRenderer<PricingTableRenderer>("pricing-table")
     .AddComponent<ProductTour>("product-tour")
+    .AddIcon("shield", ShieldIcon)
     .UseFallbackRenderer<UnknownBlockRenderer>());
 ```
 Without `AddOsirionContentBlocks` the library's renderers are used (`ContentBlockRegistry.Default`). A renderer derives
@@ -40,6 +41,6 @@ Notes
   and left as written otherwise.
 - A block that cannot render (a type without a renderer and no fallback, an unknown component name) logs an error and
   renders nothing; in Development (`IHostEnvironment.IsDevelopment()`) it renders a `div.osirion-content-block-problem`
-  with `role="alert"` naming the file, the block and the reason. `split`, `checklist` and `record` blocks render
-  nothing and log a warning until their components are in the library.
+  with `role="alert"` naming the file, the block and the reason.
+- A card's `icon` names an icon registered with `AddIcon(name, RenderFragment)`; an unregistered name shows no icon.
 - Works with static server-side rendering; no script.

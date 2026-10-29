@@ -90,8 +90,8 @@ public class ContentBlockRendererTests : ContentBlockTestBase
                   - { title: Explain }
             """);
 
-        cut.Find("ul.osirion-content-block-card-grid").ClassList.ShouldContain("osirion-content-block-card-grid-2");
-        var cards = cut.FindAll("li .osirion-feature-card");
+        cut.Find(".osirion-card-grid").ClassList.ShouldContain("osirion-card-grid-columns-2");
+        var cards = cut.FindAll(".osirion-card-grid > .osirion-feature-card");
         cards.Count.ShouldBe(2);
         cards[0].QuerySelector(".osirion-feature-card-title")!.TextContent.Trim().ShouldBe("Govern");
         cards[0].QuerySelector(".osirion-feature-card-description")!.TextContent.ShouldBe("Rules first.");
@@ -159,6 +159,120 @@ public class ContentBlockRendererTests : ContentBlockTestBase
         var section = cut.Find("section#notes.osirion-content-block-markdown");
         section.QuerySelector("h2")!.TextContent.ShouldBe("Notes");
         section.QuerySelector("strong")!.TextContent.ShouldBe("bold");
+    }
+
+    [Fact]
+    public void Section_VariantAndEyebrow_StyleTheBand()
+    {
+        var cut = RenderBlocks("blocks:\n  - { type: steps, id: how, variant: dark, eyebrow: \"How *it* works\", title: Steps, items: [{ title: A }] }\n");
+
+        var section = cut.Find("section#how");
+        section.ClassList.ShouldContain("osirion-section-variant-dark");
+        cut.Find(".osirion-section-eyebrow").TextContent.ShouldBe("How it works");
+    }
+
+    [Fact]
+    public void Cards_ItemsAreListedOnTheCard()
+    {
+        var cut = RenderBlocks("blocks:\n  - { type: cards, items: [{ title: A, items: [\"One *x*\", Two] }] }\n");
+
+        cut.FindAll(".osirion-feature-card .osirion-checklist-item-title").Select(item => item.TextContent).ShouldBe(["One x", "Two"]);
+    }
+
+    [Fact]
+    public void Hero_EyebrowHighlightsAndRecordAside_RenderInTheHero()
+    {
+        var cut = RenderBlocks("""
+            blocks:
+              - type: hero
+                eyebrow: "System *of* record"
+                title: T
+                highlights: ["Fast", "Clear"]
+                image: { src: /a.png, alt: A }
+                aside:
+                  type: record
+                  title: "Night shift"
+                  status: Blocked
+                  tone: danger
+                  rows: [{ label: Rule, value: "11 h rest" }]
+                  caption: Sample data
+            """);
+
+        cut.Find(".osirion-hero-eyebrow").TextContent.ShouldBe("System of record");
+        cut.FindAll(".osirion-hero-highlights .osirion-checklist-item-title").Select(item => item.TextContent).ShouldBe(["Fast", "Clear"]);
+        var record = cut.Find(".osirion-hero-aside figure.osirion-record-card");
+        record.QuerySelector(".osirion-record-card-status-negative")!.TextContent.ShouldContain("Blocked");
+        cut.FindAll("img.osirion-hero-featured-image").ShouldBeEmpty();
+        Logs.Problems.ShouldBeEmpty();
+    }
+
+    [Theory]
+    [InlineData("neutral", "neutral")]
+    [InlineData("info", "neutral")]
+    [InlineData("success", "positive")]
+    [InlineData("warning", "warning")]
+    [InlineData("danger", "negative")]
+    public void Record_ToneMapsToTheCardsStatusTone(string tone, string expected)
+    {
+        var cut = RenderBlocks($"blocks:\n  - {{ type: record, status: S, tone: {tone} }}\n");
+
+        cut.Find($".osirion-record-card-status-{expected}").TextContent.ShouldContain("S");
+    }
+
+    [Fact]
+    public void Record_RendersTitleRowsAndCaptionAsFootnote()
+    {
+        var cut = RenderBlocks("blocks:\n  - { type: record, id: sample, title: \"Order *7*\", rows: [{ label: Total, value: \"10 EUR\" }], caption: Sample data }\n");
+
+        var card = cut.Find("figure#sample.osirion-record-card");
+        card.QuerySelector(".osirion-record-card-title")!.TextContent.ShouldBe("Order 7");
+        card.QuerySelector("dt")!.TextContent.ShouldBe("Total");
+        card.QuerySelector("dd")!.TextContent.ShouldBe("10 EUR");
+        card.QuerySelector("figcaption.osirion-record-card-footnote")!.TextContent.ShouldBe("Sample data");
+    }
+
+    [Fact]
+    public void Checklist_RendersInASectionWithItsHeading()
+    {
+        var cut = RenderBlocks("blocks:\n  - { type: checklist, id: inc, title: Included, items: [{ text: \"One *x*\", description: More }, { text: Two }] }\n");
+
+        var section = cut.Find("section#inc");
+        section.QuerySelector("h2.osirion-section-title")!.TextContent.ShouldBe("Included");
+        section.QuerySelectorAll(".osirion-checklist-title").ShouldBeEmpty();
+        section.QuerySelectorAll(".osirion-checklist-item-title").Select(item => item.TextContent).ShouldBe(["One x", "Two"]);
+        section.TextContent.ShouldContain("More");
+    }
+
+    [Theory]
+    [InlineData("end", false)]
+    [InlineData("start", true)]
+    public void Split_RendersCopyAndAsideOnTheNamedSide(string position, bool start)
+    {
+        var cut = RenderBlocks($$"""
+            blocks:
+              - type: split
+                title: Why
+                markdown: "Copy **here**."
+                aside_position: {{position}}
+                aside: { type: checklist, title: Included, items: [{ text: One }] }
+            """);
+
+        var split = cut.Find(".osirion-split-section");
+        split.ClassList.Contains("osirion-split-section-aside-start").ShouldBe(start);
+        split.QuerySelector(".osirion-split-section-content strong")!.TextContent.ShouldBe("here");
+        var aside = split.QuerySelector(".osirion-split-section-aside")!;
+        aside.QuerySelector(".osirion-checklist-title")!.TextContent.ShouldBe("Included");
+        aside.QuerySelectorAll("section").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void Split_MetricsAside_StandsAloneWithoutASection()
+    {
+        var cut = RenderBlocks("blocks:\n  - { type: split, markdown: Copy, aside: { type: metrics, title: Results, items: [{ value: \"9\" }] } }\n");
+
+        var aside = cut.Find(".osirion-split-section-aside");
+        aside.QuerySelector("ul.osirion-metric-grid")!.GetAttribute("aria-label").ShouldBe("Results");
+        aside.QuerySelectorAll("section").ShouldBeEmpty();
     }
 
     [Fact]

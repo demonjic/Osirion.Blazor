@@ -112,30 +112,31 @@ public class ContentBlockRegistryTests : ContentBlockTestBase
         Logs.Problems.ShouldHaveSingleItem().Level.ShouldBe(LogLevel.Error);
     }
 
-    [Theory]
-    [InlineData("type: split\n    markdown: Copy", "split")]
-    [InlineData("type: checklist\n    items: [{ text: One }]", "checklist")]
-    [InlineData("type: record\n    title: R", "record")]
-    [InlineData("type: hero\n    title: T\n    aside: { type: record, title: R }", "record")]
-    public void TypeAwaitingItsRenderer_RendersNothingAndLogsAWarningNamingTheType(string block, string type)
+    [Fact]
+    public void AddIcon_GivesACardItsIcon_AndAnUnknownNameNone()
     {
-        var cut = RenderBlocks($"blocks:\n  - {block}\n");
+        Services.AddOsirionContentBlocks(blocks => blocks.AddIcon("shield", icon =>
+        {
+            icon.OpenElement(0, "svg");
+            icon.AddAttribute(1, "class", "site-shield");
+            icon.CloseElement();
+        }));
 
-        cut.FindAll(".osirion-content-block-problem").ShouldBeEmpty();
-        var warning = Logs.Problems.ShouldHaveSingleItem();
-        warning.Level.ShouldBe(LogLevel.Warning);
-        warning.Message.ShouldContain($"has type {type}");
+        var cut = RenderBlocks("blocks:\n  - { type: cards, items: [{ title: A, icon: shield }, { title: B, icon: rocket }, { title: C }] }\n");
+
+        var cards = cut.FindAll(".osirion-feature-card");
+        cards[0].QuerySelector(".osirion-feature-card-icon svg.site-shield").ShouldNotBeNull();
+        cards[1].QuerySelectorAll(".osirion-feature-card-icon").ShouldBeEmpty();
+        cards[2].QuerySelectorAll(".osirion-feature-card-icon").ShouldBeEmpty();
+        Logs.Problems.ShouldBeEmpty();
     }
 
-    [Fact]
-    public void TypeAwaitingItsRenderer_UsesASiteRendererWhenOneIsRegistered()
+    [Theory]
+    [InlineData("Shield")]
+    [InlineData("")]
+    public void AddIcon_InvalidName_Throws(string name)
     {
-        Services.AddOsirionContentBlocks(blocks => blocks.AddRenderer<SiteFallbackRenderer>("checklist"));
-
-        var cut = RenderBlocks("blocks:\n  - { type: checklist, items: [{ text: One }] }\n");
-
-        cut.Find("p.site-fallback").TextContent.ShouldBe("checklist");
-        Logs.Problems.ShouldBeEmpty();
+        Should.Throw<ArgumentException>(() => new ContentBlockOptions().AddIcon(name, _ => { }));
     }
 
     [Theory]

@@ -21,6 +21,13 @@ public abstract class ContentBlockRenderer : ComponentBase
     [Parameter, EditorRequired]
     public ContentBlockContext Context { get; set; } = default!;
 
+    /// <summary>
+    /// Gets or sets whether the block is the aside of another block (a hero's or a split section's), rendered with
+    /// <see cref="ContentBlockContext.RenderAside"/>. An aside leaves out the band and heading of a top-level section.
+    /// </summary>
+    [Parameter]
+    public bool IsAside { get; set; }
+
     /// <inheritdoc/>
     protected override void OnParametersSet()
     {
