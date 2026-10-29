@@ -728,6 +728,24 @@ content/
         ??? a-propos.md
 ```
 
+### Derived Locales (Transliteration)
+
+A locale can be made from another by transliteration when content loads, so content written once in Serbian Cyrillic
+(`sr`) is also served in Latin script (`sr-Latn`). The FileSystem and GitHub providers share the setting:
+
+```json
+"DerivedLocales": [
+  { "Locale": "sr-Latn", "From": "sr", "Transliteration": "serbian-cyrillic-to-latin" }
+]
+```
+
+`From` must be one of `SupportedLocales`; the derived locale is added to them. Every `From` item without a file of the
+same localization id in the derived locale gets a read-only derived item (`IsDerived`, `DerivedFromLocale`) with the
+same localization id and address, its text and rendered HTML transliterated (code, autolinks and addresses are kept;
+links to the site's own pages under `/sr/` move under `/sr-Latn/`). A real file always wins. Derived items are never
+saved back, and the admin, which edits files, does not list them. The rules, the validation and what is not derived are
+in the [localization guide](../content/en/docs/localization.md#serve-a-second-script-without-a-second-file).
+
 ### Localized Content Components
 
 ```razor

@@ -6,6 +6,7 @@ using Osirion.Blazor.Cms.Domain.Interfaces;
 using Osirion.Blazor.Cms.Domain.Interfaces.Content;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Infrastructure.Directory;
+using Osirion.Blazor.Cms.Infrastructure.Localization;
 using Osirion.Blazor.Cms.Infrastructure.Repositories;
 using Osirion.Blazor.Cms.Infrastructure.Utilities;
 using System.IO.Abstractions;
@@ -73,6 +74,24 @@ namespace Osirion.Blazor.Cms.Infrastructure.FileSystem
             : this(markdownProcessor, queryFilter, options, logger, fileSystem)
         {
             _directoryRepository = directoryRepository ?? throw new ArgumentNullException(nameof(directoryRepository));
+        }
+
+        /// <summary>
+        /// Initializes a new instance that links every loaded item to its directory and adds the items of the
+        /// provider's <see cref="ContentProviderOptions.DerivedLocales"/> on every load.
+        /// </summary>
+        /// <exception cref="OptionsValidationException">Thrown when a derived locale breaks a rule.</exception>
+        public FileSystemContentRepository(
+            IMarkdownProcessor markdownProcessor,
+            IContentQueryFilter queryFilter,
+            IOptions<FileSystemOptions> options,
+            ILogger<FileSystemContentRepository> logger,
+            IFileSystem fileSystem,
+            FileSystemDirectoryRepository directoryRepository,
+            DerivedLocaleGenerator derivedLocales)
+            : this(markdownProcessor, queryFilter, options, logger, fileSystem, directoryRepository)
+        {
+            UseDerivedLocales(derivedLocales, _options);
         }
 
         // The patterns match the path under BasePath, so a content folder inside a bin or obj folder still loads.
@@ -158,6 +177,7 @@ namespace Osirion.Blazor.Cms.Infrastructure.FileSystem
             if (string.IsNullOrWhiteSpace(entity.Path))
                 throw new ArgumentException("Path cannot be empty", nameof(entity));
 
+            ThrowIfDerived(entity);
             LogOperation("saving", entity.Id);
 
             try
@@ -215,6 +235,7 @@ namespace Osirion.Blazor.Cms.Infrastructure.FileSystem
                 if (item is null)
                     throw new ContentItemNotFoundException(id, ProviderId);
 
+                ThrowIfDerived(item);
                 var fullPath = item.ProviderSpecificId;
                 if (string.IsNullOrWhiteSpace(fullPath))
                 {

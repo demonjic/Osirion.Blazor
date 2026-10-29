@@ -168,6 +168,7 @@ public static class ServiceCollectionExtensions
         }
 
         // Register GitHub repositories (they will use the factory)
+        services.TryAddDerivedLocales<GitHubOptions>();
         services.TryAddSingleton<GitHubContentRepository>();
         services.TryAddSingleton<GitHubDirectoryRepository>();
         services.TryAddSingleton<IDirectoryRepository, GitHubDirectoryRepository>();
@@ -226,6 +227,7 @@ public static class ServiceCollectionExtensions
         // Register FileSystem repositories. Singletons like the GitHub ones: they own the content cache and the file
         // watchers, and the singleton provider registry holds the provider, so a scoped registration was captured
         // (and rejected by scope validation in Development).
+        services.TryAddDerivedLocales<FileSystemOptions>();
         services.TryAddSingleton<FileSystemContentRepository>();
         services.TryAddFileSystemDirectoryCache();
         services.TryAddSingleton(DirectoryExtensions.CreateFileSystemDirectoryRepository);

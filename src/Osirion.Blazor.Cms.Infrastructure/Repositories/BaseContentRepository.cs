@@ -1,10 +1,13 @@
 using Microsoft.Extensions.Logging;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Enums;
+using Osirion.Blazor.Cms.Domain.Exceptions;
 using Osirion.Blazor.Cms.Domain.Interfaces;
 using Osirion.Blazor.Cms.Domain.Interfaces.Content;
 using Osirion.Blazor.Cms.Domain.Repositories;
+using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.ValueObjects;
+using Osirion.Blazor.Cms.Infrastructure.Localization;
 using Osirion.Blazor.Cms.Infrastructure.Utilities;
 using System.Globalization;
 using System.Text;
@@ -50,6 +53,10 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
 
     private string[] _excludedExtensionsFromMarkdownProcessing = [".txt", ".json", ".yml", ".log", ".bak"];
 
+    // Set by a repository whose provider can derive locales; null derives nothing
+    private DerivedLocaleGenerator? _derivedLocaleGenerator;
+    private ContentProviderOptions? _derivedLocaleOptions;
+
     /// <summary>Initializes a repository with its content services.</summary>
     protected BaseContentRepository(
         string providerId,
@@ -64,6 +71,41 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
 
     /// <summary>Loads content items into the repository cache.</summary>
     protected abstract Task<Dictionary<string, ContentItem>> LoadItemsIntoCache(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Makes every load add the items of the provider's <see cref="ContentProviderOptions.DerivedLocales"/>, after
+    /// <see cref="LoadItemsIntoCache"/> has read the files. Validates the derived locales first.
+    /// </summary>
+    /// <typeparam name="TOptions">The provider's options type.</typeparam>
+    /// <param name="generator">Makes the derived items.</param>
+    /// <param name="options">The provider options.</param>
+    /// <exception cref="Microsoft.Extensions.Options.OptionsValidationException">Thrown when a derived locale breaks a rule.</exception>
+    private protected void UseDerivedLocales<TOptions>(DerivedLocaleGenerator generator, TOptions options)
+        where TOptions : ContentProviderOptions
+    {
+        ArgumentNullException.ThrowIfNull(generator);
+        ArgumentNullException.ThrowIfNull(options);
+
+        generator.ThrowIfInvalid(options);
+        _derivedLocaleGenerator = generator;
+        _derivedLocaleOptions = options;
+    }
+
+    /// <summary>
+    /// Refuses to write or delete an item derived from another locale: it has no file, and saving it would turn the
+    /// transliteration into a file that then wins over every later change of its source.
+    /// </summary>
+    /// <param name="item">The item to write or delete.</param>
+    /// <exception cref="ContentProviderException">Thrown when the item is derived.</exception>
+    private protected void ThrowIfDerived(ContentItem item)
+    {
+        if (item.IsDerived)
+        {
+            throw new ContentProviderException(
+                $"The item '{item.Path}' is derived from the locale '{item.DerivedFromLocale}' and is read only; change its source item instead.",
+                ProviderId);
+        }
+    }
 
     /// <inheritdoc/>
     public override async Task<IReadOnlyList<ContentItem>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -236,6 +278,11 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
         {
             Logger.LogWarning("LoadItemsIntoCache returned null for provider {ProviderId}, using empty dictionary", ProviderId);
             newCache = new Dictionary<string, ContentItem>();
+        }
+
+        if (_derivedLocaleGenerator is not null && _derivedLocaleOptions is not null)
+        {
+            _derivedLocaleGenerator.AddDerivedItems(newCache, _derivedLocaleOptions, ContentPath);
         }
 
         ItemCache = newCache;

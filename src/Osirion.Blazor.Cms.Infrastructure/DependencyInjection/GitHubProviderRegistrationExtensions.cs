@@ -11,6 +11,7 @@ using Osirion.Blazor.Cms.Domain.Interfaces.Directory;
 using Osirion.Blazor.Cms.Domain.Options;
 using Osirion.Blazor.Cms.Domain.Services;
 using Osirion.Blazor.Cms.Infrastructure.GitHub;
+using Osirion.Blazor.Cms.Infrastructure.Localization;
 using Osirion.Blazor.Cms.Infrastructure.Providers;
 using Osirion.Blazor.Cms.Infrastructure.Services;
 using Osirion.Blazor.Cms.Infrastructure.Directory;
@@ -88,6 +89,8 @@ public static class GitHubProviderRegistrationExtensions
         var directoryRepoKey = $"GitHubDirectoryRepository_{providerName}";
         var providerKey = $"GitHubContentProvider_{providerName}";
 
+        services.TryAddDerivedLocales<GitHubOptions>();
+
         // Register repositories as keyed singletons for this specific provider
         services.AddKeyedSingleton<GitHubDirectoryRepository>(directoryRepoKey, (serviceProvider, key) =>
         {
@@ -134,6 +137,7 @@ public static class GitHubProviderRegistrationExtensions
                 optionsWrapper,
                 directoryRepo,
                 logger,
+                serviceProvider.GetRequiredService<DerivedLocaleGenerator>(),
                 providerName);
         });
 

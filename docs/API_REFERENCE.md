@@ -597,6 +597,7 @@ Configuration for GitHub content provider.
 | `CacheExpirationMinutes` | `int` | `60` | Cache expiration time |
 | `EnableLocalization` | `bool` | `false` | Enable multi-language support |
 | `DefaultLocale` | `string` | `"en"` | Default locale |
+| `DerivedLocales` | `List<DerivedLocaleOptions>` | empty | Locales made from another by transliteration (`Locale`, `From`, `Transliteration`); see the localization guide |
 
 ### ClarityOptions
 

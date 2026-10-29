@@ -74,6 +74,15 @@ public class ContentItem : DomainEntity<string>
     public int OrderIndex { get; set; }
     /// <summary>Gets or sets the provider revision identifier.</summary>
     public string Sha { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets the locale this item was made from by transliteration when content loaded, or <see langword="null"/> for
+    /// an item read from its own file. A derived item has no file: it is read only and is never saved back.
+    /// </summary>
+    public string? DerivedFromLocale { get; private set; }
+
+    /// <summary>Gets whether the item was made from another locale's item (see <see cref="DerivedFromLocale"/>).</summary>
+    public bool IsDerived => DerivedFromLocale is not null;
     private DirectoryItem? _directory;
 
     /// <summary>
@@ -444,6 +453,41 @@ public class ContentItem : DomainEntity<string>
         return Math.Max(1, (int)Math.Ceiling(wordCount / (double)wordsPerMinute));
     }
 
+    /// <summary>
+    /// Creates this item's counterpart in <paramref name="locale"/>, made from it when content loads: a deep clone with
+    /// its own id, locale and path, no provider-specific id and no markdown source of its own, marked as derived from
+    /// this item's locale. The text is the caller's to transliterate; the dates are this item's.
+    /// </summary>
+    /// <param name="id">The derived item's id.</param>
+    /// <param name="locale">The derived locale.</param>
+    /// <param name="path">The path a file of the derived locale would have.</param>
+    /// <returns>The derived item.</returns>
+    public ContentItem DeriveForLocale(string id, string locale, string path)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ContentValidationException("Id", "Id cannot be empty");
+
+        if (string.IsNullOrWhiteSpace(locale))
+            throw new ContentValidationException("Locale", "Locale cannot be empty");
+
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ContentValidationException("Path", "Path cannot be empty");
+
+        var derived = Clone();
+        derived.Id = id;
+        derived.Locale = locale;
+        derived.Path = path;
+        derived.ProviderSpecificId = null;
+        derived.OriginalMarkdown = null;
+        derived.DerivedFromLocale = Locale;
+        if (derived.Metadata is not null && !string.IsNullOrWhiteSpace(derived.Metadata.Lang))
+        {
+            derived.Metadata.Lang = locale;
+        }
+
+        return derived;
+    }
+
     /// <summary>Creates a deep clone of this content item.</summary>
     public ContentItem Clone()
     {
@@ -468,6 +512,7 @@ public class ContentItem : DomainEntity<string>
             ProviderId = ProviderId,
             ProviderSpecificId = ProviderSpecificId,
             OrderIndex = OrderIndex,
+            DerivedFromLocale = DerivedFromLocale,
             _directory = _directory,
             Metadata = Metadata?.Clone()
         };
