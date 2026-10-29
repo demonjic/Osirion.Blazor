@@ -7,7 +7,7 @@ permalink: /components/base-section
 description: OsirionBaseSection renders a page section with an id, heading, description, framework container, padding and an optional background image or pattern.
 author: Dejan Demonjić
 date: 2025-09-03
-last_modified: 2026-10-17
+last_modified: 2026-10-29
 featured_image: 'https://media.getosirion.com/og/components-base-section.jpg'
 categories:
 - Components
@@ -82,6 +82,22 @@ A left-aligned section with more padding, a background image and a shadow undern
 
 With an image, the text turns white and a dark overlay (`ShowOverlay`, on by default) keeps it readable.
 
+From 4.3 a section takes a short label above its heading (`Eyebrow`) and a band (`Variant`): `Tinted` sets it apart
+in `--osirion-background-secondary`, and `Dark` gives it the dark theme's colors whatever the page's theme.
+
+```demo
+base-section-bands
+```
+
+```razor
+<OsirionBaseSection Id="how-it-works"
+                    Eyebrow="How it works"
+                    Title="Three steps to a published site"
+                    Variant="SectionVariant.Dark">
+    <p>Install the package, write your pages, publish.</p>
+</OsirionBaseSection>
+```
+
 ## Parameters
 
 <!-- osirion:parameters OsirionBaseSection -->
@@ -92,6 +108,8 @@ With an image, the text turns white and a dark overlay (`ShowOverlay`, on by def
 | `Id` | `string?` | `null` | The section's `id`, for in-page links; the section keeps a 3rem scroll margin so a link does not land under a sticky header. |
 | `Title` | `string?` | `null` | The heading, rendered as an `h2`. Written as raw HTML without sanitizing, so pass only text you control; use `TitleContent` for text you do not control. Ignored when `TitleContent` is set. |
 | `TitleContent` | `RenderFragment?` | `null` | Your own heading markup in place of `Title`. Blazor encodes any text in it. |
+| `Eyebrow` | `string?` | `null` | A short label above the heading, such as `Features` or `How it works`, as plain text in a paragraph with the class `osirion-section-eyebrow`. Shown only together with a title. |
+| `Variant` | `SectionVariant` | `SectionVariant.Default` | The band behind the section: `Default` (the page's background), `Tinted` (`--osirion-background-secondary`) or `Dark`, which gives the section the dark theme's tokens through `data-theme` (`data-bs-theme` under Bootstrap) so its text, cards and buttons turn dark with it. An explicit `OsirionComponentBase.Theme` and `BackgroundColor` still win. |
 | `Description` | `string?` | `null` | The paragraph under the heading. Written as raw HTML without sanitizing, so pass only text you control. Shown only together with a title, and ignored when `DescriptionContent` is set. |
 | `DescriptionContent` | `RenderFragment?` | `null` | Your own markup in place of `Description`. Shown only together with a title. |
 | `ContainerClass` | `string?` | `null` | The class of the inner container; when it is empty the configured CSS framework's container class is used. |
@@ -124,14 +142,22 @@ Unmatched attributes are written to the `<section>`. The pattern values are `Dot
 - `BackgroundImageUrl` is CSS-escaped before it is written (since 4.0), so a value cannot close the `url()` and add
   declarations. `BackgroundColor` and `TextColor` are written as given: use your own values.
 - The section has `scroll-margin-top: 3rem`, so a link to `#id` does not land under a sticky header.
+- `Eyebrow` is a paragraph before the heading, plain text and HTML-encoded, and like the description it is shown only
+  together with a title.
+- `Variant="SectionVariant.Dark"` writes `data-theme="dark"` (`data-bs-theme="dark"` under Bootstrap) on the
+  `<section>`, so the Osirion dark theme tokens, and Bootstrap's own dark variables, apply to everything inside it.
+  An explicit `Theme` wins over the band, and `BackgroundColor` over its background. Under a palette other than
+  Osirion, the band takes the Osirion dark tokens, because palettes set their tokens on the root element only.
+- With neither `Eyebrow` nor `Variant`, the section renders the markup it rendered before they existed.
 
 ## Styling
 
 The `<section>` has `osirion-section`, `osirion-section-align-{left|center|right|justify}` and
 `osirion-section-padding-{none|small|medium|large}`, plus `osirion-section-with-background`,
-`osirion-section-with-pattern` and `osirion-section-divider` when those options are on. Inside are
-`osirion-section-overlay`, the container, `osirion-section-header` (with `osirion-section-header-{alignment}`),
-`osirion-section-title`, `osirion-section-description` and `osirion-section-content`.
+`osirion-section-with-pattern`, `osirion-section-divider` and `osirion-section-variant-{tinted|dark}` when those
+options are on. Inside are `osirion-section-overlay`, the container, `osirion-section-header` (with
+`osirion-section-header-{alignment}`), `osirion-section-eyebrow`, `osirion-section-title`,
+`osirion-section-description` and `osirion-section-content`.
 
 The container class follows the configured CSS framework:
 
@@ -143,8 +169,10 @@ The container class follows the configured CSS framework:
 | Radzen | `rz-container` |
 | None | `osirion-container` |
 
-Colors come from `--osirion-background-primary` and `--osirion-text-primary`, and spacing from the
-`--osirion-spacing-*` tokens, so a framework adapter or your theme restyles every section at once.
+Colors come from `--osirion-background-primary` and `--osirion-text-primary` (`--osirion-background-secondary` for
+the tinted band), and spacing from the `--osirion-spacing-*` tokens, so a framework adapter or your theme restyles
+every section at once. The eyebrow is small uppercase text in `--osirion-link-color`, white over a background
+image.
 
 ## Related
 

@@ -1,7 +1,7 @@
 @namespace Osirion.Blazor.Components
 @inherits OsirionComponentBase
 
-<section id="@Id" class="@GetSectionClass()" style="@GetSectionStyle()" @attributes="@Attributes">
+<section id="@Id" class="@GetSectionClass()" style="@GetSectionStyle()" data-theme="@GetDarkBandTheme("data-theme")" data-bs-theme="@GetDarkBandTheme("data-bs-theme")" @attributes="@Attributes">
     @if (ShowPattern)
     {
         <OsirionBackgroundPattern BackgroundPattern="@BackgroundPattern" />
@@ -16,6 +16,11 @@
         @if (!string.IsNullOrWhiteSpace(Title) || TitleContent is not null)
         {
             <div class="@GetHeaderClass()">
+                @if (!string.IsNullOrWhiteSpace(Eyebrow))
+                {
+                    <p class="osirion-section-eyebrow">@Eyebrow</p>
+                }
+
                 @if (TitleContent is not null)
                 {
                     @TitleContent

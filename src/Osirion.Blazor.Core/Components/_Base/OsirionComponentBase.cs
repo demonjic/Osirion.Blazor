@@ -67,6 +67,12 @@ public abstract partial class OsirionComponentBase : ComponentBase
     /// </summary>
     protected CssFramework Framework => ThemingOptions.Value.Framework;
 
+    /// <summary>
+    /// The attribute the configured CSS framework reads the color mode from: <c>data-bs-theme</c> under Bootstrap,
+    /// <c>data-theme</c> otherwise.
+    /// </summary>
+    private protected string ThemeAttributeName => Framework == CssFramework.Bootstrap ? "data-bs-theme" : "data-theme";
+
     /// <inheritdoc />
     /// <remarks>
     /// Applies the theme attribute on every parameter update, so a changed <see cref="Theme"/> reaches the markup and
@@ -92,7 +98,7 @@ public abstract partial class OsirionComponentBase : ComponentBase
             _themeAttributeName = null;
         }
 
-        var attributeName = Framework == CssFramework.Bootstrap ? "data-bs-theme" : "data-theme";
+        var attributeName = ThemeAttributeName;
         if (_themeAttributeName is not null && _themeAttributeName != attributeName)
         {
             _ownedAttributes.Remove(_themeAttributeName);
