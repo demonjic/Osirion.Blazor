@@ -51,7 +51,7 @@ public class GitHubDerivedLocaleTests
         derived.Url.ShouldBe("vesti/prva");
         derived.Url.ShouldBe(source.Url);
         derived.ProviderSpecificId.ShouldBeNull();
-        derived.Content.ShouldContain("Tekst sa <a href=\"/sr-Latn/kontakt\">vezom</a>.");
+        derived.Content.ShouldContain("Tekst sa <a href=\"/sr-latn/kontakt\">vezom</a>.");
     }
 
     [Fact]

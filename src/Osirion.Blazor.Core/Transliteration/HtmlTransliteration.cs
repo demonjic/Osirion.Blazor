@@ -1,14 +1,14 @@
 using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
-using Osirion.Blazor.Core.Transliteration;
-using Osirion.Blazor.Core.Utils;
+using Osirion.Blazor.Core.Localization;
 
-namespace Osirion.Blazor.Cms.Infrastructure.Localization;
+namespace Osirion.Blazor.Core.Transliteration;
 
 /// <summary>
-/// Writes an item's rendered HTML in a derived locale: its text is transliterated and its links to the site's pages
-/// in the source locale move to the derived locale. Everything else is left as it is.
+/// Writes HTML of one language version in the version derived from it by transliteration: its text is transliterated
+/// and its links to the site's pages in the source culture move to the derived culture. Everything else is left as it
+/// is. Derived content and a derived site version's copyright line use it.
 /// </summary>
 /// <remarks>
 /// <list type="bullet">
@@ -16,13 +16,13 @@ namespace Osirion.Blazor.Cms.Infrastructure.Localization;
 /// transliterated.</item>
 /// <item>Nothing inside <c>code</c>, <c>pre</c>, <c>kbd</c>, <c>samp</c>, <c>script</c>, <c>style</c> or an element with
 /// <c>translate="no"</c> changes, and neither does a link's text that is its address (an autolink).</item>
-/// <item>An <c>href</c> or <c>src</c> moves only when it is a path on the site (<see cref="LocalUrl.IsLocalPath"/>) whose
-/// first segment is the source locale and whose last segment names no file; absolute, protocol-relative,
-/// <c>mailto:</c>, <c>tel:</c> and fragment links, relative paths and links to files stay.</item>
+/// <item>An <c>href</c> or <c>src</c> moves by the rule of <see cref="DerivedLocaleLinks.Move"/>: only a link to a page
+/// of the site in the source culture moves; absolute, protocol-relative, <c>mailto:</c>, <c>tel:</c> and fragment links,
+/// relative paths and links to files stay.</item>
 /// </list>
 /// HTML without a change is returned as it came; changed HTML is serialized from the parsed fragment.
 /// </remarks>
-internal sealed class TransliteratedHtml
+public sealed class HtmlTransliteration
 {
     private static readonly HashSet<string> UntouchedElements =
         new(["code", "pre", "kbd", "samp", "script", "style"], StringComparer.OrdinalIgnoreCase);
@@ -32,25 +32,31 @@ internal sealed class TransliteratedHtml
     private static readonly string[] AddressAttributes = ["href", "src"];
 
     private readonly ITextTransliterator _transliterator;
-    private readonly string _fromLocale;
-    private readonly string _toLocale;
+    private readonly string _fromCulture;
+    private readonly string _toCulture;
+    private readonly IOsirionLocalePaths? _localePaths;
     private bool _changed;
 
-    private TransliteratedHtml(ITextTransliterator transliterator, string fromLocale, string toLocale)
+    private HtmlTransliteration(ITextTransliterator transliterator, string fromCulture, string toCulture, IOsirionLocalePaths? localePaths)
     {
         _transliterator = transliterator;
-        _fromLocale = fromLocale;
-        _toLocale = toLocale;
+        _fromCulture = fromCulture;
+        _toCulture = toCulture;
+        _localePaths = localePaths;
     }
 
-    /// <summary>Writes <paramref name="html"/> in the derived locale.</summary>
-    /// <param name="html">The source item's rendered HTML.</param>
+    /// <summary>Writes <paramref name="html"/> in the derived culture.</summary>
+    /// <param name="html">The source version's HTML, a fragment such as an item's rendered content.</param>
     /// <param name="transliterator">Writes the text.</param>
-    /// <param name="fromLocale">The source locale, the first segment of the links that move.</param>
-    /// <param name="toLocale">The derived locale, the segment those links move under.</param>
-    /// <returns>The derived HTML.</returns>
-    internal static string Transform(string html, ITextTransliterator transliterator, string fromLocale, string toLocale)
+    /// <param name="fromCulture">The source culture, for example <c>sr</c>.</param>
+    /// <param name="toCulture">The derived culture, for example <c>sr-Latn</c>.</param>
+    /// <param name="localePaths">The site's culture prefixes, when <c>Osirion:Localization</c> is registered.</param>
+    /// <returns>The derived HTML; the same instance when nothing changes.</returns>
+    public static string Transform(
+        string html, ITextTransliterator transliterator, string fromCulture, string toCulture, IOsirionLocalePaths? localePaths = null)
     {
+        ArgumentNullException.ThrowIfNull(transliterator);
+
         if (string.IsNullOrEmpty(html))
         {
             return html;
@@ -60,7 +66,7 @@ internal sealed class TransliteratedHtml
         var context = parser.ParseDocument(string.Empty).Body!;
         var nodes = parser.ParseFragment(html, context);
 
-        var transform = new TransliteratedHtml(transliterator, fromLocale, toLocale);
+        var transform = new HtmlTransliteration(transliterator, fromCulture, toCulture, localePaths);
         foreach (var node in nodes)
         {
             transform.Visit(node);
@@ -89,7 +95,7 @@ internal sealed class TransliteratedHtml
 
         foreach (var name in AddressAttributes)
         {
-            RewriteAttribute(element, name, MoveToDerivedLocale);
+            RewriteAttribute(element, name, address => DerivedLocaleLinks.Move(address, _fromCulture, _toCulture, _localePaths));
         }
 
         if (IsAutolink(element))
@@ -147,26 +153,5 @@ internal sealed class TransliteratedHtml
         }
 
         return transliterated;
-    }
-
-    private string MoveToDerivedLocale(string address)
-    {
-        if (!LocalUrl.IsLocalPath(address))
-        {
-            return address;
-        }
-
-        var pathEnd = address.IndexOfAny(['?', '#']);
-        var path = pathEnd < 0 ? address : address[..pathEnd];
-        var firstSegmentEnd = path.IndexOf('/', 1);
-        var firstSegment = firstSegmentEnd < 0 ? path[1..] : path[1..firstSegmentEnd];
-        var lastSegment = path[(path.LastIndexOf('/') + 1)..];
-
-        if (!firstSegment.Equals(_fromLocale, StringComparison.OrdinalIgnoreCase) || Path.HasExtension(lastSegment))
-        {
-            return address;
-        }
-
-        return "/" + _toLocale + address[(1 + firstSegment.Length)..];
     }
 }
