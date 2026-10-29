@@ -31,3 +31,26 @@ Structured data
 - `EmitMobileMetaTags` (default `false`) emits viewport, theme-color and the mobile web app tags. Leave it off when the host document already declares them.
 - Metadata is recomputed whenever the parameters are set, so a reused instance never keeps the previous page's values.
 - `AlternateLanguageUrls` entries must have the form `language|url`; malformed entries are skipped and logged.
+
+## Language versions
+
+- On a site with locale routing (`IOsirionLocalePaths` registered by `AddOsirionLocalization`), a page that passes no
+  `AlternateLanguageUrls` gets its `hreflang` links written for it: each version named by its culture name, then
+  `x-default` with the default culture's address, and nothing for fewer than two versions.
+- A content item links its canonical address and each published translation (same `ContentId`) whose locale is a
+  configured culture, at `/{url}` with that culture's prefix. A culture without a translation, and a `noindex`
+  translation, is not linked. The translations are read through `IContentProviderManager` in `OnParametersSetAsync`;
+  a failed read writes no links and logs a warning.
+- A list page or a code page links its canonical path (`CanonicalPath` when set) in every culture through
+  `IOsirionLocalePaths.Localize`. On such a site a page without `Locale` takes its language from the address prefix.
+- `AlternateLanguageUrls` always wins; an empty list writes no links.
+
+## Pages that are not content items
+
+- `Title`, `Description`, `ImageUrl` and `CanonicalPath` give a Razor page (no `ContentItem`) the full head: title,
+  description, canonical, Open Graph (`og:type` `website`), Twitter, a JSON-LD `WebPage` (or the `ContactPage` or
+  `AboutPage` named by `SchemaTypes` or `FallbackSchemaType`) and the `hreflang` links. No author, dates or article tags.
+- They apply only when `Title` is set and neither `Content` nor `ContentItems` is; with `Content` or `ContentItems` they
+  are ignored. `CanonicalPath` is a path on the site or an absolute http(s) URL; anything else is ignored and logged.
+- Flat parameters were chosen over a page model to match `CollectionTitle` and `CollectionDescription`.
+- Blazor renders only the last `HeadContent` of a page, so all head tags go through this one renderer.
