@@ -38,6 +38,12 @@ internal sealed record SeoSchemaContext
 
     public string? MetaDescription { get; init; }
 
+    /// <summary>The title of a page that is not a content item, without the site name; null on every other page.</summary>
+    public string? PageTitle { get; init; }
+
+    /// <summary>The description of a page that is not a content item; null on every other page.</summary>
+    public string? PageDescription { get; init; }
+
     /// <summary>The resolved Open Graph image, the fallback image of collection items.</summary>
     public string? OgImage { get; init; }
 

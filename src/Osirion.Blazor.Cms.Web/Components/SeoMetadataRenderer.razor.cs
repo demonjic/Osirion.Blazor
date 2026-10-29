@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Osirion.Blazor.Cms.Domain.Entities;
+using Osirion.Blazor.Cms.Domain.Repositories;
+using Osirion.Blazor.Cms.Domain.Services;
 using Osirion.Blazor.Cms.Web.Components.Seo;
 using Osirion.Blazor.Cms.Web.Options;
+using Osirion.Blazor.Core.Localization;
 using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Cms.Web.Components;
@@ -22,6 +26,12 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     [Inject]
     private ILogger<SeoMetadataRenderer> Logger { get; set; } = default!;
+
+    // Read for the optional services: IOsirionLocalePaths exists only on a site with locale routing, and the content
+    // provider manager only on a site with content. [Inject] cannot express an optional service.
+    [Inject]
+    private IServiceProvider Services { get; set; } = default!;
+
     // Core properties
     private string _siteName = string.Empty;
     private string _baseUrl = string.Empty;
@@ -76,6 +86,18 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private int? _readTimeMinutes;
     private IReadOnlyList<string>? _tags;
     private IReadOnlyList<string>? _categories;
+
+    // A page that is not a content item: a Title with neither Content nor ContentItems.
+    private bool _isCodePage;
+
+    // Locale routing, when the site has it; read once per parameter set.
+    private IOsirionLocalePaths? _localePaths;
+
+    // Set when a content item's translations are to be read for its hreflang links, after the synchronous metadata.
+    private bool _loadTranslations;
+
+    // Counts parameter sets, so translations read for an earlier item never replace the links of the current one.
+    private int _parametersVersion;
 
     #region Parameters
 
@@ -267,6 +289,11 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     /// <summary>
     /// Gets or sets the <c>hreflang</c> links of other language versions, each entry a language code and an address joined by
     /// a vertical bar, such as <c>de|https://example.com/de/page</c>. Malformed entries are skipped with a logged warning.
+    /// When it is <see langword="null"/> on a site with locale routing (<c>IOsirionLocalePaths</c>), the links are written
+    /// for the page instead: a content item links its published, indexable translations (the items with its
+    /// <c>ContentId</c>), and any other page links its address in every configured culture, each with the culture name,
+    /// then <c>x-default</c> with the default culture's address; nothing is written for fewer than two versions. A list
+    /// passed here, even an empty one, always wins.
     /// </summary>
     [Parameter]
     public List<string>? AlternateLanguageUrls { get; set; }
@@ -338,6 +365,42 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     [Parameter]
     public SchemaType? FallbackSchemaType { get; set; }
 
+    /// <summary>
+    /// Gets or sets the title of a page that is not a content item, such as a contact page written in Razor. With a
+    /// title and neither <see cref="Content"/> nor <see cref="ContentItems"/>, the component writes the whole head for
+    /// that page: the page title as <c>{Title} | {site name}</c>, the description, the canonical URL, Open Graph and
+    /// Twitter tags (<c>og:type</c> <c>website</c>), a schema.org <c>WebPage</c> (or the <c>ContactPage</c> or
+    /// <c>AboutPage</c> that <see cref="SchemaTypes"/> or <see cref="FallbackSchemaType"/> names) and the
+    /// <c>hreflang</c> links. Ignored when <see cref="Content"/> or <see cref="ContentItems"/> is set.
+    /// </summary>
+    [Parameter]
+    public string? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the description of a page that is not a content item: the meta description (cut to 160 characters),
+    /// <c>og:description</c> (cut to 200) and the description of its structured data. Read only with <see cref="Title"/>.
+    /// </summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Gets or sets the social image of a page that is not a content item (<c>og:image</c> and <c>twitter:image</c>),
+    /// absolute or relative to the site address. When empty, <see cref="DefaultImageUrl"/> applies. Read only with
+    /// <see cref="Title"/>.
+    /// </summary>
+    [Parameter]
+    public string? ImageUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the canonical address of a page that is not a content item, as a path on the site such as
+    /// <c>/contact</c>, made absolute with the site address, or an absolute <c>http</c> or <c>https</c> address. On a
+    /// localized page pass the localized path (<c>/sr/contact</c>), for example from
+    /// <c>IOsirionLocalePaths.LocalizeForCurrentCulture</c>. When empty, the current address is the canonical one, as on
+    /// every other page. The <c>hreflang</c> links are built from it. Read only with <see cref="Title"/>.
+    /// </summary>
+    [Parameter]
+    public string? CanonicalPath { get; set; }
+
     #endregion
 
     /// <summary>
@@ -367,6 +430,10 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin",
         "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url"
     };
+
+    /// <summary>The schema types a page that is not a content item can be written as: each describes a web page.</summary>
+    private static readonly HashSet<SchemaType> CodePageSchemaTypes =
+        [Cms.Web.Components.SchemaType.WebPage, Cms.Web.Components.SchemaType.ContactPage, Cms.Web.Components.SchemaType.AboutPage];
 
     /// <summary>The schema types a listed item can be written as: each takes the article properties.</summary>
     private static readonly HashSet<SchemaType> ArticleSchemaTypes =
@@ -398,10 +465,15 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     protected override void OnParametersSet()
     {
         ResetState();
+        _parametersVersion++;
         _pageImageUrl = _explicitParameters.Contains(nameof(DefaultImageUrl)) ? DefaultImageUrl : null;
+        var hasItems = ContentItems is not null && ContentItems.Any();
+        _isCodePage = Content is null && !hasItems && !string.IsNullOrWhiteSpace(Title);
 
-        // Require either Content or ContentItems
-        if (Content is null && (ContentItems is null || !ContentItems.Any())) return;
+        // Require Content, ContentItems or the Title of a page that is not a content item
+        if (Content is null && !hasItems && !_isCodePage) return;
+
+        _localePaths = Services.GetService<IOsirionLocalePaths>();
 
         // Apply defaults from options if available
         ApplyDefaultsFromOptions();
@@ -416,8 +488,9 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _currentUrl = siteUrl is null
             ? ResolvePageUrl()
             : _baseUrl + "/" + navigationManager.ToBaseRelativePath(ResolvePageUrl());
-        _locale = SeoText.ToOpenGraphLocale(SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Lang, Content?.Locale, Locale));
-        _languageCode = Content?.Locale ?? Locale ?? "en";
+        var requestCulture = RequestCultureName();
+        _locale = SeoText.ToOpenGraphLocale(SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Lang, Content?.Locale, Locale, requestCulture));
+        _languageCode = Content?.Locale ?? Locale ?? requestCulture ?? "en";
         _alternateLinks = ParseAlternateLanguageUrls();
 
         // Build all metadata
@@ -426,6 +499,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _isArticle = string.Equals(_ogType, "article", StringComparison.OrdinalIgnoreCase);
         BuildTwitterCardMetadata();
         BuildSeoEssentials();
+        BuildLanguageVersions();
         _referrerPolicy = ResolveReferrerPolicy();
 
         // GEO & AEO optimization (before the structured data, which reuses the generated answers)
@@ -444,9 +518,32 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         AddGeneratedFaqSchema();
     }
 
+    /// <summary>
+    /// Reads the translations of a content item for its <c>hreflang</c> links, when <see cref="BuildLanguageVersions"/>
+    /// asked for them. A provider that has the items cached answers at once, so the head is complete in the first render.
+    /// </summary>
+    /// <returns>A task that completes when the links are set.</returns>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!_loadTranslations || Content is null || _localePaths is null || _canonicalUrl is null)
+        {
+            return;
+        }
+
+        var version = _parametersVersion;
+        var links = await LoadTranslationLinksAsync(Content, _localePaths, _canonicalUrl);
+        if (version == _parametersVersion)
+        {
+            _alternateLinks = links;
+        }
+    }
+
     private void ResetState()
     {
         _hasContent = false;
+        _isCodePage = false;
+        _localePaths = null;
+        _loadTranslations = false;
         _metaTitle = string.Empty;
         _metaDescription = null;
         _metaKeywords = null;
@@ -526,6 +623,89 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     }
 
     /// <summary>
+    /// The culture name of the address on a site with locale routing: the culture of its prefix, else the default
+    /// culture. <see langword="null"/> without locale routing, where the page counts as English unless told otherwise.
+    /// </summary>
+    private string? RequestCultureName()
+    {
+        if (_localePaths is null)
+        {
+            return null;
+        }
+
+        var currentPath = "/" + navigationManager.ToBaseRelativePath(ContentUrls.StripQueryAndFragment(navigationManager.Uri));
+        return _localePaths.TryGetCulture(currentPath, out var culture, out _)
+            ? culture.Culture.Name
+            : _localePaths.DefaultCulture.Culture.Name;
+    }
+
+    /// <summary>
+    /// The <c>hreflang</c> links the page did not pass, on a site with locale routing: a page that is not a content item
+    /// (a list page or a code page) in every culture, from its canonical path with the canonical query parameters; a
+    /// content item from its translations, which <see cref="OnParametersSetAsync"/> reads.
+    /// </summary>
+    private void BuildLanguageVersions()
+    {
+        if (AlternateLanguageUrls is not null || _localePaths is null)
+        {
+            return;
+        }
+
+        if (Content is not null)
+        {
+            _loadTranslations = !string.IsNullOrWhiteSpace(Content.ContentId);
+            return;
+        }
+
+        var sitePath = _isCodePage && LocalUrl.IsLocalPath(CanonicalPath)
+            ? CanonicalPath!
+            : "/" + navigationManager.ToBaseRelativePath(ResolvePageUrl());
+        _alternateLinks = LanguageVersions.ForPage(_localePaths, sitePath, path => _baseUrl + path);
+    }
+
+    /// <summary>
+    /// The <c>hreflang</c> links of a content item: its own canonical address in its culture, then each published,
+    /// indexable translation (an item with the same <c>ContentId</c>) in a configured culture, at its URL from the site
+    /// root with that culture's prefix. A culture without a translation is not linked; a failed read writes no links.
+    /// </summary>
+    private async Task<List<(string HrefLang, string Href)>> LoadTranslationLinksAsync(
+        ContentItem content, IOsirionLocalePaths localePaths, string canonicalUrl)
+    {
+        var manager = Services.GetService<IContentProviderManager>();
+        if (manager is null || LanguageVersions.CultureOf(localePaths, content.Locale) is not { } currentCulture)
+        {
+            return [];
+        }
+
+        IReadOnlyList<ContentItem>? translations;
+        try
+        {
+            translations = await manager.GetContentByQueryAsync(
+                new ContentQuery { LocalizationId = content.ContentId, IncludeUnpublished = false });
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "Writing no hreflang links for content {ContentPath}; its translations could not be read", content.Path);
+            return [];
+        }
+
+        var versions = new Dictionary<OsirionLocaleCulture, string> { [currentCulture] = canonicalUrl };
+        foreach (var translation in translations ?? [])
+        {
+            if (LanguageVersions.IsNoIndex(translation)
+                || !string.Equals(translation.ContentId, content.ContentId, StringComparison.OrdinalIgnoreCase)
+                || LanguageVersions.CultureOf(localePaths, translation.Locale) is not { } culture)
+            {
+                continue;
+            }
+
+            versions.TryAdd(culture, _baseUrl + localePaths.Localize(ContentUrls.ItemUrl(translation), culture.Culture));
+        }
+
+        return LanguageVersions.Ordered(localePaths, versions);
+    }
+
+    /// <summary>
     /// Applies default values from injected SeoMetadataOptions if parameters are not explicitly set.
     /// </summary>
     private void ApplyDefaultsFromOptions()
@@ -582,7 +762,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     /// </summary>
     private void InitializeHelperProperties()
     {
-        _hasContent = Content is not null || (ContentItems?.Any() == true);
+        _hasContent = Content is not null || (ContentItems?.Any() == true) || _isCodePage;
 
         if (Content is not null)
         {
@@ -625,7 +805,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         {
             // Single content page metadata
             _metaDescription = SeoText.TruncateDescription(
-                SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Description, Content?.Description),
+                SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Description, Content?.Description, CodePageDescription),
                 160
             );
             _metaKeywords = Content?.Tags.Any() == true ? string.Join(", ", Content.Tags) : null;
@@ -701,11 +881,11 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private void BuildContentOpenGraphMetadata()
     {
         var seo = Content?.Metadata?.SeoProperties;
-        _ogTitle = SeoText.TruncateTitle(SeoText.FirstNonBlank(seo?.OgTitle, Content?.Title, _metaTitle), 60);
-        _ogDescription = SeoText.TruncateDescription(SeoText.FirstNonBlank(seo?.OgDescription, _metaDescription), 200);
-        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(seo?.OgImageUrl, seo?.Image, Content?.FeaturedImageUrl, DefaultImageUrl));
+        _ogTitle = SeoText.TruncateTitle(SeoText.FirstNonBlank(seo?.OgTitle, Content?.Title, CodePageTitle, _metaTitle), 60);
+        _ogDescription = SeoText.TruncateDescription(SeoText.FirstNonBlank(seo?.OgDescription, CodePageDescription, _metaDescription), 200);
+        _ogImage = NormalizeImageUrl(SeoText.FirstNonBlank(seo?.OgImageUrl, seo?.Image, Content?.FeaturedImageUrl, CodePageImageUrl, DefaultImageUrl));
         _ogType = SeoText.FirstNonBlank(seo?.OgType, DetermineOgType());
-        _ogImageAlt = SeoText.FirstNonBlank(Content?.Title, _siteName);
+        _ogImageAlt = SeoText.FirstNonBlank(Content?.Title, CodePageTitle, _siteName);
     }
 
     private void BuildTwitterCardMetadata()
@@ -736,7 +916,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     private void BuildGeoOptimization()
     {
         // GEO: Create concise entity summary for AI engines
-        var description = Content?.Description ?? CollectionDescription;
+        var description = Content?.Description ?? CollectionDescription ?? CodePageDescription;
 
         if (!string.IsNullOrWhiteSpace(description))
         {
@@ -753,7 +933,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         _answersTo = [];
         _structuredAnswers = [];
 
-        var title = Content?.Title ?? CollectionTitle;
+        var title = Content?.Title ?? CollectionTitle ?? CodePageTitle;
         if (string.IsNullOrWhiteSpace(title)) return;
 
         var question = AnswerQuestions.IsQuestion(title, _languageCode)
@@ -763,7 +943,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
         _answersTo.Add(question);
 
-        var description = Content?.Description ?? CollectionDescription;
+        var description = Content?.Description ?? CollectionDescription ?? CodePageDescription;
         if (!string.IsNullOrWhiteSpace(description))
         {
             _structuredAnswers[question] = SeoText.TruncateDescription(description, 320) ?? string.Empty;
@@ -813,7 +993,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
             return $"{CollectionTitle} | {_siteName}";
         }
 
-        var title = SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Title, Content?.Title);
+        var title = SeoText.FirstNonBlank(Content?.Metadata?.SeoProperties?.Title, Content?.Title, CodePageTitle);
 
         if (string.IsNullOrWhiteSpace(title))
             return _siteName;
@@ -825,7 +1005,7 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
 
     private string? BuildCanonicalUrl()
     {
-        var declared = Content?.Metadata?.SeoProperties?.Canonical;
+        var declared = Content is null ? CodePageCanonicalUrl() : Content.Metadata?.SeoProperties?.Canonical;
         var canonical = !string.IsNullOrWhiteSpace(declared) ? declared : _currentUrl;
 
         // og:url and the structured data url must agree with the canonical URL.
@@ -866,6 +1046,27 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         return null;
     }
 
+    /// <summary>
+    /// The canonical address <see cref="CanonicalPath"/> names for a page that is not a content item: an absolute http(s)
+    /// address as it is, a path on the site after the site address. Anything else is ignored with a logged warning, so
+    /// the current address stays canonical.
+    /// </summary>
+    private string? CodePageCanonicalUrl()
+    {
+        if (!_isCodePage || string.IsNullOrWhiteSpace(CanonicalPath))
+            return null;
+
+        if (Uri.TryCreate(CanonicalPath, UriKind.Absolute, out var absolute)
+            && (absolute.Scheme == Uri.UriSchemeHttps || absolute.Scheme == Uri.UriSchemeHttp))
+            return CanonicalPath;
+
+        if (LocalUrl.IsLocalPath(CanonicalPath))
+            return _baseUrl + CanonicalPath;
+
+        Logger.LogWarning("Ignoring CanonicalPath '{CanonicalPath}'; expected a path on the site or an http(s) address", CanonicalPath);
+        return null;
+    }
+
     private string? NormalizeImageUrl(string? url) => SeoText.NormalizeImageUrl(url, _baseUrl);
 
     private string DetermineOgType() => OgTypesBySchemaType.GetValueOrDefault(PrimarySchemaTypeName, "website");
@@ -881,10 +1082,19 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     /// og:type and content-type agree with the JSON-LD.
     /// </summary>
     private string PrimarySchemaTypeName =>
-        (SchemaTypes is { Length: > 0 } schemaTypes
-            ? schemaTypes[0]
-            : DeclaredSchemaType(Content) ?? FallbackSchemaType ?? Cms.Web.Components.SchemaType.WebPage)
+        (_isCodePage
+            ? CodePageSchemaType()
+            : SchemaTypes is { Length: > 0 } schemaTypes
+                ? schemaTypes[0]
+                : DeclaredSchemaType(Content) ?? FallbackSchemaType ?? Cms.Web.Components.SchemaType.WebPage)
         .ToString();
+
+    // The values of a page that is not a content item, null on every other page, so they never fill in for an item.
+    private string? CodePageTitle => _isCodePage ? Title : null;
+
+    private string? CodePageDescription => _isCodePage ? Description : null;
+
+    private string? CodePageImageUrl => _isCodePage ? ImageUrl : null;
 
     private bool HasCategories => _categories?.Any() == true;
 
@@ -915,6 +1125,8 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         CollectionDescription = CollectionDescription,
         MetaTitle = _metaTitle,
         MetaDescription = _metaDescription,
+        PageTitle = CodePageTitle,
+        PageDescription = CodePageDescription,
         OgImage = _ogImage,
         ApplicationCategory = ApplicationCategory
     };
@@ -923,7 +1135,13 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
     {
         var context = CreateSchemaContext();
 
-        // Collection pages: OnParametersSet only gets here without Content when ContentItems has items
+        if (_isCodePage)
+        {
+            _jsonLdContent = SeoSchemas.Serialize(ContentSchemas.CodePage(context, CodePageSchemaType().ToString()));
+            return;
+        }
+
+        // Collection pages: without Content, OnParametersSet only gets here for a code page or when ContentItems has items
         if (Content is null)
         {
             GenerateCollectionJsonLd(context);
@@ -948,6 +1166,24 @@ public partial class SeoMetadataRenderer(NavigationManager navigationManager)
         }
 
         GenerateCollectionItemSchemas(context);
+    }
+
+    /// <summary>
+    /// The schema type of a page that is not a content item: the first web page type (<c>WebPage</c>,
+    /// <c>ContactPage</c> or <c>AboutPage</c>) in <see cref="SchemaTypes"/>, then <see cref="FallbackSchemaType"/> when
+    /// it is one, then <c>WebPage</c>. The other types describe an item the page does not have.
+    /// </summary>
+    private SchemaType CodePageSchemaType()
+    {
+        foreach (var schemaType in SchemaTypes ?? [])
+        {
+            if (CodePageSchemaTypes.Contains(schemaType))
+                return schemaType;
+        }
+
+        return FallbackSchemaType is { } fallback && CodePageSchemaTypes.Contains(fallback)
+            ? fallback
+            : Cms.Web.Components.SchemaType.WebPage;
     }
 
     /// <summary>
