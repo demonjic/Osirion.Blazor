@@ -11,7 +11,10 @@ using Osirion.Blazor.Cms.Domain.Enums;
 using Osirion.Blazor.Cms.Domain.Repositories;
 using Osirion.Blazor.Cms.Domain.Services;
 using Osirion.Blazor.Cms.Web.Components;
+using Osirion.Blazor.Cms.Web.Components.Seo;
 using Osirion.Blazor.Cms.Web.Options;
+using Osirion.Blazor.Core.Localization;
+using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Cms.Web.Feeds;
 
@@ -35,6 +38,7 @@ public static class ContentFeedEndpoints
 
     private const string SitemapNamespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
     private const string AtomNamespace = "http://www.w3.org/2005/Atom";
+    private const string XhtmlNamespace = "http://www.w3.org/1999/xhtml";
 
     private static readonly XmlWriterSettings WriterSettings = new()
     {
@@ -115,7 +119,7 @@ public static class ContentFeedEndpoints
             switch (kind)
             {
                 case ContentFeedKind.Sitemap:
-                    WriteSitemap(writer, feed, items);
+                    WriteSitemap(writer, feed, items, services.GetService<IOsirionLocalePaths>());
                     break;
                 case ContentFeedKind.Rss:
                     WriteRss(writer, feed, Newest(items, options.FeedItemCount));
@@ -138,39 +142,81 @@ public static class ContentFeedEndpoints
         await response.Body.WriteAsync(buffer.GetBuffer().AsMemory(0, (int)buffer.Length), context.RequestAborted).ConfigureAwait(false);
     }
 
-    private static void WriteSitemap(XmlWriter writer, FeedContext feed, IReadOnlyList<ContentItem> items)
+    private static void WriteSitemap(
+        XmlWriter writer, FeedContext feed, IReadOnlyList<ContentItem> items, IOsirionLocalePaths? localePaths)
     {
         writer.WriteStartDocument();
         writer.WriteStartElement("urlset", SitemapNamespace);
+        if (localePaths is not null)
+        {
+            writer.WriteAttributeString("xmlns", "xhtml", null, XhtmlNamespace);
+        }
 
         var written = new HashSet<string>(StringComparer.Ordinal);
         foreach (var path in feed.Options.AdditionalSitemapUrls)
         {
-            var location = feed.Absolute(path);
-            if (written.Add(location))
+            if (localePaths is null || !LocalUrl.IsLocalPath(path))
             {
-                writer.WriteStartElement("url", SitemapNamespace);
-                writer.WriteElementString("loc", SitemapNamespace, location);
-                writer.WriteEndElement();
+                WriteSitemapUrl(writer, written, feed.Absolute(path), lastModified: null, alternates: []);
+                continue;
+            }
+
+            // A page that is not content exists in every language, at the address Localize gives it.
+            var alternates = LanguageVersions.ForPage(localePaths, path, feed.Absolute);
+            foreach (var culture in localePaths.Cultures)
+            {
+                var location = feed.Absolute(localePaths.Localize(path, culture.Culture));
+                WriteSitemapUrl(writer, written, location, lastModified: null, alternates);
             }
         }
 
+        var languageVersions = localePaths is null ? null : new ContentLanguageVersions(localePaths, feed, items);
         foreach (var item in items)
         {
-            var location = feed.ItemUrl(item);
-            if (IsNoIndex(item) || !written.Add(location))
+            if (LanguageVersions.IsNoIndex(item))
             {
                 continue;
             }
 
-            writer.WriteStartElement("url", SitemapNamespace);
-            writer.WriteElementString("loc", SitemapNamespace, location);
-            writer.WriteElementString("lastmod", SitemapNamespace, ContentUrls.FormatUtc(item.LastModified ?? item.DateCreated));
-            writer.WriteEndElement();
+            var location = languageVersions?.Location(item) ?? feed.ItemUrl(item);
+            WriteSitemapUrl(writer, written, location, item.LastModified ?? item.DateCreated, languageVersions?.Alternates(item) ?? []);
         }
 
         writer.WriteEndElement();
         writer.WriteEndDocument();
+    }
+
+    // Writes one url element, unless an earlier one has the same location. The alternates follow lastmod, where the
+    // sitemap schema allows elements of other namespaces.
+    private static void WriteSitemapUrl(
+        XmlWriter writer,
+        HashSet<string> written,
+        string location,
+        DateTime? lastModified,
+        IReadOnlyList<(string HrefLang, string Href)> alternates)
+    {
+        if (!written.Add(location))
+        {
+            return;
+        }
+
+        writer.WriteStartElement("url", SitemapNamespace);
+        writer.WriteElementString("loc", SitemapNamespace, location);
+        if (lastModified is { } modified)
+        {
+            writer.WriteElementString("lastmod", SitemapNamespace, ContentUrls.FormatUtc(modified));
+        }
+
+        foreach (var (hrefLang, href) in alternates)
+        {
+            writer.WriteStartElement("xhtml", "link", XhtmlNamespace);
+            writer.WriteAttributeString("rel", "alternate");
+            writer.WriteAttributeString("hreflang", hrefLang);
+            writer.WriteAttributeString("href", href);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     private static void WriteRss(XmlWriter writer, FeedContext feed, IReadOnlyList<ContentItem> items)
@@ -280,9 +326,6 @@ public static class ContentFeedEndpoints
     private static ContentItem[] Newest(IReadOnlyList<ContentItem> items, int count) =>
         items.OrderByDescending(item => ToUtc(item.DateCreated)).Take(count).ToArray();
 
-    private static bool IsNoIndex(ContentItem item) =>
-        item.Metadata?.SeoProperties?.Robots?.Contains("noindex", StringComparison.OrdinalIgnoreCase) == true;
-
     // The feed's own SiteUrl, then the site-wide Osirion:Seo:SiteUrl, then the request. The SEO address is used only
     // when it is an absolute http(s) address, the same rule the SEO metadata renderer applies.
     private static string ResolveSiteUrl(HttpRequest request, OsirionFeedOptions options, SeoMetadataOptions? seo)
@@ -332,6 +375,52 @@ public static class ContentFeedEndpoints
         }
 
         return cleaned?.ToString() ?? value;
+    }
+
+    /// <summary>
+    /// The addresses of the sitemap's items on a site with language versions: each item in its own culture, and the
+    /// indexable translations (items with the same <see cref="ContentItem.ContentId"/>) as its alternates, the first
+    /// item of each culture winning as the content providers keep it.
+    /// </summary>
+    private sealed class ContentLanguageVersions
+    {
+        private readonly IOsirionLocalePaths _localePaths;
+        private readonly FeedContext _feed;
+        private readonly Dictionary<string, Dictionary<OsirionLocaleCulture, string>> _byLocalizationId = new(StringComparer.Ordinal);
+
+        public ContentLanguageVersions(IOsirionLocalePaths localePaths, FeedContext feed, IReadOnlyList<ContentItem> items)
+        {
+            _localePaths = localePaths;
+            _feed = feed;
+            foreach (var item in items)
+            {
+                if (LanguageVersions.IsNoIndex(item)
+                    || string.IsNullOrWhiteSpace(item.ContentId)
+                    || LanguageVersions.CultureOf(localePaths, item.Locale) is not { } culture)
+                {
+                    continue;
+                }
+
+                if (!_byLocalizationId.TryGetValue(item.ContentId, out var versions))
+                {
+                    versions = [];
+                    _byLocalizationId[item.ContentId] = versions;
+                }
+
+                versions.TryAdd(culture, Location(item)!);
+            }
+        }
+
+        /// <summary>The item's address in its culture, or <see langword="null"/> when the site has no such culture.</summary>
+        public string? Location(ContentItem item) =>
+            LanguageVersions.CultureOf(_localePaths, item.Locale) is { } culture
+                ? _feed.Absolute(_localePaths.Localize(ContentUrls.ItemUrl(item, _feed.Options.ContentUrlFormatter), culture.Culture))
+                : null;
+
+        public List<(string HrefLang, string Href)> Alternates(ContentItem item) =>
+            !string.IsNullOrWhiteSpace(item.ContentId) && _byLocalizationId.TryGetValue(item.ContentId, out var versions)
+                ? LanguageVersions.Ordered(_localePaths, versions)
+                : [];
     }
 
     private sealed record FeedContext(string SiteUrl, OsirionFeedOptions Options, SeoMetadataOptions? Seo, string Host)
