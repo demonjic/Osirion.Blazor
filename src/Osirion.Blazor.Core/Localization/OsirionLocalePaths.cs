@@ -34,6 +34,16 @@ internal sealed class OsirionLocalePaths : IOsirionLocalePaths
             _byName.Add(culture.Culture.Name, culture);
         }
 
+        // An alias reaches its culture as the prefix does; the redirect middleware sends it on to the prefix.
+        foreach (var entry in settings.Cultures)
+        {
+            var culture = _byName[CultureInfo.GetCultureInfo(entry.Name, predefinedOnly: true).Name];
+            foreach (var alias in entry.Aliases ?? [])
+            {
+                _byPrefix.Add(alias.Trim(), culture);
+            }
+        }
+
         Cultures = cultures;
         DefaultCulture = cultures.Single(culture => culture.IsDefault);
     }
@@ -41,6 +51,8 @@ internal sealed class OsirionLocalePaths : IOsirionLocalePaths
     public IReadOnlyList<OsirionLocaleCulture> Cultures { get; }
 
     public OsirionLocaleCulture DefaultCulture { get; }
+
+    public OsirionLocaleCulture CurrentCulture => Match(CultureInfo.CurrentUICulture);
 
     public bool TryGetCulture(string? path, [NotNullWhen(true)] out OsirionLocaleCulture? culture, out string remainder)
     {

@@ -71,7 +71,12 @@ Options (`OsirionSiteOptions`)
   main content`), `Menu` (`Main navigation`), `MenuToggle` (`Toggle navigation menu`), `SwitchToDarkTheme` and
   `SwitchToLightTheme` (`Switch to dark mode`, `Switch to light mode`), `Search` (`Search`, the field's label and the
   button's visible text), `SubmitSearch` (`Submit search`, the button's name; keep the words of `Search` in it),
-  `LegalLinks` (`Footer legal navigation`), `Announcement` and `DismissAnnouncement`
+  `LegalLinks` (`Footer legal navigation`), `Announcement`, `DismissAnnouncement` and `Language` (`Language`, the
+  language picker's name)
+- `LanguagePicker`: `None` (default), `Header`, `Footer` or `Both`. `Header` puts a compact `OsirionLanguagePicker`
+  (a `details` disclosure that names the current language and opens the list, no script) among the menu's actions,
+  after the theme toggle, so five language names do not wrap the menu; `Footer` puts a row of language links below
+  the footer's bottom row. It needs `Osirion:Localization`: startup fails without it
 - `Locales`: what each language version says differently, keyed by culture name in any letter case. An entry may set
   `Name`, `LogoUrl`, `HomeUrl`, `Menu`, `SearchUrl`, `SearchPlaceholder`, `CallToAction`, `Announcement`,
   `FooterDescription`, `FooterSections`, `SocialLinks`, `LegalLinks`, `Owner`, `OwnerUrl`, `Copyright`, `SocialTitle`
@@ -111,12 +116,44 @@ prefix) rather than from `Accept-Language`, so one address always answers with t
 in the culture it sets (see the locale routing guide, `content/en/docs/locale-routing.md`).
 `OsirionSiteOptions.ForCulture(culture)` returns the same view for your own code.
 
+Localized addresses
+With `Osirion:Localization` registered, the layout puts every address on the site that a version takes from
+`Osirion:Site` under the request's culture prefix: the menu, `HomeUrl` (the brand and footer logo), `SearchUrl`, the
+call to action, the announcement's link, the footer columns, the legal links and `OwnerUrl`. `/contact` is
+`/sr/contact` in a Serbian request and stays `/contact` in the default culture. So an entry of `Locales` needs only its
+texts: a menu entry, call to action, footer link or legal link written without an address takes the address of the
+site's link at the same position (the same menu entry, footer column and link), and an announcement with `LinkText`
+but no `LinkUrl` takes the site's link. An address the entry writes itself is kept as written. Absolute, `mailto:`,
+`tel:` and fragment links are never changed, and without `Osirion:Localization` every address is written as
+configured. `OsirionSiteOptions.ForCulture(culture, localePaths)` returns that view for your own code.
+
+```json
+"Osirion": {
+  "Localization": { "DefaultCulture": "en", "Cultures": [ { "Name": "en" }, { "Name": "sr" } ] },
+  "Site": {
+    "Name": "Example",
+    "LanguagePicker": "Header",
+    "Menu": [ { "Text": "Pricing", "Href": "/pricing" }, { "Text": "Contact", "Href": "/contact" } ],
+    "LegalLinks": [ { "Text": "Privacy", "Href": "/privacy" } ],
+    "Locales": {
+      "sr": {
+        "Menu": [ { "Text": "Cene" }, { "Text": "Kontakt" } ],
+        "LegalLinks": [ { "Text": "Privatnost" } ],
+        "Labels": { "Language": "Jezik" }
+      }
+    }
+  }
+}
+```
+A Serbian request gets `/sr/pricing`, `/sr/contact` and `/sr/privacy`.
+
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a
 menu nested more than one level, a call to action without `Text` or `Href` or with an `Href` of another kind (such
 as `javascript:` or `//other.example`), or a `CallToAction:FooterSection` that is not the `Title` of any footer section
 stops startup with a message naming the configuration key. A locale key that is not a culture name fails too, and so
 does a problem in a value a locale sets, named under `Osirion:Site:Locales:<culture>`; its call to action is checked
-against the footer sections that version shows. Options set another
+against the footer sections that version shows, and a menu entry without an address must have one at the same
+position in the site's menu. Options set another
 way, for example with `Services.Configure<OsirionSiteOptions>`, skip that check; the layout then renders no call to
 action for such a value.
 

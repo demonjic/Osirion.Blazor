@@ -71,7 +71,29 @@ public sealed partial class OsirionLocalizationOptions
             }
         }
 
+        // Aliases are checked once every prefix is known, so an alias that is a later culture's prefix is caught too.
+        for (var index = 0; index < Cultures.Count; index++)
+        {
+            var aliases = Cultures[index]?.Aliases ?? [];
+            for (var aliasIndex = 0; aliasIndex < aliases.Count; aliasIndex++)
+            {
+                AddAliasErrors(aliases[aliasIndex], $"{Section}:Cultures:{index}:Aliases:{aliasIndex}", prefixes, errors);
+            }
+        }
+
         return errors;
+    }
+
+    private static void AddAliasErrors(string? alias, string key, HashSet<string> segments, List<string> errors)
+    {
+        if (string.IsNullOrWhiteSpace(alias) || !AliasPattern().IsMatch(alias.Trim()))
+        {
+            errors.Add($"{key} '{alias}' must be letters, digits, hyphens and underscores, for example 'sr_latn'.");
+        }
+        else if (!segments.Add(alias.Trim()))
+        {
+            errors.Add($"{key} '{alias}' is the prefix or an alias of another culture.");
+        }
     }
 
     /// <summary>
@@ -120,6 +142,9 @@ public sealed partial class OsirionLocalizationOptions
             errors.Add($"{key} '{prefix}' is the prefix of another culture.");
         }
     }
+
+    [GeneratedRegex(@"^[A-Za-z0-9_]+(?:-[A-Za-z0-9_]+)*\z", RegexOptions.CultureInvariant)]
+    private static partial Regex AliasPattern();
 
     // \z, not $, so a trailing line break does not pass.
     [GeneratedRegex(@"^[a-z0-9]+(?:-[a-z0-9]+)*\z", RegexOptions.CultureInvariant)]
