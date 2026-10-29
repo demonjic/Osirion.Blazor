@@ -116,6 +116,22 @@ public partial class OsirionStaticContactForm : OsirionComponentBase
     [Parameter]
     public string ContactInfoTitle { get; set; } = "Contact information";
 
+    /// <summary>Gets or sets the label of the address in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoAddressLabel { get; set; } = "Address:";
+
+    /// <summary>Gets or sets the label of the phone number in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoPhoneLabel { get; set; } = "Phone:";
+
+    /// <summary>Gets or sets the label of the email address in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoEmailLabel { get; set; } = "Email:";
+
+    /// <summary>Gets or sets the label of the website in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoWebsiteLabel { get; set; } = "Website:";
+
     /// <summary>
     /// Gets or sets the details shown in an <c>OsirionContactInfoSection</c> beside or below the form: address, phone,
     /// email, website, a message and extra rows (<see cref="ContactInformation.AdditionalItems"/>). When it is

@@ -101,6 +101,30 @@ public partial class OsirionContactForm : OsirionComponentBase
     [Parameter]
     public bool ShowRequiredIndicators { get; set; } = true;
 
+    /// <summary>Gets or sets the label of the name field.</summary>
+    [Parameter]
+    public string NameLabel { get; set; } = "Name";
+
+    /// <summary>Gets or sets the label of the email field.</summary>
+    [Parameter]
+    public string EmailLabel { get; set; } = "Email";
+
+    /// <summary>Gets or sets the label of the subject field.</summary>
+    [Parameter]
+    public string SubjectLabel { get; set; } = "Subject";
+
+    /// <summary>Gets or sets the label of the message field.</summary>
+    [Parameter]
+    public string MessageLabel { get; set; } = "Message";
+
+    /// <summary>
+    /// Gets or sets the validation messages, for a form in another language. Null, the default, shows the English
+    /// messages of <see cref="ContactFormValidationTexts.Default"/>.
+    /// </summary>
+    /// <exception cref="ArgumentException">A message is empty or not a valid format string.</exception>
+    [Parameter]
+    public ContactFormValidationTexts? ValidationTexts { get; set; }
+
     /// <summary>
     /// Gets or sets fields the site adds after the message, in list order, such as a company size or a budget on a quote
     /// form: at most <see cref="ContactFormField.MaxFields"/>, each with a unique, safe <see cref="ContactFormField.Name"/>.
@@ -156,6 +180,22 @@ public partial class OsirionContactForm : OsirionComponentBase
     /// </summary>
     [Parameter]
     public string ContactInfoTitle { get; set; } = "Contact information";
+
+    /// <summary>Gets or sets the label of the address in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoAddressLabel { get; set; } = "Address:";
+
+    /// <summary>Gets or sets the label of the phone number in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoPhoneLabel { get; set; } = "Phone:";
+
+    /// <summary>Gets or sets the label of the email address in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoEmailLabel { get; set; } = "Email:";
+
+    /// <summary>Gets or sets the label of the website in the contact information section.</summary>
+    [Parameter]
+    public string ContactInfoWebsiteLabel { get; set; } = "Website:";
 
     /// <summary>
     /// Gets or sets the address, phone, email, website and message shown beside or below the form. When it is
@@ -254,13 +294,20 @@ public partial class OsirionContactForm : OsirionComponentBase
         }
 
         _fields = ContactFormFieldRules.Checked(AdditionalFields);
+        Texts.Validate();
 
         // The context EditForm would create from Model, made here so the additional fields can join its validation.
         if (!ReferenceEquals(_editContext?.Model, FormModel))
         {
             _editContext = new EditContext(FormModel);
             _fieldMessages = new ValidationMessageStore(_editContext);
-            _editContext.OnValidationRequested += (_, _) => ValidateAdditionalFields();
+            _standardMessages = new ValidationMessageStore(_editContext);
+            _editContext.OnValidationRequested += (_, _) =>
+            {
+                ValidateStandardFields();
+                ValidateAdditionalFields();
+            };
+            _editContext.OnFieldChanged += (_, changed) => RevalidateStandardField(changed.FieldIdentifier);
         }
 
         ReadPostedFieldValues();
@@ -294,6 +341,10 @@ public partial class OsirionContactForm : OsirionComponentBase
     private EditContext? _editContext;
 
     private ValidationMessageStore? _fieldMessages;
+
+    private ValidationMessageStore? _standardMessages;
+
+    private ContactFormValidationTexts Texts => ValidationTexts ?? ContactFormValidationTexts.Default;
 
     private bool _postedValuesRead;
 
@@ -426,7 +477,7 @@ public partial class OsirionContactForm : OsirionComponentBase
         var valid = true;
         foreach (var field in _fields)
         {
-            if (ContactFormFieldRules.Validate(field, SubmittedValues(field), out var answer) is { } error)
+            if (ContactFormFieldRules.Validate(field, SubmittedValues(field), Texts, out var answer) is { } error)
             {
                 _fieldMessages.Add(FieldFor(field), error);
                 valid = false;
@@ -437,8 +488,7 @@ public partial class OsirionContactForm : OsirionComponentBase
 
         if (valid && answers.Sum(answer => answer.Values.Sum(value => value.Length)) > ContactFormField.MaxTotalLength)
         {
-            _fieldMessages.Add(TotalLengthField,
-                $"The answers to the additional questions cannot exceed {ContactFormField.MaxTotalLength} characters together.");
+            _fieldMessages.Add(TotalLengthField, ContactFormValidationTexts.Format(Texts.AnswersTooLong, ContactFormField.MaxTotalLength));
             valid = false;
         }
 
@@ -467,12 +517,43 @@ public partial class OsirionContactForm : OsirionComponentBase
     {
         var identifier = FieldFor(field);
         _fieldMessages!.Clear(identifier);
-        if (ContactFormFieldRules.Validate(field, SubmittedValues(field), out _) is { } error)
+        if (ContactFormFieldRules.Validate(field, SubmittedValues(field), Texts, out _) is { } error)
         {
             _fieldMessages.Add(identifier, error);
         }
 
         _editContext!.NotifyValidationStateChanged();
+    }
+
+    // The name, email, subject, message and privacy box keep the rules of ContactFormModel's attributes; only the
+    // message shown for a broken rule comes from ValidationTexts.
+    private void ValidateStandardFields()
+    {
+        _standardMessages!.Clear();
+        foreach (var property in ContactFormStandardFields.Names)
+        {
+            AddStandardMessages(new FieldIdentifier(FormModel, property));
+        }
+    }
+
+    private void RevalidateStandardField(FieldIdentifier identifier)
+    {
+        if (!ReferenceEquals(identifier.Model, FormModel) || !ContactFormStandardFields.Names.Contains(identifier.FieldName))
+        {
+            return;
+        }
+
+        _standardMessages!.Clear(identifier);
+        AddStandardMessages(identifier);
+        _editContext!.NotifyValidationStateChanged();
+    }
+
+    private void AddStandardMessages(FieldIdentifier identifier)
+    {
+        foreach (var message in ContactFormStandardFields.Validate(FormModel, identifier.FieldName, Texts))
+        {
+            _standardMessages!.Add(identifier, message);
+        }
     }
 
     private FieldIdentifier FieldFor(ContactFormField field) => new(FormModel, ContactFormFieldRules.InputName(field));

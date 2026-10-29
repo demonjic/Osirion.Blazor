@@ -30,7 +30,6 @@
 
             <!-- Contact Form -->
             <EditForm Enhance EditContext="@_editContext" OnValidSubmit="@HandleValidSubmit" class="osirion-contact-form" FormName="@Id">
-                <DataAnnotationsValidator />
 
                 <!-- Honeypot for spam protection (hidden) -->
                 <div class="osirion-honeypot" aria-hidden="true">
@@ -40,7 +39,7 @@
                 <!-- Name Field -->
                 <div class="osirion-form-group">
                     <label for="@($"contact-name-{Id}")" class="@GetLabelClass()">
-                        Name @if (ShowRequiredIndicators) {
+                        @($" {NameLabel} ")@if (ShowRequiredIndicators) {
                         <span class="osirion-required">*</span>
                                                 }
                     </label>
@@ -55,7 +54,7 @@
                 <!-- Email Field -->
                 <div class="osirion-form-group">
                     <label for="@($"contact-email-{Id}")" class="@GetLabelClass()">
-                        Email @if (ShowRequiredIndicators) 
+                        @($" {EmailLabel} ")@if (ShowRequiredIndicators) 
                         {
                         <span class="osirion-required">*</span>
                         }
@@ -72,7 +71,7 @@
                 <!-- Subject Field -->
                 <div class="osirion-form-group">
                     <label for="@($"contact-subject-{Id}")" class="@GetLabelClass()">
-                        Subject @if (ShowRequiredIndicators) {
+                        @($" {SubjectLabel} ")@if (ShowRequiredIndicators) {
                         <span class="osirion-required">*</span>
                                                 }
                     </label>
@@ -87,7 +86,7 @@
                 <!-- Message Field -->
                 <div class="osirion-form-group">
                     <label for="@($"contact-message-{Id}")" class="@GetLabelClass()">
-                        Message @if (ShowRequiredIndicators) {
+                        @($" {MessageLabel} ")@if (ShowRequiredIndicators) {
                         <span class="osirion-required">*</span>
                                                 }
                     </label>
@@ -265,7 +264,11 @@
         @if (ShowContactInformation && ContactInfo != null)
         {
             <OsirionContactInfoSection Style="background-color: var(--osirion-background-secondary); padding: 1.5rem;" Title="@ContactInfoTitle"
-                                       ContactInfo="@ContactInfo" />
+                                       ContactInfo="@ContactInfo"
+                                       AddressLabel="@ContactInfoAddressLabel"
+                                       PhoneLabel="@ContactInfoPhoneLabel"
+                                       EmailLabel="@ContactInfoEmailLabel"
+                                       WebsiteLabel="@ContactInfoWebsiteLabel" />
         }
     </div>
 </div>
