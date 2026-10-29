@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor.Core</PackageId>
-		<Version>4.4.0</Version>
+		<Version>4.4.1</Version>
 		<Description>Core components and utilities for Osirion.Blazor ecosystem. This package provides the foundation for building SSR-compatible Blazor components.</Description>
         <PackageTags>blazor;components;core;utilities;ssr;server-side-rendering;framework;osirion;webassembly</PackageTags>
 	</PropertyGroup>

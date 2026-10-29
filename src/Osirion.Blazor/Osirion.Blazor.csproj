@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- NuGet package properties -->
 		<PackageId>Osirion.Blazor</PackageId>
-		<Version>4.4.0</Version>
+		<Version>4.4.1</Version>
 		<Description>Modern, high-performance Blazor components and utilities. Features SSR-compatible components for navigation, analytics, content management, and theming with seamless CSS framework integration.</Description>
 		<PackageTags>blazor;components;utilities;dotnet;web;navigation;analytics;cms;github;markdown;ssr;bootstrap;fluentui;mudblazor;radzen;static-rendering;content;theming</PackageTags>
 	</PropertyGroup>
