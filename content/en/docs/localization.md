@@ -247,6 +247,8 @@ same locale show up once in the list above, the first of them, and the provider 
 
 ## Next steps
 
+- [Locale routing](/docs/locale-routing): set the culture of each request from its URL prefix, with canonical
+  redirects, localized links and a language picker
 - [SEO](/docs/seo): canonical addresses, the sitemap and feeds
 - [Front matter reference](/docs/front-matter): `lang` and `id`
 - [SeoMetadataRenderer](/components/seo-metadata-renderer): the `AlternateLanguageUrls` parameter

@@ -105,7 +105,9 @@ neither renders the site's own values. Above, an English request gets the Englis
 sets, and English for every other), and every other request the German ones. Give a locale's `Labels` at least one
 key: configuration has no empty sections, so `"Labels": {}` sets nothing and the version would keep the site's labels.
 Choose the culture from the address (a path
-prefix) rather than from `Accept-Language`, so one address always answers with the same page.
+prefix) rather than from `Accept-Language`, so one address always answers with the same page:
+`Osirion:Localization` with `app.UseOsirionLocalization()` does that, and `Locales` then decides what the shell says
+in the culture it sets (see the locale routing guide, `content/en/docs/locale-routing.md`).
 `OsirionSiteOptions.ForCulture(culture)` returns the same view for your own code.
 
 The options are checked when the application starts: a missing `Name`, a menu entry without text or address, a

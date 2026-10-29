@@ -45,6 +45,7 @@ copy, and a check that it worked. For the parameters of a single component, use 
 | [How content is organized](/docs/content) | Folders, `_index.md`, slugs and addresses, ordering, drafts and `redirect_from` redirects |
 | [Front matter reference](/docs/front-matter) | Every front matter key with its type, default and effect, `seo_properties`, dates and `custom_fields` |
 | [Localization](/docs/localization) | Language folders, translations, locale routes, `hreflang` links and the limits that exist today |
+| [Locale routing](/docs/locale-routing) | The culture of each request from its URL prefix, canonical redirects, localized links and a language picker |
 | [SEO](/docs/seo) | What the library writes for search engines, the sitemap and feeds, redirects, and a checklist for a new site |
 | [Accessibility](/docs/accessibility) | What the components do for keyboard and screen reader users, the checks the repository runs, how to test your own site, and what stays your job |
 | [Security](/docs/security) | Content and URL sanitizing, raw HTML parameters, a Content Security Policy, cookie flags, secrets, the contact form honeypot, rate limiting and antiforgery |
