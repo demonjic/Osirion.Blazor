@@ -215,6 +215,60 @@
 .osirion-hero-image-container:hover .osirion-hero-featured-image {
     transform: scale(1.05);
 }
+/* Framed image: a browser-like bar with three dots above a product screenshot, a border and a deeper shadow. The
+   screenshot keeps its own proportions and does not zoom, so the frame stays still. */
+.osirion-hero-image-container.osirion-hero-image-framed {
+    border: 1px solid var(--osirion-border-color, #e5e7eb);
+    background-color: var(--osirion-background-secondary, #f9fafb);
+    box-shadow: var(--osirion-shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
+}
+
+.osirion-hero-image-frame-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--osirion-spacing-1-5, 0.375rem);
+    height: 2rem;
+    padding: 0 var(--osirion-spacing-3, 0.75rem);
+    border-bottom: 1px solid var(--osirion-border-color, #e5e7eb);
+    background-color: var(--osirion-background-tertiary, #f3f4f6);
+}
+
+    .osirion-hero-image-frame-bar span {
+        width: 0.625rem;
+        height: 0.625rem;
+        border-radius: 50%;
+        background-color: var(--osirion-border-color-hover, #d1d5db);
+    }
+
+.osirion-hero-image-container.osirion-hero-image-framed .osirion-hero-featured-image,
+.osirion-hero-image-container.osirion-hero-image-framed:hover .osirion-hero-featured-image {
+    height: auto;
+    transform: none;
+}
+/* Eyebrow: the short label above the title */
+.osirion-hero-eyebrow {
+    margin: 0 0 var(--osirion-spacing-3, 0.75rem);
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    font-weight: var(--osirion-font-weight-semibold, 600);
+    line-height: var(--osirion-line-height-normal, 1.5);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--osirion-link-color, #2563eb);
+}
+
+/* Over the overlay the text is white, and so is the eyebrow. */
+.osirion-hero-with-overlay .osirion-hero-eyebrow {
+    color: inherit;
+}
+/* Highlights: the checklist follows the content's alignment as one block and keeps its items left-aligned. */
+.osirion-hero-highlights {
+    margin: 0 0 var(--osirion-spacing-6, 1.5rem);
+}
+
+    .osirion-hero-highlights ::deep .osirion-checklist {
+        display: inline-block;
+        vertical-align: top;
+    }
 /* Additional content */
 .osirion-hero-additional {
     margin-top: var(--osirion-spacing-6, 1.5rem);

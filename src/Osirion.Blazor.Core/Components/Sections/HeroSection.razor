@@ -17,6 +17,11 @@
         <div class="osirion-hero-grid">
             <!-- Content Column -->
             <div class="osirion-hero-content">
+                @if (!string.IsNullOrWhiteSpace(Eyebrow))
+                {
+                    <p class="osirion-hero-eyebrow">@Eyebrow</p>
+                }
+
                 @if (TitleContent is not null)
                 {
                     @TitleContent
@@ -42,6 +47,13 @@
                 else if (!string.IsNullOrWhiteSpace(Summary))
                 {
                     <p class="osirion-hero-summary">@Summary</p>
+                }
+
+                @if (HasHighlights)
+                {
+                    <div class="osirion-hero-highlights">
+                        <OsirionChecklist Items="@_highlightItems" />
+                    </div>
                 }
 
                 @if (ShowMetadata)
@@ -79,7 +91,12 @@
             <!-- Side Image Column (when not using background) -->
             @if (!UseBackgroundImage && !string.IsNullOrWhiteSpace(ImageUrl))
             {
-                <div class="osirion-hero-image-container">
+                <div class="@GetImageContainerClass()">
+                    @if (FrameImage)
+                    {
+                        @* The browser-like bar is decoration: three dots, hidden from assistive technology. *@
+                        <div class="osirion-hero-image-frame-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                    }
                     <img src="@ImageUrl"
                          alt="@(ImageAlt ?? Title ?? "Hero image")"
                          class="osirion-hero-featured-image"

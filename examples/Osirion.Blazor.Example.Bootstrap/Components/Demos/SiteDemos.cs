@@ -33,6 +33,7 @@ internal static class SiteDemos
         Add<HtmlRendererDemo>(demos, "html-renderer", "Sanitized HTML with code");
         Add<ContentDemoDemo>(demos, "content-demo", "A registered demo");
         Add<HeroSectionDemo>(demos, "hero-section", "A hero section");
+        Add<HeroSectionProductDemo>(demos, "hero-section-product", "A hero with an eyebrow, highlights and a framed image");
         Add<BaseSectionDemo>(demos, "base-section", "A base section");
         Add<BaseSectionBandsDemo>(demos, "base-section-bands", "Tinted and dark bands");
         Add<ContactInfoSectionDemo>(demos, "contact-info-section", "A contact info section");

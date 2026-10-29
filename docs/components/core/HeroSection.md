@@ -35,6 +35,10 @@ Notes
 - Alignment controls text alignment. ImagePosition applies when not using background images.
 - As a background image, ImageUrl is written into `url('...')` with quotes, backslashes, parentheses and control characters CSS-escaped, so a URL taken from content front matter cannot add style declarations. Other URLs are written unchanged.
 - Optional metadata: Author, PublishDate, ReadTime, ShowMetadata.
+- From 4.3: `Eyebrow`, a plain-text label above the title (`osirion-hero-eyebrow`); `Highlights`, short phrases
+  rendered as an `OsirionChecklist` under the summary (`osirion-hero-highlights`, empty phrases left out); and
+  `FrameImage`, which puts the side image in a browser-like frame (`osirion-hero-image-framed` and a decorative
+  `osirion-hero-image-frame-bar` with `aria-hidden`). With none of them set, the markup is unchanged.
 - The buttons take the framework's large primary and secondary classes (`ButtonClasses.Primary` and
   `ButtonClasses.Secondary`, the same as `OsirionCallToActionSection`). Both carry `osirion-hero-button`, plus
   `osirion-hero-button-primary` or `osirion-hero-button-secondary`. Up to 4.2.0 the secondary button had the outlined
