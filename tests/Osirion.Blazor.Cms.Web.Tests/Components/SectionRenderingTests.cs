@@ -132,6 +132,20 @@ public class SectionRenderingTests : CmsWebComponentTestBase
         viewAll.TextContent.ShouldContain("All posts");
     }
 
+    // Fails before the fix: the placeholder of a post without an image sat in a link with no text (axe link-name).
+    [Fact]
+    public void FeaturedPostsSection_PostWithoutImage_HasNoLinkWithoutAName()
+    {
+        var cut = RenderStatic<FeaturedPostsSection>(p => p.Add(c => c.Posts, [Post("Plain", categories: ["News"])]));
+
+        cut.FindAll(".osirion-featured-post-image-placeholder").ShouldHaveSingleItem();
+        cut.FindAll("a.osirion-featured-post-image-link").ShouldBeEmpty();
+        foreach (var link in cut.FindAll("a[href]"))
+        {
+            (link.TextContent.Trim().Length > 0 || !string.IsNullOrWhiteSpace(link.GetAttribute("aria-label"))).ShouldBeTrue(link.OuterHtml);
+        }
+    }
+
     [Fact]
     public void FeaturedPostsSection_EverythingOptionalHidden_RendersOnlyTheTitles()
     {

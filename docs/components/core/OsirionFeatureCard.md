@@ -5,7 +5,7 @@ Feature card with image, headings, description, read-more and category-style pil
 
 Key parameters
 - Title, Description, ShowDescription, ChildContent
-- Url (card-level link)
+- Url (the read more link's target, and the image link; see Notes)
 - ImageUrl, ImageAlt, ImageLazyLoading, ImageTransformOnHover, ImagePosition (Top, Bottom, Left, Right)
 - CardSize (XXS..XXL), ContentAlignment, ContentFontSize
 - BorderTiming, BorderColor; ShadowTiming, ShadowColor; TransformTiming
@@ -18,4 +18,8 @@ Key parameters
 Notes
 - Emits osirion-feature-card plus many BEM modifiers for size/effects
 - ReadMoreHref takes precedence over Url for the CTA
-- Provides sensible image placeholders when ImageUrl is missing.
+- Without ImageUrl the card has no image column and no image link (`osirion-feature-card-without-image`, or
+  `osirion-feature-card-with-icon` with an Icon); up to 4.4.0 it drew a placeholder, inside a link without a name
+  when Url was set.
+- Every link has a name: the image is a link only when its alternative text is not empty, and not when the read
+  more link goes to the same place; a pillow button without text or an aria label is left out.

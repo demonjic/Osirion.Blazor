@@ -92,8 +92,8 @@ A teaser that links to an article, with the image on top and category links unde
 }
 ```
 
-From 4.3 a card takes a decorative `Icon` and a list of short `Items`. Without an image, the icon takes the place of
-the image placeholder, and the card's height follows its content, which suits a row of features in an
+From 4.3 a card takes a decorative `Icon` and a list of short `Items`. Without an image the card has no image
+column, and its height follows its content, which suits a row of features in an
 [OsirionCardGrid](/components/card-grid):
 
 ```razor
@@ -116,10 +116,10 @@ the image placeholder, and the card's height follows its content, which suits a 
 | `Description` | `string?` | `null` | The text under the title. |
 | `ShowDescription` | `bool` | `true` | Whether `Description` is shown. |
 | `ChildContent` | `RenderFragment?` | `null` | Extra content between the description and the links. |
-| `Icon` | `RenderFragment?` | `null` | A small decorative icon above the title, such as an `svg`, in a `div` with the class `osirion-feature-card-icon` and `aria-hidden="true"`, so put no meaning in it that the title does not carry. Without an `ImageUrl`, the icon takes the place of the image placeholder: the card has a single column and its height follows its content. |
+| `Icon` | `RenderFragment?` | `null` | A small decorative icon above the title, such as an `svg`, in a `div` with the class `osirion-feature-card-icon` and `aria-hidden="true"`, so put no meaning in it that the title does not carry. Without an `ImageUrl` the card has no image column: it has a single column and its height follows its content. |
 | `Items` | `IReadOnlyList<string>?` | `null` | Short phrases under the description, each behind a check mark, as an `OsirionChecklist` inside a `div` with the class `osirion-feature-card-items`. Empty phrases are left out. |
-| `Url` | `string?` | `null` | The link around the image, and the read more link's target when `ReadMoreHref` is not set. |
-| `ImageUrl` | `string?` | `null` | The image source. Without it the card shows a placeholder icon. |
+| `Url` | `string?` | `null` | The read more link's target when `ReadMoreHref` is not set, and the link around the image when the image has alternative text and the read more link does not already go to the same place. |
+| `ImageUrl` | `string?` | `null` | The image source. Without it the card has no image column and is one column of text, as tall as its content. |
 | `ImageAlt` | `string?` | `null` | The image's alternative text; when it is not set, `Title` is used, then `Feature image`. |
 | `ImageLazyLoading` | `bool` | `true` | Whether the image renders `loading="lazy"`. Set it to `false` for a card above the fold. |
 | `ImageTransformOnHover` | `bool` | `false` | Whether the image zooms on hover. |
@@ -151,21 +151,24 @@ and a constructor `PillowButton(text, href, color)`. Unmatched attributes are pa
 
 - No script is needed. Hover effects are CSS, and `prefers-reduced-motion: reduce` turns off the lift and zoom.
 - The read more link is rendered with `OsirionReadMoreLink` as a stretched link: it covers the card's text area, so
-  that whole area is one click target. The image is a separate link only when `Url` is set.
-- When `Url` is set, the image link has no text of its own; its accessible name is the image's alternative text, so
-  set `ImageAlt` to something that describes the destination.
+  that whole area is one click target. The image is a separate link only when `Url` is set, the image has
+  alternative text, and the read more link does not already go to `Url`, so a card links to a place once.
+- The image link has no text of its own; its accessible name is the image's alternative text, so set `ImageAlt` to
+  something that describes the destination. With `ImageAlt=""` (a decorative image) the image is not a link.
+- Without an `ImageUrl` the card renders no image column and no image link, and takes
+  `osirion-feature-card-without-image` (or `osirion-feature-card-with-icon` with an `Icon`) in place of the image
+  position class. Up to 4.4.0 it drew a placeholder there, inside a link with no name when `Url` was set.
+- A pillow button with neither `Text` nor `AriaLabel` is left out, so every link has a name.
 - If the image fails to load, an inline `onerror` attribute swaps in a placeholder from `placehold.co`. A Content
   Security Policy that blocks inline event handlers, or that host in `img-src`, leaves the broken image instead.
 - On viewports 768px wide or narrower, `Left` and `Right` layouts stack into one column: the image above the
   content for `Left`, below it for `Right`.
 - Text is HTML-encoded. URLs (`Url`, `ReadMoreHref`, `PillowButton.Href`) are written as given, so pass values your
   application controls.
-- `Icon` is wrapped in a `div` with `aria-hidden="true"`, so the title must say what the icon shows. With an `Icon`
-  and no `ImageUrl` the card renders no image column, no placeholder and no image link, and takes
-  `osirion-feature-card-with-icon` in place of the image position class.
+- `Icon` is wrapped in a `div` with `aria-hidden="true"`, so the title must say what the icon shows.
 - `Items` render as an [OsirionChecklist](/components/checklist) after the description and before `ChildContent`;
   empty phrases are left out.
-- With neither `Icon` nor `Items`, the card renders the markup it rendered before they existed.
+- A card with an image and without `Icon` or `Items` renders the markup it rendered before they existed.
 
 ## Styling
 
