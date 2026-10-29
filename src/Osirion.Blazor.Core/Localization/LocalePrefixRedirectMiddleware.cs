@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 namespace Osirion.Blazor.Core.Localization;
 
 /// <summary>
-/// Gives every page one address per language: a culture prefix written in another letter case (<c>/SR/contact</c>)
-/// is redirected to its canonical form (<c>/sr/contact</c>), and the default culture's prefix (<c>/en/contact</c>) to the
-/// address without one (<c>/contact</c>).
+/// Gives every page one address per language: a culture prefix written in another letter case (<c>/SR/contact</c>) or
+/// an alias of it (<c>/sr_latn/contact</c>) is redirected to its canonical form (<c>/sr-latn/contact</c>), and the
+/// default culture's prefix (<c>/en/contact</c>) to the address without one (<c>/contact</c>).
 /// </summary>
 internal sealed class LocalePrefixRedirectMiddleware(RequestDelegate next, IOsirionLocalePaths localePaths)
 {
@@ -17,11 +17,10 @@ internal sealed class LocalePrefixRedirectMiddleware(RequestDelegate next, IOsir
             return next(context);
         }
 
-        // A matched prefix has the length of the culture's prefix, so comparing that many characters ordinally tells
-        // whether it is already written in the canonical, lower-case form.
+        // The whole first segment is compared, so an alias that starts with the prefix (sr-latn-rs) is not taken for it.
         var path = context.Request.Path.Value;
         if (!localePaths.TryGetCulture(path, out var culture, out var remainder)
-            || (!culture.IsDefault && string.CompareOrdinal(path, 1, culture.Prefix, 0, culture.Prefix.Length) == 0))
+            || (!culture.IsDefault && string.Equals(FirstSegment(path!), culture.Prefix, StringComparison.Ordinal)))
         {
             return next(context);
         }
@@ -30,6 +29,12 @@ internal sealed class LocalePrefixRedirectMiddleware(RequestDelegate next, IOsir
         context.Response.StatusCode = StatusCodes.Status301MovedPermanently;
         context.Response.Headers.Location = BuildLocation(context.Request, culture.AddPrefixTo(remainder));
         return Task.CompletedTask;
+    }
+
+    private static string FirstSegment(string path)
+    {
+        var end = path.IndexOf('/', 1);
+        return end < 0 ? path[1..] : path[1..end];
     }
 
     // Keeps the application's path base and the request's query string, as the content redirects do.

@@ -21,7 +21,32 @@ public interface IOsirionLocalePaths
     OsirionLocaleCulture DefaultCulture { get; }
 
     /// <summary>
-    /// Finds the culture whose prefix is the first segment of <paramref name="path"/>, ignoring letter case.
+    /// Gets the site culture of the request: the one of <see cref="CultureInfo.CurrentUICulture"/>, which
+    /// <c>app.UseOsirionLocalization()</c> sets from the address, matched through its parents (<c>sr-Latn-RS</c>, then
+    /// <c>sr-Latn</c>, then <c>sr</c>), or <see cref="DefaultCulture"/> when none matches. Its
+    /// <see cref="OsirionLocaleCulture.Prefix"/> is the first segment of the request's localized addresses.
+    /// </summary>
+    OsirionLocaleCulture CurrentCulture
+    {
+        get
+        {
+            for (var candidate = CultureInfo.CurrentUICulture; candidate.Name.Length > 0; candidate = candidate.Parent)
+            {
+                var name = candidate.Name;
+                var match = Cultures.FirstOrDefault(culture => string.Equals(culture.Culture.Name, name, StringComparison.OrdinalIgnoreCase));
+                if (match is not null)
+                {
+                    return match;
+                }
+            }
+
+            return DefaultCulture;
+        }
+    }
+
+    /// <summary>
+    /// Finds the culture whose prefix, or one of whose <see cref="LocalizationCulture.Aliases"/>, is the first segment
+    /// of <paramref name="path"/>, ignoring letter case.
     /// </summary>
     /// <param name="path">A path that starts with <c>/</c>, without a query string, such as <c>/sr/contact</c>.</param>
     /// <param name="culture">The culture of the prefix, or <see langword="null"/> when the path has none.</param>

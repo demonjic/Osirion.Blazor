@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Osirion.Blazor.Cms.Domain.Entities;
 using Osirion.Blazor.Cms.Domain.Repositories;
 using Osirion.Blazor.Cms.Domain.Services;
+using Osirion.Blazor.Core.Localization;
 
 namespace Osirion.Blazor.Cms.Web.Redirects;
 
@@ -40,7 +41,7 @@ internal sealed partial class ContentRedirectMiddleware
         }
 
         var map = await GetMapAsync(context).ConfigureAwait(false);
-        if (!map.Targets.TryGetValue(path, out var target))
+        if (!map.Targets.TryGetValue(path, out var target) && !TryGetUnderCulturePrefix(context, map, path, out target))
         {
             await _next(context).ConfigureAwait(false);
             return;
@@ -48,6 +49,24 @@ internal sealed partial class ContentRedirectMiddleware
 
         context.Response.StatusCode = _options.Permanent ? StatusCodes.Status301MovedPermanently : StatusCodes.Status302Found;
         context.Response.Headers.Location = BuildLocation(context.Request, target);
+    }
+
+    // A fixed redirect for /pricing answers /sr/pricing too, with a target on the site moved under the same prefix. Only
+    // the fixed redirects: content lists its earlier addresses per language in its own front matter.
+    private bool TryGetUnderCulturePrefix(HttpContext context, RedirectMap map, string path, out string target)
+    {
+        target = string.Empty;
+        if (!_options.ApplyUnderCulturePrefixes
+            || context.RequestServices.GetService<IOsirionLocalePaths>() is not { } localePaths
+            || !localePaths.TryGetCulture(path, out var culture, out var remainder)
+            || RedirectPaths.Normalize(remainder) is not { } source
+            || !map.Fixed.TryGetValue(source, out var fixedTarget))
+        {
+            return false;
+        }
+
+        target = fixedTarget.StartsWith('/') ? localePaths.Localize(fixedTarget, culture.Culture) : fixedTarget;
+        return true;
     }
 
     // A site path keeps the app's path base and the request's query string; an absolute URL is used as given.
@@ -88,7 +107,8 @@ internal sealed partial class ContentRedirectMiddleware
             {
                 // The content could not be read: keep serving the last good map, or the fixed redirects, without
                 // caching the failure.
-                return current ?? new RedirectMap(FixedRedirects(), DateTimeOffset.MinValue);
+                var fixedRedirects = FixedRedirects();
+                return current ?? new RedirectMap(fixedRedirects, fixedRedirects, DateTimeOffset.MinValue);
             }
 
             _map = built with { ExpiresAt = timeProvider.GetUtcNow() + _options.CacheDuration };
@@ -116,11 +136,12 @@ internal sealed partial class ContentRedirectMiddleware
 
     private async Task<RedirectMap?> BuildAsync(HttpContext context, ILogger? logger)
     {
-        var targets = FixedRedirects();
+        var fixedRedirects = FixedRedirects();
+        var targets = new Dictionary<string, string>(fixedRedirects, StringComparer.OrdinalIgnoreCase);
         var manager = context.RequestServices.GetService<IContentProviderManager>();
         if (manager is null)
         {
-            return new RedirectMap(targets, DateTimeOffset.MinValue);
+            return new RedirectMap(targets, fixedRedirects, DateTimeOffset.MinValue);
         }
 
         IReadOnlyList<ContentItem> items;
@@ -176,7 +197,7 @@ internal sealed partial class ContentRedirectMiddleware
             }
         }
 
-        return new RedirectMap(targets, DateTimeOffset.MinValue);
+        return new RedirectMap(targets, fixedRedirects, DateTimeOffset.MinValue);
     }
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Could not read content to build the redirect map")]
@@ -188,5 +209,5 @@ internal sealed partial class ContentRedirectMiddleware
     [LoggerMessage(Level = LogLevel.Warning, Message = "Ignoring a second redirect from {Source}; it already redirects to {Target}")]
     private static partial void LogDuplicateSource(ILogger logger, string source, string target);
 
-    private sealed record RedirectMap(Dictionary<string, string> Targets, DateTimeOffset ExpiresAt);
+    private sealed record RedirectMap(Dictionary<string, string> Targets, Dictionary<string, string> Fixed, DateTimeOffset ExpiresAt);
 }

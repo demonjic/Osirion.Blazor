@@ -13,6 +13,9 @@ Requirements
 Key parameters
 - AriaLabel: the accessible name of the `nav` landmark (default: `"Language"`). Translate it per language, for
   example from your own resources
+- Compact: a `details` disclosure whose `summary` names the current language and opens the list (default: `false`,
+  a row of links). It needs no script, opens with Enter or Space, and keeps a header on one line; the list opens below
+  it, aligned to its end
 - Class: extra CSS classes, added after `osirion-language-picker` (inherited from `OsirionComponentBase`)
 - Style: inherited from `OsirionComponentBase`, written on the `nav`
 - Theme: `ThemeMode.System` (default), `Light` or `Dark`; a non-System value is written as `data-theme` (or
@@ -49,12 +52,16 @@ Notes
   the platform's culture data).
 - The current page comes from `NavigationManager`: its path without a culture prefix (`WithoutLocale`), then each
   culture's prefix (`Localize`). The query string is kept and the fragment dropped. The default culture's link has no
-  prefix.
+  prefix. On a page the framework re-executes for a status code or an error (`UseStatusCodePagesWithReExecute`,
+  `UseExceptionHandler`), the address the visitor asked for is used instead (`IStatusCodeReExecuteFeature`, then
+  `IExceptionHandlerPathFeature`), as the culture provider does, so a not-found page under `/sr/` marks Serbian.
+- `OsirionSiteLayout` renders it from `Osirion:Site:LanguagePicker`: compact in the header, a row in the footer.
 - The current culture is the one of the address (its prefix, or the default culture without one), marked with
   `aria-current="true"`; the others have no `aria-current`.
 - Links are written from the application's path base, never from the request's host, and leading slashes in the
   current address collapse, so the links always stay on the site.
 - Under interactive rendering it follows navigation (`LocationChanged`) and unsubscribes when disposed.
 - Styling uses `--osirion-*` tokens. Its own hooks: `--osirion-language-picker-gap`, `--osirion-language-picker-color`,
-  `--osirion-language-picker-hover-color` and `--osirion-language-picker-active-color`. The current language is shown
-  in a heavier weight and underlined, not by color alone.
+  `--osirion-language-picker-hover-color` and `--osirion-language-picker-active-color`, and for the compact list
+  `--osirion-language-picker-background`. The current language is shown in a heavier weight and underlined, not by
+  color alone.

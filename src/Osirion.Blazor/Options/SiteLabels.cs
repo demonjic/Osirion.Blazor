@@ -52,4 +52,10 @@ public sealed class SiteLabels
     /// Gets or sets the accessible name of the announcement's close button. Defaults to <c>Dismiss announcement</c>.
     /// </summary>
     public string DismissAnnouncement { get; set; } = "Dismiss announcement";
+
+    /// <summary>
+    /// Gets or sets the accessible name of the language picker (<see cref="OsirionSiteOptions.LanguagePicker"/>).
+    /// Defaults to <c>Language</c>.
+    /// </summary>
+    public string Language { get; set; } = "Language";
 }

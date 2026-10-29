@@ -49,3 +49,75 @@
         transition: none;
     }
 }
+
+/*
+ * Compact form: a details disclosure whose summary names the current language and whose list opens below it, so a
+ * header keeps one line. It needs no script; Enter and Space open it, as for any summary.
+ */
+.osirion-language-picker-compact {
+    position: relative;
+    display: inline-block;
+}
+
+.osirion-language-picker-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--osirion-spacing-1, 0.25rem);
+    padding: var(--osirion-spacing-1, 0.25rem) var(--osirion-spacing-2, 0.5rem);
+    color: var(--osirion-language-picker-color, var(--osirion-menu-color, var(--osirion-text-secondary, #374151)));
+    font-size: var(--osirion-font-size-sm, 0.875rem);
+    font-weight: var(--osirion-font-weight-medium, 500);
+    line-height: 1.5;
+    white-space: nowrap;
+    border-radius: var(--osirion-radius-sm, 0.25rem);
+    cursor: pointer;
+    list-style: none;
+}
+
+.osirion-language-picker-summary::-webkit-details-marker {
+    display: none;
+}
+
+/* A chevron drawn with borders, turned when the list is open. */
+.osirion-language-picker-summary::after {
+    content: "";
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.15em;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-0.15em);
+}
+
+.osirion-language-picker-disclosure[open] > .osirion-language-picker-summary::after {
+    transform: rotate(-135deg) translateY(-0.1em);
+}
+
+.osirion-language-picker-summary:hover {
+    color: var(--osirion-language-picker-hover-color, var(--osirion-link-hover-color, var(--osirion-text-primary, #111827)));
+    background-color: var(--osirion-menu-hover-background, var(--osirion-background-hover, rgba(15, 23, 42, 0.06)));
+}
+
+.osirion-language-picker-summary:focus-visible {
+    outline: var(--osirion-focus-ring-width, 3px) solid var(--osirion-focus-ring-color, #2563eb);
+    outline-offset: var(--osirion-focus-ring-offset, 2px);
+}
+
+.osirion-language-picker-compact .osirion-language-picker-list {
+    position: absolute;
+    inset-inline-end: 0;
+    z-index: var(--osirion-z-dropdown, 1000);
+    flex-direction: column;
+    align-items: stretch;
+    min-width: max-content;
+    margin-block-start: var(--osirion-spacing-1, 0.25rem);
+    padding: var(--osirion-spacing-1, 0.25rem);
+    background-color: var(--osirion-language-picker-background, var(--osirion-background-primary, #ffffff));
+    border: 1px solid var(--osirion-border-color, #e5e7eb);
+    border-radius: var(--osirion-radius-md, 0.375rem);
+    box-shadow: var(--osirion-shadow-md, 0 4px 12px rgba(15, 23, 42, 0.12));
+}
+
+.osirion-language-picker-compact .osirion-language-picker-link {
+    display: block;
+}

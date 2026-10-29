@@ -1,5 +1,6 @@
 using System.Globalization;
 using Osirion.Blazor.Components;
+using Osirion.Blazor.Core.Localization;
 using Osirion.Blazor.Core.Utils;
 
 namespace Osirion.Blazor.Options;
@@ -92,6 +93,16 @@ public sealed class OsirionSiteOptions
     public bool ShowScrollToTop { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets where the shell shows <c>OsirionLanguagePicker</c>, which links the current page in each culture of
+    /// <c>Osirion:Localization</c>: <see cref="SiteLanguagePicker.Header"/> (a compact disclosure among the menu's
+    /// actions, so a row of language names does not wrap the menu), <see cref="SiteLanguagePicker.Footer"/> (a row of
+    /// links below the footer's bottom row) or <see cref="SiteLanguagePicker.Both"/>. Defaults to
+    /// <see cref="SiteLanguagePicker.None"/>. Needs <c>Osirion:Localization</c>; its name is
+    /// <see cref="SiteLabels.Language"/>.
+    /// </summary>
+    public SiteLanguagePicker LanguagePicker { get; set; }
+
+    /// <summary>
     /// Gets or sets the shell's own texts: the skip link, the names of the menu and its toggle, the theme toggle, the
     /// search box, and the names of the footer's legal links and of the announcement. English by default.
     /// </summary>
@@ -113,21 +124,45 @@ public sealed class OsirionSiteOptions
     /// </summary>
     /// <param name="culture">The culture of the request, usually <see cref="CultureInfo.CurrentUICulture"/>.</param>
     /// <returns>The options of that version, which have no locales of their own.</returns>
-    public OsirionSiteOptions ForCulture(CultureInfo culture)
+    public OsirionSiteOptions ForCulture(CultureInfo culture) => ForCulture(culture, localePaths: null);
+
+    /// <summary>
+    /// Gets the site as one language version renders it, as <see cref="ForCulture(CultureInfo)"/> does, with every
+    /// address on the site that the version takes from these options (the menu, the home and search pages, the call to
+    /// action, the announcement's link, the footer columns, the legal links and the owner's link) put under the
+    /// culture's prefix by <paramref name="localePaths"/>: <c>/contact</c> becomes <c>/sr/contact</c>. So a
+    /// <see cref="Locales"/> entry needs only its texts. An address the entry writes itself is kept as written, and
+    /// absolute, <c>mailto:</c>, <c>tel:</c> and fragment links are never changed.
+    /// </summary>
+    /// <param name="culture">The culture of the request, usually <see cref="CultureInfo.CurrentUICulture"/>.</param>
+    /// <param name="localePaths">The site's culture prefixes, when <c>Osirion:Localization</c> is registered.</param>
+    /// <returns>The options of that version, which have no locales of their own.</returns>
+    public OsirionSiteOptions ForCulture(CultureInfo culture, IOsirionLocalePaths? localePaths)
     {
         ArgumentNullException.ThrowIfNull(culture);
 
+        var entry = FindEntry(culture);
+        if (localePaths is null)
+        {
+            return entry is null ? this : With(entry, localize: null);
+        }
+
+        return With(entry ?? new SiteLocaleOptions(), address => localePaths.Localize(address, culture));
+    }
+
+    private SiteLocaleOptions? FindEntry(CultureInfo culture)
+    {
         for (var current = culture; !string.IsNullOrEmpty(current.Name); current = current.Parent)
         {
             // Compared here, not by the dictionary, because options set in code may bring a dictionary of their own.
             var entry = Locales.FirstOrDefault(locale => string.Equals(locale.Key, current.Name, StringComparison.OrdinalIgnoreCase));
             if (entry.Value is not null)
             {
-                return With(entry.Value);
+                return entry.Value;
             }
         }
 
-        return this;
+        return null;
     }
 
     /// <summary>Gets the problems that keep the options from describing a site; empty when they are valid.</summary>
@@ -153,28 +188,31 @@ public sealed class OsirionSiteOptions
         return errors;
     }
 
-    private OsirionSiteOptions With(SiteLocaleOptions entry) => new()
+    // Links are merged with the site's by SiteLinks: an entry's link without an address takes the site's at the same
+    // position, and every address taken from the site goes through localize.
+    private OsirionSiteOptions With(SiteLocaleOptions entry, Func<string, string>? localize) => new()
     {
         Name = entry.Name ?? Name,
         LogoUrl = entry.LogoUrl ?? LogoUrl,
-        HomeUrl = entry.HomeUrl ?? HomeUrl,
-        Menu = entry.Menu ?? Menu,
+        HomeUrl = entry.HomeUrl ?? SiteLinks.Address(HomeUrl, localize),
+        Menu = SiteLinks.Menu(entry.Menu, Menu, localize),
         ShowSearch = ShowSearch,
-        SearchUrl = entry.SearchUrl ?? SearchUrl,
+        SearchUrl = entry.SearchUrl ?? SiteLinks.Address(SearchUrl, localize),
         SearchPlaceholder = entry.SearchPlaceholder ?? SearchPlaceholder,
         ShowThemeToggle = ShowThemeToggle,
-        CallToAction = entry.CallToAction ?? CallToAction,
-        Announcement = entry.Announcement ?? Announcement,
+        CallToAction = SiteLinks.CallToAction(entry.CallToAction, CallToAction, localize),
+        Announcement = SiteLinks.Announcement(entry.Announcement, Announcement, localize),
         FooterDescription = entry.FooterDescription ?? FooterDescription,
-        FooterSections = entry.FooterSections ?? FooterSections,
+        FooterSections = SiteLinks.FooterSections(entry.FooterSections, FooterSections, localize),
         SocialLinks = entry.SocialLinks ?? SocialLinks,
-        LegalLinks = entry.LegalLinks ?? LegalLinks,
+        LegalLinks = SiteLinks.LegalLinks(entry.LegalLinks, LegalLinks, localize),
         Owner = entry.Owner ?? Owner,
-        OwnerUrl = entry.OwnerUrl ?? OwnerUrl,
+        OwnerUrl = entry.OwnerUrl ?? (OwnerUrl is null ? null : SiteLinks.Address(OwnerUrl, localize)),
         Copyright = entry.Copyright ?? Copyright,
         SocialTitle = entry.SocialTitle ?? SocialTitle,
         ShowCookieConsent = ShowCookieConsent,
         ShowScrollToTop = ShowScrollToTop,
+        LanguagePicker = LanguagePicker,
         Labels = entry.Labels ?? Labels,
     };
 
@@ -199,15 +237,20 @@ public sealed class OsirionSiteOptions
             errors.Add($"{key}:Name cannot be blank.");
         }
 
+        // An entry's link without an address takes the site's at the same position, so the merged links are checked.
         if (entry.Menu is not null)
         {
-            AddMenuErrors(entry.Menu, $"{key}:Menu", errors);
+            AddMenuErrors(SiteLinks.Menu(entry.Menu, Menu, localize: null), $"{key}:Menu", errors);
         }
 
-        AddCallToActionErrors(entry.CallToAction, key, errors);
+        if (entry.CallToAction is not null)
+        {
+            AddCallToActionErrors(SiteLinks.CallToAction(entry.CallToAction, CallToAction, localize: null), key, errors);
+        }
+
         if (entry.CallToAction is not null || entry.FooterSections is not null)
         {
-            With(entry).AddCallToActionFooterSectionErrors(key, errors);
+            With(entry, localize: null).AddCallToActionFooterSectionErrors(key, errors);
         }
 
         AddAnnouncementErrors(entry.Announcement, key, errors);

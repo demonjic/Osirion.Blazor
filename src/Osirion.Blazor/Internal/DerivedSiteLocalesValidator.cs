@@ -9,7 +9,8 @@ namespace Osirion.Blazor.Internal;
 /// <summary>
 /// Fails startup when a derived site version names a transliterator that is not registered or a source the site does
 /// not have, or, with <c>Osirion:Localization</c> registered, when it names a culture the site's routes do not serve.
-/// The checks that need no service are in <see cref="OsirionSiteOptions.GetErrors"/>.
+/// It also fails a <see cref="OsirionSiteOptions.LanguagePicker"/> without <c>Osirion:Localization</c>. The checks that
+/// need no service are in <see cref="OsirionSiteOptions.GetErrors"/>.
 /// </summary>
 internal sealed class DerivedSiteLocalesValidator : IValidateOptions<OsirionSiteOptions>
 {
@@ -30,6 +31,11 @@ internal sealed class DerivedSiteLocalesValidator : IValidateOptions<OsirionSite
     public ValidateOptionsResult Validate(string? name, OsirionSiteOptions options)
     {
         var errors = new List<string>();
+        if (options.LanguagePicker != SiteLanguagePicker.None && _localePaths is null)
+        {
+            errors.Add($"{OsirionSiteOptions.Section}:LanguagePicker needs the site's cultures: add an {OsirionLocalizationOptions.Section} section, or call UseLocalization.");
+        }
+
         foreach (var (culture, entry) in options.Locales)
         {
             if (entry?.DerivedFrom is { } from)

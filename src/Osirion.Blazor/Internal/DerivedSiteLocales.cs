@@ -10,7 +10,7 @@ namespace Osirion.Blazor.Internal;
 /// <summary>
 /// Fills each <see cref="SiteLocaleOptions"/> entry that names <see cref="SiteLocaleOptions.DerivedFrom"/> with its
 /// source culture's version, transliterated, before the options are validated and used, so
-/// <see cref="OsirionSiteOptions.ForCulture"/> serves a derived version like any other. A value the entry sets itself
+/// <see cref="OsirionSiteOptions.ForCulture(System.Globalization.CultureInfo)"/> serves a derived version like any other. A value the entry sets itself
 /// wins. An entry that breaks a rule is left as it is, for the validators to report.
 /// </summary>
 internal sealed class DerivedSiteLocales : IPostConfigureOptions<OsirionSiteOptions>
@@ -59,7 +59,8 @@ internal sealed class DerivedSiteLocales : IPostConfigureOptions<OsirionSiteOpti
         }
 
         var texts = new DerivedTexts(transliterator, from, culture, _localePaths);
-        version = WithOwnValues(entry, texts.Version(options.ForCulture(source)));
+        // The source's addresses are first put under its own prefix, so moving them to the derived prefix finds them.
+        version = WithOwnValues(entry, texts.Version(options.ForCulture(source, _localePaths)));
         return true;
     }
 
@@ -192,6 +193,7 @@ internal sealed class DerivedSiteLocales : IPostConfigureOptions<OsirionSiteOpti
             LegalLinks = Text(labels.LegalLinks),
             Announcement = Text(labels.Announcement),
             DismissAnnouncement = Text(labels.DismissAnnouncement),
+            Language = Text(labels.Language),
         };
     }
 }
