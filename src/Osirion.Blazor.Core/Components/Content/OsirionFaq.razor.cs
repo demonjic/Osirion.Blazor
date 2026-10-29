@@ -27,6 +27,14 @@ public partial class OsirionFaq
     public bool IncludeStructuredData { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets how each answer renders, in place of the plain-text paragraph, for answers with formatting such as
+    /// rendered Markdown. The structured data still describes the answer with <see cref="FaqItem.Answer"/>, so give it
+    /// the answer's plain text. Markup the template writes is not sanitized here; sanitize content before passing it.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<FaqItem>? AnswerTemplate { get; set; }
+
+    /// <summary>
     /// Gets or sets whether several answers can be open at once. When <see langword="false"/>, opening one answer
     /// closes the others, in browsers that support exclusive <c>details</c> elements.
     /// </summary>

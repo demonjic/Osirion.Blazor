@@ -7,7 +7,14 @@
         @foreach (var item in Items)
         {
             <OsirionAccordionItem @key="item" Title="@item.Question">
-                <p class="osirion-faq-answer">@item.Answer</p>
+                @if (AnswerTemplate is not null)
+                {
+                    @AnswerTemplate(item)
+                }
+                else
+                {
+                    <p class="osirion-faq-answer">@item.Answer</p>
+                }
             </OsirionAccordionItem>
         }
     </OsirionAccordion>

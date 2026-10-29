@@ -27,6 +27,24 @@ public class OsirionFaqTests : OsirionComponentTestBase
     }
 
     [Fact]
+    public void OsirionFaq_AnswerTemplate_RendersEachAnswerAndKeepsTheTextInTheStructuredData()
+    {
+        var cut = RenderStatic<OsirionFaq>(parameters => parameters
+            .Add(p => p.Items, Items)
+            .Add(p => p.AnswerTemplate, item => builder =>
+            {
+                builder.OpenElement(0, "div");
+                builder.AddAttribute(1, "class", "rich-answer");
+                builder.AddContent(2, item.Answer.ToUpperInvariant());
+                builder.CloseElement();
+            }));
+
+        cut.FindAll("p.osirion-faq-answer").ShouldBeEmpty();
+        cut.FindAll("div.rich-answer").Select(answer => answer.TextContent).ShouldBe(Items.Select(item => item.Answer.ToUpperInvariant()));
+        cut.Find("script[type='application/ld+json']").TextContent.ShouldContain(Items[0].Answer);
+    }
+
+    [Fact]
     public void OsirionFaq_Default_WritesFaqPageStructuredData()
     {
         var cut = RenderStatic<OsirionFaq>(parameters => parameters.Add(p => p.Items, Items));
