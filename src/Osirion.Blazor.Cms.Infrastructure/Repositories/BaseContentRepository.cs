@@ -595,10 +595,7 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
     }
 
     private static DateTime? ParseUtcDate(string? value) =>
-        !string.IsNullOrWhiteSpace(value)
-        && DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var parsed)
-            ? parsed
-            : null;
+        FrontMatterDates.TryParse(value, out var parsed) ? parsed : null;
 
     /// <summary>
     /// Generates markdown content with front matter for saving
@@ -641,7 +638,12 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
         metadata.Title = entity.Title;
         metadata.Description = entity.Description;
         metadata.Author = entity.Author;
-        metadata.Date = entity.DateCreated.ToString("yyyy-MM-dd");
+        // The file's own text for the same moment stays, offset and all; a changed date is written with its time of day
+        if (!FrontMatterDates.TryParse(metadata.Date, out var written) || written != entity.DateCreated)
+        {
+            metadata.Date = FrontMatterDates.Format(entity.DateCreated);
+        }
+
         metadata.FeaturedImage = entity.FeaturedImageUrl;
         metadata.IsFeatured = entity.IsFeatured;
         metadata.Slug = entity.Slug;
@@ -664,7 +666,7 @@ public abstract class BaseContentRepository : RepositoryBase<ContentItem, string
         AppendQuotedValue(markdown, "title", entity.Title);
         AppendQuotedValue(markdown, "description", entity.Description);
         AppendQuotedValue(markdown, "author", entity.Author);
-        markdown.AppendLine($"date: {entity.DateCreated:yyyy-MM-dd}");
+        markdown.AppendLine($"date: {FrontMatterDates.Format(entity.DateCreated)}");
         AppendQuotedValue(markdown, "featured_image", entity.FeaturedImageUrl);
         AppendQuotedList(markdown, "categories", entity.Categories);
         AppendQuotedList(markdown, "tags", entity.Tags);

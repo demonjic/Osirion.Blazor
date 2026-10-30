@@ -111,15 +111,29 @@ public class BasicMetadataFormTests : AdminComponentTestContext
         last.Published.ShouldBeFalse();
     }
 
+    // Failed before the fix: the field takes a date and a time, and the front matter kept only the day.
     [Fact]
-    public void BasicMetadataForm_ChangingDate_RaisesChangedWithNewDate()
+    public void BasicMetadataForm_ChangingDate_RaisesChangedWithNewDateAndTime()
     {
         var cut = RenderForm(CreateMetadata());
 
         cut.Find("#date").Change("2025-03-04T10:30:00");
 
         _changes.ShouldNotBeEmpty();
-        _changes[^1].Date.ShouldBe("2025-03-04");
+        _changes[^1].Date.ShouldBe("2025-03-04T10:30:00");
+    }
+
+    // A moment with an offset shows in UTC, as the front matter reads a moment without one, and the label says so.
+    [Fact]
+    public void BasicMetadataForm_DateWithAnOffset_ShowsTheMomentInUtc()
+    {
+        var metadata = CreateMetadata();
+        metadata.Date = "2026-10-29T18:30:00+01:00";
+
+        var cut = Render<BasicMetadataForm>(parameters => parameters.Add(p => p.Metadata, metadata));
+
+        cut.Find("#date").GetAttribute("value").ShouldBe("2026-10-29T17:30:00");
+        cut.Find("label[for=date]").TextContent.ShouldBe("Publish Date (UTC)");
     }
 
     [Fact]

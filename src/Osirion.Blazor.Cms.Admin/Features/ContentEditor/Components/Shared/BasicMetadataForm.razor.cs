@@ -16,15 +16,16 @@ public partial class BasicMetadataForm
 
     private bool ImageLoadError { get; set; } = false;
 
+    // The field shows and takes the moment in UTC: the front matter reads a moment without an offset as UTC
     private DateTime PostDate
     {
         get
         {
-            if (DateTime.TryParse(Metadata.Date, out var date))
+            if (FrontMatterDates.TryParse(Metadata.Date, out var date))
             {
                 return date;
             }
-            return DateTime.Now;
+            return DateTime.UtcNow;
         }
         set
         {

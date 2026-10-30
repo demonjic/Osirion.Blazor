@@ -7,7 +7,7 @@ permalink: /docs/front-matter
 description: "Every front matter key Osirion.Blazor reads, with its type, default and effect, how dates and custom_fields work, and a complete annotated example."
 author: Dejan Demonjić
 date: 2026-10-17
-last_modified: 2026-10-24
+last_modified: 2026-10-30
 featured_image: 'https://media.getosirion.com/og/docs-front-matter.jpg'
 categories:
 - Documentation
@@ -124,7 +124,10 @@ date: 2026-10-17
 last_modified: 2026-10-17T09:30:00Z
 ```
 
-A date without a time zone is taken as UTC. A page without a `date` key is not an error either: it gets the creation
+A date without a time zone is taken as UTC. Give a time with its offset when the moment matters, such as
+`date: 2026-10-17T18:30:00+02:00`: pages of one day are then listed by their times, and `datePublished` and the feed
+`pubDate` carry the time. Saving a page from the admin keeps the time and the text written for it; its Publish Date
+field shows and takes the time in UTC. A page without a `date` key is not an error either: it gets the creation
 time of its file (the date of the file's last commit with a GitHub provider, which costs one more request to GitHub for
 each undated file the first time it is read), the same as a `date` that cannot be parsed and a file with no front matter
 block. This arrives in the release after 4.1.0; in 4.1.0 a page with front matter and no `date` key gets the day the
