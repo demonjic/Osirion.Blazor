@@ -231,6 +231,10 @@
         padding: var(--osirion-spacing-3, 0.75rem);
         text-align: left;
         border-bottom: 1px solid var(--osirion-border-color, #e5e7eb);
+        /* A cell keeps its words whole at every width: table layout would otherwise take the content's break-anywhere
+           as leave to squeeze a column to a letter or two per line. */
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
     .osirion-html-renderer th {
@@ -243,8 +247,8 @@
         background-color: var(--osirion-background-secondary, #f9fafb);
     }
 
-    /* On small screens a wide table scrolls sideways inside the content column. Its cells keep whole words and
-       inline code together, instead of the column squeezing them into a letter or two per line. */
+    /* On small screens a wide table scrolls sideways inside the content column, and its cells keep inline code
+       together. */
     @media (max-width: 768px) {
         .osirion-html-renderer table {
             display: block;
@@ -256,8 +260,6 @@
         .osirion-html-renderer th,
         .osirion-html-renderer td {
             min-width: 7rem;
-            word-break: normal;
-            overflow-wrap: normal;
         }
 
         .osirion-html-renderer th code,
