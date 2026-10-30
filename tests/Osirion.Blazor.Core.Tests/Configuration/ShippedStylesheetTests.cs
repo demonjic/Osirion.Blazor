@@ -50,18 +50,20 @@ public class ShippedStylesheetTests
         iconRules.ShouldAllBe(selector => selector.Contains("a:is([href^=\"http:\"],[href^=\"https:\"],[href^=\"//\"])", StringComparison.Ordinal));
     }
 
-    // Fails before the fix: only the phone rule reset the content's word-break, so on a wider screen a table with long
-    // cells squeezed a column to one letter per line, 102 lines high in the case that exposed it.
+    // A table scrolls only on small screens, so only there may its cells keep whole words. With the reset in the base
+    // rule, a long code token or address pushed a table 51 to 85 pixels out of a 720 pixel column on a wide screen.
     [Fact]
-    public void HtmlRenderer_TableCells_KeepWholeWordsAtEveryWidth()
+    public void HtmlRenderer_TableCells_KeepWholeWordsOnlyWhereTheTableScrolls()
     {
         // Act
         var css = File.ReadAllText(CoreCss("osirion-html-renderer.min.css"));
         var baseCellRule = System.Text.RegularExpressions.Regex.Match(css, @"[^{}]*\.osirion-html-renderer td[^{}]*\{[^{}]*border-bottom[^{}]*\}").Value;
 
         // Assert
-        baseCellRule.ShouldContain("word-break:normal");
-        baseCellRule.ShouldContain("overflow-wrap:normal");
+        baseCellRule.ShouldNotBeEmpty();
+        baseCellRule.ShouldNotContain("word-break");
+        baseCellRule.ShouldNotContain("overflow-wrap");
+        css.ShouldContain("{min-width:7rem;word-break:normal;overflow-wrap:normal}");
     }
 
     // Fails before the fix: the medium card was 450 pixels wide whatever its column, so on a 375 pixel screen it pushed
