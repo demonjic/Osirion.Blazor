@@ -51,13 +51,14 @@ public class FrontMatter : ValueObject
     public string Author { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets the date in ISO format (yyyy-MM-dd). Empty when the file does not say, so the repository dates the item
-    /// from its source (a file's creation time) instead of the day it was loaded.
+    /// Gets the publication date in ISO form: a day (<c>2026-10-29</c>) or a moment (<c>2026-10-29T18:30:00+01:00</c>),
+    /// read as <see cref="FrontMatterDates"/> describes. Empty when the file does not say, so the repository dates the
+    /// item from its source (a file's creation time) instead of the day it was loaded.
     /// </summary>
     public string Date { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets the last modified date in ISO format (yyyy-MM-dd)
+    /// Gets the last modified date in ISO form: a day or a moment, like <see cref="Date"/>.
     /// </summary>
     public string? LastModified { get; set; }
 
@@ -192,7 +193,8 @@ public class FrontMatter : ValueObject
     }
 
     /// <summary>
-    /// Factory method to create a new FrontMatter instance
+    /// Factory method to create a new FrontMatter instance. The date keeps <paramref name="dateCreated"/>'s time of day,
+    /// as <see cref="FrontMatterDates.Format"/> writes it.
     /// </summary>
     public static FrontMatter Create(string title, string description, DateTime dateCreated)
     {
@@ -200,7 +202,7 @@ public class FrontMatter : ValueObject
         {
             Title = title,
             Description = description,
-            Date = dateCreated.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
+            Date = FrontMatterDates.Format(dateCreated)
         };
 
         return frontMatter;
@@ -230,8 +232,9 @@ public class FrontMatter : ValueObject
             Title = title,
             Description = description ?? string.Empty,
             Author = author ?? string.Empty,
-            Date = (date ?? DateTime.Now).ToString("yyyy-MM-dd"),
-            LastModified = lastModified?.ToString("yyyy-MM-dd"),
+            // Without a date the content is dated today, as a day
+            Date = date is { } given ? FrontMatterDates.Format(given) : DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            LastModified = lastModified is { } changed ? FrontMatterDates.Format(changed) : null,
             FeaturedImage = featuredImage,
             IsFeatured = isFeatured,
             Published = published,
@@ -287,21 +290,23 @@ public class FrontMatter : ValueObject
         return clone;
     }
 
-    /// <summary>Returns a copy with a new date.</summary>
+    /// <summary>Returns a copy with a new date, its time of day kept as <see cref="FrontMatterDates.Format"/> writes it.</summary>
     /// <param name="date">The new date.</param>
     public FrontMatter WithDate(DateTime date)
     {
         var clone = Clone();
-        clone.Date = date.ToString("yyyy-MM-dd");
+        clone.Date = FrontMatterDates.Format(date);
         return clone;
     }
 
-    /// <summary>Returns a copy with a new last-modified date.</summary>
+    /// <summary>
+    /// Returns a copy with a new last-modified date, its time of day kept as <see cref="FrontMatterDates.Format"/> writes it.
+    /// </summary>
     /// <param name="lastModified">The last-modified date.</param>
     public FrontMatter WithLastModified(DateTime? lastModified)
     {
         var clone = Clone();
-        clone.LastModified = lastModified?.ToString("yyyy-MM-dd");
+        clone.LastModified = lastModified is { } value ? FrontMatterDates.Format(value) : null;
         return clone;
     }
 
@@ -531,11 +536,12 @@ public class FrontMatter : ValueObject
         return false;
     }
 
+    // Read the way the content repositories read a file's front matter, so the same text is the same moment
     private static FrontMatter ApplyDate(FrontMatter frontMatter, string value) =>
-        DateTime.TryParse(value, out var date) ? frontMatter.WithDate(date) : frontMatter;
+        FrontMatterDates.TryParse(value, out var date) ? frontMatter.WithDate(date) : frontMatter;
 
     private static FrontMatter ApplyLastModified(FrontMatter frontMatter, string value) =>
-        DateTime.TryParse(value, out var lastModified) ? frontMatter.WithLastModified(lastModified) : frontMatter;
+        FrontMatterDates.TryParse(value, out var lastModified) ? frontMatter.WithLastModified(lastModified) : frontMatter;
 
     private static FrontMatter ApplySeries(FrontMatter frontMatter, string value)
     {

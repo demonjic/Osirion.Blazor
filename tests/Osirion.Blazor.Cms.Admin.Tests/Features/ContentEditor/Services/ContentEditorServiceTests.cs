@@ -330,11 +330,23 @@ public class ContentEditorServiceTests
         result.Metadata.Title.ShouldBe(contentItem.Title);
         result.Metadata.Description.ShouldBe(contentItem.Description);
         result.Metadata.Author.ShouldBe(contentItem.Author);
-        result.Metadata.Date.ShouldBe(contentItem.DateCreated.ToString("yyyy-MM-dd"));
+        result.Metadata.Date.ShouldBe(FrontMatterDates.Format(contentItem.DateCreated));
         result.Metadata.Tags.ShouldBe(contentItem.Tags.ToList());
         result.Metadata.Categories.ShouldBe(contentItem.Categories.ToList());
         result.Metadata.Slug.ShouldBe(contentItem.Slug);
         result.Metadata.IsFeatured.ShouldBe(contentItem.IsFeatured);
         result.Metadata.Published.ShouldBe(contentItem.IsPublished);
+    }
+
+    // Failed before the fix: the post was dated by its day alone.
+    [Fact]
+    public void ConvertToBlogPost_ItemPublishedAtATime_KeepsTheTime()
+    {
+        var contentItem = Cms.Domain.Entities.ContentItem.Create(id: "123", title: "Test Title", content: "# Test Content", path: "content/blog/post.md", providerId: "provider-id");
+        contentItem.SetCreatedDate(new DateTime(2026, 10, 29, 17, 30, 0, DateTimeKind.Utc));
+
+        var result = _service.ConvertToBlogPost(contentItem);
+
+        result.Metadata.ShouldNotBeNull().Date.ShouldBe("2026-10-29T17:30:00Z");
     }
 }

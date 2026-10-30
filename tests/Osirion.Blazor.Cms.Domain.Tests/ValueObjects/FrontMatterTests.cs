@@ -31,15 +31,24 @@ public class FrontMatterTests
         Assert.Equal(DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), frontMatter.Date);
     }
 
+    // Failed before the fix: the time of day was dropped, so posts of one day had no order.
     [Fact]
-    public void Create_WithTitleDescriptionAndDate_WritesTheIsoDate()
+    public void Create_WithTitleDescriptionAndDate_WritesTheIsoMoment()
     {
-        var created = new DateTime(2024, 3, 4, 5, 6, 7);
+        var created = new DateTime(2024, 3, 4, 5, 6, 7, DateTimeKind.Utc);
 
         var frontMatter = FrontMatter.Create("Title", "Description", created);
 
         Assert.Equal("Title", frontMatter.Title);
         Assert.Equal("Description", frontMatter.Description);
+        Assert.Equal("2024-03-04T05:06:07Z", frontMatter.Date);
+    }
+
+    [Fact]
+    public void Create_WithTitleDescriptionAndDay_WritesTheIsoDate()
+    {
+        var frontMatter = FrontMatter.Create("Title", "Description", new DateTime(2024, 3, 4));
+
         Assert.Equal("2024-03-04", frontMatter.Date);
     }
 
@@ -127,6 +136,31 @@ public class FrontMatterTests
         Assert.False(updated.Published);
         Assert.Equal("page", updated.Layout);
         Assert.Equal("new", updated.Slug);
+    }
+
+    // Failed before the fix: the admin's date and time field kept only the day.
+    [Fact]
+    public void WithDateAndWithLastModified_MomentsWithATime_KeepTheTime()
+    {
+        var frontMatter = FrontMatter.Create("T")
+            .WithDate(new DateTime(2026, 10, 29, 17, 30, 0, DateTimeKind.Utc))
+            .WithLastModified(new DateTime(2026, 10, 30, 8, 15, 0, DateTimeKind.Unspecified));
+
+        Assert.Equal("2026-10-29T17:30:00Z", frontMatter.Date);
+        Assert.Equal("2026-10-30T08:15:00", frontMatter.LastModified);
+    }
+
+    [Fact]
+    public void Create_WithAllValuesAndMoments_KeepsTheirTimes()
+    {
+        var frontMatter = FrontMatter.Create(
+            id: "id-1",
+            title: "Title",
+            date: new DateTime(2024, 1, 2, 9, 0, 0, DateTimeKind.Utc),
+            lastModified: new DateTime(2024, 1, 3, 10, 0, 0, DateTimeKind.Utc));
+
+        Assert.Equal("2024-01-02T09:00:00Z", frontMatter.Date);
+        Assert.Equal("2024-01-03T10:00:00Z", frontMatter.LastModified);
     }
 
     [Fact]

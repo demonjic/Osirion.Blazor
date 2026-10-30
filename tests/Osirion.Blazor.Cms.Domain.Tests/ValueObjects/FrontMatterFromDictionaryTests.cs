@@ -101,9 +101,41 @@ public class FrontMatterFromDictionaryTests
     [Fact]
     public void FromDictionary_ValidDate_StoresIsoDate()
     {
-        var frontMatter = Parse(("date", "2024-05-17T13:45:00"));
+        var frontMatter = Parse(("date", "2024-05-17"));
 
         Assert.Equal("2024-05-17", frontMatter.Date);
+    }
+
+    // Failed before the fix: the time was dropped, and the offset moved the moment to the server's time zone first.
+    [Theory]
+    [InlineData("2024-05-17T13:45:00", "2024-05-17T13:45:00Z")]
+    [InlineData("2024-05-17T13:45:00Z", "2024-05-17T13:45:00Z")]
+    [InlineData("2024-05-18T00:30:00+02:00", "2024-05-17T22:30:00Z")]
+    public void FromDictionary_DateWithATime_StoresTheMomentInUtc(string value, string expected)
+    {
+        var frontMatter = Parse(("date", value), ("last_modified", value));
+
+        Assert.Equal(expected, frontMatter.Date);
+        Assert.Equal(expected, frontMatter.LastModified);
+    }
+
+    // Failed before the fix: the date was read in the server's culture, so en-GB read 02/03/2024 as the 2nd of March,
+    // where a file read by a content repository is the 3rd of February.
+    [Fact]
+    public void FromDictionary_UnderAnotherCulture_ReadsTheDateAsTheRepositoriesDo()
+    {
+        var culture = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
+        try
+        {
+            var frontMatter = Parse(("date", "02/03/2024"));
+
+            Assert.Equal("2024-02-03", frontMatter.Date);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = culture;
+        }
     }
 
     [Fact]

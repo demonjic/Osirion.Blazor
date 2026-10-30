@@ -199,7 +199,7 @@ public class ContentEditorService : IContentEditorService
             Title = item.Title,
             Description = item.Description,
             Author = item.Author,
-            Date = item.DateCreated.ToString("yyyy-MM-dd"),
+            Date = FrontMatterDates.Format(item.DateCreated),
             Tags = item.Tags.ToList(),
             Categories = item.Categories.ToList(),
             Slug = item.Slug,
