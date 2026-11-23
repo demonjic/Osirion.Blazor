@@ -3,8 +3,8 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
-    <Net9MicrosoftVersion>9.0.21</Net9MicrosoftVersion>
-    <Net10MicrosoftVersion>10.0.14</Net10MicrosoftVersion>
+    <Net9MicrosoftVersion>10.0.15</Net9MicrosoftVersion>
+    <Net10MicrosoftVersion>10.0.15</Net10MicrosoftVersion>
   </PropertyGroup>
 
   <ItemGroup Label="Common packages">
@@ -14,7 +14,7 @@
     <PackageVersion Include="FluentValidation" Version="12.2.0" />
     <PackageVersion Include="HtmlSanitizer" Version="9.2.1039" />
     <PackageVersion Include="Markdig" Version="1.4.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.403" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" />
     <PackageVersion Include="Octokit" Version="14.0.0" />
     <PackageVersion Include="Scrutor" Version="7.0.0" />
     <PackageVersion Include="System.IO.Abstractions" Version="22.3.0" />
@@ -26,9 +26,9 @@
     <PackageVersion Include="bUnit" Version="2.12.5" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(Net10MicrosoftVersion)" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
-    <PackageVersion Include="Microsoft.Playwright" Version="1.63.0" />
-    <PackageVersion Include="Microsoft.Playwright.TestAdapter" Version="1.63.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.65.1" />
+    <PackageVersion Include="Microsoft.Playwright.TestAdapter" Version="1.65.1" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Example packages">
-    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="5.0.1" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="5.1.0" />
     <PackageVersion Include="MudBlazor" Version="9.11.0" />
     <!-- Transitive through the Aspire AppHost SDK. Pinned past GHSA-qhrr-8q5h-9q3h (fixed in 2.5.303), which NU1902
          turns into a restore error for the whole solution. -->
